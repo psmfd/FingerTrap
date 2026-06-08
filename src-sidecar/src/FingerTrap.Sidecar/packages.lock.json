@@ -4,9 +4,9 @@
     "net10.0": {
       "Nerdbank.MessagePack": {
         "type": "Direct",
-        "requested": "[1.1.62, )",
-        "resolved": "1.1.62",
-        "contentHash": "mJN+8kTL/UOvKv6Vhf7I/G4XkdY2YSqA31EwFY61NA7qg0um+Oy5h0nj+XCQ2hXAjqYiBhpvUpOJDUxiJBZ45A==",
+        "requested": "[1.2.4, )",
+        "resolved": "1.2.4",
+        "contentHash": "9NKlDsKkOV5zQFkZZnQmssdV6npFNs0Of1Nz5mvAJA4uANxCge2TfXQ9nCYUet58bEWQ00a/aNHdjmcXEI7iuQ==",
         "dependencies": {
           "Microsoft.NET.StringTools": "18.4.0",
           "Microsoft.VisualStudio.Validation": "17.13.22",
