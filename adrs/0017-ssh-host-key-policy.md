@@ -1,11 +1,11 @@
-# 0014 — Unified strict SSH host-key policy
+# 0017 — Unified strict SSH host-key policy
 
 - Status: Proposed
 - Date: 2026-05-30
 
 ## Context and problem statement
 
-FingerTrap will have **two SSH use-cases sharing one SSH.NET layer** (ADR-0013): interactive SSH terminals (M3) and the automated, often privileged theme-install workflow (ADR-0016). SSH.NET's `HostKeyEventArgs.CanTrust` **defaults to `true`** — if no `HostKeyReceived` handler is wired, every host key is silently accepted (a textbook MITM footgun).
+FingerTrap will have **two SSH use-cases sharing one SSH.NET layer** (ADR-0016): interactive SSH terminals (M3) and the automated, often privileged theme-install workflow (ADR-0019). SSH.NET's `HostKeyEventArgs.CanTrust` **defaults to `true`** — if no `HostKeyReceived` handler is wired, every host key is silently accepted (a textbook MITM footgun).
 
 The asymmetric danger: an interactive SSH session is often built with a lax "trust on first use, user clicks yes" posture. If that policy is established first (M3) and the install workflow is layered on the same `ISshService` later, the privileged path inherits the lax policy — and an MITM on a `sudo apt-get install` stream is effectively remote root.
 

@@ -1,4 +1,4 @@
-# 0012 — Adopt terminal-theme-manager as a FingerTrap feature
+# 0015 — Adopt terminal-theme-manager as a FingerTrap feature
 
 - Status: Proposed
 - Date: 2026-05-30
@@ -32,13 +32,13 @@ This decision **supersedes** TTM's standalone direction. The migration of TTM's 
 | TTM ADR | Disposition in FingerTrap |
 |---|---|
 | 001 GUI framework (Avalonia) | Superseded by this ADR — no standalone GUI. |
-| 002 Execution transport | Migrated → **ADR-0013** (becomes the M3 SSH + local-exec spec). |
-| 003 Theme model | Migrated → **ADR-0015**. |
-| 004 Detection & install | Migrated → **ADR-0016**. |
+| 002 Execution transport | Migrated → **ADR-0016** (becomes the M3 SSH + local-exec spec). |
+| 003 Theme model | Migrated → **ADR-0018**. |
+| 004 Detection & install | Migrated → **ADR-0019**. |
 | 005 Windows behaviour | Compatible — FingerTrap already defers Windows; TTM's client-only/WSL substance carries into FingerTrap's eventual Windows milestone. |
 | 006 Packaging | Superseded by this ADR — TTM inherits FingerTrap's publish (ADR-0005) + Tauri bundle (ADR-0010). **Carry-over:** TTM-006's distribution requirement — *users must not bypass OS security to install* (macOS notarization, Windows signing) — transfers to FingerTrap's distribution, which does not sign/notarize yet. |
 
-Cross-cutting decisions the integration adds: a **unified strict SSH host-key policy** (ADR-0014) and a consolidated **integration security guardrail set** (ADR-0017).
+Cross-cutting decisions the integration adds: a **unified strict SSH host-key policy** (ADR-0017) and a consolidated **integration security guardrail set** (ADR-0020).
 
 Feature surfacing (UI): a command-palette entry opens a wizard overlay (detect → plan → consent → install → report) with a read-only xterm.js pane for streamed install output. RPC surface grows under the ADR-0003 three-file pairing.
 
@@ -46,6 +46,6 @@ Feature surfacing (UI): a command-palette entry opens a wizard overlay (detect �
 
 - Good: reuses FingerTrap's transport, packaging, CI, and command palette; TTM supplies the M3 SSH layer; no Rust changes for the MVP.
 - Good: the originating design work (TTM ADRs 002/003/004) is preserved as FingerTrap feature ADRs, not lost.
-- Bad: couples a privileged-install workflow into the same process as the interactive terminal — new trust boundaries (ADR-0017) and a single host-key policy obligation (ADR-0014).
+- Bad: couples a privileged-install workflow into the same process as the interactive terminal — new trust boundaries (ADR-0020) and a single host-key policy obligation (ADR-0017).
 - Bad: the macOS-notarization / Windows-signing requirement now lands on FingerTrap's distribution pipeline.
 - Neutral: TTM's repo becomes a design-record archive; its superseded ADRs point here.

@@ -1,11 +1,11 @@
-# 0017 — Theme-manager integration security guardrails
+# 0020 — Theme-manager integration security guardrails
 
 - Status: Proposed
 - Date: 2026-05-30
 
 ## Context and problem statement
 
-Folding an automated, privileged install workflow (ADR-0016) into FingerTrap's Tauri + sidecar terminal app introduces trust boundaries that the originating standalone design (`terminal-theme-manager`) did not have, because credentials and commands now cross the JSON-RPC-over-stdio IPC and coexist in one process with an interactive PTY/terminal feature. This ADR consolidates the guardrails the integration must hold — both those carried forward from TTM's design and those newly required by the merge.
+Folding an automated, privileged install workflow (ADR-0019) into FingerTrap's Tauri + sidecar terminal app introduces trust boundaries that the originating standalone design (`terminal-theme-manager`) did not have, because credentials and commands now cross the JSON-RPC-over-stdio IPC and coexist in one process with an interactive PTY/terminal feature. This ADR consolidates the guardrails the integration must hold — both those carried forward from TTM's design and those newly required by the merge.
 
 ## Considered options
 
@@ -14,7 +14,7 @@ Folding an automated, privileged install workflow (ADR-0016) into FingerTrap's T
 
 ## Decision outcome
 
-Chosen: **a single consolidated guardrail set**, mandatory for the theme-manager feature. Host-key policy is ADR-0014; the rest follow.
+Chosen: **a single consolidated guardrail set**, mandatory for the theme-manager feature. Host-key policy is ADR-0017; the rest follow.
 
 **Carried forward from the TTM design (enforced at FingerTrap's boundaries):**
 

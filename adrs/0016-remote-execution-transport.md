@@ -1,11 +1,11 @@
-# 0013 — Remote execution transport and command model
+# 0016 — Remote execution transport and command model
 
 - Status: Proposed
 - Date: 2026-05-30
 
 ## Context and problem statement
 
-The theme-manager feature (ADR-0012) needs to run commands and edit files on a target host that is **local or remote over SSH**, and the SSH half is also FingerTrap's M3 deliverable. Two distinct execution shapes are required, neither of which the existing `PtyService` (ADR-0006) provides:
+The theme-manager feature (ADR-0015) needs to run commands and edit files on a target host that is **local or remote over SSH**, and the SSH half is also FingerTrap's M3 deliverable. Two distinct execution shapes are required, neither of which the existing `PtyService` (ADR-0006) provides:
 
 - **Non-interactive command capture** — run a command, capture stdout/stderr/exit-code as a result. `PtyService` is an interactive pseudoterminal stream (event-driven bytes, no exit-code result); the two are orthogonal and do not share an implementation.
 - **SSH command + SFTP** — `ISshService` is currently an empty stub and SSH.NET is not yet a dependency. This ADR defines that layer.
@@ -30,12 +30,12 @@ Chosen:
 - **Streaming**: `IAsyncEnumerable<OutputLine>` on the RPC method, which StreamJsonRpc emits as notifications (idiomatic; maps cleanly to the `Channel<OutputLine>` pump).
 - **SSH session lifecycle is RPC-driven**: `theme/connect` returns a `sessionId`; downstream methods carry it; the `RpcSurface` holds a `ConcurrentDictionary<sessionId, SshExecutor>` (mirroring the PTY `_sessions` pattern). Credentials are not re-sent per call.
 
-Host-key verification policy is specified in **ADR-0014**; the full security guardrail set in **ADR-0017**.
+Host-key verification policy is specified in **ADR-0017**; the full security guardrail set in **ADR-0020**.
 
 ### Consequences
 
 - Good: builds M3's SSH layer and the theme-manager's transport in one coherent abstraction; install/theme logic is transport-agnostic.
-- Good: SFTP enables safe rc-file read-modify-write (ADR-0015); no system `ssh` prerequisite.
+- Good: SFTP enables safe rc-file read-modify-write (ADR-0018); no system `ssh` prerequisite.
 - Bad: SSH.NET pulls in `Portable.BouncyCastle`, whose `[RequiresDynamicCode]` paths complicate the eventual trim/AOT step (M8) — root BouncyCastle whole when trimming; untrimmed today is fine.
 - Bad: `LocalExecutor` is net-new code, separate from `PtyService` — two execution models in the sidecar.
-- Neutral: SSH.NET's `HostKeyReceived` defaults to trusting any key — made safe by ADR-0014.
+- Neutral: SSH.NET's `HostKeyReceived` defaults to trusting any key — made safe by ADR-0017.
