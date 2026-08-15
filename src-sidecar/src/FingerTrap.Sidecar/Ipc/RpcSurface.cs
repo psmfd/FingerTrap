@@ -8,6 +8,7 @@ internal sealed class RpcSurface : IDisposable
 {
     private readonly IPtyService _pty;
     private readonly PaneSettings? _paneSettings;
+    private readonly CredentialCache _credentials;
     private JsonRpc? _rpc;
     private bool _eventsBound;
 
@@ -15,10 +16,15 @@ internal sealed class RpcSurface : IDisposable
     /// Persisted pane configuration (N-1, #52), or null to rely on the
     /// environment and the host default alone.
     /// </param>
-    public RpcSurface(IPtyService pty, PaneSettings? paneSettings = null)
+    /// <param name="credentials">
+    /// Receives shell-delivered provider tokens (ADR-0022); a fresh empty
+    /// cache when omitted (tests).
+    /// </param>
+    public RpcSurface(IPtyService pty, PaneSettings? paneSettings = null, CredentialCache? credentials = null)
     {
         _pty = pty;
         _paneSettings = paneSettings;
+        _credentials = credentials ?? new CredentialCache();
     }
 
     public void AttachRpc(JsonRpc rpc)
@@ -81,6 +87,21 @@ internal sealed class RpcSurface : IDisposable
         ArgumentNullException.ThrowIfNull(request);
         _pty.Close(request.SessionId);
         return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Shell-originated notification (ADR-0022) — void on purpose: no
+    /// response frame may exist, since stdout is relayed to the WebView.
+    /// Also deliberately outside check.sh's rpc-pairing count, which counts
+    /// Task-returning methods; see the note there.
+    /// </summary>
+    [JsonRpcMethod("credentials/set")]
+    public void CredentialsSet(CredentialsSetNotification notification)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        // Never log any part of this notification — the token is a secret
+        // and the provider name adjacent to a failure is a correlation gift.
+        _credentials.Set(notification.Provider, notification.Token);
     }
 
     private void OnPtyOutput(object? sender, PtyOutputEventArgs e)

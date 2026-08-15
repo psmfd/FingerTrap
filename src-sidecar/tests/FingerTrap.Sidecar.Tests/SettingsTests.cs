@@ -9,6 +9,11 @@ namespace FingerTrap.Sidecar.Tests;
 /// <summary>
 /// Settings loading and the settings-over-environment precedence (N-1, #52).
 /// </summary>
+// Serialized with every other env-mutating test class: xUnit v3 runs test
+// classes in parallel, and two classes scoping the same process-wide
+// environment variable race each other — the local 1-in-3 false red and,
+// in all likelihood, CI flake #60. Same collection name = no parallelism.
+[Collection("process-environment")]
 public sealed class SettingsTests
 {
     // Concrete return type, not IDisposable: CA1859 is an error in this repo.

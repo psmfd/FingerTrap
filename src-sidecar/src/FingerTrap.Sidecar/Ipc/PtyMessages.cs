@@ -94,6 +94,16 @@ public sealed record PtyResizeRequest(string SessionId, int Cols, int Rows);
 /// </summary>
 public sealed record PtyKillRequest(string SessionId);
 
+/// <summary>
+/// Shell-originated (ADR-0022): written by the Rust shell into the sidecar's
+/// stdin — deliberately a notification, because sidecar stdout is relayed
+/// wholesale to the WebView and a notification has no response frame, so no
+/// secret-bearing frame ever travels toward the WebView. Has no `api.ts`
+/// counterpart by design. A null/empty <paramref name="Token"/> clears the
+/// provider. Never log this record.
+/// </summary>
+public sealed record CredentialsSetNotification(string Provider, string? Token);
+
 public sealed record PtyOutputNotification(string SessionId, string DataBase64);
 
 public sealed record PtyExitNotification(string SessionId, int ExitCode);

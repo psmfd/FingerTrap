@@ -15,6 +15,11 @@ namespace FingerTrap.Sidecar.Tests;
 /// xunit runs tests within a class sequentially, which is why they live in one
 /// class rather than being split by concern.
 /// </remarks>
+// Serialized with every other env-mutating test class: xUnit v3 runs test
+// classes in parallel, and two classes scoping the same process-wide
+// environment variable race each other — the local 1-in-3 false red and,
+// in all likelihood, CI flake #60. Same collection name = no parallelism.
+[Collection("process-environment")]
 public sealed class PaneKindTests
 {
     // Concrete return type, not IDisposable: CA1859 is an error in this repo.

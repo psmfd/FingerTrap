@@ -176,6 +176,12 @@ else
 fi
 
 # ---- 5. RpcSurface.cs <-> api.ts pairing (heuristic) ----
+# Shell-originated methods (ADR-0022) have no api.ts counterpart by design:
+# the Rust shell writes them into the sidecar's stdin (e.g. credentials/set).
+# They are implemented as void-returning notification handlers, which the
+# Task-returning grep below deliberately does not count. A shell-originated
+# method that returns Task would break this pairing — that is intentional
+# friction: a response frame would be relayed to the WebView.
 RPC="src-sidecar/src/FingerTrap.Sidecar/Ipc/RpcSurface.cs"
 API="src-ui/src/api.ts"
 if [[ -f "$RPC" && -f "$API" ]]; then
