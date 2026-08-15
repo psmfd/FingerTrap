@@ -64,10 +64,12 @@ internal sealed class PtyService : IPtyService
 
         connection.ProcessExited += (_, e) =>
         {
-            if (_sessions.TryRemove(sessionId, out var removed))
-            {
-                removed.Dispose();
-            }
+            // The session may already be out of the map (Close() removes it
+            // before the process dies); dispose the captured session either
+            // way — Dispose is idempotent — so a killed session's timer, CTS
+            // and streams are still released.
+            _sessions.TryRemove(sessionId, out Session? _);
+            session.Dispose();
 
             Exited?.Invoke(this, new PtyExitEventArgs
             {
@@ -102,9 +104,24 @@ internal sealed class PtyService : IPtyService
 
     public void Close(string sessionId)
     {
+        // Kill, don't Dispose. Dispose tears the read loop down FIRST, and a
+        // PTY child dying with nothing draining the master can wedge
+        // uninterruptibly in terminal teardown on macOS — SIGKILL pending,
+        // waitpid never returning, no exit event (found by the FT-1 stdio
+        // probe; the process sat in `ps` state `?Es` indefinitely). Killing
+        // while the reader still drains lets the process actually exit; the
+        // ProcessExited handler then disposes the session and raises Exited,
+        // so a kill produces the same pty/exit notification as a self-exit.
         if (_sessions.TryRemove(sessionId, out var session))
         {
-            session.Dispose();
+            try
+            {
+                session.Connection.Kill();
+            }
+            catch
+            {
+                // Already exited — the ProcessExited handler owns cleanup.
+            }
         }
     }
 
