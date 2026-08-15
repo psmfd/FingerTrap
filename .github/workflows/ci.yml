@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [dev, main]
 
+# All jobs only read the checkout; none write back to the repo. Explicit so
+# the workflow token is least-privilege (CodeQL actions/missing-workflow-permissions).
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}

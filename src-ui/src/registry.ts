@@ -20,10 +20,16 @@ export interface Pane {
 }
 
 function randomSessionId(): string {
-  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
+  // Every Tauri WebView provides crypto; the fallback covers only the
+  // (older-WebKit) case where randomUUID specifically is missing. No
+  // Math.random anywhere — CodeQL js/insecure-randomness, and session ids
+  // should be unguessable on principle even on a private stdio channel.
+  if (typeof crypto.randomUUID === 'function') {
     return crypto.randomUUID();
   }
-  return `s-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return `s-${Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('')}`;
 }
 
 function bytesToBase64(bytes: Uint8Array): string {
