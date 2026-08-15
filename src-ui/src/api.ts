@@ -31,13 +31,28 @@ export async function ping(message: string): Promise<string> {
   return require_().sendRequest(PingMethod, message);
 }
 
+/** What a pane is, as opposed to which binary happens to run in it. */
+export type PaneKind = 'shell' | 'pi';
+
 export interface PtySpawnRequest {
   sessionId: string;
+  /**
+   * Explicit executable path, overriding resolution for whichever `kind` is in
+   * force. Named `shell` for wire compatibility with the pre-FT-0 contract; it
+   * overrides a pi pane's executable just as much as a shell pane's.
+   */
   shell?: string;
   cwd?: string;
   cols: number;
   rows: number;
   env?: Record<string, string>;
+  /**
+   * Omit to take the host default, which the sidecar resolves (`pi`, unless
+   * `FINGERTRAP_PANE_KIND` says otherwise). The default lives sidecar-side
+   * because a WebView cannot read process environment. An unrecognised value
+   * is rejected rather than silently defaulted.
+   */
+  kind?: PaneKind;
 }
 
 export interface PtySpawnResult {

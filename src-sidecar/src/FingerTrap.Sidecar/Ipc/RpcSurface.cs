@@ -46,7 +46,8 @@ internal sealed class RpcSurface : IDisposable
     public async Task<PtySpawnResult> PtySpawnAsync(PtySpawnRequest request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
-        var options = new PtySpawnOptions(request.Shell, request.Cwd, request.Cols, request.Rows, request.Env);
+        var kind = PaneKinds.Parse(request.Kind);
+        var options = new PtySpawnOptions(request.Shell, request.Cwd, request.Cols, request.Rows, request.Env, kind);
         var pid = await _pty.SpawnAsync(request.SessionId, options, cancellationToken).ConfigureAwait(false);
         return new PtySpawnResult(pid);
     }
