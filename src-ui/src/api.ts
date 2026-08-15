@@ -89,10 +89,64 @@ export interface PtyExitNotification {
   exitCode: number;
 }
 
+/**
+ * Status surfaces (ADR-0022). Free-text fields arrive already sanitized at
+ * the sidecar's data boundary; render them via textContent regardless —
+ * never innerHTML (defense in depth, there is no framework auto-escaping).
+ * Provider `state` is a string, not a union: an unrecognized future state
+ * must render as text, not fail to parse.
+ */
+export interface IssueRow {
+  id: number;
+  number: number;
+  title: string;
+  author: string;
+  state: string;
+  updatedAt: string;
+}
+
+export interface PrRow {
+  id: number;
+  number: number;
+  title: string;
+  author: string;
+  state: string;
+  isDraft: boolean;
+  headBranch: string;
+  updatedAt: string;
+}
+
+export interface RunRow {
+  id: number;
+  runNumber: number;
+  workflowName: string;
+  displayTitle: string;
+  status: string;
+  conclusion: string | null;
+  outcome: string;
+  headBranch: string;
+  createdAt: string;
+}
+
+export interface ProviderSnapshot {
+  provider: string;
+  state: string;
+  detail: string | null;
+  issues: IssueRow[];
+  pullRequests: PrRow[];
+  runs: RunRow[];
+}
+
+export interface StatusSnapshotNotification {
+  providers: ProviderSnapshot[];
+}
+
 const PtySpawnMethod = new RequestType1<PtySpawnRequest, PtySpawnResult, void>('pty/spawn');
 const PtyWriteMethod = new RequestType1<PtyWriteRequest, void, void>('pty/write');
 const PtyResizeMethod = new RequestType1<PtyResizeRequest, void, void>('pty/resize');
 const PtyKillMethod = new RequestType1<PtyKillRequest, void, void>('pty/kill');
+const StatusRefreshMethod = new RequestType1<null, void, void>('status/refresh');
+const StatusSnapshotNotif = new NotificationType1<StatusSnapshotNotification>('status/snapshot');
 const PtyOutputNotif = new NotificationType1<PtyOutputNotification>('pty/output');
 const PtyExitNotif = new NotificationType1<PtyExitNotification>('pty/exit');
 
@@ -118,4 +172,13 @@ export function onPtyOutput(handler: (n: PtyOutputNotification) => void): Dispos
 
 export function onPtyExit(handler: (n: PtyExitNotification) => void): Disposable {
   return require_().onNotification(PtyExitNotif, handler);
+}
+
+/** Fire-and-forget by contract: the answer is the next status/snapshot. */
+export async function statusRefresh(): Promise<void> {
+  await require_().sendRequest(StatusRefreshMethod, null);
+}
+
+export function onStatusSnapshot(handler: (n: StatusSnapshotNotification) => void): Disposable {
+  return require_().onNotification(StatusSnapshotNotif, handler);
 }

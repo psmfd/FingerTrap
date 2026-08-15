@@ -214,6 +214,7 @@
         "dependencies": {
           "FingerTrap.Sidecar.Abstractions": "[1.0.0, )",
           "Nerdbank.MessagePack": "[1.2.36, )",
+          "Octokit": "[14.0.0, )",
           "Porta.Pty": "[1.0.0, )",
           "StreamJsonRpc": "[2.25.29, )"
         }
@@ -236,6 +237,12 @@
           "Microsoft.VisualStudio.Validation": "17.13.22",
           "PolyType": "1.3.1"
         }
+      },
+      "Octokit": {
+        "type": "CentralTransitive",
+        "requested": "[14.0.0, )",
+        "resolved": "14.0.0",
+        "contentHash": "jGOuTH1l+TCpJH+fwYOp7USzHDuGfN1jKbLz3J2COwyn+wL08eynvpnM6rY2qkzIEXum3PN2p2QkP3BW/p9Qcw=="
       },
       "StreamJsonRpc": {
         "type": "CentralTransitive",

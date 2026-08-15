@@ -2,6 +2,7 @@ using FingerTrap.Sidecar.Abstractions;
 using FingerTrap.Sidecar.Ipc;
 using FingerTrap.Sidecar.Pty;
 using FingerTrap.Sidecar.Settings;
+using FingerTrap.Sidecar.Status;
 using Nerdbank.Streams;
 using Newtonsoft.Json.Serialization;
 using StreamJsonRpc;
@@ -46,7 +47,10 @@ await using var pty = new PtyService(settings.Pi);
 // Provider tokens live only here, delivered by the shell over stdin
 // (credentials/set, ADR-0022); status providers read them per-request.
 var credentials = new CredentialCache();
-using var surface = new RpcSurface(pty, settings.Pane, credentials);
+await using var status = new StatusService([
+    new GitHubStatusProvider(credentials, settings.Status?.Github),
+]);
+using var surface = new RpcSurface(pty, settings.Pane, credentials, status);
 
 var rpc = new JsonRpc(handler);
 rpc.AddLocalRpcTarget(surface, new JsonRpcTargetOptions
@@ -61,6 +65,7 @@ rpc.AddLocalRpcTarget(surface, new JsonRpcTargetOptions
 });
 surface.AttachRpc(rpc);
 rpc.StartListening();
+status.Start();
 
 Console.Error.WriteLine("fingertrap-sidecar: listening on stdio");
 await rpc.Completion;

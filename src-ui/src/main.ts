@@ -1,6 +1,7 @@
 import './styles.css';
 import * as api from './api';
 import { PaneRegistry } from './registry';
+import { StatusPanel } from './status';
 import { TabBar } from './tabbar';
 
 async function main(): Promise<void> {
@@ -11,7 +12,10 @@ async function main(): Promise<void> {
   }
 
   const registry = new PaneRegistry(panesEl, () => tabbar.render());
-  const tabbar = new TabBar(tabbarEl, registry);
+  const status = new StatusPanel(panesEl);
+  const tabbar = new TabBar(tabbarEl, registry, [
+    { label: '⎔', ariaLabel: 'Toggle status panel', onClick: () => status.toggle() },
+  ]);
 
   await api.start();
 
@@ -20,6 +24,7 @@ async function main(): Promise<void> {
   // leak a handler.
   api.onPtyOutput((n) => registry.handleOutput(n));
   api.onPtyExit((n) => registry.handleExit(n));
+  api.onStatusSnapshot((n) => status.update(n));
 
   // xterm's onResize only fires from term.resize(...) — observe the shared
   // pane host and let FitAddon translate DOM size changes into cell counts.
