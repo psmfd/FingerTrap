@@ -67,6 +67,12 @@ internal sealed record StatusSettings
 {
     [JsonPropertyName("github")]
     public GitHubStatusSettings? Github { get; init; }
+
+    [JsonPropertyName("ado")]
+    public AdoStatusSettings? Ado { get; init; }
+
+    [JsonPropertyName("git")]
+    public LocalGitStatusSettings? Git { get; init; }
 }
 
 internal sealed record GitHubStatusSettings
@@ -74,6 +80,25 @@ internal sealed record GitHubStatusSettings
     /// <summary>Repository to watch, as <c>"owner/name"</c>.</summary>
     [JsonPropertyName("repo")]
     public string? Repo { get; init; }
+}
+
+internal sealed record AdoStatusSettings
+{
+    /// <summary>Organization name — the <c>{org}</c> in
+    /// <c>https://dev.azure.com/{org}</c>, not a URL.</summary>
+    [JsonPropertyName("organization")]
+    public string? Organization { get; init; }
+
+    /// <summary>Project name or id within the organization.</summary>
+    [JsonPropertyName("project")]
+    public string? Project { get; init; }
+}
+
+internal sealed record LocalGitStatusSettings
+{
+    /// <summary>Absolute path of the working tree to watch.</summary>
+    [JsonPropertyName("path")]
+    public string? Path { get; init; }
 }
 
 internal sealed record PaneSettings

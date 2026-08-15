@@ -49,6 +49,8 @@ await using var pty = new PtyService(settings.Pi);
 var credentials = new CredentialCache();
 await using var status = new StatusService([
     new GitHubStatusProvider(credentials, settings.Status?.Github),
+    new AdoStatusProvider(credentials, settings.Status?.Ado),
+    new LocalGitStatusProvider(settings.Status?.Git),
 ]);
 using var surface = new RpcSurface(pty, settings.Pane, credentials, status);
 

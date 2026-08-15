@@ -12,6 +12,13 @@ import * as api from './api';
  * Rust shell via invoke('credential_save') — keychain plus sidecar delivery
  * — and never comes back. There is no credential_get anywhere.
  */
+/**
+ * Providers whose auth is a keychain-held PAT — mirrors the Rust shell's
+ * PROVIDERS list in credentials.rs. The local-git provider takes no token;
+ * rendering a PAT box for its not-configured state would be a lie.
+ */
+const TOKEN_PROVIDERS = new Set(['github', 'ado']);
+
 export class StatusPanel {
   private readonly root: HTMLElement;
   private snapshot: api.StatusSnapshotNotification | undefined;
@@ -64,7 +71,7 @@ export class StatusPanel {
       section.appendChild(el('p', 'status-detail', p.detail));
     }
 
-    if (p.state === 'not-configured' || p.state === 'auth-failed') {
+    if (TOKEN_PROVIDERS.has(p.provider) && (p.state === 'not-configured' || p.state === 'auth-failed')) {
       section.appendChild(this.renderTokenEntry(p.provider));
     }
 

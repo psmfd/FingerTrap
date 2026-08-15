@@ -43,6 +43,16 @@ jobs:
       - run: dotnet restore --locked-mode
       - run: dotnet build -c Release --no-restore
       - run: dotnet test --no-build -c Release
+      # xUnit v3 / Microsoft.Testing.Platform writes per-test failure detail
+      # to a log file, not the console — without this upload, a CI-only
+      # failure is undiagnosable from the job log (#60).
+      - name: upload test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: testresults-sidecar-${{ matrix.os }}
+          path: src-sidecar/tests/**/TestResults/
+          if-no-files-found: ignore
 
   ui:
     name: ui (${{ matrix.os }})

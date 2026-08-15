@@ -66,6 +66,23 @@ public sealed class SettingsTests
     }
 
     [Fact]
+    public void Parse_StatusSection_ReadsAllThreeProviderBlocks()
+    {
+        var s = SettingsLoader.Parse("""
+            {"version": 1, "status": {
+              "github": {"repo": "o/n"},
+              "ado": {"organization": "org", "project": "proj"},
+              "git": {"path": "/repos/x"}
+            }}
+            """);
+
+        Assert.Equal("o/n", s.Status?.Github?.Repo);
+        Assert.Equal("org", s.Status?.Ado?.Organization);
+        Assert.Equal("proj", s.Status?.Ado?.Project);
+        Assert.Equal("/repos/x", s.Status?.Git?.Path);
+    }
+
+    [Fact]
     public void Parse_UnknownKeys_AreTolerated()
     {
         // Forward compatibility WITHIN a version: a newer build may write keys
