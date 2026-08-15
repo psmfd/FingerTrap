@@ -1,6 +1,7 @@
 using System.Buffers;
 using System.Collections.Concurrent;
 using FingerTrap.Sidecar.Abstractions;
+using FingerTrap.Sidecar.Settings;
 
 namespace FingerTrap.Sidecar.Pty;
 
@@ -16,6 +17,18 @@ internal sealed class PtyService : IPtyService
 
     private readonly ConcurrentDictionary<string, Session> _sessions = new(StringComparer.Ordinal);
 
+    private readonly PiSettings? _piSettings;
+
+    /// <param name="piSettings">
+    /// Persisted pi configuration (N-1, #52), or null to rely on the
+    /// environment and PATH alone. Injected rather than loaded here so the
+    /// settings file is read exactly once per process, in Program.cs.
+    /// </param>
+    public PtyService(PiSettings? piSettings = null)
+    {
+        _piSettings = piSettings;
+    }
+
     public event EventHandler<PtyOutputEventArgs>? Output;
 
     public event EventHandler<PtyExitEventArgs>? Exited;
@@ -26,7 +39,7 @@ internal sealed class PtyService : IPtyService
         ArgumentNullException.ThrowIfNull(options);
         cancellationToken.ThrowIfCancellationRequested();
 
-        var shellPath = ResolveShell(options.Shell);
+        var shellPath = ResolveExecutable(options.Kind, options.Shell, _piSettings);
 
         var ptyOptions = new global::Porta.Pty.PtyOptions
         {
@@ -104,6 +117,127 @@ internal sealed class PtyService : IPtyService
 
         _sessions.Clear();
         return ValueTask.CompletedTask;
+    }
+
+    /// <summary>
+    /// Environment variable naming the pi executable outright. The escape
+    /// hatch until the settings system (Native track N-1) exists; a pi
+    /// installed somewhere unusual should not require a code change.
+    /// </summary>
+    internal const string PiPathEnvVar = "FINGERTRAP_PI";
+
+    /// <summary>Executable name searched for on <c>PATH</c>.</summary>
+    private const string PiExecutableName = "pi";
+
+    /// <summary>
+    /// Map a pane kind onto the executable to spawn.
+    /// </summary>
+    /// <remarks>
+    /// Deliberately asymmetric. Shell resolution ends in a fallback chain
+    /// because <em>some</em> shell essentially always exists and guessing is
+    /// harmless. pi resolution ends in a <see cref="PiNotFoundException"/>,
+    /// because a pi pane that quietly opened a shell would be worse than one
+    /// that refused: the operator would be typing at something that is not the
+    /// thing they asked for, and the difference is not obvious at a glance.
+    /// </remarks>
+    internal static string ResolveExecutable(PaneKind kind, string? requested, PiSettings? settings = null) => kind switch
+    {
+        PaneKind.Pi => ResolvePi(requested, settings),
+        PaneKind.Shell => ResolveShell(requested),
+        _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, "unknown pane kind"),
+    };
+
+    /// <summary>
+    /// Locate the pi executable: explicit request, then settings, then
+    /// <see cref="PiPathEnvVar"/>, then <c>PATH</c>. Throws rather than
+    /// falling back.
+    /// </summary>
+    internal static string ResolvePi(string? requested, PiSettings? settings = null)
+    {
+        if (!string.IsNullOrEmpty(requested))
+        {
+            return requested;
+        }
+
+        // Settings outrank the environment (N-1, #52); the env var survives as
+        // a lower layer for ephemeral overrides rather than being retired.
+        if (!string.IsNullOrEmpty(settings?.Path))
+        {
+            return settings.Path;
+        }
+
+        var fromEnv = Environment.GetEnvironmentVariable(PiPathEnvVar);
+        if (!string.IsNullOrEmpty(fromEnv))
+        {
+            return fromEnv;
+        }
+
+        var onPath = FindOnPath(PiExecutableName);
+        if (onPath is not null)
+        {
+            return onPath;
+        }
+
+        throw new PiNotFoundException(
+            $"no pi executable found. Tried: the spawn request's explicit path, settings pi.path, " +
+            $"${PiPathEnvVar}, then PATH. Fix: install pi, set pi.path in settings.json or " +
+            $"{PiPathEnvVar}=/path/to/pi, or request a shell pane instead.");
+    }
+
+    /// <summary>
+    /// First executable match for <paramref name="name"/> across <c>PATH</c>,
+    /// or null.
+    /// </summary>
+    /// <remarks>
+    /// Hand-rolled rather than shelling out to <c>which</c>/<c>where</c>:
+    /// spawning a process to decide what to spawn is a needless dependency on
+    /// yet another binary being present, and this runs on the pane-open path.
+    /// The executable-bit check is what stops a same-named directory or a
+    /// non-executable file from being returned as a usable answer.
+    /// </remarks>
+    private static string? FindOnPath(string name)
+    {
+        var path = Environment.GetEnvironmentVariable("PATH");
+        if (string.IsNullOrEmpty(path))
+        {
+            return null;
+        }
+
+        foreach (var dir in path.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
+        {
+            string candidate;
+            try
+            {
+                candidate = Path.Combine(dir.Trim(), name);
+            }
+            catch (ArgumentException)
+            {
+                // A PATH entry containing invalid path characters is skipped
+                // rather than aborting the whole search — one bad entry must
+                // not hide a good one further along.
+                continue;
+            }
+
+            if (!File.Exists(candidate))
+            {
+                continue;
+            }
+
+            if (OperatingSystem.IsWindows())
+            {
+                return candidate;
+            }
+
+            var mode = File.GetUnixFileMode(candidate);
+            const UnixFileMode AnyExecute =
+                UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute;
+            if ((mode & AnyExecute) != 0)
+            {
+                return candidate;
+            }
+        }
+
+        return null;
     }
 
     private static string ResolveShell(string? requested)

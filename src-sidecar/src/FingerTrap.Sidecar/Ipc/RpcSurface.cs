@@ -1,4 +1,5 @@
 using FingerTrap.Sidecar.Abstractions;
+using FingerTrap.Sidecar.Settings;
 using StreamJsonRpc;
 
 namespace FingerTrap.Sidecar.Ipc;
@@ -6,12 +7,18 @@ namespace FingerTrap.Sidecar.Ipc;
 internal sealed class RpcSurface : IDisposable
 {
     private readonly IPtyService _pty;
+    private readonly PaneSettings? _paneSettings;
     private JsonRpc? _rpc;
     private bool _eventsBound;
 
-    public RpcSurface(IPtyService pty)
+    /// <param name="paneSettings">
+    /// Persisted pane configuration (N-1, #52), or null to rely on the
+    /// environment and the host default alone.
+    /// </param>
+    public RpcSurface(IPtyService pty, PaneSettings? paneSettings = null)
     {
         _pty = pty;
+        _paneSettings = paneSettings;
     }
 
     public void AttachRpc(JsonRpc rpc)
@@ -46,7 +53,8 @@ internal sealed class RpcSurface : IDisposable
     public async Task<PtySpawnResult> PtySpawnAsync(PtySpawnRequest request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
-        var options = new PtySpawnOptions(request.Shell, request.Cwd, request.Cols, request.Rows, request.Env);
+        var kind = PaneKinds.Parse(request.Kind, _paneSettings);
+        var options = new PtySpawnOptions(request.Shell, request.Cwd, request.Cols, request.Rows, request.Env, kind);
         var pid = await _pty.SpawnAsync(request.SessionId, options, cancellationToken).ConfigureAwait(false);
         return new PtySpawnResult(pid);
     }
