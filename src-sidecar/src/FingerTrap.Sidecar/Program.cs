@@ -1,6 +1,7 @@
 using FingerTrap.Sidecar.Abstractions;
 using FingerTrap.Sidecar.Ipc;
 using FingerTrap.Sidecar.Pty;
+using FingerTrap.Sidecar.Settings;
 using Nerdbank.Streams;
 using Newtonsoft.Json.Serialization;
 using StreamJsonRpc;
@@ -18,10 +19,26 @@ formatter.JsonSerializer.ContractResolver = new CamelCasePropertyNamesContractRe
 
 var handler = new HeaderDelimitedMessageHandler(stdio, stdio, formatter);
 
+// Settings are read exactly once per process (N-1, #52). A missing file is a
+// supported state and yields defaults; a file that exists but cannot be used
+// is fatal here rather than silently ignored, because a typo'd settings file
+// that appears to work is the failure ADR-0013 already rejected once for
+// FINGERTRAP_PANE_KIND. Reported on stderr — stdout is the RPC framing.
+FingerTrapSettings settings;
+try
+{
+    settings = SettingsLoader.Load();
+}
+catch (SettingsException ex)
+{
+    Console.Error.WriteLine($"fingertrap-sidecar: {ex.Message}");
+    return 1;
+}
+
 // Single platform-agnostic PtyService backed by Porta.Pty (ADR-0008);
 // platform branching now lives inside the vendored library.
-await using var pty = new PtyService();
-using var surface = new RpcSurface(pty);
+await using var pty = new PtyService(settings.Pi);
+using var surface = new RpcSurface(pty, settings.Pane);
 
 var rpc = new JsonRpc(handler);
 rpc.AddLocalRpcTarget(surface, new JsonRpcTargetOptions
@@ -40,3 +57,4 @@ rpc.StartListening();
 Console.Error.WriteLine("fingertrap-sidecar: listening on stdio");
 await rpc.Completion;
 Console.Error.WriteLine("fingertrap-sidecar: rpc completion");
+return 0;
