@@ -147,14 +147,26 @@ public sealed class LocalGitStatusProviderTests
         }
         finally
         {
-            try
+            TryDeleteRepo(repo);
+        }
+    }
+
+    /// <summary>Best-effort temp cleanup. On Windows, .git/objects files
+    /// are read-only and Directory.Delete throws UnauthorizedAccessException
+    /// until the attribute is cleared.</summary>
+    private static void TryDeleteRepo(string path)
+    {
+        try
+        {
+            foreach (var file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
             {
-                Directory.Delete(repo, recursive: true);
+                File.SetAttributes(file, FileAttributes.Normal);
             }
-            catch (IOException)
-            {
-                // Best-effort temp cleanup.
-            }
+
+            Directory.Delete(path, recursive: true);
+        }
+        catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+        {
         }
     }
 
