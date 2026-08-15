@@ -1,6 +1,7 @@
 using System.Buffers;
 using System.Collections.Concurrent;
 using FingerTrap.Sidecar.Abstractions;
+using FingerTrap.Sidecar.Settings;
 
 namespace FingerTrap.Sidecar.Pty;
 
@@ -16,6 +17,18 @@ internal sealed class PtyService : IPtyService
 
     private readonly ConcurrentDictionary<string, Session> _sessions = new(StringComparer.Ordinal);
 
+    private readonly PiSettings? _piSettings;
+
+    /// <param name="piSettings">
+    /// Persisted pi configuration (N-1, #52), or null to rely on the
+    /// environment and PATH alone. Injected rather than loaded here so the
+    /// settings file is read exactly once per process, in Program.cs.
+    /// </param>
+    public PtyService(PiSettings? piSettings = null)
+    {
+        _piSettings = piSettings;
+    }
+
     public event EventHandler<PtyOutputEventArgs>? Output;
 
     public event EventHandler<PtyExitEventArgs>? Exited;
@@ -26,7 +39,7 @@ internal sealed class PtyService : IPtyService
         ArgumentNullException.ThrowIfNull(options);
         cancellationToken.ThrowIfCancellationRequested();
 
-        var shellPath = ResolveExecutable(options.Kind, options.Shell);
+        var shellPath = ResolveExecutable(options.Kind, options.Shell, _piSettings);
 
         var ptyOptions = new global::Porta.Pty.PtyOptions
         {
@@ -127,23 +140,30 @@ internal sealed class PtyService : IPtyService
     /// that refused: the operator would be typing at something that is not the
     /// thing they asked for, and the difference is not obvious at a glance.
     /// </remarks>
-    internal static string ResolveExecutable(PaneKind kind, string? requested) => kind switch
+    internal static string ResolveExecutable(PaneKind kind, string? requested, PiSettings? settings = null) => kind switch
     {
-        PaneKind.Pi => ResolvePi(requested),
+        PaneKind.Pi => ResolvePi(requested, settings),
         PaneKind.Shell => ResolveShell(requested),
         _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, "unknown pane kind"),
     };
 
     /// <summary>
-    /// Locate the pi executable: explicit request, then
+    /// Locate the pi executable: explicit request, then settings, then
     /// <see cref="PiPathEnvVar"/>, then <c>PATH</c>. Throws rather than
     /// falling back.
     /// </summary>
-    internal static string ResolvePi(string? requested)
+    internal static string ResolvePi(string? requested, PiSettings? settings = null)
     {
         if (!string.IsNullOrEmpty(requested))
         {
             return requested;
+        }
+
+        // Settings outrank the environment (N-1, #52); the env var survives as
+        // a lower layer for ephemeral overrides rather than being retired.
+        if (!string.IsNullOrEmpty(settings?.Path))
+        {
+            return settings.Path;
         }
 
         var fromEnv = Environment.GetEnvironmentVariable(PiPathEnvVar);
@@ -159,8 +179,9 @@ internal sealed class PtyService : IPtyService
         }
 
         throw new PiNotFoundException(
-            $"no pi executable found. Tried: the spawn request's explicit path, ${PiPathEnvVar}, then PATH. " +
-            $"Fix: install pi, set {PiPathEnvVar}=/path/to/pi, or request a shell pane instead.");
+            $"no pi executable found. Tried: the spawn request's explicit path, settings pi.path, " +
+            $"${PiPathEnvVar}, then PATH. Fix: install pi, set pi.path in settings.json or " +
+            $"{PiPathEnvVar}=/path/to/pi, or request a shell pane instead.");
     }
 
     /// <summary>

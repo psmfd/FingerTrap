@@ -1,4 +1,5 @@
 using FingerTrap.Sidecar.Abstractions;
+using FingerTrap.Sidecar.Settings;
 
 namespace FingerTrap.Sidecar.Ipc;
 
@@ -34,7 +35,8 @@ internal static class PaneKinds
 
     /// <summary>
     /// Resolve a wire value to a pane kind: explicit request wins, then
-    /// <see cref="DefaultKindEnvVar"/>, then <see cref="HostDefault"/>.
+    /// settings, then <see cref="DefaultKindEnvVar"/>, then
+    /// <see cref="HostDefault"/>.
     /// </summary>
     /// <remarks>
     /// The default lives here rather than in the UI because the UI is a
@@ -46,9 +48,18 @@ internal static class PaneKinds
     /// indistinguishable from the variable working, which is the failure this
     /// deliberately makes loud.
     /// </remarks>
-    internal static PaneKind Parse(string? requested)
+    internal static PaneKind Parse(string? requested, PaneSettings? settings = null)
     {
         var value = requested;
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            // Settings outrank the environment (N-1, #52). The env var is kept
+            // as a lower layer rather than retired: it stays the natural fit
+            // for ephemeral overrides — CI, or a one-off launch — where
+            // editing a file and putting it back is the wrong shape.
+            value = settings?.DefaultKind;
+        }
+
         if (string.IsNullOrWhiteSpace(value))
         {
             value = Environment.GetEnvironmentVariable(DefaultKindEnvVar);
