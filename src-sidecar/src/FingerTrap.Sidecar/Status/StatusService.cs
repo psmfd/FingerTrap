@@ -127,5 +127,9 @@ internal sealed class StatusService : IAsyncDisposable
 
         _shutdown.Dispose();
         _fetchGate.Dispose();
+        foreach (var provider in _providers)
+        {
+            (provider as IDisposable)?.Dispose();
+        }
     }
 }

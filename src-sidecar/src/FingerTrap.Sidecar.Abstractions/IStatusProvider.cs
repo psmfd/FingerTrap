@@ -40,7 +40,8 @@ public static class ProviderStates
 /// <summary>
 /// One provider's contribution to a <c>status/snapshot</c> notification.
 /// <see cref="Detail"/> is an operator-actionable, already-sanitized
-/// sentence for any non-ok state.
+/// sentence for any non-ok state — or, for a provider whose entire surface
+/// is one line (local git), the surface itself on an ok state.
 /// </summary>
 public sealed record ProviderSnapshot(
     string Provider,
