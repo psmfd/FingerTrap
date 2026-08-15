@@ -25,11 +25,11 @@ individual item says otherwise.
 |---|---|---|
 | M0 — Skeleton | foundation | **complete** |
 | M1 — Local PTY (Linux + macOS) | foundation | **complete** (v0.3.0) |
-| FT-0 — Revive + host | Home | **in progress** ([#46](https://github.com/psmfd/FingerTrap/issues/46)) |
-| FT-1 — Chrome | Home | not started |
+| FT-0 — Revive + host | Home | **complete** ([#46](https://github.com/psmfd/FingerTrap/issues/46), PRs #47–#50, #53) |
+| FT-1 — Chrome | Home | not started — gate open (FT-0 complete, repo-dash landed and in use) |
 | FT-2 — Structured control + observability | Home | not started |
 | FT-3 — Tool host | Home | not started |
-| N-1 — Settings and persistence | Native | not started |
+| N-1 — Settings and persistence | Native | **in progress** ([#51](https://github.com/psmfd/FingerTrap/issues/51); settings foundation landed, ADR-0014) |
 | N-2 — Packaging | Native | partially standing (semantic-release wired) |
 | N-3 — SSH terminal | Native | not started |
 | N-4 — SFTP tree | Native | not started |
