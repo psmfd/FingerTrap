@@ -98,10 +98,7 @@ pub fn credential_save(
 
 /// Remove a provider's token from the keychain and clear it sidecar-side.
 #[tauri::command]
-pub fn credential_clear(
-    state: State<'_, SidecarState>,
-    provider: String,
-) -> Result<(), String> {
+pub fn credential_clear(state: State<'_, SidecarState>, provider: String) -> Result<(), String> {
     validate_provider(&provider)?;
     match entry_for(&provider)?.delete_credential() {
         Ok(()) => {}
