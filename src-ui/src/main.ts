@@ -67,10 +67,16 @@ async function main(): Promise<void> {
     term.write(`\r\n\x1b[33m[process exited (${n.exitCode})]\x1b[0m\r\n`);
   });
 
+  // `kind` is deliberately omitted: the sidecar owns the default (pi, unless
+  // FINGERTRAP_PANE_KIND overrides it), because only it can read process
+  // environment. Sending an explicit kind from here would shadow that.
   try {
     await api.ptySpawn({ sessionId, cols: term.cols, rows: term.rows });
   } catch (err) {
-    term.write(`\r\n\x1b[31mfailed to spawn shell: ${(err as Error).message}\x1b[0m\r\n`);
+    // Rendered into the terminal the spawn failed to fill — where the operator
+    // is already looking. A missing pi arrives here as an actionable message
+    // from the sidecar, rather than as a shell that quietly is not pi.
+    term.write(`\r\n\x1b[31mfailed to spawn pane: ${(err as Error).message}\x1b[0m\r\n`);
     return;
   }
 
