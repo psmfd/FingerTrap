@@ -43,7 +43,10 @@ catch (SettingsException ex)
 // Single platform-agnostic PtyService backed by Porta.Pty (ADR-0008);
 // platform branching now lives inside the vendored library.
 await using var pty = new PtyService(settings.Pi);
-using var surface = new RpcSurface(pty, settings.Pane);
+// Provider tokens live only here, delivered by the shell over stdin
+// (credentials/set, ADR-0022); status providers read them per-request.
+var credentials = new CredentialCache();
+using var surface = new RpcSurface(pty, settings.Pane, credentials);
 
 var rpc = new JsonRpc(handler);
 rpc.AddLocalRpcTarget(surface, new JsonRpcTargetOptions

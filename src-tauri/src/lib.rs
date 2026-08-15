@@ -1,3 +1,4 @@
+mod credentials;
 mod sidecar;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -12,6 +13,9 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             sidecar::sidecar_write,
             sidecar::subscribe_sidecar_output,
+            credentials::credential_save,
+            credentials::credential_clear,
+            credentials::credential_status,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
