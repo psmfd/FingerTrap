@@ -104,6 +104,13 @@ public sealed record PtyKillRequest(string SessionId);
 /// </summary>
 public sealed record CredentialsSetNotification(string Provider, string? Token);
 
+/// <summary>
+/// Full-state snapshot of every provider (ADR-0022): snapshot-replace, so a
+/// dropped notification costs nothing — the next one supersedes it.
+/// </summary>
+public sealed record StatusSnapshotNotification(
+    IReadOnlyList<FingerTrap.Sidecar.Abstractions.ProviderSnapshot> Providers);
+
 public sealed record PtyOutputNotification(string SessionId, string DataBase64);
 
 public sealed record PtyExitNotification(string SessionId, int ExitCode);

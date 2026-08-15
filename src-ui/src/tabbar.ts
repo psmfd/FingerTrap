@@ -6,13 +6,21 @@ import type { Pane, PaneRegistry } from './registry';
  * to the registry. Rebuilt wholesale on each change — at tab-strip scale,
  * reconciliation is not worth owning.
  */
+export interface TabBarAction {
+  label: string;
+  ariaLabel: string;
+  onClick: () => void;
+}
+
 export class TabBar {
   private readonly host: HTMLElement;
   private readonly registry: PaneRegistry;
+  private readonly extras: readonly TabBarAction[];
 
-  constructor(host: HTMLElement, registry: PaneRegistry) {
+  constructor(host: HTMLElement, registry: PaneRegistry, extras: readonly TabBarAction[] = []) {
     this.host = host;
     this.registry = registry;
+    this.extras = extras;
   }
 
   render(): void {
@@ -33,6 +41,9 @@ export class TabBar {
     this.host.appendChild(
       this.renderAction('+sh', 'New shell tab', () => void this.registry.open('shell')),
     );
+    for (const extra of this.extras) {
+      this.host.appendChild(this.renderAction(extra.label, extra.ariaLabel, extra.onClick));
+    }
   }
 
   private renderTab(pane: Pane, isActive: boolean): HTMLElement {

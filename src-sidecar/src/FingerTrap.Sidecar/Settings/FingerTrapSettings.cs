@@ -41,6 +41,9 @@ internal sealed record FingerTrapSettings
     [JsonPropertyName("pane")]
     public PaneSettings? Pane { get; init; }
 
+    [JsonPropertyName("status")]
+    public StatusSettings? Status { get; init; }
+
     /// <summary>Everything unset — the behaviour of an absent settings file.</summary>
     internal static FingerTrapSettings Defaults { get; } = new() { Version = SettingsLoader.SupportedVersion };
 }
@@ -53,6 +56,24 @@ internal sealed record PiSettings
     /// </summary>
     [JsonPropertyName("path")]
     public string? Path { get; init; }
+}
+
+/// <summary>
+/// Status-provider configuration (FT-1 slice 2, ADR-0022). Additive within
+/// schema v1: unknown keys are tolerated, version is the compatibility gate.
+/// Credentials do NOT live here — they are keychain-held by the shell.
+/// </summary>
+internal sealed record StatusSettings
+{
+    [JsonPropertyName("github")]
+    public GitHubStatusSettings? Github { get; init; }
+}
+
+internal sealed record GitHubStatusSettings
+{
+    /// <summary>Repository to watch, as <c>"owner/name"</c>.</summary>
+    [JsonPropertyName("repo")]
+    public string? Repo { get; init; }
 }
 
 internal sealed record PaneSettings

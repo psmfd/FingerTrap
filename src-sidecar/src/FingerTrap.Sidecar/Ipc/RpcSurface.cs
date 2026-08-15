@@ -1,5 +1,6 @@
 using FingerTrap.Sidecar.Abstractions;
 using FingerTrap.Sidecar.Settings;
+using FingerTrap.Sidecar.Status;
 using StreamJsonRpc;
 
 namespace FingerTrap.Sidecar.Ipc;
@@ -20,12 +21,19 @@ internal sealed class RpcSurface : IDisposable
     /// Receives shell-delivered provider tokens (ADR-0022); a fresh empty
     /// cache when omitted (tests).
     /// </param>
-    public RpcSurface(IPtyService pty, PaneSettings? paneSettings = null, CredentialCache? credentials = null)
+    public RpcSurface(
+        IPtyService pty,
+        PaneSettings? paneSettings = null,
+        CredentialCache? credentials = null,
+        StatusService? status = null)
     {
         _pty = pty;
         _paneSettings = paneSettings;
         _credentials = credentials ?? new CredentialCache();
+        _status = status;
     }
+
+    private readonly StatusService? _status;
 
     public void AttachRpc(JsonRpc rpc)
     {
@@ -37,6 +45,11 @@ internal sealed class RpcSurface : IDisposable
 
         _pty.Output += OnPtyOutput;
         _pty.Exited += OnPtyExit;
+        if (_status is not null)
+        {
+            _status.SnapshotReady += OnStatusSnapshot;
+        }
+
         _eventsBound = true;
     }
 
@@ -46,6 +59,11 @@ internal sealed class RpcSurface : IDisposable
         {
             _pty.Output -= OnPtyOutput;
             _pty.Exited -= OnPtyExit;
+            if (_status is not null)
+            {
+                _status.SnapshotReady -= OnStatusSnapshot;
+            }
+
             _eventsBound = false;
         }
     }
@@ -102,6 +120,29 @@ internal sealed class RpcSurface : IDisposable
         // Never log any part of this notification — the token is a secret
         // and the provider name adjacent to a failure is a correlation gift.
         _credentials.Set(notification.Provider, notification.Token);
+        // A fresh token should be visible without waiting a poll interval.
+        _status?.RefreshNow();
+    }
+
+    [JsonRpcMethod("status/refresh")]
+    public Task StatusRefreshAsync()
+    {
+        // Fire-and-forget by contract: the answer is the next
+        // status/snapshot notification (snapshot-replace, ADR-0022).
+        _status?.RefreshNow();
+        return Task.CompletedTask;
+    }
+
+    private void OnStatusSnapshot(object? sender, IReadOnlyList<ProviderSnapshot> snapshots)
+    {
+        var rpc = _rpc;
+        if (rpc is null)
+        {
+            return;
+        }
+
+        var payload = new StatusSnapshotNotification(snapshots);
+        _ = rpc.NotifyAsync("status/snapshot", payload);
     }
 
     private void OnPtyOutput(object? sender, PtyOutputEventArgs e)
