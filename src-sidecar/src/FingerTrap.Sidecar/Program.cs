@@ -10,8 +10,13 @@ using StreamJsonRpc;
 // the stream. All status output goes to stderr (ADR-0002).
 Console.Error.WriteLine("fingertrap-sidecar: starting");
 
+// Inbound frames pass a Content-Length ceiling before StreamJsonRpc sees
+// them (ADR-0022): the declared length is attacker-influenceable once
+// provider payloads share the channel, and nothing in the RPC stack bounds
+// it. A breach is connection-fatal (IOException), same posture as any other
+// framing corruption.
 var stdio = FullDuplexStream.Splice(
-    Console.OpenStandardInput(),
+    new FrameCeilingStream(Console.OpenStandardInput()),
     Console.OpenStandardOutput());
 
 var formatter = new JsonMessageFormatter();

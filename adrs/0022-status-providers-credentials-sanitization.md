@@ -1,6 +1,6 @@
 # 0022 — Status providers: sidecar clients, shell-owned credentials, sanitization boundary
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-08-15
 
 ## Context and problem statement

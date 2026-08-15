@@ -10,6 +10,14 @@ import { invoke, Channel } from '@tauri-apps/api/core';
 const CR = 0x0d;
 const LF = 0x0a;
 
+/**
+ * Ceiling on a frame's declared Content-Length (ADR-0022). Must match the
+ * sidecar reader's (`FrameCeilingStream.DefaultMaxFrameBytes`) — lockstep
+ * pair; change both together. A breach kills the reader rather than
+ * allocating whatever the header claims.
+ */
+const MAX_FRAME_BYTES = 4 * 1024 * 1024;
+
 function parseContentLength(headers: string): number {
   for (const line of headers.split('\r\n')) {
     const match = /^Content-Length:\s*(\d+)$/i.exec(line);
@@ -21,6 +29,10 @@ function parseContentLength(headers: string): number {
 export class TauriMessageReader extends AbstractMessageReader {
   private callback: DataCallback | undefined;
   private buffer = new Uint8Array(0);
+  // Set on a frame-ceiling breach: the stream is unrecoverable at that point
+  // (we cannot skip a frame we refuse to buffer), so all further input is
+  // dropped — connection-fatal, no resync heuristics (ADR-0002/0022).
+  private dead = false;
   // Messages parsed before listen() registers its callback are queued
   // here and flushed in listen(). Without this, any pty/output
   // notification (or response) that arrives between `await
@@ -55,6 +67,7 @@ export class TauriMessageReader extends AbstractMessageReader {
   }
 
   private feed(data: Uint8Array): void {
+    if (this.dead) return;
     const merged = new Uint8Array(this.buffer.length + data.length);
     merged.set(this.buffer);
     merged.set(data, this.buffer.length);
@@ -73,6 +86,15 @@ export class TauriMessageReader extends AbstractMessageReader {
         contentLength = parseContentLength(headerText);
       } catch (err) {
         this.fireError(err as Error);
+        return;
+      }
+
+      if (contentLength > MAX_FRAME_BYTES) {
+        this.dead = true;
+        this.buffer = new Uint8Array(0);
+        this.fireError(
+          new Error(`rpc frame declared Content-Length ${contentLength} exceeds the ${MAX_FRAME_BYTES}-byte ceiling (ADR-0022)`),
+        );
         return;
       }
 
