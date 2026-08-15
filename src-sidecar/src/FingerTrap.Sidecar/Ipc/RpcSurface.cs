@@ -75,6 +75,14 @@ internal sealed class RpcSurface : IDisposable
         return Task.CompletedTask;
     }
 
+    [JsonRpcMethod("pty/kill")]
+    public Task PtyKillAsync(PtyKillRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        _pty.Close(request.SessionId);
+        return Task.CompletedTask;
+    }
+
     private void OnPtyOutput(object? sender, PtyOutputEventArgs e)
     {
         var rpc = _rpc;

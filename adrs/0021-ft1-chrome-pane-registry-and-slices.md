@@ -1,6 +1,6 @@
 # 0021 — FT-1 chrome: UI pane registry, tab bar, and slice sequencing
 
-- Status: Proposed
+- Status: Accepted
 - Date: 2026-08-15
 
 ## Context and problem statement

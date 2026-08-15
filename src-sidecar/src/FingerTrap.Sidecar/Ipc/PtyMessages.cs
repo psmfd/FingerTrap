@@ -86,6 +86,14 @@ public sealed record PtyWriteRequest(string SessionId, string DataBase64);
 
 public sealed record PtyResizeRequest(string SessionId, int Cols, int Rows);
 
+/// <summary>
+/// Ends a session's process and releases its PTY (FT-1, ADR-0021).
+/// Idempotent: killing a session that already exited — or never existed — is
+/// success, because the caller's intent ("this session must not be running")
+/// already holds. The close-tab path must not race the process's own exit.
+/// </summary>
+public sealed record PtyKillRequest(string SessionId);
+
 public sealed record PtyOutputNotification(string SessionId, string DataBase64);
 
 public sealed record PtyExitNotification(string SessionId, int ExitCode);

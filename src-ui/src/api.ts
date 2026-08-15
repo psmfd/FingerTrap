@@ -70,6 +70,15 @@ export interface PtyResizeRequest {
   rows: number;
 }
 
+/**
+ * Ends a session's process and releases its PTY (ADR-0021). Idempotent: a
+ * session that already exited — or never existed — is success, so the
+ * close-tab path never races the process's own exit.
+ */
+export interface PtyKillRequest {
+  sessionId: string;
+}
+
 export interface PtyOutputNotification {
   sessionId: string;
   dataBase64: string;
@@ -83,6 +92,7 @@ export interface PtyExitNotification {
 const PtySpawnMethod = new RequestType1<PtySpawnRequest, PtySpawnResult, void>('pty/spawn');
 const PtyWriteMethod = new RequestType1<PtyWriteRequest, void, void>('pty/write');
 const PtyResizeMethod = new RequestType1<PtyResizeRequest, void, void>('pty/resize');
+const PtyKillMethod = new RequestType1<PtyKillRequest, void, void>('pty/kill');
 const PtyOutputNotif = new NotificationType1<PtyOutputNotification>('pty/output');
 const PtyExitNotif = new NotificationType1<PtyExitNotification>('pty/exit');
 
@@ -96,6 +106,10 @@ export async function ptyWrite(request: PtyWriteRequest): Promise<void> {
 
 export async function ptyResize(request: PtyResizeRequest): Promise<void> {
   await require_().sendRequest(PtyResizeMethod, request);
+}
+
+export async function ptyKill(request: PtyKillRequest): Promise<void> {
+  await require_().sendRequest(PtyKillMethod, request);
 }
 
 export function onPtyOutput(handler: (n: PtyOutputNotification) => void): Disposable {
