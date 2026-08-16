@@ -2,10 +2,27 @@
 # not depend on this file; this adds proactive version PRs so dependencies do
 # not silently age between advisories (the 2026-05→08 dormancy left the
 # MessagePack advisories blocking every build — #48).
+#
+# Every entry pins target-branch to dev: without it Dependabot targets the
+# repo default branch (main), where enforce-gitflow rejects any PR not coming
+# from dev — all nine PRs of the 2026-08-16 weekly run failed the gate that
+# way (#97). commit-message is likewise explicit so PR titles satisfy
+# lint-pr-title by configuration, not by Dependabot's convention
+# auto-detection.
+#
+# Residual gap, accepted: GitHub SECURITY updates always target the default
+# branch regardless of target-branch, so a security PR arrives against main
+# and fails enforce-gitflow. Retarget it to dev by hand (`gh pr edit <n>
+# --base dev`) — dev and main are content-level except mid-release, so the
+# retarget is clean.
 version: 2
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "dev"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
     schedule:
       interval: "weekly"
     groups:
@@ -15,6 +32,10 @@ updates:
   - package-ecosystem: "nuget"
     directories:
       - "/src-sidecar/**"
+    target-branch: "dev"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
     schedule:
       interval: "weekly"
     groups:
@@ -23,6 +44,10 @@ updates:
 
   - package-ecosystem: "npm"
     directory: "/src-ui"
+    target-branch: "dev"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
     schedule:
       interval: "weekly"
     groups:
@@ -31,6 +56,10 @@ updates:
 
   - package-ecosystem: "cargo"
     directory: "/src-tauri"
+    target-branch: "dev"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
     schedule:
       interval: "weekly"
     groups:
