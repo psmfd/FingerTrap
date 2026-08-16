@@ -1,5 +1,6 @@
 import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
+import { WebglAddon } from '@xterm/addon-webgl';
 import * as api from './api';
 
 /**
@@ -113,6 +114,22 @@ export class PaneRegistry {
     const fit = new FitAddon();
     term.loadAddon(fit);
     term.open(container);
+
+    // The DOM renderer (xterm's default) leaves stale rows on screen after
+    // full-screen erases (#78) — our display:none pane toggling stresses its
+    // known repaint gaps. Prefer the WebGL renderer; on context loss or
+    // WebGL-less environments fall back to the DOM renderer by disposing the
+    // addon rather than freezing the pane. Addon lifetime is owned by the
+    // terminal: term.dispose() disposes loaded addons.
+    try {
+      const webgl = new WebglAddon();
+      webgl.onContextLoss(() => {
+        webgl.dispose();
+      });
+      term.loadAddon(webgl);
+    } catch {
+      // WebGL unavailable — the DOM renderer stays in effect.
+    }
 
     const pane: Pane = {
       sessionId,
