@@ -81,12 +81,8 @@ export class StatusPanel {
       section.appendChild(this.renderTokenEntry(p.provider));
     }
 
-    if (p.runs.length > 0) {
-      section.appendChild(this.renderList('CI runs', p.runs.map((r) => ({
-        text: `${glyph(r.outcome)} ${r.workflowName} — ${r.displayTitle} (${r.headBranch})`,
-        url: r.url,
-      }))));
-    }
+    // List order is an operator-facing choice (#85): the actionable work
+    // items first (PRs, then issues), pipeline state last.
     if (p.pullRequests.length > 0) {
       section.appendChild(this.renderList('Pull requests', p.pullRequests.map((pr) => ({
         text: `#${pr.number} ${pr.isDraft ? '[draft] ' : ''}${pr.title} — ${pr.author}`,
@@ -97,6 +93,12 @@ export class StatusPanel {
       section.appendChild(this.renderList('Issues', p.issues.map((i) => ({
         text: `#${i.number} ${i.title} — ${i.author}`,
         url: i.url,
+      }))));
+    }
+    if (p.runs.length > 0) {
+      section.appendChild(this.renderList('CI runs', p.runs.map((r) => ({
+        text: `${glyph(r.outcome)} ${r.workflowName} — ${r.displayTitle} (${r.headBranch})`,
+        url: r.url,
       }))));
     }
     return section;
