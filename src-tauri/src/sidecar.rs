@@ -10,6 +10,19 @@ pub struct SidecarState {
     output_channel: Mutex<Option<Channel<Vec<u8>>>>,
 }
 
+impl SidecarState {
+    /// Write raw bytes into the sidecar's stdin. Callers own framing; this
+    /// deliberately never logs the payload (credentials/set frames carry
+    /// secrets — ADR-0022).
+    pub fn write(&self, payload: &[u8]) -> Result<(), String> {
+        let mut guard = self.child.lock().unwrap();
+        match guard.as_mut() {
+            Some(child) => child.write(payload).map_err(|e| e.to_string()),
+            None => Err("sidecar is not running".into()),
+        }
+    }
+}
+
 pub fn spawn(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let app_handle = app.handle().clone();
     // set_raw_out: deliver stdout as raw bytes. The default reader splits on
@@ -24,6 +37,10 @@ pub fn spawn(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
 
     let state: State<SidecarState> = app_handle.state();
     *state.child.lock().unwrap() = Some(child);
+
+    // The sidecar holds tokens in memory only; every (re)spawn starts empty
+    // until the shell re-pushes what the keychain holds (ADR-0022).
+    crate::credentials::preload_into_sidecar(&state);
 
     tauri::async_runtime::spawn(async move {
         while let Some(event) = rx.recv().await {
@@ -55,11 +72,7 @@ pub fn spawn(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
 
 #[tauri::command]
 pub fn sidecar_write(state: State<'_, SidecarState>, payload: Vec<u8>) -> Result<(), String> {
-    let mut guard = state.child.lock().unwrap();
-    match guard.as_mut() {
-        Some(child) => child.write(&payload).map_err(|e| e.to_string()),
-        None => Err("sidecar is not running".into()),
-    }
+    state.write(&payload)
 }
 
 #[tauri::command]

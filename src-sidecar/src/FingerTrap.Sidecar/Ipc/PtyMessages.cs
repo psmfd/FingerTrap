@@ -86,6 +86,31 @@ public sealed record PtyWriteRequest(string SessionId, string DataBase64);
 
 public sealed record PtyResizeRequest(string SessionId, int Cols, int Rows);
 
+/// <summary>
+/// Ends a session's process and releases its PTY (FT-1, ADR-0021).
+/// Idempotent: killing a session that already exited — or never existed — is
+/// success, because the caller's intent ("this session must not be running")
+/// already holds. The close-tab path must not race the process's own exit.
+/// </summary>
+public sealed record PtyKillRequest(string SessionId);
+
+/// <summary>
+/// Shell-originated (ADR-0022): written by the Rust shell into the sidecar's
+/// stdin — deliberately a notification, because sidecar stdout is relayed
+/// wholesale to the WebView and a notification has no response frame, so no
+/// secret-bearing frame ever travels toward the WebView. Has no `api.ts`
+/// counterpart by design. A null/empty <paramref name="Token"/> clears the
+/// provider. Never log this record.
+/// </summary>
+public sealed record CredentialsSetNotification(string Provider, string? Token);
+
+/// <summary>
+/// Full-state snapshot of every provider (ADR-0022): snapshot-replace, so a
+/// dropped notification costs nothing — the next one supersedes it.
+/// </summary>
+public sealed record StatusSnapshotNotification(
+    IReadOnlyList<FingerTrap.Sidecar.Abstractions.ProviderSnapshot> Providers);
+
 public sealed record PtyOutputNotification(string SessionId, string DataBase64);
 
 public sealed record PtyExitNotification(string SessionId, int ExitCode);

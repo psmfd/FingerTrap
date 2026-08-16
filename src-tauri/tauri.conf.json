@@ -6,8 +6,14 @@
   "build": {
     "frontendDist": "../src-ui/dist",
     "devUrl": "http://localhost:1420",
-    "beforeDevCommand": "pnpm --dir src-ui dev",
-    "beforeBuildCommand": "pnpm --dir src-ui build",
+    "beforeDevCommand": {
+      "script": "pnpm dev",
+      "cwd": "../src-ui"
+    },
+    "beforeBuildCommand": {
+      "script": "pnpm build",
+      "cwd": "../src-ui"
+    },
     "beforeBundleCommand": {
       "script": "bash scripts/stage-native-lib.sh",
       "cwd": ".."
@@ -25,7 +31,7 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'self' ipc: http://ipc.localhost; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'"
     }
   },
   "bundle": {

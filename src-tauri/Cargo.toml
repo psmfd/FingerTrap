@@ -16,8 +16,15 @@ tauri-build = { version = "2", features = [] }
 [dependencies]
 tauri = { version = "2", features = [] }
 tauri-plugin-shell = "2"
+# Rust-API use only — its JS permissions are deliberately never granted in
+# capabilities/; the WebView reaches it solely via links::open_url (ADR-0023).
+tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+# v1 feature: auto-selected platform store (Keychain / Credential Manager /
+# Secret Service) with no store-registration ceremony (ADR-0022).
+keyring = { version = "4", features = ["v1"] }
+zeroize = "1"
 
 [profile.release]
 panic = "abort"

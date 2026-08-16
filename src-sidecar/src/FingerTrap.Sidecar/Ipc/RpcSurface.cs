@@ -1,5 +1,6 @@
 using FingerTrap.Sidecar.Abstractions;
 using FingerTrap.Sidecar.Settings;
+using FingerTrap.Sidecar.Status;
 using StreamJsonRpc;
 
 namespace FingerTrap.Sidecar.Ipc;
@@ -8,6 +9,7 @@ internal sealed class RpcSurface : IDisposable
 {
     private readonly IPtyService _pty;
     private readonly PaneSettings? _paneSettings;
+    private readonly CredentialCache _credentials;
     private JsonRpc? _rpc;
     private bool _eventsBound;
 
@@ -15,11 +17,23 @@ internal sealed class RpcSurface : IDisposable
     /// Persisted pane configuration (N-1, #52), or null to rely on the
     /// environment and the host default alone.
     /// </param>
-    public RpcSurface(IPtyService pty, PaneSettings? paneSettings = null)
+    /// <param name="credentials">
+    /// Receives shell-delivered provider tokens (ADR-0022); a fresh empty
+    /// cache when omitted (tests).
+    /// </param>
+    public RpcSurface(
+        IPtyService pty,
+        PaneSettings? paneSettings = null,
+        CredentialCache? credentials = null,
+        StatusService? status = null)
     {
         _pty = pty;
         _paneSettings = paneSettings;
+        _credentials = credentials ?? new CredentialCache();
+        _status = status;
     }
+
+    private readonly StatusService? _status;
 
     public void AttachRpc(JsonRpc rpc)
     {
@@ -31,6 +45,11 @@ internal sealed class RpcSurface : IDisposable
 
         _pty.Output += OnPtyOutput;
         _pty.Exited += OnPtyExit;
+        if (_status is not null)
+        {
+            _status.SnapshotReady += OnStatusSnapshot;
+        }
+
         _eventsBound = true;
     }
 
@@ -40,6 +59,11 @@ internal sealed class RpcSurface : IDisposable
         {
             _pty.Output -= OnPtyOutput;
             _pty.Exited -= OnPtyExit;
+            if (_status is not null)
+            {
+                _status.SnapshotReady -= OnStatusSnapshot;
+            }
+
             _eventsBound = false;
         }
     }
@@ -73,6 +97,52 @@ internal sealed class RpcSurface : IDisposable
         ArgumentNullException.ThrowIfNull(request);
         _pty.Resize(request.SessionId, request.Cols, request.Rows);
         return Task.CompletedTask;
+    }
+
+    [JsonRpcMethod("pty/kill")]
+    public Task PtyKillAsync(PtyKillRequest request)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        _pty.Close(request.SessionId);
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Shell-originated notification (ADR-0022) — void on purpose: no
+    /// response frame may exist, since stdout is relayed to the WebView.
+    /// Also deliberately outside check.sh's rpc-pairing count, which counts
+    /// Task-returning methods; see the note there.
+    /// </summary>
+    [JsonRpcMethod("credentials/set")]
+    public void CredentialsSet(CredentialsSetNotification notification)
+    {
+        ArgumentNullException.ThrowIfNull(notification);
+        // Never log any part of this notification — the token is a secret
+        // and the provider name adjacent to a failure is a correlation gift.
+        _credentials.Set(notification.Provider, notification.Token);
+        // A fresh token should be visible without waiting a poll interval.
+        _status?.RefreshNow();
+    }
+
+    [JsonRpcMethod("status/refresh")]
+    public Task StatusRefreshAsync()
+    {
+        // Fire-and-forget by contract: the answer is the next
+        // status/snapshot notification (snapshot-replace, ADR-0022).
+        _status?.RefreshNow();
+        return Task.CompletedTask;
+    }
+
+    private void OnStatusSnapshot(object? sender, IReadOnlyList<ProviderSnapshot> snapshots)
+    {
+        var rpc = _rpc;
+        if (rpc is null)
+        {
+            return;
+        }
+
+        var payload = new StatusSnapshotNotification(snapshots);
+        _ = rpc.NotifyAsync("status/snapshot", payload);
     }
 
     private void OnPtyOutput(object? sender, PtyOutputEventArgs e)

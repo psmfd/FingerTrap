@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="Nerdbank.MessagePack" />
+    <PackageReference Include="Octokit" />
     <PackageReference Include="StreamJsonRpc" />
   </ItemGroup>
 

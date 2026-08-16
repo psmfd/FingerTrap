@@ -15,6 +15,11 @@ namespace FingerTrap.Sidecar.Tests;
 /// xunit runs tests within a class sequentially, which is why they live in one
 /// class rather than being split by concern.
 /// </remarks>
+// Serialized with every other env-mutating test class: xUnit v3 runs test
+// classes in parallel, and two classes scoping the same process-wide
+// environment variable race each other — the local 1-in-3 false red and,
+// in all likelihood, CI flake #60. Same collection name = no parallelism.
+[Collection("process-environment")]
 public sealed class PaneKindTests
 {
     // Concrete return type, not IDisposable: CA1859 is an error in this repo.
@@ -233,5 +238,22 @@ public sealed class PaneKindTests
     public void ResolveExecutable_PiKind_RoutesToPiResolution()
     {
         Assert.Equal("/opt/custom/pi", PtyService.ResolveExecutable(PaneKind.Pi, "/opt/custom/pi"));
+    }
+
+    // --- PtyService.ResolveCommandLine -----------------------------------
+
+    [Fact]
+    public void ResolveCommandLine_ShellKind_IsLoginShell()
+    {
+        // A launchd-started app has the bare system PATH; only a login shell
+        // re-reads ~/.zprofile where PATH additions live (#77).
+        var arg = Assert.Single(PtyService.ResolveCommandLine(PaneKind.Shell));
+        Assert.Equal("-l", arg);
+    }
+
+    [Fact]
+    public void ResolveCommandLine_PiKind_TakesNoArguments()
+    {
+        Assert.Empty(PtyService.ResolveCommandLine(PaneKind.Pi));
     }
 }

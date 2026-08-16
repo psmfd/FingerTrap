@@ -9,6 +9,11 @@ namespace FingerTrap.Sidecar.Tests;
 /// <summary>
 /// Settings loading and the settings-over-environment precedence (N-1, #52).
 /// </summary>
+// Serialized with every other env-mutating test class: xUnit v3 runs test
+// classes in parallel, and two classes scoping the same process-wide
+// environment variable race each other — the local 1-in-3 false red and,
+// in all likelihood, CI flake #60. Same collection name = no parallelism.
+[Collection("process-environment")]
 public sealed class SettingsTests
 {
     // Concrete return type, not IDisposable: CA1859 is an error in this repo.
@@ -58,6 +63,23 @@ public sealed class SettingsTests
 
         Assert.Equal("/opt/pi", s.Pi?.Path);
         Assert.Equal("shell", s.Pane?.DefaultKind);
+    }
+
+    [Fact]
+    public void Parse_StatusSection_ReadsAllThreeProviderBlocks()
+    {
+        var s = SettingsLoader.Parse("""
+            {"version": 1, "status": {
+              "github": {"repo": "o/n"},
+              "ado": {"organization": "org", "project": "proj"},
+              "git": {"path": "/repos/x"}
+            }}
+            """);
+
+        Assert.Equal("o/n", s.Status?.Github?.Repo);
+        Assert.Equal("org", s.Status?.Ado?.Organization);
+        Assert.Equal("proj", s.Status?.Ado?.Project);
+        Assert.Equal("/repos/x", s.Status?.Git?.Path);
     }
 
     [Fact]

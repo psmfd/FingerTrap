@@ -2,6 +2,7 @@ using FingerTrap.Sidecar.Abstractions;
 using FingerTrap.Sidecar.Ipc;
 using FingerTrap.Sidecar.Pty;
 using FingerTrap.Sidecar.Settings;
+using FingerTrap.Sidecar.Status;
 using Nerdbank.Streams;
 using Newtonsoft.Json.Serialization;
 using StreamJsonRpc;
@@ -10,8 +11,13 @@ using StreamJsonRpc;
 // the stream. All status output goes to stderr (ADR-0002).
 Console.Error.WriteLine("fingertrap-sidecar: starting");
 
+// Inbound frames pass a Content-Length ceiling before StreamJsonRpc sees
+// them (ADR-0022): the declared length is attacker-influenceable once
+// provider payloads share the channel, and nothing in the RPC stack bounds
+// it. A breach is connection-fatal (IOException), same posture as any other
+// framing corruption.
 var stdio = FullDuplexStream.Splice(
-    Console.OpenStandardInput(),
+    new FrameCeilingStream(Console.OpenStandardInput()),
     Console.OpenStandardOutput());
 
 var formatter = new JsonMessageFormatter();
@@ -38,7 +44,15 @@ catch (SettingsException ex)
 // Single platform-agnostic PtyService backed by Porta.Pty (ADR-0008);
 // platform branching now lives inside the vendored library.
 await using var pty = new PtyService(settings.Pi);
-using var surface = new RpcSurface(pty, settings.Pane);
+// Provider tokens live only here, delivered by the shell over stdin
+// (credentials/set, ADR-0022); status providers read them per-request.
+var credentials = new CredentialCache();
+await using var status = new StatusService([
+    new GitHubStatusProvider(credentials, settings.Status?.Github),
+    new AdoStatusProvider(credentials, settings.Status?.Ado),
+    new LocalGitStatusProvider(settings.Status?.Git),
+]);
+using var surface = new RpcSurface(pty, settings.Pane, credentials, status);
 
 var rpc = new JsonRpc(handler);
 rpc.AddLocalRpcTarget(surface, new JsonRpcTargetOptions
@@ -53,6 +67,7 @@ rpc.AddLocalRpcTarget(surface, new JsonRpcTargetOptions
 });
 surface.AttachRpc(rpc);
 rpc.StartListening();
+status.Start();
 
 Console.Error.WriteLine("fingertrap-sidecar: listening on stdio");
 await rpc.Completion;

@@ -41,6 +41,9 @@ internal sealed record FingerTrapSettings
     [JsonPropertyName("pane")]
     public PaneSettings? Pane { get; init; }
 
+    [JsonPropertyName("status")]
+    public StatusSettings? Status { get; init; }
+
     /// <summary>Everything unset — the behaviour of an absent settings file.</summary>
     internal static FingerTrapSettings Defaults { get; } = new() { Version = SettingsLoader.SupportedVersion };
 }
@@ -51,6 +54,49 @@ internal sealed record PiSettings
     /// Explicit pi executable path. Outranks <c>$FINGERTRAP_PI</c> and the
     /// <c>PATH</c> search; outranked by a path named in the spawn request.
     /// </summary>
+    [JsonPropertyName("path")]
+    public string? Path { get; init; }
+}
+
+/// <summary>
+/// Status-provider configuration (FT-1 slice 2, ADR-0022). Additive within
+/// schema v1: unknown keys are tolerated, version is the compatibility gate.
+/// Credentials do NOT live here — they are keychain-held by the shell.
+/// </summary>
+internal sealed record StatusSettings
+{
+    [JsonPropertyName("github")]
+    public GitHubStatusSettings? Github { get; init; }
+
+    [JsonPropertyName("ado")]
+    public AdoStatusSettings? Ado { get; init; }
+
+    [JsonPropertyName("git")]
+    public LocalGitStatusSettings? Git { get; init; }
+}
+
+internal sealed record GitHubStatusSettings
+{
+    /// <summary>Repository to watch, as <c>"owner/name"</c>.</summary>
+    [JsonPropertyName("repo")]
+    public string? Repo { get; init; }
+}
+
+internal sealed record AdoStatusSettings
+{
+    /// <summary>Organization name — the <c>{org}</c> in
+    /// <c>https://dev.azure.com/{org}</c>, not a URL.</summary>
+    [JsonPropertyName("organization")]
+    public string? Organization { get; init; }
+
+    /// <summary>Project name or id within the organization.</summary>
+    [JsonPropertyName("project")]
+    public string? Project { get; init; }
+}
+
+internal sealed record LocalGitStatusSettings
+{
+    /// <summary>Absolute path of the working tree to watch.</summary>
     [JsonPropertyName("path")]
     public string? Path { get; init; }
 }

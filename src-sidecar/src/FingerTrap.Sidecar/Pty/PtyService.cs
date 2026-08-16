@@ -44,7 +44,7 @@ internal sealed class PtyService : IPtyService
         var ptyOptions = new global::Porta.Pty.PtyOptions
         {
             App = shellPath,
-            CommandLine = Array.Empty<string>(),
+            CommandLine = ResolveCommandLine(options.Kind),
             Cwd = ResolveCwd(options.Cwd),
             Cols = Math.Max(1, options.Cols),
             Rows = Math.Max(1, options.Rows),
@@ -64,10 +64,12 @@ internal sealed class PtyService : IPtyService
 
         connection.ProcessExited += (_, e) =>
         {
-            if (_sessions.TryRemove(sessionId, out var removed))
-            {
-                removed.Dispose();
-            }
+            // The session may already be out of the map (Close() removes it
+            // before the process dies); dispose the captured session either
+            // way — Dispose is idempotent — so a killed session's timer, CTS
+            // and streams are still released.
+            _sessions.TryRemove(sessionId, out Session? _);
+            session.Dispose();
 
             Exited?.Invoke(this, new PtyExitEventArgs
             {
@@ -102,9 +104,24 @@ internal sealed class PtyService : IPtyService
 
     public void Close(string sessionId)
     {
+        // Kill, don't Dispose. Dispose tears the read loop down FIRST, and a
+        // PTY child dying with nothing draining the master can wedge
+        // uninterruptibly in terminal teardown on macOS — SIGKILL pending,
+        // waitpid never returning, no exit event (found by the FT-1 stdio
+        // probe; the process sat in `ps` state `?Es` indefinitely). Killing
+        // while the reader still drains lets the process actually exit; the
+        // ProcessExited handler then disposes the session and raises Exited,
+        // so a kill produces the same pty/exit notification as a self-exit.
         if (_sessions.TryRemove(sessionId, out var session))
         {
-            session.Dispose();
+            try
+            {
+                session.Connection.Kill();
+            }
+            catch
+            {
+                // Already exited — the ProcessExited handler owns cleanup.
+            }
         }
     }
 
@@ -145,6 +162,24 @@ internal sealed class PtyService : IPtyService
         PaneKind.Pi => ResolvePi(requested, settings),
         PaneKind.Shell => ResolveShell(requested),
         _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, "unknown pane kind"),
+    };
+
+    /// <summary>
+    /// Arguments for the resolved executable, by pane kind.
+    /// </summary>
+    /// <remarks>
+    /// Shell panes get <c>-l</c> (login shell — zsh, bash, sh, and fish all
+    /// accept it), the convention Terminal.app, iTerm2, and VS Code follow.
+    /// A launchd-started app inherits the bare system <c>PATH</c>, and only a
+    /// login shell re-reads the profile files (<c>~/.zprofile</c> on macOS)
+    /// where users put <c>PATH</c> additions — a non-login pane shell leaves
+    /// user-installed tools unreachable (#77). pi panes are spawned by
+    /// resolved absolute path and take no arguments.
+    /// </remarks>
+    internal static string[] ResolveCommandLine(PaneKind kind) => kind switch
+    {
+        PaneKind.Shell => new[] { "-l" },
+        _ => Array.Empty<string>(),
     };
 
     /// <summary>
