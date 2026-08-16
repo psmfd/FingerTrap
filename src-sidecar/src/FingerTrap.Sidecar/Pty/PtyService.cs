@@ -44,7 +44,7 @@ internal sealed class PtyService : IPtyService
         var ptyOptions = new global::Porta.Pty.PtyOptions
         {
             App = shellPath,
-            CommandLine = Array.Empty<string>(),
+            CommandLine = ResolveCommandLine(options.Kind),
             Cwd = ResolveCwd(options.Cwd),
             Cols = Math.Max(1, options.Cols),
             Rows = Math.Max(1, options.Rows),
@@ -162,6 +162,24 @@ internal sealed class PtyService : IPtyService
         PaneKind.Pi => ResolvePi(requested, settings),
         PaneKind.Shell => ResolveShell(requested),
         _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, "unknown pane kind"),
+    };
+
+    /// <summary>
+    /// Arguments for the resolved executable, by pane kind.
+    /// </summary>
+    /// <remarks>
+    /// Shell panes get <c>-l</c> (login shell — zsh, bash, sh, and fish all
+    /// accept it), the convention Terminal.app, iTerm2, and VS Code follow.
+    /// A launchd-started app inherits the bare system <c>PATH</c>, and only a
+    /// login shell re-reads the profile files (<c>~/.zprofile</c> on macOS)
+    /// where users put <c>PATH</c> additions — a non-login pane shell leaves
+    /// user-installed tools unreachable (#77). pi panes are spawned by
+    /// resolved absolute path and take no arguments.
+    /// </remarks>
+    internal static string[] ResolveCommandLine(PaneKind kind) => kind switch
+    {
+        PaneKind.Shell => new[] { "-l" },
+        _ => Array.Empty<string>(),
     };
 
     /// <summary>
