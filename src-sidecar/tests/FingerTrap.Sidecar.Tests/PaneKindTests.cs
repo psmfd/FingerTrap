@@ -239,4 +239,21 @@ public sealed class PaneKindTests
     {
         Assert.Equal("/opt/custom/pi", PtyService.ResolveExecutable(PaneKind.Pi, "/opt/custom/pi"));
     }
+
+    // --- PtyService.ResolveCommandLine -----------------------------------
+
+    [Fact]
+    public void ResolveCommandLine_ShellKind_IsLoginShell()
+    {
+        // A launchd-started app has the bare system PATH; only a login shell
+        // re-reads ~/.zprofile where PATH additions live (#77).
+        var arg = Assert.Single(PtyService.ResolveCommandLine(PaneKind.Shell));
+        Assert.Equal("-l", arg);
+    }
+
+    [Fact]
+    public void ResolveCommandLine_PiKind_TakesNoArguments()
+    {
+        Assert.Empty(PtyService.ResolveCommandLine(PaneKind.Pi));
+    }
 }
