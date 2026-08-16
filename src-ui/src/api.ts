@@ -103,6 +103,8 @@ export interface IssueRow {
   author: string;
   state: string;
   updatedAt: string;
+  /** Present only when the sidecar validated it (ADR-0023); null renders unlinked. */
+  url?: string | null;
 }
 
 export interface PrRow {
@@ -114,6 +116,8 @@ export interface PrRow {
   isDraft: boolean;
   headBranch: string;
   updatedAt: string;
+  /** Present only when the sidecar validated it (ADR-0023); null renders unlinked. */
+  url?: string | null;
 }
 
 export interface RunRow {
@@ -126,6 +130,8 @@ export interface RunRow {
   outcome: string;
   headBranch: string;
   createdAt: string;
+  /** Present only when the sidecar validated it (ADR-0023); null renders unlinked. */
+  url?: string | null;
 }
 
 export interface ProviderSnapshot {

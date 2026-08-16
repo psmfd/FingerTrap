@@ -83,6 +83,7 @@ public sealed class AdoStatusProviderTests
         Assert.Equal("fix[2J the thing", snapshot.Issues[0].Title);
         Assert.Equal("Ada", snapshot.Issues[0].Author);
         Assert.Equal("Active", snapshot.Issues[0].State);
+        Assert.Equal("https://dev.azure.com/org/proj/_workitems/edit/7", snapshot.Issues[0].Url);
         Assert.Empty(snapshot.PullRequests);
         Assert.Empty(snapshot.Runs);
     }

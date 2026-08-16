@@ -89,6 +89,40 @@ public sealed class RunOutcomesTests
     }
 }
 
+public sealed class StatusUrlsTests
+{
+    [Theory]
+    [InlineData("https://github.com/psmfd/FingerTrap/actions/runs/1")]
+    [InlineData("https://GITHUB.com/psmfd/FingerTrap/pull/73")]
+    public void AllowsHttpsOnAllowlistedHost(string url)
+    {
+        Assert.NotNull(StatusUrls.Validate(url, "github.com"));
+    }
+
+    [Theory]
+    [InlineData("http://github.com/psmfd")]
+    [InlineData("https://evil.example/github.com")]
+    [InlineData("https://github.com.evil.example/x")]
+    [InlineData("https://user@github.com/x")]
+    [InlineData("https://github.com@evil.example/x")]
+    [InlineData("file:///etc/passwd")]
+    [InlineData("javascript:alert(1)")]
+    [InlineData("not a url")]
+    [InlineData("")]
+    [InlineData(null)]
+    public void RejectsEverythingElse(string? url)
+    {
+        Assert.Null(StatusUrls.Validate(url, "github.com"));
+    }
+
+    [Fact]
+    public void HostMatchIsExactPerAllowlistEntry()
+    {
+        Assert.NotNull(StatusUrls.Validate("https://dev.azure.com/org/proj", "dev.azure.com"));
+        Assert.Null(StatusUrls.Validate("https://dev.azure.com/org/proj", "github.com"));
+    }
+}
+
 public sealed class GitHubStatusProviderTests
 {
     [Fact]
