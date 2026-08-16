@@ -21,8 +21,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       vscode-jsonrpc:
-        specifier: ^8.2.1
-        version: 8.2.1
+        specifier: ^9.0.1
+        version: 9.0.1
     devDependencies:
       '@eslint/js':
         specifier: ^9.20.0
@@ -784,8 +784,8 @@ packages:
       yaml:
         optional: true
 
-  vscode-jsonrpc@8.2.1:
-    resolution: {integrity: sha512-kdjOSJ2lLIn7r1rtrMbbNCHjyMPfRnowdKjBQ+mGq6NAW5QY2bEZC/khaC5OR8svbbjvLEaIXkOq45e2X9BIbQ==}
+  vscode-jsonrpc@9.0.1:
+    resolution: {integrity: sha512-rfuA6T75H6m5EkbhtEPzre9pT0HPcDI2MMy4+nPFIBks5J8JBAUHD4tRYSgaBOijIEC7SRkC1kKyXTLqbmh9jw==}
     engines: {node: '>=14.0.0'}
 
   which@2.0.2:
@@ -1451,7 +1451,7 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  vscode-jsonrpc@8.2.1: {}
+  vscode-jsonrpc@9.0.1: {}
 
   which@2.0.2:
     dependencies:
