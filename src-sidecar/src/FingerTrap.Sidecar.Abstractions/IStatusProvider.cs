@@ -56,7 +56,9 @@ public sealed record ProviderSnapshot(
 }
 
 /// <remarks>
-/// Row types are deliberately separate per surface — a shared shape with
+/// <c>Url</c> is present only when the provider validated it against the
+/// ADR-0023 policy (https, allowlisted host) at row construction; null
+/// renders as an unlinked row. Row types are deliberately separate per surface — a shared shape with
 /// optional run fields would let an issue row silently carry a run's
 /// conclusion (the exact drift repo-dash guards against). Keyed by the API
 /// <c>Id</c>, never a per-workflow ordinal.
@@ -67,7 +69,8 @@ public sealed record IssueRow(
     string Title,
     string Author,
     string State,
-    string UpdatedAt);
+    string UpdatedAt,
+    string? Url = null);
 
 public sealed record PrRow(
     long Id,
@@ -77,7 +80,8 @@ public sealed record PrRow(
     string State,
     bool IsDraft,
     string HeadBranch,
-    string UpdatedAt);
+    string UpdatedAt,
+    string? Url = null);
 
 /// <remarks>
 /// <c>Status</c> says whether the run finished; <c>Conclusion</c> says how
@@ -95,4 +99,5 @@ public sealed record RunRow(
     string? Conclusion,
     string Outcome,
     string HeadBranch,
-    string CreatedAt);
+    string CreatedAt,
+    string? Url = null);

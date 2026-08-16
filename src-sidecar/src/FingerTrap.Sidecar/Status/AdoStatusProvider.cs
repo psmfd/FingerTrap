@@ -114,7 +114,12 @@ internal sealed class AdoStatusProvider : IStatusProvider, IDisposable
 
             var batch = await ReadAsync(batchResponse, AdoJsonContext.Default.AdoWorkItemBatch, cancellationToken)
                 .ConfigureAwait(false);
-            var issues = (batch?.Value ?? []).Select(ToIssueRow).ToList();
+
+            // ADR-0023: the work-item URL is CONSTRUCTED from the already
+            // url-safe org/project, never taken from the response body.
+            var itemUrlBase =
+                $"https://dev.azure.com/{Uri.EscapeDataString(organization)}/{Uri.EscapeDataString(project)}/_workitems/edit/";
+            var issues = (batch?.Value ?? []).Select(w => ToIssueRow(w, itemUrlBase)).ToList();
             return new ProviderSnapshot(Name, ProviderStates.Ok, null, issues, [], []);
         }
         catch (JsonException)
@@ -212,7 +217,7 @@ internal sealed class AdoStatusProvider : IStatusProvider, IDisposable
     private static bool IsUrlSafeSegment(string value) =>
         value.All(c => char.IsAsciiLetterOrDigit(c) || c is '-' or '_' or '.' or ' ');
 
-    private IssueRow ToIssueRow(AdoWorkItem item)
+    private static IssueRow ToIssueRow(AdoWorkItem item, string itemUrlBase)
     {
         var fields = item.Fields;
         return new IssueRow(
@@ -221,7 +226,8 @@ internal sealed class AdoStatusProvider : IStatusProvider, IDisposable
             StatusText.Sanitize(FieldString(fields, "System.Title")),
             StatusText.Sanitize(IdentityDisplayName(fields, "System.CreatedBy"), 80),
             StatusText.Sanitize(FieldString(fields, "System.State"), 40),
-            StatusText.Sanitize(FieldString(fields, "System.ChangedDate"), 40));
+            StatusText.Sanitize(FieldString(fields, "System.ChangedDate"), 40),
+            StatusUrls.Validate(itemUrlBase + item.Id, "dev.azure.com"));
     }
 
     private static string FieldString(Dictionary<string, JsonElement>? fields, string key) =>

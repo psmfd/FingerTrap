@@ -130,7 +130,8 @@ internal sealed class GitHubStatusProvider : IStatusProvider
         StatusText.Sanitize(issue.Title),
         StatusText.Sanitize(issue.User?.Login, 80),
         issue.State.StringValue,
-        issue.UpdatedAt?.UtcDateTime.ToString("O") ?? string.Empty);
+        issue.UpdatedAt?.UtcDateTime.ToString("O") ?? string.Empty,
+        StatusUrls.Validate(issue.HtmlUrl, "github.com"));
 
     private static PrRow ToPrRow(PullRequest pr) => new(
         pr.Id,
@@ -140,7 +141,8 @@ internal sealed class GitHubStatusProvider : IStatusProvider
         pr.State.StringValue,
         pr.Draft,
         StatusText.Sanitize(pr.Head?.Ref, 120),
-        pr.UpdatedAt.UtcDateTime.ToString("O"));
+        pr.UpdatedAt.UtcDateTime.ToString("O"),
+        StatusUrls.Validate(pr.HtmlUrl, "github.com"));
 
     private static RunRow ToRunRow(WorkflowRun run) => new(
         run.Id,
@@ -151,5 +153,6 @@ internal sealed class GitHubStatusProvider : IStatusProvider
         run.Conclusion?.StringValue,
         RunOutcomes.Derive(run.Status.StringValue, run.Conclusion?.StringValue),
         StatusText.Sanitize(run.HeadBranch, 120),
-        run.CreatedAt.UtcDateTime.ToString("O"));
+        run.CreatedAt.UtcDateTime.ToString("O"),
+        StatusUrls.Validate(run.HtmlUrl, "github.com"));
 }

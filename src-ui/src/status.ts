@@ -19,6 +19,12 @@ import * as api from './api';
  */
 const TOKEN_PROVIDERS = new Set(['github', 'ado']);
 
+/** One rendered row: text always, url only when the sidecar validated it. */
+interface RowEntry {
+  text: string;
+  url?: string | null;
+}
+
 export class StatusPanel {
   private readonly root: HTMLElement;
   private snapshot: api.StatusSnapshotNotification | undefined;
@@ -76,26 +82,50 @@ export class StatusPanel {
     }
 
     if (p.runs.length > 0) {
-      section.appendChild(this.renderList('CI runs', p.runs.map((r) =>
-        `${glyph(r.outcome)} ${r.workflowName} — ${r.displayTitle} (${r.headBranch})`)));
+      section.appendChild(this.renderList('CI runs', p.runs.map((r) => ({
+        text: `${glyph(r.outcome)} ${r.workflowName} — ${r.displayTitle} (${r.headBranch})`,
+        url: r.url,
+      }))));
     }
     if (p.pullRequests.length > 0) {
-      section.appendChild(this.renderList('Pull requests', p.pullRequests.map((pr) =>
-        `#${pr.number} ${pr.isDraft ? '[draft] ' : ''}${pr.title} — ${pr.author}`)));
+      section.appendChild(this.renderList('Pull requests', p.pullRequests.map((pr) => ({
+        text: `#${pr.number} ${pr.isDraft ? '[draft] ' : ''}${pr.title} — ${pr.author}`,
+        url: pr.url,
+      }))));
     }
     if (p.issues.length > 0) {
-      section.appendChild(this.renderList('Issues', p.issues.map((i) =>
-        `#${i.number} ${i.title} — ${i.author}`)));
+      section.appendChild(this.renderList('Issues', p.issues.map((i) => ({
+        text: `#${i.number} ${i.title} — ${i.author}`,
+        url: i.url,
+      }))));
     }
     return section;
   }
 
-  private renderList(heading: string, lines: string[]): HTMLElement {
+  private renderList(heading: string, rows: RowEntry[]): HTMLElement {
     const wrap = el('div', 'status-list');
     wrap.appendChild(el('h3', 'status-list-title', heading));
     const ul = el('ul', 'status-rows');
-    for (const line of lines) {
-      ul.appendChild(el('li', 'status-row', line));
+    for (const row of rows) {
+      const li = el('li', 'status-row');
+      if (row.url) {
+        // Linked rows are buttons invoking the shell's validated open_url
+        // command (ADR-0023) — never <a href>: the WebView must not
+        // navigate, and the URL must pass the shell's second gate.
+        const url = row.url;
+        const button = el('button', 'status-row-link', row.text) as HTMLButtonElement;
+        button.type = 'button';
+        button.addEventListener('click', () => {
+          invoke('open_url', { url }).catch(() => {
+            // Shell refused (off-allowlist) or opener failed; nothing to
+            // render — the row simply stays put.
+          });
+        });
+        li.appendChild(button);
+      } else {
+        li.textContent = row.text;
+      }
+      ul.appendChild(li);
     }
     wrap.appendChild(ul);
     return wrap;

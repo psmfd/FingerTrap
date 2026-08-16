@@ -214,6 +214,28 @@ main {
   text-overflow: ellipsis;
 }
 
+.status-row-link {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.status-row-link:hover,
+.status-row-link:focus-visible {
+  color: #fff;
+  text-decoration: underline;
+}
+
 .status-empty {
   color: #777;
 }
