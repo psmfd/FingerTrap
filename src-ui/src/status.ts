@@ -116,9 +116,12 @@ export class StatusPanel {
         const button = el('button', 'status-row-link', row.text) as HTMLButtonElement;
         button.type = 'button';
         button.addEventListener('click', () => {
-          invoke('open_url', { url }).catch(() => {
-            // Shell refused (off-allowlist) or opener failed; nothing to
-            // render — the row simply stays put.
+          invoke('open_url', { url }).catch((err: unknown) => {
+            // Shell refused (off-allowlist), command missing (stale binary),
+            // or opener failed. The row deliberately stays visually put, but
+            // the cause must be one DevTools glance away — a swallowed
+            // rejection is indistinguishable from a dead click handler (#82).
+            console.warn('open_url failed', url, err);
           });
         });
         li.appendChild(button);
