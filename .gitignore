@@ -477,3 +477,7 @@ ehthumbs.db
 .env
 .env.*
 !.env.example
+
+# Local agent/tooling artifacts (never commit — swept into #109 by accident once)
+.cocoindex_code/
+CLAUDE.md
