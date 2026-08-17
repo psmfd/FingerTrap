@@ -27,7 +27,7 @@ individual item says otherwise.
 | M1 — Local PTY (Linux + macOS) | foundation | **complete** (v0.3.0) |
 | FT-0 — Revive + host | Home | **complete** ([#46](https://github.com/psmfd/FingerTrap/issues/46), PRs #47–#50, #53) |
 | FT-1 — Chrome | Home | **complete** ([#58](https://github.com/psmfd/FingerTrap/issues/58), ADR-0021; slices 1–3, follow-ups [#70](https://github.com/psmfd/FingerTrap/issues/70)/[#72](https://github.com/psmfd/FingerTrap/issues/72), and splits ([#118](https://github.com/psmfd/FingerTrap/issues/118), ADR-0024)) |
-| FT-2 — Structured control + observability | Home | not started |
+| FT-2 — Structured control + observability | Home | **in progress** ([#120](https://github.com/psmfd/FingerTrap/issues/120); gate satisfied by [rpc-contract.md](rpc-contract.md)) |
 | FT-3 — Tool host | Home | not started |
 | N-1 — Settings and persistence | Native | **in progress** ([#51](https://github.com/psmfd/FingerTrap/issues/51); settings foundation landed, ADR-0014) |
 | N-2 — Packaging | Native | partially standing (semantic-release wired) |
@@ -137,7 +137,10 @@ storage. FT-3's minted leases are the terminus.
 **Gate:** FT-1, **and** an RPC-contract study note — in `pi_config`'s `notes/`
 or this repo's `docs/` — enumerating the `pi --mode rpc` methods and events
 FT-2 consumes, verified against the pinned pi version, with gaps filed as
-issues.
+issues. **Satisfied:** FT-1 complete ([#58](https://github.com/psmfd/FingerTrap/issues/58));
+the study note is [rpc-contract.md](rpc-contract.md) (verified against
+`v0.84.1-psmfd.1`; gaps filed as psmfd/pi#54–#56 and psmfd/pi_config#1018).
+Tracked as [#120](https://github.com/psmfd/FingerTrap/issues/120).
 
 The sidecar drives `pi --mode rpc`: session list and resume, worktree-orphan
 surfacing, model and status readouts. Read-only observability dashboards over
