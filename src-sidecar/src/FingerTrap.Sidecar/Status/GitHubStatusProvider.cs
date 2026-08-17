@@ -2,6 +2,7 @@ using FingerTrap.Sidecar.Abstractions;
 using FingerTrap.Sidecar.Ipc;
 using FingerTrap.Sidecar.Settings;
 using Octokit;
+using Octokit.Internal;
 
 namespace FingerTrap.Sidecar.Status;
 
@@ -20,6 +21,10 @@ internal sealed class GitHubStatusProvider : IStatusProvider
     private readonly CredentialCache _credentials;
     private readonly GitHubStatusSettings? _settings;
     private readonly Func<string, IGitHubClient> _clientFactory;
+
+    /// <summary>Provider-lifetime: the client (and handler chain) is rebuilt
+    /// per fetch, so the conditional-request cache must live here (#70).</summary>
+    private readonly EtagStore _etags = new();
 
     public GitHubStatusProvider(
         CredentialCache credentials,
@@ -118,8 +123,11 @@ internal sealed class GitHubStatusProvider : IStatusProvider
         }
     }
 
-    private static GitHubClient CreateClient(string token) =>
-        new GitHubClient(new ProductHeaderValue("FingerTrap"))
+    private GitHubClient CreateClient(string token) =>
+        new GitHubClient(new Connection(
+            new ProductHeaderValue("FingerTrap"),
+            new HttpClientAdapter(() =>
+                new EtagCachingHandler(_etags, HttpMessageHandlerFactory.CreateDefault()))))
         {
             Credentials = new Credentials(token),
         };
