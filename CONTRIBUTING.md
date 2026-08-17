@@ -28,7 +28,7 @@ Required tools: .NET 10 SDK, Node 22+, pnpm 10, rustup + cargo, Tauri Linux deps
 ## Branching and PRs
 
 - Feature/fix work targets `dev`, never `main`. `main` only receives `dev` via release-promotion PRs (per [`ADR-0004`](adrs/0004-repo-conventions.md) and the agent-framework `github-flow` rule).
-- Feature branch naming: `<type>/kebab-case-description` where `<type>` is a Conventional Commits type (`feat`, `fix`, `docs`, `chore`, `refactor`, `test`, `ci`, `style`).
+- Feature branch naming: `<type>/kebab-case-description` where `<type>` is a Conventional Commits type (`feat`, `fix`, `perf`, `docs`, `chore`, `refactor`, `test`, `ci`, `style`).
 - PR title must be a valid Conventional Commits message — it becomes the squash-commit message on `dev`.
 - PR template at [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md) is mandatory; fill all sections.
 
