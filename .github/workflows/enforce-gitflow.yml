@@ -20,7 +20,7 @@ jobs:
         run: |
           set -euo pipefail
           echo "INFO  base=$BASE head=$HEAD"
-          feature_re='^(feat|fix|docs|chore|refactor|test|ci|style)/[a-z0-9]+(-[a-z0-9]+)*$'
+          feature_re='^(feat|fix|perf|docs|chore|refactor|test|ci|style)/[a-z0-9]+(-[a-z0-9]+)*$'
           # Dependabot names its branches dependabot/<ecosystem>/<dep>-<version>
           # and the pattern is not configurable, so its update PRs get a
           # dedicated carve-out rather than a broadened feature regex.
@@ -33,7 +33,7 @@ jobs:
               fi
               if [[ ! "$HEAD" =~ $feature_re ]]; then
                 echo "ERROR [branch-name] head '$HEAD' must match '<type>/kebab-case-description' per ADR-0004."
-                echo "      allowed types: feat|fix|docs|chore|refactor|test|ci|style"
+                echo "      allowed types: feat|fix|perf|docs|chore|refactor|test|ci|style"
                 echo "      no hotfix/, release/, dev/, or claude/ prefixes"
                 exit 1
               fi
