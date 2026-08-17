@@ -159,6 +159,14 @@ main {
 .status-detail {
   margin: 4px 0;
   color: #bbb;
+  cursor: default;
+}
+
+.status-hint {
+  margin: 2px 0;
+  color: #777;
+  font-size: 11px;
+  cursor: default;
 }
 
 .status-token {
@@ -212,6 +220,9 @@ main {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* Unlinked rows are plain text; the default I-beam makes them read as
+     broken links rather than non-links (#83). */
+  cursor: default;
 }
 
 .status-row-link {

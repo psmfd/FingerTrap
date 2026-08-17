@@ -52,7 +52,7 @@ internal sealed class GitHubStatusProvider : IStatusProvider
         if (!_credentials.TryGet(Name, out var token))
         {
             return ProviderSnapshot.Empty(Name, ProviderStates.NotConfigured,
-                "no GitHub token; save one from the status panel");
+                "no GitHub token — save a fine-grained read-only PAT below to show linked PRs, issues, and CI runs");
         }
 
         var (owner, name) = (parts[0], parts[1]);
