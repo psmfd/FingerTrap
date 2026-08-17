@@ -2,6 +2,7 @@ import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebglAddon } from '@xterm/addon-webgl';
 import * as api from './api';
+import { type LayoutNode, type SplitDir, leaf, leaves, removeLeaf, renderLayout, splitLeaf } from './layout';
 
 /**
  * A pane that exited stays visible (badge + scrollback) rather than
@@ -18,6 +19,42 @@ export interface Pane {
   readonly term: Terminal;
   readonly fit: FitAddon;
   state: PaneState;
+}
+
+/** What an open()/split() caller can choose (FT-1 slice 3, #75). */
+export interface OpenOptions {
+  /**
+   * Explicit pane kind. Omitted means the sidecar's host-default chain
+   * (request → settings → environment → pi; ADR-0013/0014) decides —
+   * including for the palette's plain "new pane". An explicit value is an
+   * operator choice from the palette and deliberately overrides that chain;
+   * `'pi'` is now sendable for exactly that reason.
+   */
+  kind?: api.PaneKind;
+  /** Working directory, resolved and validated sidecar-side; a bad path
+   * fails the spawn loudly into the pane. */
+  cwd?: string;
+}
+
+/** What the tab bar renders — presentation projection of a tab. */
+export interface TabInfo {
+  readonly id: string;
+  readonly title: string;
+  readonly active: boolean;
+  /** Every pane in the tab has exited (a lone dead pane keeps its tab). */
+  readonly exited: boolean;
+}
+
+/**
+ * A tab is a workspace (ADR-0024): one layout tree of panes plus a focused
+ * pane. The root element hosts the rendered tree and display-toggles like
+ * panes themselves did pre-splits — mounted forever, xterm never unmounts.
+ */
+interface Tab {
+  readonly id: string;
+  readonly root: HTMLElement;
+  tree: LayoutNode;
+  activePaneId: string;
 }
 
 function randomSessionId(): string {
@@ -57,32 +94,20 @@ function nextFrame(): Promise<void> {
 }
 
 /**
- * Owns the mapping sessionId → pane, tab order, and focus (ADR-0021 P1). The
- * sidecar stays a session-keyed PTY host with no layout knowledge; everything
- * about *presentation* multiplicity lives here.
+ * Owns pane lifecycle, the tab list with each tab's layout tree, and focus
+ * (ADR-0021 P1, ADR-0024). The sidecar stays a session-keyed PTY host with
+ * no layout knowledge; everything about *presentation* multiplicity lives
+ * here.
  */
-/** What an open() caller can choose (FT-1 slice 3, #75). */
-export interface OpenOptions {
-  /**
-   * Explicit pane kind. Omitted means the sidecar's host-default chain
-   * (request → settings → environment → pi; ADR-0013/0014) decides —
-   * including for the palette's plain "new pane". An explicit value is an
-   * operator choice from the palette and deliberately overrides that chain;
-   * `'pi'` is now sendable for exactly that reason.
-   */
-  kind?: api.PaneKind;
-  /** Working directory, resolved and validated sidecar-side; a bad path
-   * fails the spawn loudly into the pane. */
-  cwd?: string;
-}
-
 export class PaneRegistry {
-  private readonly panes: Pane[] = [];
+  private readonly panes = new Map<string, Pane>();
+  private readonly tabList: Tab[] = [];
   private readonly host: HTMLElement;
   private readonly onChange: () => void;
   private readonly encoder = new TextEncoder();
-  private activeId: string | undefined;
+  private activeTabId: string | undefined;
   private nextIndex = 1;
+  private nextTabId = 1;
 
   /**
    * The kind an unqualified spawn actually gets, from `settings/get` —
@@ -92,32 +117,248 @@ export class PaneRegistry {
   defaultKind: api.PaneKind = 'pi';
 
   /**
-   * @param host Element pane containers are mounted into. Inactive panes are
+   * @param host Element tab roots are mounted into. Inactive tabs are
    * hidden, never unmounted — xterm loses scrollback and cell metrics on
    * unmount.
    * @param onChange Fired after any change a tab bar would render (open,
-   * close, activate, exit).
+   * close, activate, exit, split).
    */
   constructor(host: HTMLElement, onChange: () => void) {
     this.host = host;
     this.onChange = onChange;
   }
 
-  list(): readonly Pane[] {
-    return this.panes;
+  tabs(): readonly TabInfo[] {
+    return this.tabList.map((tab) => {
+      const ids = leaves(tab.tree);
+      const activePane = this.panes.get(tab.activePaneId);
+      const title = activePane?.title ?? '';
+      return {
+        id: tab.id,
+        title: ids.length > 1 ? `${title} +${ids.length - 1}` : title,
+        active: tab.id === this.activeTabId,
+        exited: ids.every((id) => this.panes.get(id)?.state === 'exited'),
+      };
+    });
   }
 
+  /** The focused pane of the active tab. */
   active(): Pane | undefined {
-    return this.panes.find((p) => p.sessionId === this.activeId);
+    const tab = this.activeTab();
+    return tab ? this.panes.get(tab.activePaneId) : undefined;
   }
 
-  /** Open a new pane and make it active. See {@link OpenOptions}. */
+  /** Open a new tab with one pane and make it active. */
   async open(opts: OpenOptions = {}): Promise<Pane> {
-    const { kind, cwd } = opts;
+    const root = document.createElement('div');
+    root.className = 'tab-root';
+    this.host.appendChild(root);
+
+    const pane = this.createPane(opts);
+    const tab: Tab = {
+      id: `t-${this.nextTabId++}`,
+      root,
+      tree: leaf(pane.sessionId),
+      activePaneId: pane.sessionId,
+    };
+    this.tabList.push(tab);
+    this.renderTab(tab);
+    this.activateTab(tab.id);
+
+    await this.spawnInto(pane, opts);
+    return pane;
+  }
+
+  /**
+   * Split the focused pane of the active tab (ADR-0024): the new pane takes
+   * the b-side at ratio 0.5 and receives focus. Splitting with no tab open
+   * degrades to opening one.
+   */
+  async split(dir: SplitDir, opts: OpenOptions = {}): Promise<Pane> {
+    const tab = this.activeTab();
+    if (!tab) {
+      return this.open(opts);
+    }
+
+    const pane = this.createPane(opts);
+    tab.tree = splitLeaf(tab.tree, tab.activePaneId, dir, pane.sessionId);
+    this.renderTab(tab);
+    this.focusPane(pane.sessionId);
+    // The surviving pane was reparented into a half-size cell; refit it
+    // after the layout pass (spawnInto only fits the new pane).
+    void nextFrame().then(() => this.fitVisible());
+    this.onChange();
+
+    await this.spawnInto(pane, opts);
+    return pane;
+  }
+
+  activateTab(tabId: string): void {
+    const tab = this.tabList.find((t) => t.id === tabId);
+    if (!tab) return;
+    this.activeTabId = tab.id;
+    for (const t of this.tabList) {
+      t.root.classList.toggle('active', t === tab);
+    }
+    // A root shown after display:none needs the same layout-pass-first fit
+    // as a fresh mount, for the divide-by-near-zero reason in createPane.
+    void nextFrame().then(() => {
+      this.fitVisible();
+      this.panes.get(tab.activePaneId)?.term.focus();
+    });
+    this.onChange();
+  }
+
+  /** Focus a pane, activating its tab if needed. */
+  focusPane(sessionId: string): void {
+    const tab = this.tabList.find((t) => leaves(t.tree).includes(sessionId));
+    if (!tab) return;
+    tab.activePaneId = sessionId;
+    this.applyFocusClasses(tab);
+    if (this.activeTabId !== tab.id) {
+      this.activateTab(tab.id);
+      return;
+    }
+    void nextFrame().then(() => {
+      this.panes.get(sessionId)?.term.focus();
+    });
+    this.onChange();
+  }
+
+  /**
+   * Focus the neighboring pane in global order — tab order × tree traversal
+   * (ADR-0024). Identical to the pre-splits tab cycle while every tab holds
+   * one pane; crossing a tab boundary activates that tab.
+   */
+  cyclePane(delta: 1 | -1): void {
+    const order = this.tabList.flatMap((t) => leaves(t.tree));
+    if (order.length < 2) return;
+    const current = this.activeTab()?.activePaneId;
+    const index = current === undefined ? -1 : order.indexOf(current);
+    const next = order[(index + delta + order.length) % order.length];
+    this.focusPane(next);
+  }
+
+  /**
+   * Close a pane: kill its process (idempotent sidecar-side, so a racing
+   * self-exit is fine), then remove it and collapse its split — the sibling
+   * subtree takes the parent's place; the last pane closing closes the tab.
+   * Unlike a self-exit — which leaves a dead pane — closing is an explicit
+   * operator action, so removal is immediate.
+   */
+  close(sessionId: string): void {
+    const pane = this.panes.get(sessionId);
+    const tab = this.tabList.find((t) => leaves(t.tree).includes(sessionId));
+    if (!pane || !tab) return;
+
+    api.ptyKill({ sessionId }).catch(() => {
+      // Best-effort: the pane is going away either way, and the sidecar's
+      // kill is idempotent. A transport-level failure here surfaces on the
+      // next interaction with a live pane.
+    });
+    this.disposePane(pane);
+
+    const collapsed = removeLeaf(tab.tree, sessionId);
+    if (collapsed === null) {
+      this.removeTab(tab);
+      return;
+    }
+
+    tab.tree = collapsed;
+    if (tab.activePaneId === sessionId) {
+      tab.activePaneId = leaves(collapsed)[0];
+    }
+    this.renderTab(tab);
+    if (tab.id === this.activeTabId) {
+      void nextFrame().then(() => {
+        this.fitVisible();
+        this.panes.get(tab.activePaneId)?.term.focus();
+      });
+    }
+    this.onChange();
+  }
+
+  /** Close a whole tab: every pane in its tree, then the tab itself. */
+  closeTab(tabId: string): void {
+    const tab = this.tabList.find((t) => t.id === tabId);
+    if (!tab) return;
+    for (const sessionId of leaves(tab.tree)) {
+      const pane = this.panes.get(sessionId);
+      if (!pane) continue;
+      api.ptyKill({ sessionId }).catch(() => {
+        // Same best-effort contract as close().
+      });
+      this.disposePane(pane);
+    }
+    this.removeTab(tab);
+  }
+
+  /** Route a pty/output notification to its pane, if it still exists. */
+  handleOutput(n: api.PtyOutputNotification): void {
+    this.panes.get(n.sessionId)?.term.write(base64ToBytes(n.dataBase64));
+  }
+
+  /** A self-exit marks the pane dead but keeps it (and its scrollback). */
+  handleExit(n: api.PtyExitNotification): void {
+    const pane = this.panes.get(n.sessionId);
+    if (!pane) return;
+    pane.term.write(`\r\n\x1b[33m[process exited (${n.exitCode})]\x1b[0m\r\n`);
+    pane.state = 'exited';
+    this.onChange();
+  }
+
+  /** Refit every pane in the active tab; hidden tabs refit on activation. */
+  fitVisible(): void {
+    const tab = this.activeTab();
+    if (!tab) return;
+    for (const sessionId of leaves(tab.tree)) {
+      this.panes.get(sessionId)?.fit.fit();
+    }
+  }
+
+  private activeTab(): Tab | undefined {
+    return this.tabList.find((t) => t.id === this.activeTabId);
+  }
+
+  private renderTab(tab: Tab): void {
+    renderLayout(tab.root, tab.tree, (id) => {
+      const pane = this.panes.get(id);
+      if (!pane) throw new Error(`layout references unknown pane ${id}`);
+      return pane.container;
+    }, () => this.fitVisible());
+    this.applyFocusClasses(tab);
+  }
+
+  private applyFocusClasses(tab: Tab): void {
+    const ids = leaves(tab.tree);
+    // A focus ring on a lone pane is noise; it earns its place at two.
+    const multi = ids.length > 1;
+    for (const id of ids) {
+      this.panes.get(id)?.container.classList.toggle('focused', multi && id === tab.activePaneId);
+    }
+  }
+
+  private removeTab(tab: Tab): void {
+    const index = this.tabList.indexOf(tab);
+    tab.root.remove();
+    this.tabList.splice(index, 1);
+    if (this.activeTabId === tab.id) {
+      this.activeTabId = undefined;
+      const neighbor = this.tabList[Math.min(index, this.tabList.length - 1)];
+      if (neighbor) {
+        this.activateTab(neighbor.id);
+        return;
+      }
+    }
+    this.onChange();
+  }
+
+  /** Build the pane (terminal, container, wiring) without mounting it —
+   * the caller places the container via its tab's layout render. */
+  private createPane(opts: OpenOptions): Pane {
     const sessionId = randomSessionId();
     const container = document.createElement('div');
     container.className = 'pane';
-    this.host.appendChild(container);
 
     const term = new Terminal({
       fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
@@ -131,7 +372,7 @@ export class PaneRegistry {
     term.open(container);
 
     // The DOM renderer (xterm's default) leaves stale rows on screen after
-    // full-screen erases (#78) — our display:none pane toggling stresses its
+    // full-screen erases (#78) — our display:none tab toggling stresses its
     // known repaint gaps. Prefer the WebGL renderer; on context loss or
     // WebGL-less environments fall back to the DOM renderer by disposing the
     // addon rather than freezing the pane. Addon lifetime is owned by the
@@ -148,34 +389,46 @@ export class PaneRegistry {
 
     const pane: Pane = {
       sessionId,
-      title: `${kind ?? this.defaultKind} ${this.nextIndex++}`,
+      title: `${opts.kind ?? this.defaultKind} ${this.nextIndex++}`,
       container,
       term,
       fit,
       state: 'running',
     };
-    this.panes.push(pane);
-    this.setActive(pane);
+    this.panes.set(sessionId, pane);
+    return pane;
+  }
 
+  /** Spawn the pane's process once its container has had a layout pass. */
+  private async spawnInto(pane: Pane, opts: OpenOptions): Promise<void> {
     // First fit() only after a layout pass — before it, cell measurement
     // divides by near-zero and reports thousands of cols, which the sidecar
     // would set as the real pty winsize.
     await nextFrame();
-    fit.fit();
+    pane.fit.fit();
 
     try {
-      await api.ptySpawn({ sessionId, kind, cwd, cols: term.cols, rows: term.rows });
+      await api.ptySpawn({
+        sessionId: pane.sessionId,
+        kind: opts.kind,
+        cwd: opts.cwd,
+        cols: pane.term.cols,
+        rows: pane.term.rows,
+      });
     } catch (err) {
       // Rendered into the terminal the spawn failed to fill — where the
       // operator is already looking. A missing pi arrives here as an
       // actionable message from the sidecar (PiNotFoundException), rather
       // than as a shell that quietly is not pi.
-      term.write(`\r\n\x1b[31mfailed to spawn pane: ${(err as Error).message}\x1b[0m\r\n`);
+      pane.term.write(`\r\n\x1b[31mfailed to spawn pane: ${(err as Error).message}\x1b[0m\r\n`);
       pane.state = 'exited';
       this.onChange();
-      return pane;
+      return;
     }
 
+    // Wired only after a successful spawn — a pane whose spawn failed
+    // deliberately ignores typing instead of erroring on every keystroke.
+    const { sessionId, term } = pane;
     term.onData((data) => {
       api.ptyWrite({ sessionId, dataBase64: bytesToBase64(this.encoder.encode(data)) }).catch((err: unknown) => {
         term.write(`\r\n\x1b[31m[ptyWrite error] ${(err as Error).message}\x1b[0m\r\n`);
@@ -189,89 +442,11 @@ export class PaneRegistry {
         term.write(`\r\n\x1b[31m[ptyResize error] ${(err as Error).message}\x1b[0m\r\n`);
       });
     });
-
-    this.onChange();
-    return pane;
   }
 
-  activate(sessionId: string): void {
-    const pane = this.panes.find((p) => p.sessionId === sessionId);
-    if (!pane) return;
-    this.setActive(pane);
-    this.onChange();
-  }
-
-  /** Focus the neighboring tab, wrapping. No-op with fewer than two panes. */
-  cycle(delta: 1 | -1): void {
-    if (this.panes.length < 2) return;
-    const current = this.panes.findIndex((p) => p.sessionId === this.activeId);
-    const next = this.panes[(current + delta + this.panes.length) % this.panes.length];
-    this.setActive(next);
-    this.onChange();
-  }
-
-  /**
-   * Close a pane: kill its process (idempotent sidecar-side, so a racing
-   * self-exit is fine), then remove it. Unlike a self-exit — which leaves a
-   * dead tab — closing is an explicit operator action, so removal is
-   * immediate.
-   */
-  close(sessionId: string): void {
-    const idx = this.panes.findIndex((p) => p.sessionId === sessionId);
-    if (idx === -1) return;
-    const pane = this.panes[idx];
-
-    api.ptyKill({ sessionId }).catch(() => {
-      // Best-effort: the pane is going away either way, and the sidecar's
-      // kill is idempotent. A transport-level failure here surfaces on the
-      // next interaction with a live pane.
-    });
-
+  private disposePane(pane: Pane): void {
     pane.term.dispose();
     pane.container.remove();
-    this.panes.splice(idx, 1);
-
-    if (this.activeId === sessionId) {
-      const neighbor = this.panes[Math.min(idx, this.panes.length - 1)];
-      this.activeId = undefined;
-      if (neighbor) {
-        this.setActive(neighbor);
-      }
-    }
-    this.onChange();
-  }
-
-  /** Route a pty/output notification to its pane, if it still exists. */
-  handleOutput(n: api.PtyOutputNotification): void {
-    const pane = this.panes.find((p) => p.sessionId === n.sessionId);
-    pane?.term.write(base64ToBytes(n.dataBase64));
-  }
-
-  /** A self-exit marks the tab dead but keeps it (and its scrollback). */
-  handleExit(n: api.PtyExitNotification): void {
-    const pane = this.panes.find((p) => p.sessionId === n.sessionId);
-    if (!pane) return;
-    pane.term.write(`\r\n\x1b[33m[process exited (${n.exitCode})]\x1b[0m\r\n`);
-    pane.state = 'exited';
-    this.onChange();
-  }
-
-  /** Refit the active pane; hidden panes refit on activation instead. */
-  fitActive(): void {
-    this.active()?.fit.fit();
-  }
-
-  private setActive(pane: Pane): void {
-    if (this.activeId === pane.sessionId) return;
-    for (const p of this.panes) {
-      p.container.classList.toggle('active', p === pane);
-    }
-    this.activeId = pane.sessionId;
-    // A container shown after display:none needs the same layout-pass-first
-    // fit as a fresh mount, for the same divide-by-near-zero reason.
-    void nextFrame().then(() => {
-      pane.fit.fit();
-      pane.term.focus();
-    });
+    this.panes.delete(pane.sessionId);
   }
 }

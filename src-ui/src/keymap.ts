@@ -24,6 +24,8 @@ export type ActionId =
   | 'pane.close'
   | 'pane.next'
   | 'pane.prev'
+  | 'pane.splitRight'
+  | 'pane.splitDown'
   | 'status.toggle';
 
 /**
@@ -36,6 +38,8 @@ const DEFAULT_CHORDS: Readonly<Record<ActionId, string>> = {
   'pane.close': 'mod+shift+w',
   'pane.next': 'ctrl+tab',
   'pane.prev': 'ctrl+shift+tab',
+  'pane.splitRight': 'mod+shift+d',
+  'pane.splitDown': 'mod+shift+f',
   'status.toggle': 'mod+shift+s',
 };
 

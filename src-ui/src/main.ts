@@ -41,8 +41,10 @@ async function main(): Promise<void> {
         if (active) registry.close(active.sessionId);
       },
     },
-    { title: 'Next tab', run: () => registry.cycle(1) },
-    { title: 'Previous tab', run: () => registry.cycle(-1) },
+    { title: 'Split right', run: () => void registry.split('row') },
+    { title: 'Split down', run: () => void registry.split('col') },
+    { title: 'Next pane', run: () => registry.cyclePane(1) },
+    { title: 'Previous pane', run: () => registry.cyclePane(-1) },
     { title: 'Toggle status panel', run: () => status.toggle() },
   ];
   const palette = new Palette(panesEl, commands, () => registry.active()?.term.focus());
@@ -79,16 +81,18 @@ async function main(): Promise<void> {
       const active = registry.active();
       if (active) registry.close(active.sessionId);
     })
-    .on('pane.next', () => registry.cycle(1))
-    .on('pane.prev', () => registry.cycle(-1))
+    .on('pane.next', () => registry.cyclePane(1))
+    .on('pane.prev', () => registry.cyclePane(-1))
+    .on('pane.splitRight', () => void registry.split('row'))
+    .on('pane.splitDown', () => void registry.split('col'))
     .on('status.toggle', () => status.toggle())
     .install();
 
   // xterm's onResize only fires from term.resize(...) — observe the shared
   // pane host and let FitAddon translate DOM size changes into cell counts.
-  // Hidden panes are skipped; they refit on activation instead.
+  // Hidden tabs are skipped; they refit on activation instead.
   const observer = new ResizeObserver(() => {
-    registry.fitActive();
+    registry.fitVisible();
   });
   observer.observe(panesEl);
 

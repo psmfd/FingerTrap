@@ -93,16 +93,74 @@ main {
   background: #000;
 }
 
-.pane {
+/* A tab root hosts one rendered layout tree (ADR-0024) and display-toggles
+   the way panes themselves did pre-splits — mounted forever, xterm never
+   unmounts. */
+.tab-root {
   position: absolute;
   inset: 0;
   display: none;
   background: #000;
+}
+
+.tab-root.active {
+  display: flex;
+}
+
+.layout-split {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+}
+
+.layout-row {
+  flex-direction: row;
+}
+
+.layout-col {
+  flex-direction: column;
+}
+
+.layout-cell {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+}
+
+.layout-gutter {
+  flex: 0 0 5px;
+  background: #1a1a1a;
+  touch-action: none;
+}
+
+.layout-gutter:hover,
+.layout-gutter:active {
+  background: #3a3a3a;
+}
+
+.layout-gutter-row {
+  cursor: col-resize;
+}
+
+.layout-gutter-col {
+  cursor: row-resize;
+}
+
+.pane {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 0;
+  background: #000;
   padding: 0.25rem 0.5rem;
 }
 
-.pane.active {
-  display: block;
+/* Applied only when a tab holds more than one pane — a focus ring on a
+   lone pane is noise. */
+.pane.focused {
+  outline: 1px solid #33507a;
+  outline-offset: -1px;
 }
 
 .pane .xterm {

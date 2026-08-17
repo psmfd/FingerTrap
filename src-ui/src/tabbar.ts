@@ -1,10 +1,11 @@
-import type { Pane, PaneRegistry } from './registry';
+import type { PaneRegistry, TabInfo } from './registry';
 
 /**
- * The persistent tab strip (ADR-0021). Presentation only: reads the registry,
- * renders one tab per pane plus the new-tab actions, and forwards clicks back
- * to the registry. Rebuilt wholesale on each change — at tab-strip scale,
- * reconciliation is not worth owning.
+ * The persistent tab strip (ADR-0021). Presentation only: reads the
+ * registry's tab projections, renders one tab per workspace plus the
+ * new-tab actions, and forwards clicks back to the registry. Rebuilt
+ * wholesale on each change — at tab-strip scale, reconciliation is not
+ * worth owning.
  */
 export interface TabBarAction {
   label: string;
@@ -25,16 +26,15 @@ export class TabBar {
 
   render(): void {
     this.host.replaceChildren();
-    const active = this.registry.active();
 
-    for (const pane of this.registry.list()) {
-      this.host.appendChild(this.renderTab(pane, pane === active));
+    for (const tab of this.registry.tabs()) {
+      this.host.appendChild(this.renderTab(tab));
     }
 
     // Default new tab is an unqualified spawn — the host-default chain
     // decides what it is. The explicit action stays shell-only: the tab bar
-    // offers the default and its opposite; the full kind/cwd choice is the
-    // palette's job (slice 3, #75).
+    // offers the default and its opposite; the full kind/cwd choice — and
+    // splits — are the palette's job (slices 3+4, #75, ADR-0024).
     this.host.appendChild(
       this.renderAction('+', 'New tab', () => void this.registry.open()),
     );
@@ -46,26 +46,26 @@ export class TabBar {
     }
   }
 
-  private renderTab(pane: Pane, isActive: boolean): HTMLElement {
+  private renderTab(info: TabInfo): HTMLElement {
     const tab = document.createElement('div');
     tab.className = 'tab';
-    tab.classList.toggle('active', isActive);
-    tab.classList.toggle('exited', pane.state === 'exited');
-    tab.addEventListener('click', () => this.registry.activate(pane.sessionId));
+    tab.classList.toggle('active', info.active);
+    tab.classList.toggle('exited', info.exited);
+    tab.addEventListener('click', () => this.registry.activateTab(info.id));
 
     const title = document.createElement('span');
     title.className = 'tab-title';
-    title.textContent = pane.state === 'exited' ? `${pane.title} · exited` : pane.title;
+    title.textContent = info.exited ? `${info.title} · exited` : info.title;
     tab.appendChild(title);
 
     const close = document.createElement('button');
     close.className = 'tab-close';
     close.type = 'button';
     close.textContent = '×';
-    close.setAttribute('aria-label', `Close ${pane.title}`);
+    close.setAttribute('aria-label', `Close ${info.title}`);
     close.addEventListener('click', (e) => {
       e.stopPropagation();
-      this.registry.close(pane.sessionId);
+      this.registry.closeTab(info.id);
     });
     tab.appendChild(close);
 
