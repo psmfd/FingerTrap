@@ -103,6 +103,15 @@ internal sealed record AdoStatusSettings
     /// <summary>Project name or id within the organization.</summary>
     [JsonPropertyName("project")]
     public string? Project { get; init; }
+
+    /// <summary>
+    /// Repository name or id within the project — the <c>{repositoryId}</c>
+    /// segment of the pull-requests REST route (#72). Optional: absent means
+    /// the pull-request surface is skipped; work items and pipeline runs
+    /// need only organization/project.
+    /// </summary>
+    [JsonPropertyName("repository")]
+    public string? Repository { get; init; }
 }
 
 internal sealed record LocalGitStatusSettings

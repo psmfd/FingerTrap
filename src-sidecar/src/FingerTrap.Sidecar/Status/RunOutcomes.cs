@@ -53,4 +53,37 @@ internal static class RunOutcomes
 
         return "unknown";
     }
+
+    /// <summary>
+    /// The ADO build vocabulary (#72), collapsed into the same outcome set
+    /// the UI already renders — this module stays the only collapse point,
+    /// now with one deriver per provider vocabulary. <c>partiallySucceeded</c>
+    /// maps to <c>failure</c>: something in the run failed, and rendering it
+    /// as anything softer hides exactly the bit an operator watches for; the
+    /// unmerged <c>Status</c>/<c>Result</c> fields on the row keep the truth.
+    /// Unrecognized values degrade to <c>unknown</c>, same as
+    /// <see cref="Derive"/>.
+    /// </summary>
+    public static string DeriveAdo(string? status, string? result)
+    {
+        if (!string.IsNullOrEmpty(result))
+        {
+            return result switch
+            {
+                "succeeded" => "success",
+                "failed" => "failure",
+                "canceled" => "cancelled",
+                "partiallySucceeded" => "failure",
+                _ => "unknown",
+            };
+        }
+
+        return status switch
+        {
+            // A cancelling build is still executing its teardown.
+            "inProgress" or "cancelling" => "in_progress",
+            "notStarted" or "postponed" => "queued",
+            _ => "unknown",
+        };
+    }
 }
