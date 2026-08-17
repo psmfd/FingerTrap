@@ -58,7 +58,7 @@ internal sealed class AdoStatusProvider : IStatusProvider, IDisposable
         if (!_credentials.TryGet(Name, out var token))
         {
             return ProviderSnapshot.Empty(Name, ProviderStates.NotConfigured,
-                "no Azure DevOps token; save one from the status panel");
+                "no Azure DevOps token — save a read-only PAT below to show linked work items");
         }
 
         // Org/project travel inside a URL: reject anything that would

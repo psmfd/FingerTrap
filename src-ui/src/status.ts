@@ -77,6 +77,12 @@ export class StatusPanel {
       section.appendChild(el('p', 'status-detail', p.detail));
     }
 
+    // Local-git surfaces are one summary line with nothing to click; say so,
+    // or its plain text reads as broken links next to the linked rows (#83).
+    if (p.provider === 'git') {
+      section.appendChild(el('p', 'status-hint', 'local repository status — nothing here links to a web page'));
+    }
+
     if (TOKEN_PROVIDERS.has(p.provider) && (p.state === 'not-configured' || p.state === 'auth-failed')) {
       section.appendChild(this.renderTokenEntry(p.provider));
     }
