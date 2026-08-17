@@ -13,8 +13,9 @@ namespace FingerTrap.Sidecar.Status;
 /// against the WIQL + work-items REST surface with source-generated
 /// <see cref="System.Text.Json"/> contexts — the official SDK is rejected
 /// (closed-source, dependency-heavy, reflection-based). Work items surface
-/// as issue rows; ADO pull requests and pipeline runs are tracked
-/// separately (issue #72). PAT is borrowed from the shell-fed
+/// as issue rows; active pull requests and pipeline runs (#72) surface as
+/// PR and run rows, the PR surface gated on the optional
+/// <c>status.ado.repository</c> setting. PAT is borrowed from the shell-fed
 /// <see cref="CredentialCache"/> per fetch, sent as Basic auth with an
 /// empty username, and never cached here.
 /// </summary>
@@ -61,66 +62,59 @@ internal sealed class AdoStatusProvider : IStatusProvider, IDisposable
                 "no Azure DevOps token — save a read-only PAT below to show linked work items");
         }
 
-        // Org/project travel inside a URL: reject anything that would
-        // change its shape rather than trying to escape it.
+        // Org/project/repository travel inside a URL: reject anything that
+        // would change its shape rather than trying to escape it.
         if (!IsUrlSafeSegment(organization) || !IsUrlSafeSegment(project))
         {
             return ProviderSnapshot.Empty(Name, ProviderStates.Error,
                 "status.ado.organization/project must be plain names (letters, digits, '-', '_', '.', spaces)");
         }
 
-        var baseUrl = $"https://dev.azure.com/{Uri.EscapeDataString(organization)}/{Uri.EscapeDataString(project)}/_apis";
+        var repository = _settings?.Repository;
+        if (!string.IsNullOrWhiteSpace(repository) && !IsUrlSafeSegment(repository))
+        {
+            return ProviderSnapshot.Empty(Name, ProviderStates.Error,
+                "status.ado.repository must be a plain name (letters, digits, '-', '_', '.', spaces)");
+        }
+
+        var projectBase = $"https://dev.azure.com/{Uri.EscapeDataString(organization)}/{Uri.EscapeDataString(project)}";
+        var baseUrl = $"{projectBase}/_apis";
         try
         {
-            var wiql = new AdoWiqlRequest(
-                "SELECT [System.Id] FROM WorkItems " +
-                "WHERE [System.TeamProject] = @project AND [System.State] NOT IN ('Closed', 'Done', 'Removed') " +
-                "ORDER BY [System.ChangedDate] DESC");
-
-            using var wiqlRequest = new HttpRequestMessage(
-                HttpMethod.Post, $"{baseUrl}/wit/wiql?api-version={ApiVersion}&$top={MaxWorkItems}")
-            {
-                Content = new StringContent(
-                    JsonSerializer.Serialize(wiql, AdoJsonContext.Default.AdoWiqlRequest),
-                    Encoding.UTF8, "application/json"),
-            };
-            Authorize(wiqlRequest, token);
-
-            using var wiqlResponse = await _http.SendAsync(wiqlRequest, cancellationToken).ConfigureAwait(false);
-            if (!IsUsableSuccess(wiqlResponse))
-            {
-                return await ToErrorSnapshotAsync(wiqlResponse, cancellationToken).ConfigureAwait(false);
-            }
-
-            var refs = await ReadAsync(wiqlResponse, AdoJsonContext.Default.AdoWiqlResponse, cancellationToken)
+            // Sequential on purpose: latencies are sub-second against a 60s
+            // cadence, the first error snapshot short-circuits the rest, and
+            // deterministic request order keeps the canned-response tests
+            // honest.
+            var (issues, issuesError) = await FetchWorkItemRowsAsync(baseUrl, projectBase, token, cancellationToken)
                 .ConfigureAwait(false);
-            var ids = (refs?.WorkItems ?? []).Take(MaxWorkItems).Select(w => w.Id).ToList();
-            if (ids.Count == 0)
+            if (issuesError is not null)
             {
-                return new ProviderSnapshot(Name, ProviderStates.Ok, null, [], [], []);
+                return issuesError;
             }
 
-            var fields = "System.Title,System.State,System.CreatedBy,System.ChangedDate";
-            using var batchRequest = new HttpRequestMessage(
-                HttpMethod.Get,
-                $"{baseUrl}/wit/workitems?ids={string.Join(',', ids)}&fields={fields}&api-version={ApiVersion}");
-            Authorize(batchRequest, token);
-
-            using var batchResponse = await _http.SendAsync(batchRequest, cancellationToken).ConfigureAwait(false);
-            if (!IsUsableSuccess(batchResponse))
+            List<PrRow> prs = [];
+            if (!string.IsNullOrWhiteSpace(repository))
             {
-                return await ToErrorSnapshotAsync(batchResponse, cancellationToken).ConfigureAwait(false);
+                // Opt-in surface (#72): work items and builds need only
+                // org/project; the PR route needs a repository segment.
+                var (prRows, prError) = await FetchPullRequestRowsAsync(
+                    baseUrl, projectBase, repository, token, cancellationToken).ConfigureAwait(false);
+                if (prError is not null)
+                {
+                    return prError;
+                }
+
+                prs = prRows!;
             }
 
-            var batch = await ReadAsync(batchResponse, AdoJsonContext.Default.AdoWorkItemBatch, cancellationToken)
+            var (runs, runsError) = await FetchBuildRowsAsync(baseUrl, projectBase, token, cancellationToken)
                 .ConfigureAwait(false);
+            if (runsError is not null)
+            {
+                return runsError;
+            }
 
-            // ADR-0023: the work-item URL is CONSTRUCTED from the already
-            // url-safe org/project, never taken from the response body.
-            var itemUrlBase =
-                $"https://dev.azure.com/{Uri.EscapeDataString(organization)}/{Uri.EscapeDataString(project)}/_workitems/edit/";
-            var issues = (batch?.Value ?? []).Select(w => ToIssueRow(w, itemUrlBase)).ToList();
-            return new ProviderSnapshot(Name, ProviderStates.Ok, null, issues, [], []);
+            return new ProviderSnapshot(Name, ProviderStates.Ok, null, issues!, prs, runs!);
         }
         catch (JsonException)
         {
@@ -136,6 +130,103 @@ internal sealed class AdoStatusProvider : IStatusProvider, IDisposable
             // HttpClient.Timeout surfaces as a cancellation that is not ours.
             return ProviderSnapshot.Empty(Name, ProviderStates.Error, "Azure DevOps request timed out");
         }
+    }
+
+    private async Task<(List<IssueRow>? Rows, ProviderSnapshot? Error)> FetchWorkItemRowsAsync(
+        string baseUrl, string projectBase, string token, CancellationToken cancellationToken)
+    {
+        var wiql = new AdoWiqlRequest(
+                "SELECT [System.Id] FROM WorkItems " +
+                "WHERE [System.TeamProject] = @project AND [System.State] NOT IN ('Closed', 'Done', 'Removed') " +
+                "ORDER BY [System.ChangedDate] DESC");
+
+            using var wiqlRequest = new HttpRequestMessage(
+                HttpMethod.Post, $"{baseUrl}/wit/wiql?api-version={ApiVersion}&$top={MaxWorkItems}")
+            {
+                Content = new StringContent(
+                    JsonSerializer.Serialize(wiql, AdoJsonContext.Default.AdoWiqlRequest),
+                    Encoding.UTF8, "application/json"),
+            };
+            Authorize(wiqlRequest, token);
+
+        using var wiqlResponse = await _http.SendAsync(wiqlRequest, cancellationToken).ConfigureAwait(false);
+        if (!IsUsableSuccess(wiqlResponse))
+        {
+            return (null, await ToErrorSnapshotAsync(wiqlResponse, cancellationToken).ConfigureAwait(false));
+        }
+
+        var refs = await ReadAsync(wiqlResponse, AdoJsonContext.Default.AdoWiqlResponse, cancellationToken)
+            .ConfigureAwait(false);
+        var ids = (refs?.WorkItems ?? []).Take(MaxWorkItems).Select(w => w.Id).ToList();
+        if (ids.Count == 0)
+        {
+            return ([], null);
+        }
+
+        var fields = "System.Title,System.State,System.CreatedBy,System.ChangedDate";
+        using var batchRequest = new HttpRequestMessage(
+            HttpMethod.Get,
+            $"{baseUrl}/wit/workitems?ids={string.Join(',', ids)}&fields={fields}&api-version={ApiVersion}");
+        Authorize(batchRequest, token);
+
+        using var batchResponse = await _http.SendAsync(batchRequest, cancellationToken).ConfigureAwait(false);
+        if (!IsUsableSuccess(batchResponse))
+        {
+            return (null, await ToErrorSnapshotAsync(batchResponse, cancellationToken).ConfigureAwait(false));
+        }
+
+        var batch = await ReadAsync(batchResponse, AdoJsonContext.Default.AdoWorkItemBatch, cancellationToken)
+            .ConfigureAwait(false);
+
+        // ADR-0023: the work-item URL is CONSTRUCTED from the already
+        // url-safe org/project, never taken from the response body.
+        var itemUrlBase = $"{projectBase}/_workitems/edit/";
+        return ((batch?.Value ?? []).Select(w => ToIssueRow(w, itemUrlBase)).ToList(), null);
+    }
+
+    private async Task<(List<PrRow>? Rows, ProviderSnapshot? Error)> FetchPullRequestRowsAsync(
+        string baseUrl, string projectBase, string repository, string token, CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(
+            HttpMethod.Get,
+            $"{baseUrl}/git/repositories/{Uri.EscapeDataString(repository)}/pullrequests" +
+            $"?searchCriteria.status=active&$top={MaxWorkItems}&api-version={ApiVersion}");
+        Authorize(request, token);
+
+        using var response = await _http.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        if (!IsUsableSuccess(response))
+        {
+            return (null, await ToErrorSnapshotAsync(response, cancellationToken,
+                "repository not found (404) — check status.ado.repository").ConfigureAwait(false));
+        }
+
+        var list = await ReadAsync(response, AdoJsonContext.Default.AdoPrList, cancellationToken)
+            .ConfigureAwait(false);
+
+        // ADR-0023: constructed from the validated org/project/repository
+        // segments, never from the response body.
+        var prUrlBase = $"{projectBase}/_git/{Uri.EscapeDataString(repository)}/pullrequest/";
+        return ((list?.Value ?? []).Take(MaxWorkItems).Select(pr => ToPrRow(pr, prUrlBase)).ToList(), null);
+    }
+
+    private async Task<(List<RunRow>? Rows, ProviderSnapshot? Error)> FetchBuildRowsAsync(
+        string baseUrl, string projectBase, string token, CancellationToken cancellationToken)
+    {
+        using var request = new HttpRequestMessage(
+            HttpMethod.Get, $"{baseUrl}/build/builds?$top={MaxWorkItems}&api-version={ApiVersion}");
+        Authorize(request, token);
+
+        using var response = await _http.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        if (!IsUsableSuccess(response))
+        {
+            return (null, await ToErrorSnapshotAsync(response, cancellationToken).ConfigureAwait(false));
+        }
+
+        var list = await ReadAsync(response, AdoJsonContext.Default.AdoBuildList, cancellationToken)
+            .ConfigureAwait(false);
+
+        var buildUrlBase = $"{projectBase}/_build/results?buildId=";
+        return ((list?.Value ?? []).Take(MaxWorkItems).Select(b => ToRunRow(b, buildUrlBase)).ToList(), null);
     }
 
     public void Dispose() => _http.Dispose();
@@ -167,7 +258,8 @@ internal sealed class AdoStatusProvider : IStatusProvider, IDisposable
     }
 
     private async Task<ProviderSnapshot> ToErrorSnapshotAsync(
-        HttpResponseMessage response, CancellationToken cancellationToken)
+        HttpResponseMessage response, CancellationToken cancellationToken,
+        string notFoundDetail = "organization or project not found (404)")
     {
         switch (response.StatusCode)
         {
@@ -183,8 +275,7 @@ internal sealed class AdoStatusProvider : IStatusProvider, IDisposable
                 return ProviderSnapshot.Empty(Name, ProviderStates.AuthFailed,
                     "token has no access to this organization/project (403) — check the PAT's scope and org");
             case HttpStatusCode.NotFound:
-                return ProviderSnapshot.Empty(Name, ProviderStates.Error,
-                    "organization or project not found (404)");
+                return ProviderSnapshot.Empty(Name, ProviderStates.Error, notFoundDetail);
             default:
             {
                 var body = await ReadBoundedAsync(response, cancellationToken).ConfigureAwait(false);
@@ -229,6 +320,38 @@ internal sealed class AdoStatusProvider : IStatusProvider, IDisposable
             StatusText.Sanitize(FieldString(fields, "System.ChangedDate"), 40),
             StatusUrls.Validate(itemUrlBase + item.Id, "dev.azure.com"));
     }
+
+    private static PrRow ToPrRow(AdoPr pr, string prUrlBase) => new(
+        pr.PullRequestId,
+        (int)pr.PullRequestId,
+        StatusText.Sanitize(pr.Title),
+        StatusText.Sanitize(pr.CreatedBy?.DisplayName, 80),
+        StatusText.Sanitize(pr.Status, 40),
+        pr.IsDraft,
+        StatusText.Sanitize(StripRefPrefix(pr.SourceRefName), 120),
+        StatusText.Sanitize(pr.CreationDate, 40),
+        StatusUrls.Validate(prUrlBase + pr.PullRequestId, "dev.azure.com"));
+
+    /// <remarks><c>RunNumber</c> is 0: ADO build numbers are operator-format
+    /// strings ("20260817.3"), carried in <c>DisplayTitle</c> instead; rows
+    /// key on the API <c>Id</c> (repo-dash's rule) and the UI does not render
+    /// the number.</remarks>
+    private static RunRow ToRunRow(AdoBuild build, string buildUrlBase) => new(
+        build.Id,
+        0,
+        StatusText.Sanitize(build.Definition?.Name, 120),
+        StatusText.Sanitize(build.BuildNumber),
+        StatusText.Sanitize(build.Status, 40),
+        build.Result is null ? null : StatusText.Sanitize(build.Result, 40),
+        RunOutcomes.DeriveAdo(build.Status, build.Result),
+        StatusText.Sanitize(StripRefPrefix(build.SourceBranch), 120),
+        StatusText.Sanitize(build.QueueTime, 40),
+        StatusUrls.Validate(buildUrlBase + build.Id, "dev.azure.com"));
+
+    private static string? StripRefPrefix(string? refName) =>
+        refName is not null && refName.StartsWith("refs/heads/", StringComparison.Ordinal)
+            ? refName["refs/heads/".Length..]
+            : refName;
 
     private static string FieldString(Dictionary<string, JsonElement>? fields, string key) =>
         fields is not null && fields.TryGetValue(key, out var value) && value.ValueKind == JsonValueKind.String

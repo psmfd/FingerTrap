@@ -87,6 +87,25 @@ public sealed class RunOutcomesTests
     {
         Assert.Equal("unknown", RunOutcomes.Derive("completed", null));
     }
+
+    [Theory]
+    [InlineData("completed", "succeeded", "success")]
+    [InlineData("completed", "failed", "failure")]
+    [InlineData("completed", "canceled", "cancelled")]
+    [InlineData("completed", "partiallySucceeded", "failure")]
+    [InlineData("inProgress", null, "in_progress")]
+    [InlineData("cancelling", null, "in_progress")]
+    [InlineData("notStarted", null, "queued")]
+    [InlineData("postponed", null, "queued")]
+    [InlineData("completed", null, "unknown")]
+    [InlineData("completed", "brandNewResult", "unknown")]
+    public void DerivesAdoVocabulary(string status, string? result, string expected)
+    {
+        // #72: ADO's status/result vocabulary through the same single
+        // collapse point; partiallySucceeded is a failure on purpose, and
+        // unrecognized values degrade to unknown, same as Derive.
+        Assert.Equal(expected, RunOutcomes.DeriveAdo(status, result));
+    }
 }
 
 public sealed class StatusUrlsTests

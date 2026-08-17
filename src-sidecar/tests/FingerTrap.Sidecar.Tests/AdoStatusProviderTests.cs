@@ -72,7 +72,7 @@ public sealed class AdoStatusProviderTests
                 "System.ChangedDate":"2026-08-14T10:00:00Z"}}
             ]}
             """;
-        var handler = new CannedHandler([Ok(wiql), Ok(batch)]);
+        var handler = new CannedHandler([Ok(wiql), Ok(batch), Ok("""{"value":[]}""")]);
         using var provider = new AdoStatusProvider(WithToken(), Configured, handler);
 
         var snapshot = await provider.FetchAsync(TestContext.Current.CancellationToken);
@@ -91,13 +91,13 @@ public sealed class AdoStatusProviderTests
     [Fact]
     public async Task SendsBasicAuthWithEmptyUsernameAndNeverEchoesToken()
     {
-        var handler = new CannedHandler([Ok("""{"workItems":[]}""")]);
+        var handler = new CannedHandler([Ok("""{"workItems":[]}"""), Ok("""{"value":[]}""")]);
         using var provider = new AdoStatusProvider(WithToken(), Configured, handler);
 
         var snapshot = await provider.FetchAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(ProviderStates.Ok, snapshot.State);
-        var auth = Assert.Single(handler.Requests).Headers.Authorization;
+        var auth = handler.Requests[0].Headers.Authorization;
         Assert.NotNull(auth);
         Assert.Equal("Basic", auth.Scheme);
         Assert.Equal(":pat-value", Encoding.ASCII.GetString(Convert.FromBase64String(auth.Parameter!)));
@@ -107,14 +107,16 @@ public sealed class AdoStatusProviderTests
     [Fact]
     public async Task EmptyWiqlResultIsOkWithNoRowsAndNoBatchCall()
     {
-        var handler = new CannedHandler([Ok("""{"workItems":[]}""")]);
+        var handler = new CannedHandler([Ok("""{"workItems":[]}"""), Ok("""{"value":[]}""")]);
         using var provider = new AdoStatusProvider(WithToken(), Configured, handler);
 
         var snapshot = await provider.FetchAsync(TestContext.Current.CancellationToken);
 
         Assert.Equal(ProviderStates.Ok, snapshot.State);
         Assert.Empty(snapshot.Issues);
-        Assert.Single(handler.Requests);
+        // wiql + builds only — the empty id list must not become a batch GET.
+        Assert.Equal(2, handler.Requests.Count);
+        Assert.DoesNotContain(handler.Requests, r => r.RequestUri!.AbsolutePath.Contains("/wit/workitems"));
     }
 
     [Theory]
@@ -187,6 +189,99 @@ public sealed class AdoStatusProviderTests
 
         Assert.Equal(ProviderStates.Error, snapshot.State);
         Assert.Contains("network", snapshot.Detail);
+    }
+
+    private static AdoStatusSettings ConfiguredWithRepo =>
+        new() { Organization = "org", Project = "proj", Repository = "repo" };
+
+    [Fact]
+    public async Task MapsActivePrsAndBuildsToSanitizedRows()
+    {
+        var prs = """
+            {"value":[{
+              "pullRequestId":5,
+              "title":"add\u001b[2J thing",
+              "status":"active",
+              "isDraft":true,
+              "sourceRefName":"refs/heads/feat/x",
+              "creationDate":"2026-08-16T09:00:00Z",
+              "createdBy":{"displayName":"Ada"}}]}
+            """;
+        var builds = """
+            {"value":[{
+              "id":42,
+              "buildNumber":"20260817.3",
+              "status":"completed",
+              "result":"succeeded",
+              "sourceBranch":"refs/heads/dev",
+              "queueTime":"2026-08-17T08:00:00Z",
+              "definition":{"name":"CI"}}]}
+            """;
+        var handler = new CannedHandler([Ok("""{"workItems":[]}"""), Ok(prs), Ok(builds)]);
+        using var provider = new AdoStatusProvider(WithToken(), ConfiguredWithRepo, handler);
+
+        var snapshot = await provider.FetchAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal(ProviderStates.Ok, snapshot.State);
+        var pr = Assert.Single(snapshot.PullRequests);
+        Assert.Equal(5, pr.Id);
+        Assert.Equal("add[2J thing", pr.Title);
+        Assert.Equal("Ada", pr.Author);
+        Assert.True(pr.IsDraft);
+        Assert.Equal("feat/x", pr.HeadBranch);
+        Assert.Equal("https://dev.azure.com/org/proj/_git/repo/pullrequest/5", pr.Url);
+        var run = Assert.Single(snapshot.Runs);
+        Assert.Equal(42, run.Id);
+        Assert.Equal("CI", run.WorkflowName);
+        Assert.Equal("20260817.3", run.DisplayTitle);
+        Assert.Equal("completed", run.Status);
+        Assert.Equal("succeeded", run.Conclusion);
+        Assert.Equal("success", run.Outcome);
+        Assert.Equal("dev", run.HeadBranch);
+        Assert.Equal("https://dev.azure.com/org/proj/_build/results?buildId=42", run.Url);
+    }
+
+    [Fact]
+    public async Task NoRepositorySettingSkipsThePullRequestSurface()
+    {
+        var handler = new CannedHandler([Ok("""{"workItems":[]}"""), Ok("""{"value":[]}""")]);
+        using var provider = new AdoStatusProvider(WithToken(), Configured, handler);
+
+        var snapshot = await provider.FetchAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal(ProviderStates.Ok, snapshot.State);
+        Assert.Empty(snapshot.PullRequests);
+        Assert.Equal(2, handler.Requests.Count);
+        Assert.DoesNotContain(handler.Requests, r => r.RequestUri!.AbsolutePath.Contains("/git/repositories/"));
+    }
+
+    [Fact]
+    public async Task RepositoryNotFoundNamesTheRepositorySetting()
+    {
+        var handler = new CannedHandler(
+            [Ok("""{"workItems":[]}"""), new HttpResponseMessage(HttpStatusCode.NotFound)]);
+        using var provider = new AdoStatusProvider(WithToken(), ConfiguredWithRepo, handler);
+
+        var snapshot = await provider.FetchAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal(ProviderStates.Error, snapshot.State);
+        Assert.Contains("status.ado.repository", snapshot.Detail);
+    }
+
+    [Fact]
+    public async Task UrlHostileRepositoryIsErrorWithoutAnyRequest()
+    {
+        var handler = new CannedHandler([]);
+        using var provider = new AdoStatusProvider(
+            WithToken(),
+            new AdoStatusSettings { Organization = "org", Project = "proj", Repository = "x/../y" },
+            handler);
+
+        var snapshot = await provider.FetchAsync(TestContext.Current.CancellationToken);
+
+        Assert.Equal(ProviderStates.Error, snapshot.State);
+        Assert.Contains("status.ado.repository", snapshot.Detail);
+        Assert.Empty(handler.Requests);
     }
 
     private static HttpResponseMessage Ok(string json) => new(HttpStatusCode.OK)
