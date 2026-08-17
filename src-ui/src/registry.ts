@@ -61,6 +61,21 @@ function nextFrame(): Promise<void> {
  * sidecar stays a session-keyed PTY host with no layout knowledge; everything
  * about *presentation* multiplicity lives here.
  */
+/** What an open() caller can choose (FT-1 slice 3, #75). */
+export interface OpenOptions {
+  /**
+   * Explicit pane kind. Omitted means the sidecar's host-default chain
+   * (request → settings → environment → pi; ADR-0013/0014) decides —
+   * including for the palette's plain "new pane". An explicit value is an
+   * operator choice from the palette and deliberately overrides that chain;
+   * `'pi'` is now sendable for exactly that reason.
+   */
+  kind?: api.PaneKind;
+  /** Working directory, resolved and validated sidecar-side; a bad path
+   * fails the spawn loudly into the pane. */
+  cwd?: string;
+}
+
 export class PaneRegistry {
   private readonly panes: Pane[] = [];
   private readonly host: HTMLElement;
@@ -68,6 +83,13 @@ export class PaneRegistry {
   private readonly encoder = new TextEncoder();
   private activeId: string | undefined;
   private nextIndex = 1;
+
+  /**
+   * The kind an unqualified spawn actually gets, from `settings/get` —
+   * display-only (tab titles). Starts at the host default and is corrected
+   * at startup before the first pane's title renders.
+   */
+  defaultKind: api.PaneKind = 'pi';
 
   /**
    * @param host Element pane containers are mounted into. Inactive panes are
@@ -89,16 +111,9 @@ export class PaneRegistry {
     return this.panes.find((p) => p.sessionId === this.activeId);
   }
 
-  /**
-   * Open a new pane and make it active.
-   *
-   * `kind` is omitted for a default pane so the sidecar's host-default chain
-   * (request → settings → environment → pi; ADR-0013/0014) stays
-   * authoritative — there is no way to ask for pi *harder*, so no caller here
-   * ever sends `kind: "pi"`. The title assumes the standard host default;
-   * settings-aware titles arrive with slice 3's `settings/get`.
-   */
-  async open(kind?: 'shell'): Promise<Pane> {
+  /** Open a new pane and make it active. See {@link OpenOptions}. */
+  async open(opts: OpenOptions = {}): Promise<Pane> {
+    const { kind, cwd } = opts;
     const sessionId = randomSessionId();
     const container = document.createElement('div');
     container.className = 'pane';
@@ -133,7 +148,7 @@ export class PaneRegistry {
 
     const pane: Pane = {
       sessionId,
-      title: `${kind ?? 'pi'} ${this.nextIndex++}`,
+      title: `${kind ?? this.defaultKind} ${this.nextIndex++}`,
       container,
       term,
       fit,
@@ -149,7 +164,7 @@ export class PaneRegistry {
     fit.fit();
 
     try {
-      await api.ptySpawn({ sessionId, kind, cols: term.cols, rows: term.rows });
+      await api.ptySpawn({ sessionId, kind, cwd, cols: term.cols, rows: term.rows });
     } catch (err) {
       // Rendered into the terminal the spawn failed to fill — where the
       // operator is already looking. A missing pi arrives here as an
@@ -183,6 +198,15 @@ export class PaneRegistry {
     const pane = this.panes.find((p) => p.sessionId === sessionId);
     if (!pane) return;
     this.setActive(pane);
+    this.onChange();
+  }
+
+  /** Focus the neighboring tab, wrapping. No-op with fewer than two panes. */
+  cycle(delta: 1 | -1): void {
+    if (this.panes.length < 2) return;
+    const current = this.panes.findIndex((p) => p.sessionId === this.activeId);
+    const next = this.panes[(current + delta + this.panes.length) % this.panes.length];
+    this.setActive(next);
     this.onChange();
   }
 

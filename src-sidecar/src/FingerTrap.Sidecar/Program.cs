@@ -52,7 +52,7 @@ await using var status = new StatusService([
     new AdoStatusProvider(credentials, settings.Status?.Ado),
     new LocalGitStatusProvider(settings.Status?.Git),
 ]);
-using var surface = new RpcSurface(pty, settings.Pane, credentials, status);
+using var surface = new RpcSurface(pty, settings.Pane, credentials, status, settings.Keybindings);
 
 var rpc = new JsonRpc(handler);
 rpc.AddLocalRpcTarget(surface, new JsonRpcTargetOptions

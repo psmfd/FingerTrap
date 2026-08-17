@@ -44,6 +44,17 @@ internal sealed record FingerTrapSettings
     [JsonPropertyName("status")]
     public StatusSettings? Status { get; init; }
 
+    /// <summary>
+    /// Per-chord keybinding overrides (FT-1 slice 3, ADR-0021): action id →
+    /// chord string, e.g. <c>"palette.toggle": "ctrl+shift+p"</c>. Additive
+    /// within schema v1. The action vocabulary and chord grammar are the UI's
+    /// (the key events live there); the sidecar stores and serves this map
+    /// verbatim via <c>settings/get</c> and never interprets it. Defaults
+    /// ship in UI code — an absent map means "all defaults".
+    /// </summary>
+    [JsonPropertyName("keybindings")]
+    public Dictionary<string, string>? Keybindings { get; init; }
+
     /// <summary>Everything unset — the behaviour of an absent settings file.</summary>
     internal static FingerTrapSettings Defaults { get; } = new() { Version = SettingsLoader.SupportedVersion };
 }

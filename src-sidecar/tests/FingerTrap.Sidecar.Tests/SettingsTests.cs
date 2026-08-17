@@ -285,4 +285,66 @@ public sealed class SettingsTests
 
         Assert.Throws<ArgumentException>(() => PaneKinds.Parse(null, new PaneSettings { DefaultKind = "pie" }));
     }
+
+    // --- keybindings + settings/get (FT-1 slice 3, ADR-0021) ---------------
+
+    [Fact]
+    public void Parse_KeybindingsSection_ReadsMapVerbatim()
+    {
+        var s = SettingsLoader.Parse("""
+            {"version": 1, "keybindings": {"palette.toggle": "ctrl+shift+k", "pane.new": "ctrl+n"}}
+            """);
+
+        Assert.Equal("ctrl+shift+k", s.Keybindings?["palette.toggle"]);
+        Assert.Equal("ctrl+n", s.Keybindings?["pane.new"]);
+    }
+
+    [Fact]
+    public void Parse_NoKeybindingsSection_YieldsNull()
+    {
+        // Absent means "all defaults" — the UI owns the default chords.
+        var s = SettingsLoader.Parse("""{"version": 1}""");
+
+        Assert.Null(s.Keybindings);
+    }
+
+    [Fact]
+    public async Task SettingsGet_Defaults_ReportsPiAndNoBindings()
+    {
+        using var _ = EnvScope(PaneKinds.DefaultKindEnvVar, null);
+        using var surface = new RpcSurface(NSubstitute.Substitute.For<IPtyService>());
+
+        var result = await surface.SettingsGetAsync();
+
+        Assert.Equal("pi", result.PaneDefaultKind);
+        Assert.Empty(result.Keybindings);
+    }
+
+    [Fact]
+    public async Task SettingsGet_ResolvesDefaultKindThroughTheSpawnChain()
+    {
+        // Same resolver as a real unqualified spawn (PaneKinds.Parse): settings
+        // outrank the environment.
+        using var _ = EnvScope(PaneKinds.DefaultKindEnvVar, "pi");
+        using var surface = new RpcSurface(
+            NSubstitute.Substitute.For<IPtyService>(),
+            new PaneSettings { DefaultKind = "shell" });
+
+        var result = await surface.SettingsGetAsync();
+
+        Assert.Equal("shell", result.PaneDefaultKind);
+    }
+
+    [Fact]
+    public async Task SettingsGet_ServesKeybindingOverridesVerbatim()
+    {
+        using var _ = EnvScope(PaneKinds.DefaultKindEnvVar, null);
+        var bindings = new Dictionary<string, string> { ["palette.toggle"] = "ctrl+shift+k" };
+        using var surface = new RpcSurface(
+            NSubstitute.Substitute.For<IPtyService>(), keybindings: bindings);
+
+        var result = await surface.SettingsGetAsync();
+
+        Assert.Equal("ctrl+shift+k", result.Keybindings["palette.toggle"]);
+    }
 }

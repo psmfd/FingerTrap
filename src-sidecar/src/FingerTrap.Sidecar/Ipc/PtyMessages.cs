@@ -78,7 +78,28 @@ internal static class PaneKinds
                 $"unknown pane kind '{value}'; expected 'pi' or 'shell'", nameof(requested)),
         };
     }
+
+    /// <summary>Inverse of <see cref="Parse"/> for the wire (settings/get).</summary>
+    internal static string ToWire(PaneKind kind) => kind switch
+    {
+        PaneKind.Pi => "pi",
+        PaneKind.Shell => "shell",
+        _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, null),
+    };
 }
+
+/// <summary>
+/// Effective settings the UI needs (FT-1 slice 3, ADR-0021). The WebView
+/// cannot read the settings file or the environment, so the sidecar — the
+/// single reader with the single precedence chain — answers with what it
+/// already resolved. <paramref name="PaneDefaultKind"/> is the kind an
+/// unqualified spawn gets (request → settings → env → host default);
+/// <paramref name="Keybindings"/> is the operator's override map, served
+/// verbatim (empty when unset) — chord semantics are the UI's.
+/// </summary>
+public sealed record SettingsGetResult(
+    string PaneDefaultKind,
+    IReadOnlyDictionary<string, string> Keybindings);
 
 public sealed record PtySpawnResult(int Pid);
 

@@ -250,3 +250,65 @@ main {
 .status-empty {
   color: #777;
 }
+
+/* Command palette (FT-1 slice 3) */
+
+.palette-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 10vh;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.palette-box {
+  width: min(520px, 90%);
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.palette-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  color: #ddd;
+  background: #000;
+  border: 0;
+  border-bottom: 1px solid #333;
+  outline: none;
+  font: inherit;
+}
+
+.palette-list {
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.palette-item {
+  padding: 6px 12px;
+  color: #ccc;
+  cursor: pointer;
+}
+
+.palette-item:hover {
+  background: #1c1c1c;
+}
+
+.palette-item.selected {
+  background: #24344d;
+  color: #fff;
+}
+
+.palette-none {
+  padding: 6px 12px;
+  color: #777;
+}

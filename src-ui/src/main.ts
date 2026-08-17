@@ -1,5 +1,7 @@
 import './styles.css';
 import * as api from './api';
+import { Keymap } from './keymap';
+import { Palette, type Command } from './palette';
 import { PaneRegistry } from './registry';
 import { StatusPanel } from './status';
 import { TabBar } from './tabbar';
@@ -17,6 +19,34 @@ async function main(): Promise<void> {
     { label: '⎔', ariaLabel: 'Toggle status panel', onClick: () => status.toggle() },
   ]);
 
+  // The palette owns every command the keymap can also reach, plus the
+  // argument-taking spawns (#75): explicit kind, and free-text cwd — the
+  // sidecar resolves and validates the path, so a bad one fails loudly into
+  // the pane rather than silently opening in the wrong place.
+  const commands: readonly Command[] = [
+    { title: 'New pi pane', run: () => void registry.open({ kind: 'pi' }) },
+    { title: 'New shell pane', run: () => void registry.open({ kind: 'shell' }) },
+    {
+      title: 'New pi pane in directory…',
+      run: (p) => p.promptInput('absolute directory path', (cwd) => void registry.open({ kind: 'pi', cwd })),
+    },
+    {
+      title: 'New shell pane in directory…',
+      run: (p) => p.promptInput('absolute directory path', (cwd) => void registry.open({ kind: 'shell', cwd })),
+    },
+    {
+      title: 'Close pane',
+      run: () => {
+        const active = registry.active();
+        if (active) registry.close(active.sessionId);
+      },
+    },
+    { title: 'Next tab', run: () => registry.cycle(1) },
+    { title: 'Previous tab', run: () => registry.cycle(-1) },
+    { title: 'Toggle status panel', run: () => status.toggle() },
+  ];
+  const palette = new Palette(panesEl, commands, () => registry.active()?.term.focus());
+
   await api.start();
 
   // One global dispatch per notification type; the registry routes by
@@ -25,6 +55,34 @@ async function main(): Promise<void> {
   api.onPtyOutput((n) => registry.handleOutput(n));
   api.onPtyExit((n) => registry.handleExit(n));
   api.onStatusSnapshot((n) => status.update(n));
+
+  // Effective settings (slice 3): keybinding overrides and the real default
+  // pane kind for tab titles. A transport-level failure here degrades to
+  // built-in defaults — visibly, not silently — rather than blocking panes:
+  // the settings file itself cannot be the cause (a bad file already killed
+  // the sidecar at startup, before any RPC).
+  let overrides: Record<string, string> = {};
+  try {
+    const settings = await api.settingsGet();
+    overrides = settings.keybindings;
+    if (settings.paneDefaultKind === 'pi' || settings.paneDefaultKind === 'shell') {
+      registry.defaultKind = settings.paneDefaultKind;
+    }
+  } catch (err) {
+    console.error('settings/get failed; using default keybindings', err);
+  }
+
+  new Keymap(overrides)
+    .on('palette.toggle', () => palette.toggle())
+    .on('pane.new', () => void registry.open())
+    .on('pane.close', () => {
+      const active = registry.active();
+      if (active) registry.close(active.sessionId);
+    })
+    .on('pane.next', () => registry.cycle(1))
+    .on('pane.prev', () => registry.cycle(-1))
+    .on('status.toggle', () => status.toggle())
+    .install();
 
   // xterm's onResize only fires from term.resize(...) — observe the shared
   // pane host and let FitAddon translate DOM size changes into cell counts.
