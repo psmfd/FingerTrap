@@ -60,15 +60,17 @@ fn credentials_frame(provider: &str, token: Option<&str>) -> Zeroizing<Vec<u8>> 
     Zeroizing::new(frame.into_bytes())
 }
 
+/// Operator-command path (save/clear): marks the provider operator-owned so
+/// an in-flight async preload can never overwrite this write (#105).
 fn push_to_sidecar(
-    state: &State<'_, SidecarState>,
+    state: &SidecarState,
     provider: &str,
     token: Option<&str>,
 ) -> Result<(), String> {
     let frame = credentials_frame(provider, token);
     // Never log the frame or attach it to an error — the token is inside it.
     state
-        .write(&frame)
+        .write_credential_override(provider, &frame)
         .map_err(|_| "failed to deliver credential to sidecar".to_string())
 }
 
@@ -127,7 +129,13 @@ pub fn credential_status(provider: String) -> Result<String, String> {
 /// Called after (re)spawn: push every stored credential into the fresh
 /// sidecar. The sidecar holds tokens in memory only, so a respawn starts
 /// empty until this runs.
-pub fn preload_into_sidecar(state: &State<'_, SidecarState>) {
+///
+/// Must never run on the setup/main-thread path: `get_password` can block
+/// on a modal keychain ACL prompt (ad-hoc dev builds re-trigger it on every
+/// rebuild), and a pending prompt must not stall window/pane bring-up
+/// (#105). The status panel already renders the not-configured state, so a
+/// late credential arrival is just a snapshot refresh.
+pub fn preload_into_sidecar(state: &SidecarState) {
     for provider in PROVIDERS {
         let entry = match entry_for(provider) {
             Ok(entry) => entry,
@@ -139,7 +147,10 @@ pub fn preload_into_sidecar(state: &State<'_, SidecarState>) {
         match entry.get_password() {
             Ok(secret) => {
                 let secret = Zeroizing::new(secret);
-                if let Err(e) = push_to_sidecar(state, provider, Some(&secret)) {
+                let frame = credentials_frame(provider, Some(&secret));
+                // Preload defers to any operator save/clear that beat it
+                // here; never log the frame — the token is inside it.
+                if let Err(e) = state.write_credential_preload(provider, &frame) {
                     eprintln!("credential preload failed ({provider}): {e}");
                 }
             }
