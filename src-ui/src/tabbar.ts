@@ -32,14 +32,14 @@ export class TabBar {
     }
 
     // Default new tab is an unqualified spawn — the host-default chain
-    // decides what it is. The explicit action is shell-only on purpose:
-    // there is no "new pi tab", because pi cannot be asked for harder than
-    // the default already asks (ADR-0021).
+    // decides what it is. The explicit action stays shell-only: the tab bar
+    // offers the default and its opposite; the full kind/cwd choice is the
+    // palette's job (slice 3, #75).
     this.host.appendChild(
       this.renderAction('+', 'New tab', () => void this.registry.open()),
     );
     this.host.appendChild(
-      this.renderAction('+sh', 'New shell tab', () => void this.registry.open('shell')),
+      this.renderAction('+sh', 'New shell tab', () => void this.registry.open({ kind: 'shell' })),
     );
     for (const extra of this.extras) {
       this.host.appendChild(this.renderAction(extra.label, extra.ariaLabel, extra.onClick));

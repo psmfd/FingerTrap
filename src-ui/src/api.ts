@@ -147,11 +147,23 @@ export interface StatusSnapshotNotification {
   providers: ProviderSnapshot[];
 }
 
+/**
+ * Effective settings (FT-1 slice 3, ADR-0021): the WebView cannot read the
+ * settings file, so the sidecar answers with what it already resolved.
+ * `keybindings` is the operator's per-chord override map served verbatim
+ * (empty when unset); defaults and chord semantics live in keymap.ts.
+ */
+export interface SettingsGetResult {
+  paneDefaultKind: string;
+  keybindings: Record<string, string>;
+}
+
 const PtySpawnMethod = new RequestType1<PtySpawnRequest, PtySpawnResult, void>('pty/spawn');
 const PtyWriteMethod = new RequestType1<PtyWriteRequest, void, void>('pty/write');
 const PtyResizeMethod = new RequestType1<PtyResizeRequest, void, void>('pty/resize');
 const PtyKillMethod = new RequestType1<PtyKillRequest, void, void>('pty/kill');
 const StatusRefreshMethod = new RequestType1<null, void, void>('status/refresh');
+const SettingsGetMethod = new RequestType1<null, SettingsGetResult, void>('settings/get');
 const StatusSnapshotNotif = new NotificationType1<StatusSnapshotNotification>('status/snapshot');
 const PtyOutputNotif = new NotificationType1<PtyOutputNotification>('pty/output');
 const PtyExitNotif = new NotificationType1<PtyExitNotification>('pty/exit');
@@ -187,4 +199,8 @@ export async function statusRefresh(): Promise<void> {
 
 export function onStatusSnapshot(handler: (n: StatusSnapshotNotification) => void): Disposable {
   return require_().onNotification(StatusSnapshotNotif, handler);
+}
+
+export async function settingsGet(): Promise<SettingsGetResult> {
+  return require_().sendRequest(SettingsGetMethod, null);
 }

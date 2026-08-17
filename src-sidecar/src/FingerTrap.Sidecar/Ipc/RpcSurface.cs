@@ -21,19 +21,29 @@ internal sealed class RpcSurface : IDisposable
     /// Receives shell-delivered provider tokens (ADR-0022); a fresh empty
     /// cache when omitted (tests).
     /// </param>
+    /// <param name="keybindings">
+    /// Operator keybinding overrides from settings (FT-1 slice 3), served
+    /// verbatim by <c>settings/get</c>; null means "none configured".
+    /// </param>
     public RpcSurface(
         IPtyService pty,
         PaneSettings? paneSettings = null,
         CredentialCache? credentials = null,
-        StatusService? status = null)
+        StatusService? status = null,
+        IReadOnlyDictionary<string, string>? keybindings = null)
     {
         _pty = pty;
         _paneSettings = paneSettings;
         _credentials = credentials ?? new CredentialCache();
         _status = status;
+        _keybindings = keybindings;
     }
 
     private readonly StatusService? _status;
+    private readonly IReadOnlyDictionary<string, string>? _keybindings;
+
+    private static readonly IReadOnlyDictionary<string, string> NoKeybindings =
+        new Dictionary<string, string>();
 
     public void AttachRpc(JsonRpc rpc)
     {
@@ -122,6 +132,21 @@ internal sealed class RpcSurface : IDisposable
         _credentials.Set(notification.Provider, notification.Token);
         // A fresh token should be visible without waiting a poll interval.
         _status?.RefreshNow();
+    }
+
+    /// <summary>
+    /// Effective settings for the UI (FT-1 slice 3, ADR-0021). The default
+    /// kind is resolved through the same chain a real unqualified spawn uses
+    /// (<see cref="PaneKinds.Parse"/>), so a settings file this call would
+    /// misreport is one a spawn would reject identically — one resolver, one
+    /// failure mode.
+    /// </summary>
+    [JsonRpcMethod("settings/get")]
+    public Task<SettingsGetResult> SettingsGetAsync()
+    {
+        var kind = PaneKinds.Parse(null, _paneSettings);
+        return Task.FromResult(new SettingsGetResult(
+            PaneKinds.ToWire(kind), _keybindings ?? NoKeybindings));
     }
 
     [JsonRpcMethod("status/refresh")]

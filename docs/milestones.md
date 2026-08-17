@@ -26,7 +26,7 @@ individual item says otherwise.
 | M0 — Skeleton | foundation | **complete** |
 | M1 — Local PTY (Linux + macOS) | foundation | **complete** (v0.3.0) |
 | FT-0 — Revive + host | Home | **complete** ([#46](https://github.com/psmfd/FingerTrap/issues/46), PRs #47–#50, #53) |
-| FT-1 — Chrome | Home | **in progress** ([#58](https://github.com/psmfd/FingerTrap/issues/58), ADR-0021; slice 1 landed) |
+| FT-1 — Chrome | Home | **in progress** ([#58](https://github.com/psmfd/FingerTrap/issues/58), ADR-0021; slices 1–3 landed — splits and slice-2 follow-ups [#70](https://github.com/psmfd/FingerTrap/issues/70)/[#72](https://github.com/psmfd/FingerTrap/issues/72) remain) |
 | FT-2 — Structured control + observability | Home | not started |
 | FT-3 — Tool host | Home | not started |
 | N-1 — Settings and persistence | Native | **in progress** ([#51](https://github.com/psmfd/FingerTrap/issues/51); settings foundation landed, ADR-0014) |
