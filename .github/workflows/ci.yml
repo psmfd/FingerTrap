@@ -32,8 +32,8 @@ jobs:
       run:
         working-directory: src-sidecar
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: "10.0"
           cache: true
@@ -48,7 +48,7 @@ jobs:
       # failure is undiagnosable from the job log (#60).
       - name: upload test results
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: testresults-sidecar-${{ matrix.os }}
           path: src-sidecar/tests/**/TestResults/
@@ -65,11 +65,11 @@ jobs:
       run:
         working-directory: src-ui
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v5
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
         with:
           version: 10
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: "22"
           cache: pnpm
@@ -102,7 +102,7 @@ jobs:
       run:
         working-directory: src-tauri
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Install Linux system dependencies
         if: runner.os == 'Linux'
         working-directory: ${{ github.workspace }}
@@ -113,7 +113,7 @@ jobs:
             libappindicator3-dev \
             librsvg2-dev \
             patchelf
-      - uses: actions/setup-dotnet@v5
+      - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: "10.0"
           cache: true
@@ -183,12 +183,12 @@ jobs:
     name: repo-check
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - run: bash scripts/check.sh
 
   lint-actions:
     name: lint-actions
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: raven-actions/actionlint@v2
