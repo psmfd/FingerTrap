@@ -7,11 +7,20 @@ import {
   createTranscriptState,
   reduceTranscript,
   type BlockId,
+  type SystemSeverity,
   type TranscriptState,
 } from './transcript';
 import { TranscriptView } from './transcript-view';
 import { Composer } from './composer';
 import { RpcHeader, type ContextUsage, type ModelChoice } from './rpc-header';
+import { ExtensionStrip } from './extension-strip';
+import { UiRequestOverlay } from './ui-request-overlay';
+import {
+  auditLine,
+  isInteractiveMethod,
+  parseUiDialogRequest,
+  type UiDialogOutcome,
+} from './ui-requests';
 
 /**
  * What the registry, layout tree, and tab chrome need from a pane's content,
@@ -196,6 +205,8 @@ export class RpcPaneContent implements PaneContent {
   private readonly dirty = new Set<BlockId>();
   private readonly composer: Composer;
   private readonly header: RpcHeader;
+  private readonly strip: ExtensionStrip;
+  private readonly overlay: UiRequestOverlay;
   private flushScheduled = false;
 
   constructor(sessionId: string) {
@@ -231,7 +242,20 @@ export class RpcPaneContent implements PaneContent {
       },
       onAbort: () => this.sendControl(api.rpcAbort({ sessionId }), 'abort'),
     });
+    this.strip = new ExtensionStrip();
+    this.container.appendChild(this.strip.above);
     this.container.appendChild(this.composer.container);
+    this.container.appendChild(this.strip.below);
+
+    this.overlay = new UiRequestOverlay(this.container, {
+      onOutcome: (request, outcome) => {
+        // The audit line is the durable record of the decision (a guard
+        // confirm is security-relevant); the modal itself is ephemeral.
+        this.writeSystemMessage(`[ui: ${auditLine(request, outcome)}]`, 'info');
+        this.sendUiResponse(request.id, outcome);
+      },
+      onIdle: () => this.composer.focus(),
+    });
   }
 
   async open(opts: { cwd?: string }): Promise<void> {
@@ -271,10 +295,14 @@ export class RpcPaneContent implements PaneContent {
   }
 
   async close(): Promise<void> {
+    // A dialog answered into a dying session would be silently dropped by
+    // pi anyway — drop the queue instead of leaving a stale modal up.
+    this.overlay.clearAll();
     await api.rpcKill({ sessionId: this.sessionId });
   }
 
   dispose(): void {
+    this.overlay.clearAll();
     this.container.remove();
   }
 
@@ -302,9 +330,95 @@ export class RpcPaneContent implements PaneContent {
       case 'session_info_changed':
         void this.refreshState();
         break;
+      case 'extension_ui_request':
+        this.handleUiRequest(n, event);
+        break;
       default:
         break;
     }
+  }
+
+  /**
+   * The extension UI channel (FT-2 slice 4). Interactive kinds queue into
+   * the modal overlay and MUST end in a response — an unanswered dialog
+   * can hang the agent turn forever (docs/rpc-contract.md), so every
+   * unrenderable path below still answers `cancelled` when an id exists.
+   */
+  private handleUiRequest(
+    n: api.RpcEventNotification,
+    event: Record<string, unknown> | null,
+  ): void {
+    if (n.truncated) {
+      // The payload is gone; the sidecar's marker preserves originalId/
+      // originalMethod for this event type so the dialog stays answerable.
+      const id = typeof event?.originalId === 'string' ? event.originalId : null;
+      const method = event?.originalMethod;
+      if (id !== null && isInteractiveMethod(method)) {
+        this.sendUiResponse(id, { cancelled: true });
+        this.writeSystemMessage(`[ui: oversized ${method} request auto-cancelled]`, 'error');
+      }
+      return;
+    }
+    if (event === null) return;
+
+    const method = event.method;
+    if (isInteractiveMethod(method)) {
+      const request = parseUiDialogRequest(event);
+      if (request !== null) {
+        this.overlay.enqueue(request);
+      } else if (typeof event.id === 'string' && event.id.length > 0) {
+        this.sendUiResponse(event.id, { cancelled: true });
+        this.writeSystemMessage(`[ui: malformed ${method} request auto-cancelled]`, 'error');
+      }
+      return;
+    }
+
+    switch (method) {
+      case 'notify':
+        this.markDirty([
+          appendSystemBlock(this.state, asText(event.message), notifySeverity(event.notifyType)),
+        ]);
+        break;
+      case 'setTitle':
+        // Live tab rename needs registry plumbing that does not exist yet
+        // (#133); the transcript records the request meanwhile.
+        this.writeSystemMessage(`[ui: title set to "${asText(event.title)}"]`, 'info');
+        break;
+      case 'set_editor_text':
+        this.composer.setText(asText(event.text));
+        break;
+      case 'setStatus':
+        if (typeof event.statusKey === 'string') {
+          this.strip.setStatus(
+            event.statusKey,
+            typeof event.statusText === 'string' ? event.statusText : undefined,
+          );
+        }
+        break;
+      case 'setWidget':
+        if (typeof event.widgetKey === 'string') {
+          this.strip.setWidget(
+            event.widgetKey,
+            Array.isArray(event.widgetLines) ? asStringArray(event.widgetLines) : undefined,
+            event.widgetPlacement === 'belowEditor' ? 'belowEditor' : 'aboveEditor',
+          );
+        }
+        break;
+      default:
+        // Fire-and-forget drift renders as a note; an unknown *dialog*
+        // kind cannot be safely auto-answered (we cannot know its
+        // response shape), so nothing more to do here.
+        this.writeSystemMessage(`[ui: unhandled request method "${asText(method)}"]`, 'info');
+        break;
+    }
+  }
+
+  private sendUiResponse(requestId: string, outcome: UiDialogOutcome): void {
+    api
+      .rpcExtensionUiResponse({ sessionId: this.sessionId, requestId, ...outcome })
+      .catch((err: unknown) => {
+        this.writeSystemMessage(`ui response error: ${(err as Error).message}`, 'error');
+      });
   }
 
   /**
@@ -411,4 +525,14 @@ function asStringArray(value: unknown): string[] {
   return Array.isArray(value)
     ? value.filter((item): item is string => typeof item === 'string')
     : [];
+}
+
+function asText(value: unknown): string {
+  return typeof value === 'string' ? value : '';
+}
+
+function notifySeverity(value: unknown): SystemSeverity {
+  // Unrecognized future notifyType values render as info — the
+  // fail-open-on-display posture the reducer uses for unknown events.
+  return value === 'warning' || value === 'error' ? value : 'info';
 }

@@ -19,6 +19,12 @@ export type BlockId = string;
 
 export type ToolStatus = 'running' | 'done' | 'error';
 
+/**
+ * `warning` exists for extension `notify` events (notifyType has three
+ * values on the wire); host-originated messages stay info/error.
+ */
+export type SystemSeverity = 'info' | 'warning' | 'error';
+
 export type Block =
   | { kind: 'user'; id: BlockId; text: string }
   | { kind: 'assistant-text'; id: BlockId; text: string; provisional: boolean }
@@ -31,7 +37,7 @@ export type Block =
       argsText: string;
       resultText: string;
     }
-  | { kind: 'system'; id: BlockId; text: string; severity: 'info' | 'error' }
+  | { kind: 'system'; id: BlockId; text: string; severity: SystemSeverity }
   | { kind: 'unknown-event'; id: BlockId; eventType: string; count: number };
 
 export interface TranscriptState {
@@ -162,7 +168,7 @@ export function reduceTranscript(
 export function appendSystemBlock(
   state: TranscriptState,
   text: string,
-  severity: 'info' | 'error',
+  severity: SystemSeverity,
 ): BlockId {
   return appendBlock(state, (id) => ({ kind: 'system', id, text, severity }));
 }
