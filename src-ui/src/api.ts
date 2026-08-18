@@ -90,6 +90,57 @@ export interface PtyExitNotification {
 }
 
 /**
+ * Native RPC pane surface (FT-2 slice 2, ADR-0025). `sessionPath` resumes a
+ * session at spawn time — selection is spawn-time-only in pi's protocol; the
+ * session browser (slice 5) is its first setter.
+ */
+export interface RpcSpawnRequest {
+  sessionId: string;
+  cwd?: string;
+  sessionPath?: string;
+  env?: Record<string, string>;
+}
+
+export interface RpcKillRequest {
+  sessionId: string;
+}
+
+export interface RpcPromptRequest {
+  sessionId: string;
+  message: string;
+}
+
+/** The prompt ack — asynchronous relative to the prompt's own events. */
+export interface RpcPromptResult {
+  success: boolean;
+  error?: string | null;
+}
+
+/**
+ * One relayed pi event, verbatim (thin relay). `event` is the raw event
+ * object — untrusted content in every field: render text via
+ * textContent/text nodes only, never innerHTML (ADR-0022). `truncated`
+ * marks an oversized event replaced sidecar-side by a small
+ * `rpc_event_truncated` marker so it could not kill the shared transport.
+ */
+export interface RpcEventNotification {
+  sessionId: string;
+  eventType?: string | null;
+  event: unknown;
+  truncated: boolean;
+}
+
+/**
+ * The pane's pi child is gone. `stderrTail` is bounded diagnostic text —
+ * untrusted (extension logs reroute to stderr); textContent-only rendering.
+ */
+export interface RpcExitNotification {
+  sessionId: string;
+  exitCode: number;
+  stderrTail: string;
+}
+
+/**
  * Status surfaces (ADR-0022). Free-text fields arrive already sanitized at
  * the sidecar's data boundary; render them via textContent regardless —
  * never innerHTML (defense in depth, there is no framework auto-escaping).
@@ -162,11 +213,16 @@ const PtySpawnMethod = new RequestType1<PtySpawnRequest, PtySpawnResult, void>('
 const PtyWriteMethod = new RequestType1<PtyWriteRequest, void, void>('pty/write');
 const PtyResizeMethod = new RequestType1<PtyResizeRequest, void, void>('pty/resize');
 const PtyKillMethod = new RequestType1<PtyKillRequest, void, void>('pty/kill');
+const RpcSpawnMethod = new RequestType1<RpcSpawnRequest, void, void>('rpc/spawn');
+const RpcKillMethod = new RequestType1<RpcKillRequest, void, void>('rpc/kill');
+const RpcPromptMethod = new RequestType1<RpcPromptRequest, RpcPromptResult, void>('rpc/prompt');
 const StatusRefreshMethod = new RequestType1<null, void, void>('status/refresh');
 const SettingsGetMethod = new RequestType1<null, SettingsGetResult, void>('settings/get');
 const StatusSnapshotNotif = new NotificationType1<StatusSnapshotNotification>('status/snapshot');
 const PtyOutputNotif = new NotificationType1<PtyOutputNotification>('pty/output');
 const PtyExitNotif = new NotificationType1<PtyExitNotification>('pty/exit');
+const RpcEventNotif = new NotificationType1<RpcEventNotification>('rpc/event');
+const RpcExitNotif = new NotificationType1<RpcExitNotification>('rpc/exit');
 
 export async function ptySpawn(request: PtySpawnRequest): Promise<PtySpawnResult> {
   return require_().sendRequest(PtySpawnMethod, request);
@@ -190,6 +246,26 @@ export function onPtyOutput(handler: (n: PtyOutputNotification) => void): Dispos
 
 export function onPtyExit(handler: (n: PtyExitNotification) => void): Disposable {
   return require_().onNotification(PtyExitNotif, handler);
+}
+
+export async function rpcSpawn(request: RpcSpawnRequest): Promise<void> {
+  await require_().sendRequest(RpcSpawnMethod, request);
+}
+
+export async function rpcKill(request: RpcKillRequest): Promise<void> {
+  await require_().sendRequest(RpcKillMethod, request);
+}
+
+export async function rpcPrompt(request: RpcPromptRequest): Promise<RpcPromptResult> {
+  return require_().sendRequest(RpcPromptMethod, request);
+}
+
+export function onRpcEvent(handler: (n: RpcEventNotification) => void): Disposable {
+  return require_().onNotification(RpcEventNotif, handler);
+}
+
+export function onRpcExit(handler: (n: RpcExitNotification) => void): Disposable {
+  return require_().onNotification(RpcExitNotif, handler);
 }
 
 /** Fire-and-forget by contract: the answer is the next status/snapshot. */

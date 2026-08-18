@@ -44,6 +44,9 @@ catch (SettingsException ex)
 // Single platform-agnostic PtyService backed by Porta.Pty (ADR-0008);
 // platform branching now lives inside the vendored library.
 await using var pty = new PtyService(settings.Pi);
+// Native RPC panes (FT-2 slice 2, ADR-0025): one pi --mode rpc child per
+// attached session, relayed thin through the surface's IRpcPaneSink.
+await using var rpcPanes = new FingerTrap.Sidecar.PiRpc.RpcPaneService(settings.Pi);
 // Provider tokens live only here, delivered by the shell over stdin
 // (credentials/set, ADR-0022); status providers read them per-request.
 var credentials = new CredentialCache();
@@ -52,7 +55,7 @@ await using var status = new StatusService([
     new AdoStatusProvider(credentials, settings.Status?.Ado),
     new LocalGitStatusProvider(settings.Status?.Git),
 ]);
-using var surface = new RpcSurface(pty, settings.Pane, credentials, status, settings.Keybindings);
+using var surface = new RpcSurface(pty, settings.Pane, credentials, status, settings.Keybindings, rpcPanes);
 
 var rpc = new JsonRpc(handler);
 rpc.AddLocalRpcTarget(surface, new JsonRpcTargetOptions
@@ -66,6 +69,7 @@ rpc.AddLocalRpcTarget(surface, new JsonRpcTargetOptions
     UseSingleObjectParameterDeserialization = true,
 });
 surface.AttachRpc(rpc);
+rpcPanes.AttachSink(surface);
 rpc.StartListening();
 status.Start();
 

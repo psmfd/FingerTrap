@@ -26,13 +26,21 @@ async function main(): Promise<void> {
   const commands: readonly Command[] = [
     { title: 'New pi pane', run: () => void registry.open({ kind: 'pi' }) },
     { title: 'New shell pane', run: () => void registry.open({ kind: 'shell' }) },
+    // FT-2 slice 2 walking skeleton (ADR-0025): raw relayed events + a
+    // provisional prompt input; the PTY pi pane stays first-class.
+    { title: 'New pi pane (native rpc)', run: () => void registry.open({ kind: 'pi-rpc' }) },
     {
       title: 'New pi pane in directory…',
-      run: (p) => p.promptInput('absolute directory path', (cwd) => void registry.open({ kind: 'pi', cwd })),
+      run: (p) =>
+        p.promptInput('absolute directory path', (cwd) => void registry.open({ kind: 'pi', cwd })),
     },
     {
       title: 'New shell pane in directory…',
-      run: (p) => p.promptInput('absolute directory path', (cwd) => void registry.open({ kind: 'shell', cwd })),
+      run: (p) =>
+        p.promptInput(
+          'absolute directory path',
+          (cwd) => void registry.open({ kind: 'shell', cwd }),
+        ),
     },
     {
       title: 'Close pane',
@@ -47,7 +55,7 @@ async function main(): Promise<void> {
     { title: 'Previous pane', run: () => registry.cyclePane(-1) },
     { title: 'Toggle status panel', run: () => status.toggle() },
   ];
-  const palette = new Palette(panesEl, commands, () => registry.active()?.term.focus());
+  const palette = new Palette(panesEl, commands, () => registry.active()?.content.focus());
 
   await api.start();
 
@@ -56,6 +64,8 @@ async function main(): Promise<void> {
   // leak a handler.
   api.onPtyOutput((n) => registry.handleOutput(n));
   api.onPtyExit((n) => registry.handleExit(n));
+  api.onRpcEvent((n) => registry.handleRpcEvent(n));
+  api.onRpcExit((n) => registry.handleRpcExit(n));
   api.onStatusSnapshot((n) => status.update(n));
 
   // Effective settings (slice 3): keybinding overrides and the real default
