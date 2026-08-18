@@ -1,7 +1,5 @@
-import { Terminal } from '@xterm/xterm';
-import { FitAddon } from '@xterm/addon-fit';
-import { WebglAddon } from '@xterm/addon-webgl';
 import * as api from './api';
+import { type OpenKind, type PaneContent, PtyPaneContent, RpcPaneContent } from './pane-content';
 import { type LayoutNode, type SplitDir, leaf, leaves, removeLeaf, renderLayout, splitLeaf } from './layout';
 
 /**
@@ -12,12 +10,15 @@ import { type LayoutNode, type SplitDir, leaf, leaves, removeLeaf, renderLayout,
  */
 export type PaneState = 'running' | 'exited';
 
+/**
+ * A pane: identity, presentation state, and its content behind the
+ * kind-agnostic <see>PaneContent</see> surface (ADR-0025 decision 4). The
+ * registry never reaches past `content` into xterm or the RPC skeleton.
+ */
 export interface Pane {
   readonly sessionId: string;
   readonly title: string;
-  readonly container: HTMLElement;
-  readonly term: Terminal;
-  readonly fit: FitAddon;
+  readonly content: PaneContent;
   state: PaneState;
 }
 
@@ -27,10 +28,11 @@ export interface OpenOptions {
    * Explicit pane kind. Omitted means the sidecar's host-default chain
    * (request → settings → environment → pi; ADR-0013/0014) decides —
    * including for the palette's plain "new pane". An explicit value is an
-   * operator choice from the palette and deliberately overrides that chain;
-   * `'pi'` is now sendable for exactly that reason.
+   * operator choice from the palette and deliberately overrides that chain.
+   * `'pi-rpc'` opens the native RPC pane (FT-2 slice 2) — a UI-level kind,
+   * never sent on the pty wire.
    */
-  kind?: api.PaneKind;
+  kind?: OpenKind;
   /** Working directory, resolved and validated sidecar-side; a bad path
    * fails the spawn loudly into the pane. */
   cwd?: string;
@@ -48,7 +50,8 @@ export interface TabInfo {
 /**
  * A tab is a workspace (ADR-0024): one layout tree of panes plus a focused
  * pane. The root element hosts the rendered tree and display-toggles like
- * panes themselves did pre-splits — mounted forever, xterm never unmounts.
+ * panes themselves did pre-splits — mounted forever, content never
+ * unmounts (xterm loses scrollback and cell metrics on unmount).
  */
 interface Tab {
   readonly id: string;
@@ -56,6 +59,13 @@ interface Tab {
   tree: LayoutNode;
   activePaneId: string;
 }
+
+/** Builds a pane's content for a kind — injectable so registry tests run
+ * against a fake with no xterm or transport. */
+export type PaneContentFactory = (sessionId: string, kind: OpenKind | undefined) => PaneContent;
+
+const defaultContentFactory: PaneContentFactory = (sessionId, kind) =>
+  kind === 'pi-rpc' ? new RpcPaneContent(sessionId) : new PtyPaneContent(sessionId, kind);
 
 function randomSessionId(): string {
   // Every Tauri WebView provides crypto; the fallback covers only the
@@ -68,15 +78,6 @@ function randomSessionId(): string {
   const bytes = new Uint8Array(16);
   crypto.getRandomValues(bytes);
   return `s-${Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('')}`;
-}
-
-function bytesToBase64(bytes: Uint8Array): string {
-  const CHUNK = 0x8000;
-  const parts: string[] = [];
-  for (let i = 0; i < bytes.length; i += CHUNK) {
-    parts.push(String.fromCharCode(...bytes.subarray(i, i + CHUNK)));
-  }
-  return btoa(parts.join(''));
 }
 
 function base64ToBytes(b64: string): Uint8Array {
@@ -95,8 +96,8 @@ function nextFrame(): Promise<void> {
 
 /**
  * Owns pane lifecycle, the tab list with each tab's layout tree, and focus
- * (ADR-0021 P1, ADR-0024). The sidecar stays a session-keyed PTY host with
- * no layout knowledge; everything about *presentation* multiplicity lives
+ * (ADR-0021 P1, ADR-0024). The sidecar stays a session-keyed host with no
+ * layout knowledge; everything about *presentation* multiplicity lives
  * here.
  */
 export class PaneRegistry {
@@ -104,7 +105,7 @@ export class PaneRegistry {
   private readonly tabList: Tab[] = [];
   private readonly host: HTMLElement;
   private readonly onChange: () => void;
-  private readonly encoder = new TextEncoder();
+  private readonly contentFactory: PaneContentFactory;
   private activeTabId: string | undefined;
   private nextIndex = 1;
   private nextTabId = 1;
@@ -122,10 +123,12 @@ export class PaneRegistry {
    * unmount.
    * @param onChange Fired after any change a tab bar would render (open,
    * close, activate, exit, split).
+   * @param contentFactory Test seam; production uses the default.
    */
-  constructor(host: HTMLElement, onChange: () => void) {
+  constructor(host: HTMLElement, onChange: () => void, contentFactory: PaneContentFactory = defaultContentFactory) {
     this.host = host;
     this.onChange = onChange;
+    this.contentFactory = contentFactory;
   }
 
   tabs(): readonly TabInfo[] {
@@ -204,7 +207,7 @@ export class PaneRegistry {
     // as a fresh mount, for the divide-by-near-zero reason in createPane.
     void nextFrame().then(() => {
       this.fitVisible();
-      this.panes.get(tab.activePaneId)?.term.focus();
+      this.panes.get(tab.activePaneId)?.content.focus();
     });
     this.onChange();
   }
@@ -220,7 +223,7 @@ export class PaneRegistry {
       return;
     }
     void nextFrame().then(() => {
-      this.panes.get(sessionId)?.term.focus();
+      this.panes.get(sessionId)?.content.focus();
     });
     this.onChange();
   }
@@ -240,9 +243,10 @@ export class PaneRegistry {
   }
 
   /**
-   * Close a pane: kill its process (idempotent sidecar-side, so a racing
-   * self-exit is fine), then remove it and collapse its split — the sibling
-   * subtree takes the parent's place; the last pane closing closes the tab.
+   * Close a pane: end its process — dispatched through the pane's own
+   * content, because the kill is kind-specific (pty/kill vs rpc/kill; a
+   * hardcoded pty/kill would silently leak the pi RPC child) — then remove
+   * it and collapse its split. The last pane closing closes the tab.
    * Unlike a self-exit — which leaves a dead pane — closing is an explicit
    * operator action, so removal is immediate.
    */
@@ -251,10 +255,10 @@ export class PaneRegistry {
     const tab = this.tabList.find((t) => leaves(t.tree).includes(sessionId));
     if (!pane || !tab) return;
 
-    api.ptyKill({ sessionId }).catch(() => {
-      // Best-effort: the pane is going away either way, and the sidecar's
-      // kill is idempotent. A transport-level failure here surfaces on the
-      // next interaction with a live pane.
+    pane.content.close().catch(() => {
+      // Best-effort: the pane is going away either way, and both kill
+      // methods are idempotent sidecar-side. A transport-level failure here
+      // surfaces on the next interaction with a live pane.
     });
     this.disposePane(pane);
 
@@ -272,7 +276,7 @@ export class PaneRegistry {
     if (tab.id === this.activeTabId) {
       void nextFrame().then(() => {
         this.fitVisible();
-        this.panes.get(tab.activePaneId)?.term.focus();
+        this.panes.get(tab.activePaneId)?.content.focus();
       });
     }
     this.onChange();
@@ -285,7 +289,7 @@ export class PaneRegistry {
     for (const sessionId of leaves(tab.tree)) {
       const pane = this.panes.get(sessionId);
       if (!pane) continue;
-      api.ptyKill({ sessionId }).catch(() => {
+      pane.content.close().catch(() => {
         // Same best-effort contract as close().
       });
       this.disposePane(pane);
@@ -295,24 +299,50 @@ export class PaneRegistry {
 
   /** Route a pty/output notification to its pane, if it still exists. */
   handleOutput(n: api.PtyOutputNotification): void {
-    this.panes.get(n.sessionId)?.term.write(base64ToBytes(n.dataBase64));
+    const content = this.panes.get(n.sessionId)?.content;
+    if (content instanceof PtyPaneContent) {
+      content.write(base64ToBytes(n.dataBase64));
+    }
   }
 
   /** A self-exit marks the pane dead but keeps it (and its scrollback). */
   handleExit(n: api.PtyExitNotification): void {
     const pane = this.panes.get(n.sessionId);
     if (!pane) return;
-    pane.term.write(`\r\n\x1b[33m[process exited (${n.exitCode})]\x1b[0m\r\n`);
+    pane.content.writeSystemMessage(`[process exited (${n.exitCode})]`, 'info');
     pane.state = 'exited';
     this.onChange();
   }
 
-  /** Refit every pane in the active tab; hidden tabs refit on activation. */
+  /** Route a relayed pi event to its native RPC pane. */
+  handleRpcEvent(n: api.RpcEventNotification): void {
+    const content = this.panes.get(n.sessionId)?.content;
+    if (content instanceof RpcPaneContent) {
+      content.appendEvent(n);
+    }
+  }
+
+  /** The RPC pane's pi child is gone: same badge posture as a PTY exit,
+   * plus the child's stderr tail — its actual last words. */
+  handleRpcExit(n: api.RpcExitNotification): void {
+    const pane = this.panes.get(n.sessionId);
+    if (!pane) return;
+    pane.content.writeSystemMessage(`[pi exited (${n.exitCode})]`, 'info');
+    if (n.stderrTail.length > 0) {
+      pane.content.writeSystemMessage(n.stderrTail, 'error');
+    }
+    pane.state = 'exited';
+    this.onChange();
+  }
+
+  /** Resize every pane in the active tab; hidden tabs refit on activation.
+   * Uniform across kinds on purpose — the choreography is load-bearing for
+   * PTY cell measurement and must never be conditionally skipped. */
   fitVisible(): void {
     const tab = this.activeTab();
     if (!tab) return;
     for (const sessionId of leaves(tab.tree)) {
-      this.panes.get(sessionId)?.fit.fit();
+      this.panes.get(sessionId)?.content.resize();
     }
   }
 
@@ -324,7 +354,7 @@ export class PaneRegistry {
     renderLayout(tab.root, tab.tree, (id) => {
       const pane = this.panes.get(id);
       if (!pane) throw new Error(`layout references unknown pane ${id}`);
-      return pane.container;
+      return pane.content.container;
     }, () => this.fitVisible());
     this.applyFocusClasses(tab);
   }
@@ -334,7 +364,7 @@ export class PaneRegistry {
     // A focus ring on a lone pane is noise; it earns its place at two.
     const multi = ids.length > 1;
     for (const id of ids) {
-      this.panes.get(id)?.container.classList.toggle('focused', multi && id === tab.activePaneId);
+      this.panes.get(id)?.content.container.classList.toggle('focused', multi && id === tab.activePaneId);
     }
   }
 
@@ -353,100 +383,43 @@ export class PaneRegistry {
     this.onChange();
   }
 
-  /** Build the pane (terminal, container, wiring) without mounting it —
-   * the caller places the container via its tab's layout render. */
+  /** Build the pane (content, wiring) without mounting it — the caller
+   * places the container via its tab's layout render. */
   private createPane(opts: OpenOptions): Pane {
     const sessionId = randomSessionId();
-    const container = document.createElement('div');
-    container.className = 'pane';
-
-    const term = new Terminal({
-      fontFamily: 'ui-monospace, SFMono-Regular, Menlo, monospace',
-      fontSize: 13,
-      theme: { background: '#000000' },
-      cursorBlink: true,
-      allowProposedApi: true,
-    });
-    const fit = new FitAddon();
-    term.loadAddon(fit);
-    term.open(container);
-
-    // The DOM renderer (xterm's default) leaves stale rows on screen after
-    // full-screen erases (#78) — our display:none tab toggling stresses its
-    // known repaint gaps. Prefer the WebGL renderer; on context loss or
-    // WebGL-less environments fall back to the DOM renderer by disposing the
-    // addon rather than freezing the pane. Addon lifetime is owned by the
-    // terminal: term.dispose() disposes loaded addons.
-    try {
-      const webgl = new WebglAddon();
-      webgl.onContextLoss(() => {
-        webgl.dispose();
-      });
-      term.loadAddon(webgl);
-    } catch {
-      // WebGL unavailable — the DOM renderer stays in effect.
-    }
-
     const pane: Pane = {
       sessionId,
       title: `${opts.kind ?? this.defaultKind} ${this.nextIndex++}`,
-      container,
-      term,
-      fit,
+      content: this.contentFactory(sessionId, opts.kind),
       state: 'running',
     };
     this.panes.set(sessionId, pane);
     return pane;
   }
 
-  /** Spawn the pane's process once its container has had a layout pass. */
+  /** Start the pane's process once its container has had a layout pass. */
   private async spawnInto(pane: Pane, opts: OpenOptions): Promise<void> {
-    // First fit() only after a layout pass — before it, cell measurement
-    // divides by near-zero and reports thousands of cols, which the sidecar
-    // would set as the real pty winsize.
+    // First resize() only after a layout pass — before it, PTY cell
+    // measurement divides by near-zero and reports thousands of cols,
+    // which the sidecar would set as the real pty winsize.
     await nextFrame();
-    pane.fit.fit();
+    pane.content.resize();
 
     try {
-      await api.ptySpawn({
-        sessionId: pane.sessionId,
-        kind: opts.kind,
-        cwd: opts.cwd,
-        cols: pane.term.cols,
-        rows: pane.term.rows,
-      });
+      await pane.content.open({ cwd: opts.cwd });
     } catch (err) {
-      // Rendered into the terminal the spawn failed to fill — where the
+      // Rendered into the pane the spawn failed to fill — where the
       // operator is already looking. A missing pi arrives here as an
       // actionable message from the sidecar (PiNotFoundException), rather
       // than as a shell that quietly is not pi.
-      pane.term.write(`\r\n\x1b[31mfailed to spawn pane: ${(err as Error).message}\x1b[0m\r\n`);
+      pane.content.writeSystemMessage(`failed to spawn pane: ${(err as Error).message}`, 'error');
       pane.state = 'exited';
       this.onChange();
-      return;
     }
-
-    // Wired only after a successful spawn — a pane whose spawn failed
-    // deliberately ignores typing instead of erroring on every keystroke.
-    const { sessionId, term } = pane;
-    term.onData((data) => {
-      api.ptyWrite({ sessionId, dataBase64: bytesToBase64(this.encoder.encode(data)) }).catch((err: unknown) => {
-        term.write(`\r\n\x1b[31m[ptyWrite error] ${(err as Error).message}\x1b[0m\r\n`);
-      });
-    });
-
-    // The sidecar coalesces resize requests over 50 ms (ADR-0006); no UI
-    // debounce.
-    term.onResize(({ cols, rows }) => {
-      api.ptyResize({ sessionId, cols, rows }).catch((err: unknown) => {
-        term.write(`\r\n\x1b[31m[ptyResize error] ${(err as Error).message}\x1b[0m\r\n`);
-      });
-    });
   }
 
   private disposePane(pane: Pane): void {
-    pane.term.dispose();
-    pane.container.remove();
+    pane.content.dispose();
     this.panes.delete(pane.sessionId);
   }
 }

@@ -1,15 +1,19 @@
+using System.Text.Json.Nodes;
 using FingerTrap.Sidecar.Abstractions;
+using FingerTrap.Sidecar.PiRpc;
 using FingerTrap.Sidecar.Settings;
 using FingerTrap.Sidecar.Status;
+using Newtonsoft.Json.Linq;
 using StreamJsonRpc;
 
 namespace FingerTrap.Sidecar.Ipc;
 
-internal sealed class RpcSurface : IDisposable
+internal sealed class RpcSurface : IDisposable, IRpcPaneSink
 {
     private readonly IPtyService _pty;
     private readonly PaneSettings? _paneSettings;
     private readonly CredentialCache _credentials;
+    private readonly RpcPaneService? _rpcPanes;
     private JsonRpc? _rpc;
     private bool _eventsBound;
 
@@ -25,18 +29,24 @@ internal sealed class RpcSurface : IDisposable
     /// Operator keybinding overrides from settings (FT-1 slice 3), served
     /// verbatim by <c>settings/get</c>; null means "none configured".
     /// </param>
+    /// <param name="rpcPanes">
+    /// Native RPC pane service (FT-2 slice 2), or null when the host wires
+    /// no RPC panes (tests). This surface is its <see cref="IRpcPaneSink"/>.
+    /// </param>
     public RpcSurface(
         IPtyService pty,
         PaneSettings? paneSettings = null,
         CredentialCache? credentials = null,
         StatusService? status = null,
-        IReadOnlyDictionary<string, string>? keybindings = null)
+        IReadOnlyDictionary<string, string>? keybindings = null,
+        RpcPaneService? rpcPanes = null)
     {
         _pty = pty;
         _paneSettings = paneSettings;
         _credentials = credentials ?? new CredentialCache();
         _status = status;
         _keybindings = keybindings;
+        _rpcPanes = rpcPanes;
     }
 
     private readonly StatusService? _status;
@@ -65,6 +75,9 @@ internal sealed class RpcSurface : IDisposable
 
     public void Dispose()
     {
+        // Symmetric with AttachSink in Program.cs: a disposed surface's
+        // IRpcPaneSink implementation must never be invoked into again.
+        _rpcPanes?.AttachSink(null);
         if (_eventsBound)
         {
             _pty.Output -= OnPtyOutput;
@@ -116,6 +129,69 @@ internal sealed class RpcSurface : IDisposable
         _pty.Close(request.SessionId);
         return Task.CompletedTask;
     }
+
+    [JsonRpcMethod("rpc/spawn")]
+    public async Task RpcSpawnAsync(RpcSpawnRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var options = new RpcPaneSpawnOptions(request.Cwd, request.SessionPath, request.Env);
+        await RequireRpcPanes().SpawnAsync(request.SessionId, options, cancellationToken).ConfigureAwait(false);
+    }
+
+    [JsonRpcMethod("rpc/kill")]
+    public async Task RpcKillAsync(RpcKillRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        await RequireRpcPanes().KillAsync(request.SessionId, cancellationToken).ConfigureAwait(false);
+    }
+
+    [JsonRpcMethod("rpc/prompt")]
+    public async Task<RpcPromptResult> RpcPromptAsync(RpcPromptRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        // JsonObject rather than string interpolation: the message is
+        // operator free text and must arrive as one correctly-escaped JSON
+        // string value.
+        var parameters = new JsonObject { ["message"] = request.Message }.ToJsonString();
+        var response = await RequireRpcPanes()
+            .SendPromptAsync(request.SessionId, parameters, cancellationToken)
+            .ConfigureAwait(false);
+        return new RpcPromptResult(response.Success, response.Error);
+    }
+
+    /// <inheritdoc/>
+    /// <remarks>
+    /// Awaited by the pump on purpose (ordering + backpressure — see
+    /// <see cref="RpcPaneService"/>). The raw event JSON is parsed once and
+    /// embedded as a native token, not re-escaped as a string value.
+    /// </remarks>
+    Task IRpcPaneSink.PublishEventAsync(string sessionId, string? eventType, string json, bool truncated)
+    {
+        var rpc = _rpc;
+        if (rpc is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        var payload = new RpcEventNotification(sessionId, eventType, JToken.Parse(json), truncated);
+        return rpc.NotifyAsync("rpc/event", payload);
+    }
+
+    /// <inheritdoc/>
+    Task IRpcPaneSink.PublishExitAsync(string sessionId, int exitCode, string stderrTail)
+    {
+        var rpc = _rpc;
+        if (rpc is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        var payload = new RpcExitNotification(sessionId, exitCode, stderrTail);
+        return rpc.NotifyAsync("rpc/exit", payload);
+    }
+
+    private RpcPaneService RequireRpcPanes() =>
+        _rpcPanes ?? throw new InvalidOperationException("rpc panes are not wired on this host");
 
     /// <summary>
     /// Shell-originated notification (ADR-0022) — void on purpose: no
