@@ -108,12 +108,51 @@ export interface RpcKillRequest {
 export interface RpcPromptRequest {
   sessionId: string;
   message: string;
+  /**
+   * Required by pi when prompting mid-stream: 'steer' interrupts,
+   * 'followUp' queues (pi's exact casing). Omit when idle.
+   */
+  streamingBehavior?: 'steer' | 'followUp';
 }
 
 /** The prompt ack — asynchronous relative to the prompt's own events. */
 export interface RpcPromptResult {
   success: boolean;
   error?: string | null;
+}
+
+/** Session-scoped command with a message payload (steer / follow_up). */
+export interface RpcMessageRequest {
+  sessionId: string;
+  message: string;
+}
+
+/** Session-scoped command with no further parameters. */
+export interface RpcSessionRequest {
+  sessionId: string;
+}
+
+export interface RpcSetModelRequest {
+  sessionId: string;
+  provider: string;
+  modelId: string;
+}
+
+export interface RpcSetThinkingLevelRequest {
+  sessionId: string;
+  level: string;
+}
+
+/**
+ * A pi command's outcome, envelope stripped sidecar-side (FT-2 slice 3b):
+ * `data` is the response's `data` payload verbatim, or absent/null when
+ * the command returns none. Untrusted content in every field — read
+ * defensively, render text via textContent only (ADR-0022).
+ */
+export interface RpcCommandResult {
+  success: boolean;
+  error?: string | null;
+  data?: unknown;
 }
 
 /**
@@ -216,6 +255,33 @@ const PtyKillMethod = new RequestType1<PtyKillRequest, void, void>('pty/kill');
 const RpcSpawnMethod = new RequestType1<RpcSpawnRequest, void, void>('rpc/spawn');
 const RpcKillMethod = new RequestType1<RpcKillRequest, void, void>('rpc/kill');
 const RpcPromptMethod = new RequestType1<RpcPromptRequest, RpcPromptResult, void>('rpc/prompt');
+const RpcSteerMethod = new RequestType1<RpcMessageRequest, RpcCommandResult, void>('rpc/steer');
+const RpcFollowUpMethod = new RequestType1<RpcMessageRequest, RpcCommandResult, void>(
+  'rpc/followUp',
+);
+const RpcAbortMethod = new RequestType1<RpcSessionRequest, RpcCommandResult, void>('rpc/abort');
+const RpcGetStateMethod = new RequestType1<RpcSessionRequest, RpcCommandResult, void>(
+  'rpc/getState',
+);
+const RpcGetSessionStatsMethod = new RequestType1<RpcSessionRequest, RpcCommandResult, void>(
+  'rpc/getSessionStats',
+);
+const RpcGetAvailableModelsMethod = new RequestType1<RpcSessionRequest, RpcCommandResult, void>(
+  'rpc/getAvailableModels',
+);
+const RpcGetAvailableThinkingLevelsMethod = new RequestType1<
+  RpcSessionRequest,
+  RpcCommandResult,
+  void
+>('rpc/getAvailableThinkingLevels');
+const RpcSetModelMethod = new RequestType1<RpcSetModelRequest, RpcCommandResult, void>(
+  'rpc/setModel',
+);
+const RpcSetThinkingLevelMethod = new RequestType1<
+  RpcSetThinkingLevelRequest,
+  RpcCommandResult,
+  void
+>('rpc/setThinkingLevel');
 const StatusRefreshMethod = new RequestType1<null, void, void>('status/refresh');
 const SettingsGetMethod = new RequestType1<null, SettingsGetResult, void>('settings/get');
 const StatusSnapshotNotif = new NotificationType1<StatusSnapshotNotification>('status/snapshot');
@@ -258,6 +324,46 @@ export async function rpcKill(request: RpcKillRequest): Promise<void> {
 
 export async function rpcPrompt(request: RpcPromptRequest): Promise<RpcPromptResult> {
   return require_().sendRequest(RpcPromptMethod, request);
+}
+
+export async function rpcSteer(request: RpcMessageRequest): Promise<RpcCommandResult> {
+  return require_().sendRequest(RpcSteerMethod, request);
+}
+
+export async function rpcFollowUp(request: RpcMessageRequest): Promise<RpcCommandResult> {
+  return require_().sendRequest(RpcFollowUpMethod, request);
+}
+
+export async function rpcAbort(request: RpcSessionRequest): Promise<RpcCommandResult> {
+  return require_().sendRequest(RpcAbortMethod, request);
+}
+
+export async function rpcGetState(request: RpcSessionRequest): Promise<RpcCommandResult> {
+  return require_().sendRequest(RpcGetStateMethod, request);
+}
+
+export async function rpcGetSessionStats(request: RpcSessionRequest): Promise<RpcCommandResult> {
+  return require_().sendRequest(RpcGetSessionStatsMethod, request);
+}
+
+export async function rpcGetAvailableModels(request: RpcSessionRequest): Promise<RpcCommandResult> {
+  return require_().sendRequest(RpcGetAvailableModelsMethod, request);
+}
+
+export async function rpcGetAvailableThinkingLevels(
+  request: RpcSessionRequest,
+): Promise<RpcCommandResult> {
+  return require_().sendRequest(RpcGetAvailableThinkingLevelsMethod, request);
+}
+
+export async function rpcSetModel(request: RpcSetModelRequest): Promise<RpcCommandResult> {
+  return require_().sendRequest(RpcSetModelMethod, request);
+}
+
+export async function rpcSetThinkingLevel(
+  request: RpcSetThinkingLevelRequest,
+): Promise<RpcCommandResult> {
+  return require_().sendRequest(RpcSetThinkingLevelMethod, request);
 }
 
 export function onRpcEvent(handler: (n: RpcEventNotification) => void): Disposable {

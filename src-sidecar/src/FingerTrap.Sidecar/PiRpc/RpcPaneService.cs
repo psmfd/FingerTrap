@@ -1,8 +1,19 @@
 using System.Collections.Concurrent;
+using System.Text;
+using System.Text.Json;
 using FingerTrap.Sidecar.Executables;
 using FingerTrap.Sidecar.Settings;
 
 namespace FingerTrap.Sidecar.PiRpc;
+
+/// <summary>
+/// One pi command's outcome, envelope stripped: <paramref name="DataJson"/>
+/// is the raw JSON of the response's <c>data</c> field (null when the
+/// command returns none — pi omits the key entirely rather than sending
+/// null). Forwarded opaquely to the UI; the sidecar never models pi's
+/// evolving payload shapes (see <see cref="PiWireEnvelope"/> rationale).
+/// </summary>
+internal readonly record struct RpcCommandOutcome(bool Success, string? Error, string? DataJson);
 
 /// <summary>
 /// The single consumer a <see cref="RpcPaneService"/> publishes into —
@@ -126,6 +137,47 @@ internal sealed class RpcPaneService : IAsyncDisposable
     public Task<PiRpcResponse> SendPromptAsync(string sessionId, string parametersJson, CancellationToken cancellationToken)
     {
         return GetEntry(sessionId).Client.SendAsync("prompt", parametersJson, cancellationToken);
+    }
+
+    /// <summary>
+    /// Generic command passthrough behind the per-command typed surface
+    /// (FT-2 slice 3b): the one place that talks the pi command wire —
+    /// sends, strips the response envelope down to <c>data</c>, and
+    /// ceilings the payload. The <see cref="RpcEventGuard"/> ceiling is
+    /// reused because both legs share the UI transport's 4 MB frame
+    /// limit; unlike the notification path there is a proper error
+    /// channel here, so an oversized response becomes a failed command,
+    /// never a substitute marker a typed caller was not coded for.
+    /// </summary>
+    public async Task<RpcCommandOutcome> SendCommandAsync(
+        string sessionId, string command, string? parametersJson, CancellationToken cancellationToken)
+    {
+        var response = await GetEntry(sessionId).Client
+            .SendAsync(command, parametersJson, cancellationToken)
+            .ConfigureAwait(false);
+        if (!response.Success)
+        {
+            return new RpcCommandOutcome(false, response.Error, null);
+        }
+
+        var dataJson = ExtractDataJson(response.Json);
+        if (dataJson is not null
+            && Encoding.UTF8.GetByteCount(dataJson) > RpcEventGuard.MaxNotificationPayloadBytes)
+        {
+            return new RpcCommandOutcome(
+                false, $"response payload for '{command}' exceeds the relay ceiling", null);
+        }
+
+        return new RpcCommandOutcome(true, null, dataJson);
+    }
+
+    private static string? ExtractDataJson(string responseLine)
+    {
+        using var document = JsonDocument.Parse(responseLine);
+        return document.RootElement.ValueKind == JsonValueKind.Object
+            && document.RootElement.TryGetProperty("data", out var data)
+                ? data.GetRawText()
+                : null;
     }
 
     /// <summary>

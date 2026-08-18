@@ -22,7 +22,17 @@ public sealed record RpcSpawnRequest(
 
 public sealed record RpcKillRequest(string SessionId);
 
-public sealed record RpcPromptRequest(string SessionId, string Message);
+/// <param name="StreamingBehavior">
+/// <c>"steer"</c> or <c>"followUp"</c> (pi's exact casing), required by pi
+/// when a prompt is sent mid-stream; omitted when idle. A plain string,
+/// not an enum — pi types it as a TS string-literal union, and the
+/// Newtonsoft formatter would serialize a C# enum numerically. Note the
+/// null default is load-bearing convention: Newtonsoft does not apply
+/// positional-record constructor defaults for omitted JSON properties
+/// (Newtonsoft.Json#2765), so request records here must never declare a
+/// non-<c>default(T)</c> default.
+/// </param>
+public sealed record RpcPromptRequest(string SessionId, string Message, string? StreamingBehavior = null);
 
 /// <summary>
 /// The prompt ack (asynchronous relative to the prompt's own streamed
@@ -30,6 +40,28 @@ public sealed record RpcPromptRequest(string SessionId, string Message);
 /// contract's plain-string error, paired with success.
 /// </summary>
 public sealed record RpcPromptResult(bool Success, string? Error);
+
+public sealed record RpcSteerRequest(string SessionId, string Message);
+
+public sealed record RpcFollowUpRequest(string SessionId, string Message);
+
+/// <summary>Session-scoped command with no further parameters
+/// (abort, get_state, get_session_stats, get_available_models,
+/// get_available_thinking_levels).</summary>
+public sealed record RpcSessionRequest(string SessionId);
+
+public sealed record RpcSetModelRequest(string SessionId, string Provider, string ModelId);
+
+public sealed record RpcSetThinkingLevelRequest(string SessionId, string Level);
+
+/// <summary>
+/// A pi command's outcome with its envelope stripped: <paramref name="Data"/>
+/// is the response's <c>data</c> payload as an opaque parsed token (null
+/// when the command returns none), size-ceilinged sidecar-side. Untrusted
+/// content throughout — the UI renders text via textContent only
+/// (ADR-0022) and never assumes shape beyond the field it reads.
+/// </summary>
+public sealed record RpcCommandResult(bool Success, string? Error, JToken? Data);
 
 /// <summary>
 /// One relayed pi event, verbatim (thin relay). <paramref name="Event"/>
