@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json;
 using FingerTrap.Sidecar.PiRpc;
 using Xunit;
+using static FingerTrap.Sidecar.Tests.FakePiShim;
 
 namespace FingerTrap.Sidecar.Tests;
 
@@ -141,6 +142,88 @@ public sealed class RpcPaneServiceTests
         await service.KillAsync("dup", TestContext.Current.CancellationToken);
     }
 
+    [Fact]
+    public async Task SendCommandAsync_StripsEnvelope_ForwardsDataVerbatim()
+    {
+        await using var service = new RpcPaneService();
+        await SpawnFakePiAsync(service, "s1",
+            Step("waitForLine", "get_state"),
+            Step("writeLine",
+                """{"id":"{{lastId}}","type":"response","command":"get_state","success":true,"data":{"isStreaming":false,"thinkingLevel":"high"}}"""),
+            Step("waitForEof", true));
+
+        var outcome = await service.SendCommandAsync(
+            "s1", "get_state", null, TestContext.Current.CancellationToken);
+        await service.KillAsync("s1", TestContext.Current.CancellationToken);
+
+        Assert.True(outcome.Success);
+        Assert.Null(outcome.Error);
+        // data only — no envelope keys (id/type/command) leak to the UI leg.
+        using var data = JsonDocument.Parse(outcome.DataJson!);
+        Assert.Equal("high", data.RootElement.GetProperty("thinkingLevel").GetString());
+        Assert.False(data.RootElement.TryGetProperty("id", out _));
+        Assert.DoesNotContain("\"command\"", outcome.DataJson, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task SendCommandAsync_NoDataKey_YieldsNullData()
+    {
+        await using var service = new RpcPaneService();
+        await SpawnFakePiAsync(service, "s1",
+            Step("waitForLine", "abort"),
+            Step("writeLine", """{"id":"{{lastId}}","type":"response","command":"abort","success":true}"""),
+            Step("waitForEof", true));
+
+        var outcome = await service.SendCommandAsync(
+            "s1", "abort", null, TestContext.Current.CancellationToken);
+        await service.KillAsync("s1", TestContext.Current.CancellationToken);
+
+        Assert.True(outcome.Success);
+        Assert.Null(outcome.DataJson);
+    }
+
+    [Fact]
+    public async Task SendCommandAsync_ErrorResponse_PropagatesPlainStringError()
+    {
+        await using var service = new RpcPaneService();
+        await SpawnFakePiAsync(service, "s1",
+            Step("waitForLine", "set_model"),
+            Step("writeLine",
+                """{"id":"{{lastId}}","type":"response","command":"set_model","success":false,"error":"unknown model: nope"}"""),
+            Step("waitForEof", true));
+
+        var outcome = await service.SendCommandAsync(
+            "s1", "set_model", """{"provider":"x","modelId":"nope"}""", TestContext.Current.CancellationToken);
+        await service.KillAsync("s1", TestContext.Current.CancellationToken);
+
+        Assert.False(outcome.Success);
+        Assert.Equal("unknown model: nope", outcome.Error);
+        Assert.Null(outcome.DataJson);
+    }
+
+    [Fact]
+    public async Task SendCommandAsync_OversizedData_FailsWithCeilingError()
+    {
+        await using var service = new RpcPaneService();
+        // Over the 3 MB relay ceiling, under the supervisor's 8 MB line
+        // ceiling — unlike the notification path this surfaces as a failed
+        // command, never a substitute marker.
+        var blob = new string('x', RpcEventGuard.MaxNotificationPayloadBytes + 1024);
+        await SpawnFakePiAsync(service, "s1",
+            Step("waitForLine", "get_messages"),
+            Step("writeLine",
+                "{\"id\":\"{{lastId}}\",\"type\":\"response\",\"command\":\"get_messages\",\"success\":true,\"data\":{\"blob\":\"" + blob + "\"}}"),
+            Step("waitForEof", true));
+
+        var outcome = await service.SendCommandAsync(
+            "s1", "get_messages", null, TestContext.Current.CancellationToken);
+        await service.KillAsync("s1", TestContext.Current.CancellationToken);
+
+        Assert.False(outcome.Success);
+        Assert.Contains("relay ceiling", outcome.Error, StringComparison.Ordinal);
+        Assert.Null(outcome.DataJson);
+    }
+
     private static Task SpawnFakePiAsync(RpcPaneService service, string sessionId, params string[] steps)
     {
         // RequestedPath override: the resolver returns the explicit request
@@ -155,60 +238,6 @@ public sealed class RpcPaneServiceTests
             RequestedPath: WriteShim(steps));
         return service.SpawnAsync(sessionId, options, TestContext.Current.CancellationToken);
     }
-
-    /// <summary>
-    /// Platform shim that launches FakePi with its script, ignoring the
-    /// <c>--mode rpc</c> args the service appends — the seam that lets the
-    /// relay spawn "pi" without a pi.
-    /// </summary>
-    private static string WriteShim(string[] steps)
-    {
-        var scriptPath = Path.Combine(Path.GetTempPath(), $"fakepi-{Guid.NewGuid():N}.json");
-        File.WriteAllText(scriptPath, "[" + string.Join(",", steps) + "]");
-
-        var fakePi = FakePiDllPath();
-        if (OperatingSystem.IsWindows())
-        {
-            var cmd = Path.Combine(Path.GetTempPath(), $"fakepi-{Guid.NewGuid():N}.cmd");
-            File.WriteAllText(cmd, $"@echo off\r\ndotnet \"{fakePi}\" \"{scriptPath}\"\r\n");
-            return cmd;
-        }
-
-        var sh = Path.Combine(Path.GetTempPath(), $"fakepi-{Guid.NewGuid():N}.sh");
-        File.WriteAllText(sh, $"#!/bin/sh\nexec dotnet \"{fakePi}\" \"{scriptPath}\"\n");
-        File.SetUnixFileMode(sh, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
-        return sh;
-    }
-
-    private static string FakePiDllPath()
-    {
-        var baseDir = AppContext.BaseDirectory;
-        foreach (var configuration in new[] { "Debug", "Release" })
-        {
-            var marker = $"{Path.DirectorySeparatorChar}{configuration}{Path.DirectorySeparatorChar}";
-            if (!baseDir.Contains(marker, StringComparison.Ordinal))
-            {
-                continue;
-            }
-
-            var candidate = Path.GetFullPath(Path.Combine(
-                baseDir, "..", "..", "..", "..", "FakePi", "bin", configuration, "net10.0", "FakePi.dll"));
-            if (File.Exists(candidate))
-            {
-                return candidate;
-            }
-        }
-
-        throw new FileNotFoundException(
-            $"FakePi.dll not found relative to test output '{baseDir}' — build src-sidecar/tests/FakePi first");
-    }
-
-    private static string Step(string key, string value) =>
-        JsonSerializer.Serialize(new Dictionary<string, string> { [key] = value });
-
-    private static string Step(string key, int value) => $"{{\"{key}\":{value}}}";
-
-    private static string Step(string key, bool value) => $"{{\"{key}\":{(value ? "true" : "false")}}}";
 
     private sealed record CollectedEvent(string SessionId, string? EventType, string Json, bool Truncated);
 

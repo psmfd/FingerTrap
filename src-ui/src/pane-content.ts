@@ -10,6 +10,8 @@ import {
   type TranscriptState,
 } from './transcript';
 import { TranscriptView } from './transcript-view';
+import { Composer } from './composer';
+import { RpcHeader, type ContextUsage, type ModelChoice } from './rpc-header';
 
 /**
  * What the registry, layout tree, and tab chrome need from a pane's content,
@@ -177,21 +179,23 @@ export class PtyPaneContent implements PaneContent {
 }
 
 /**
- * The native RPC pane (FT-2 slice 3): a structured transcript fed by the
- * pure reducer in transcript.ts and projected by TranscriptView, with a
- * provisional single-line prompt input the slice-3b composer replaces.
- * Everything relayed is untrusted content: rendering is text nodes only,
- * never markup (ADR-0022), and DOM flushes are rAF-coalesced so
- * token-rate notification bursts cost one layout pass per frame.
+ * The native RPC pane (FT-2 slice 3): header strip (model/thinking
+ * pickers, context meter) over a structured transcript fed by the pure
+ * reducer in transcript.ts, over the host-owned composer
+ * (prompt/steer/follow-up/abort — ADR-0025 decision 6). Everything
+ * relayed is untrusted content: rendering is text nodes only, never
+ * markup (ADR-0022), and DOM flushes are rAF-coalesced so token-rate
+ * notification bursts cost one layout pass per frame.
  */
 export class RpcPaneContent implements PaneContent {
   readonly container: HTMLElement;
   private readonly output: HTMLElement;
-  private readonly input: HTMLInputElement;
   private readonly sessionId: string;
   private readonly state: TranscriptState = createTranscriptState();
   private readonly view: TranscriptView;
   private readonly dirty = new Set<BlockId>();
+  private readonly composer: Composer;
+  private readonly header: RpcHeader;
   private flushScheduled = false;
 
   constructor(sessionId: string) {
@@ -199,26 +203,42 @@ export class RpcPaneContent implements PaneContent {
     this.container = document.createElement('div');
     this.container.className = 'pane rpc-pane';
 
+    this.header = new RpcHeader({
+      onSetModel: (provider, modelId) =>
+        this.sendControl(api.rpcSetModel({ sessionId, provider, modelId }), 'set model'),
+      onSetThinkingLevel: (level) =>
+        this.sendControl(api.rpcSetThinkingLevel({ sessionId, level }), 'set thinking level'),
+    });
+    this.container.appendChild(this.header.container);
+
     this.output = document.createElement('div');
     this.output.className = 'rpc-output';
     this.container.appendChild(this.output);
     this.view = new TranscriptView(this.output);
 
-    const composer = document.createElement('form');
-    composer.className = 'rpc-composer';
-    this.input = document.createElement('input');
-    this.input.type = 'text';
-    this.input.placeholder = 'prompt (provisional — slice 3b composer replaces this)';
-    composer.appendChild(this.input);
-    composer.addEventListener('submit', (e) => {
-      e.preventDefault();
-      this.submitPrompt();
+    this.composer = new Composer({
+      onPrompt: (message) => {
+        this.view.forcePin();
+        this.sendControl(api.rpcPrompt({ sessionId, message }), 'prompt');
+      },
+      onSteer: (message) => {
+        this.view.forcePin();
+        this.sendControl(api.rpcSteer({ sessionId, message }), 'steer');
+      },
+      onFollowUp: (message) => {
+        this.view.forcePin();
+        this.sendControl(api.rpcFollowUp({ sessionId, message }), 'follow-up');
+      },
+      onAbort: () => this.sendControl(api.rpcAbort({ sessionId }), 'abort'),
     });
-    this.container.appendChild(composer);
+    this.container.appendChild(this.composer.container);
   }
 
   async open(opts: { cwd?: string }): Promise<void> {
     await api.rpcSpawn({ sessionId: this.sessionId, cwd: opts.cwd });
+    // Seed the header/composer from session state; failures degrade the
+    // chrome, not the pane, so this does not gate open().
+    void this.seed();
   }
 
   resize(): void {
@@ -228,13 +248,14 @@ export class RpcPaneContent implements PaneContent {
   }
 
   focus(): void {
-    this.input.focus();
+    this.composer.focus();
   }
 
-  /** One relayed event, folded through the transcript reducer. */
+  /** One relayed event: transcript fold + control-plane wiring. */
   appendEvent(n: api.RpcEventNotification): void {
     try {
       this.markDirty(reduceTranscript(this.state, n));
+      this.handleControlEvent(n);
     } catch (err) {
       // Backstop: one malformed event must not take down the pane's event
       // handling for the rest of the session (mirrors the sidecar's
@@ -257,24 +278,114 @@ export class RpcPaneContent implements PaneContent {
     this.container.remove();
   }
 
-  private submitPrompt(): void {
-    const message = this.input.value.trim();
-    if (!message) return;
-    this.input.value = '';
-    // No local echo: pi echoes every user message as message_start/end
-    // (docs/rpc-contract.md), and that echo is the transcript's single
-    // source of truth for ordering.
-    this.view.forcePin();
-    api
-      .rpcPrompt({ sessionId: this.sessionId, message })
+  /**
+   * Composer/header mode and readouts, driven by the same event stream
+   * the transcript folds. `agent_settled` is the sole idle boundary —
+   * `turn_end` fires between queued turns and would flicker the controls.
+   */
+  private handleControlEvent(n: api.RpcEventNotification): void {
+    const event = asRecord(n.event);
+    switch (n.eventType) {
+      case 'turn_start':
+        this.composer.setMode('streaming');
+        break;
+      case 'agent_settled':
+        this.composer.setMode('idle');
+        void this.refreshStats();
+        break;
+      case 'queue_update':
+        this.composer.setQueue(asStringArray(event?.steering), asStringArray(event?.followUp));
+        break;
+      case 'thinking_level_changed':
+        if (typeof event?.level === 'string') this.header.setActiveThinkingLevel(event.level);
+        break;
+      case 'session_info_changed':
+        void this.refreshState();
+        break;
+      default:
+        break;
+    }
+  }
+
+  /**
+   * No local echo on submit: pi echoes every user message as
+   * message_start/end (docs/rpc-contract.md), and that echo is the
+   * transcript's single source of truth for ordering. The ack only ever
+   * adds a rejection line.
+   */
+  private sendControl(
+    call: Promise<{ success: boolean; error?: string | null }>,
+    what: string,
+  ): void {
+    call
       .then((result) => {
         if (!result.success) {
-          this.writeSystemMessage(`prompt rejected: ${result.error ?? 'unknown error'}`, 'error');
+          this.writeSystemMessage(`${what} rejected: ${result.error ?? 'unknown error'}`, 'error');
         }
       })
       .catch((err: unknown) => {
-        this.writeSystemMessage(`rpc/prompt error: ${(err as Error).message}`, 'error');
+        this.writeSystemMessage(`${what} error: ${(err as Error).message}`, 'error');
       });
+  }
+
+  /** Header/composer seeding after spawn; each read degrades alone. */
+  private async seed(): Promise<void> {
+    const { sessionId } = this;
+    try {
+      const models = await api.rpcGetAvailableModels({ sessionId });
+      const list = asRecord(models.data)?.models;
+      if (models.success && Array.isArray(list)) {
+        this.header.setModels(
+          list.flatMap((m: unknown): ModelChoice[] => {
+            const model = asRecord(m);
+            if (typeof model?.id !== 'string' || typeof model.provider !== 'string') return [];
+            return [
+              {
+                provider: model.provider,
+                id: model.id,
+                name: typeof model.name === 'string' ? model.name : model.id,
+              },
+            ];
+          }),
+        );
+      }
+      const levels = await api.rpcGetAvailableThinkingLevels({ sessionId });
+      const levelList = asRecord(levels.data)?.levels;
+      if (levels.success && Array.isArray(levelList)) {
+        this.header.setThinkingLevels(asStringArray(levelList));
+      }
+      await this.refreshState();
+      await this.refreshStats();
+    } catch (err) {
+      this.writeSystemMessage(`state readout error: ${(err as Error).message}`, 'error');
+    }
+  }
+
+  private async refreshState(): Promise<void> {
+    const result = await api.rpcGetState({ sessionId: this.sessionId });
+    const data = asRecord(result.data);
+    if (!result.success || data === null) return;
+    this.composer.setMode(data.isStreaming === true ? 'streaming' : 'idle');
+    const model = asRecord(data.model);
+    if (typeof model?.id === 'string') this.header.setActiveModel(model.id);
+    if (typeof data.thinkingLevel === 'string') {
+      this.header.setActiveThinkingLevel(data.thinkingLevel);
+    }
+  }
+
+  private async refreshStats(): Promise<void> {
+    const result = await api.rpcGetSessionStats({ sessionId: this.sessionId });
+    const usage = asRecord(asRecord(result.data)?.contextUsage);
+    if (!result.success) return;
+    this.header.setContextUsage(
+      usage === null
+        ? null
+        : ({
+            percent: typeof usage.percent === 'number' ? usage.percent : null,
+            tokens: typeof usage.tokens === 'number' ? usage.tokens : null,
+            contextWindow: typeof usage.contextWindow === 'number' ? usage.contextWindow : null,
+          } satisfies ContextUsage),
+    );
   }
 
   private markDirty(ids: readonly BlockId[]): void {
@@ -288,4 +399,16 @@ export class RpcPaneContent implements PaneContent {
       this.view.apply(this.state, flushIds);
     });
   }
+}
+
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return typeof value === 'object' && value !== null && !Array.isArray(value)
+    ? (value as Record<string, unknown>)
+    : null;
+}
+
+function asStringArray(value: unknown): string[] {
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === 'string')
+    : [];
 }

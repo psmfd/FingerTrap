@@ -152,11 +152,103 @@ internal sealed class RpcSurface : IDisposable, IRpcPaneSink
         // JsonObject rather than string interpolation: the message is
         // operator free text and must arrive as one correctly-escaped JSON
         // string value.
-        var parameters = new JsonObject { ["message"] = request.Message }.ToJsonString();
+        var parameters = new JsonObject { ["message"] = request.Message };
+        if (!string.IsNullOrEmpty(request.StreamingBehavior))
+        {
+            parameters["streamingBehavior"] = request.StreamingBehavior;
+        }
+
         var response = await RequireRpcPanes()
-            .SendPromptAsync(request.SessionId, parameters, cancellationToken)
+            .SendPromptAsync(request.SessionId, parameters.ToJsonString(), cancellationToken)
             .ConfigureAwait(false);
         return new RpcPromptResult(response.Success, response.Error);
+    }
+
+    // The per-command typed surface (FT-2 slice 3b, ADR-0003's
+    // one-method-per-capability posture): each method is a thin wrapper
+    // over RpcPaneService.SendCommandAsync, which owns the pi plumbing.
+
+    [JsonRpcMethod("rpc/steer")]
+    public Task<RpcCommandResult> RpcSteerAsync(RpcSteerRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var parameters = new JsonObject { ["message"] = request.Message }.ToJsonString();
+        return SendCommandAsync(request.SessionId, "steer", parameters, cancellationToken);
+    }
+
+    [JsonRpcMethod("rpc/followUp")]
+    public Task<RpcCommandResult> RpcFollowUpAsync(RpcFollowUpRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var parameters = new JsonObject { ["message"] = request.Message }.ToJsonString();
+        return SendCommandAsync(request.SessionId, "follow_up", parameters, cancellationToken);
+    }
+
+    [JsonRpcMethod("rpc/abort")]
+    public Task<RpcCommandResult> RpcAbortAsync(RpcSessionRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return SendCommandAsync(request.SessionId, "abort", null, cancellationToken);
+    }
+
+    [JsonRpcMethod("rpc/getState")]
+    public Task<RpcCommandResult> RpcGetStateAsync(RpcSessionRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return SendCommandAsync(request.SessionId, "get_state", null, cancellationToken);
+    }
+
+    [JsonRpcMethod("rpc/getSessionStats")]
+    public Task<RpcCommandResult> RpcGetSessionStatsAsync(RpcSessionRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return SendCommandAsync(request.SessionId, "get_session_stats", null, cancellationToken);
+    }
+
+    [JsonRpcMethod("rpc/getAvailableModels")]
+    public Task<RpcCommandResult> RpcGetAvailableModelsAsync(RpcSessionRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return SendCommandAsync(request.SessionId, "get_available_models", null, cancellationToken);
+    }
+
+    [JsonRpcMethod("rpc/getAvailableThinkingLevels")]
+    public Task<RpcCommandResult> RpcGetAvailableThinkingLevelsAsync(RpcSessionRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return SendCommandAsync(request.SessionId, "get_available_thinking_levels", null, cancellationToken);
+    }
+
+    [JsonRpcMethod("rpc/setModel")]
+    public Task<RpcCommandResult> RpcSetModelAsync(RpcSetModelRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var parameters = new JsonObject
+        {
+            ["provider"] = request.Provider,
+            ["modelId"] = request.ModelId,
+        }.ToJsonString();
+        return SendCommandAsync(request.SessionId, "set_model", parameters, cancellationToken);
+    }
+
+    [JsonRpcMethod("rpc/setThinkingLevel")]
+    public Task<RpcCommandResult> RpcSetThinkingLevelAsync(RpcSetThinkingLevelRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        var parameters = new JsonObject { ["level"] = request.Level }.ToJsonString();
+        return SendCommandAsync(request.SessionId, "set_thinking_level", parameters, cancellationToken);
+    }
+
+    private async Task<RpcCommandResult> SendCommandAsync(
+        string sessionId, string command, string? parametersJson, CancellationToken cancellationToken)
+    {
+        var outcome = await RequireRpcPanes()
+            .SendCommandAsync(sessionId, command, parametersJson, cancellationToken)
+            .ConfigureAwait(false);
+        // Same raw-text boundary crossing as PublishEventAsync: STJ on the
+        // pi leg, Newtonsoft JToken on the UI leg, joined only via strings.
+        var data = outcome.DataJson is null ? null : JToken.Parse(outcome.DataJson);
+        return new RpcCommandResult(outcome.Success, outcome.Error, data);
     }
 
     /// <inheritdoc/>
