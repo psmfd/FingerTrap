@@ -31,11 +31,16 @@ async function main(): Promise<void> {
     { title: 'New pi pane (native rpc)', run: () => void registry.open({ kind: 'pi-rpc' }) },
     {
       title: 'New pi pane in directory…',
-      run: (p) => p.promptInput('absolute directory path', (cwd) => void registry.open({ kind: 'pi', cwd })),
+      run: (p) =>
+        p.promptInput('absolute directory path', (cwd) => void registry.open({ kind: 'pi', cwd })),
     },
     {
       title: 'New shell pane in directory…',
-      run: (p) => p.promptInput('absolute directory path', (cwd) => void registry.open({ kind: 'shell', cwd })),
+      run: (p) =>
+        p.promptInput(
+          'absolute directory path',
+          (cwd) => void registry.open({ kind: 'shell', cwd }),
+        ),
     },
     {
       title: 'Close pane',

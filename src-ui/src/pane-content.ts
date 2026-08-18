@@ -124,9 +124,11 @@ export class PtyPaneContent implements PaneContent {
     // deliberately ignores typing instead of erroring on every keystroke.
     const { sessionId, term } = this;
     term.onData((data) => {
-      api.ptyWrite({ sessionId, dataBase64: bytesToBase64(this.encoder.encode(data)) }).catch((err: unknown) => {
-        term.write(`\r\n\x1b[31m[ptyWrite error] ${(err as Error).message}\x1b[0m\r\n`);
-      });
+      api
+        .ptyWrite({ sessionId, dataBase64: bytesToBase64(this.encoder.encode(data)) })
+        .catch((err: unknown) => {
+          term.write(`\r\n\x1b[31m[ptyWrite error] ${(err as Error).message}\x1b[0m\r\n`);
+        });
     });
 
     // The sidecar coalesces resize requests over 50 ms (ADR-0006); no UI

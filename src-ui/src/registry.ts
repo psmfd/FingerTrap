@@ -1,6 +1,14 @@
 import * as api from './api';
 import { type OpenKind, type PaneContent, PtyPaneContent, RpcPaneContent } from './pane-content';
-import { type LayoutNode, type SplitDir, leaf, leaves, removeLeaf, renderLayout, splitLeaf } from './layout';
+import {
+  type LayoutNode,
+  type SplitDir,
+  leaf,
+  leaves,
+  removeLeaf,
+  renderLayout,
+  splitLeaf,
+} from './layout';
 
 /**
  * A pane that exited stays visible (badge + scrollback) rather than
@@ -125,7 +133,11 @@ export class PaneRegistry {
    * close, activate, exit, split).
    * @param contentFactory Test seam; production uses the default.
    */
-  constructor(host: HTMLElement, onChange: () => void, contentFactory: PaneContentFactory = defaultContentFactory) {
+  constructor(
+    host: HTMLElement,
+    onChange: () => void,
+    contentFactory: PaneContentFactory = defaultContentFactory,
+  ) {
     this.host = host;
     this.onChange = onChange;
     this.contentFactory = contentFactory;
@@ -351,11 +363,16 @@ export class PaneRegistry {
   }
 
   private renderTab(tab: Tab): void {
-    renderLayout(tab.root, tab.tree, (id) => {
-      const pane = this.panes.get(id);
-      if (!pane) throw new Error(`layout references unknown pane ${id}`);
-      return pane.content.container;
-    }, () => this.fitVisible());
+    renderLayout(
+      tab.root,
+      tab.tree,
+      (id) => {
+        const pane = this.panes.get(id);
+        if (!pane) throw new Error(`layout references unknown pane ${id}`);
+        return pane.content.container;
+      },
+      () => this.fitVisible(),
+    );
     this.applyFocusClasses(tab);
   }
 
@@ -364,7 +381,9 @@ export class PaneRegistry {
     // A focus ring on a lone pane is noise; it earns its place at two.
     const multi = ids.length > 1;
     for (const id of ids) {
-      this.panes.get(id)?.content.container.classList.toggle('focused', multi && id === tab.activePaneId);
+      this.panes
+        .get(id)
+        ?.content.container.classList.toggle('focused', multi && id === tab.activePaneId);
     }
   }
 
