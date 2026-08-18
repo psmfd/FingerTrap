@@ -136,7 +136,9 @@ function createBlockEls(block: Block): BlockEls {
       return { root, text, toolHead, toolArgs };
     }
     case 'system': {
-      root.classList.add(block.severity === 'error' ? 't-error' : 't-info');
+      // severity is a closed union, never event-derived text — safe as a
+      // class-name fragment.
+      root.classList.add(`t-${block.severity}`);
       const text = document.createTextNode(block.text);
       root.appendChild(text);
       return { root, text };

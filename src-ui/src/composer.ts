@@ -29,7 +29,9 @@ export class Composer {
   private readonly followUpButton: HTMLButtonElement;
   private readonly abortButton: HTMLButtonElement;
   private readonly queueEl: HTMLElement;
+  private readonly restoreButton: HTMLButtonElement;
   private mode: ComposerMode = 'idle';
+  private stashedDraft: string | null = null;
 
   constructor(private readonly handlers: ComposerHandlers) {
     this.container = document.createElement('div');
@@ -39,6 +41,14 @@ export class Composer {
     this.queueEl.className = 'composer-queue';
     this.queueEl.hidden = true;
     this.container.appendChild(this.queueEl);
+
+    this.restoreButton = document.createElement('button');
+    this.restoreButton.type = 'button';
+    this.restoreButton.className = 'composer-restore';
+    this.restoreButton.hidden = true;
+    this.restoreButton.appendChild(document.createTextNode('restore previous draft'));
+    this.restoreButton.addEventListener('click', () => this.restoreDraft());
+    this.container.appendChild(this.restoreButton);
 
     const row = document.createElement('div');
     row.className = 'composer-row';
@@ -89,6 +99,30 @@ export class Composer {
   }
 
   focus(): void {
+    this.textarea.focus();
+  }
+
+  /**
+   * set_editor_text: pi replaces the whole draft, never inserts
+   * (docs/rpc-contract.md), matching pi-tui's own buffer-overwrite
+   * semantics. The clobbered draft is stashed one step back — a cheap
+   * host-side addition the terminal client never had — and offered via
+   * the restore button.
+   */
+  setText(text: string): void {
+    const previous = this.textarea.value;
+    if (previous.length > 0 && previous !== text) {
+      this.stashedDraft = previous;
+      this.restoreButton.hidden = false;
+    }
+    this.textarea.value = text;
+  }
+
+  private restoreDraft(): void {
+    if (this.stashedDraft === null) return;
+    this.textarea.value = this.stashedDraft;
+    this.stashedDraft = null;
+    this.restoreButton.hidden = true;
     this.textarea.focus();
   }
 

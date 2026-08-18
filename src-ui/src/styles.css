@@ -370,6 +370,8 @@ main {
 /* Native RPC pane (FT-2 slice 3, ADR-0025): structured transcript above a
    provisional prompt input; the slice-3b composer replaces the input. */
 .rpc-pane {
+  /* Anchors the extension-UI dialog overlay (slice 4). */
+  position: relative;
   display: flex;
   flex-direction: column;
   color: #ccc;
@@ -436,6 +438,10 @@ main {
 
 .t-system.t-info {
   color: #d7ba7d;
+}
+
+.t-system.t-warning {
+  color: #d19a66;
 }
 
 .t-system.t-error {
@@ -551,4 +557,167 @@ main {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.composer-restore {
+  align-self: flex-start;
+  margin: 2px 0;
+  background: transparent;
+  color: #9cdcfe;
+  border: 0;
+  font: inherit;
+  font-size: 11px;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Extension status/widget strips (slice 4): keyed, replace-in-place. */
+.extension-strip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 2px 8px;
+  border-top: 1px solid #1c1c1c;
+}
+
+.strip-status {
+  color: #999;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.strip-widget {
+  margin: 0;
+  font: inherit;
+  font-size: 11px;
+  color: #9cdcfe;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Extension UI dialog overlay (slice 4): modal over the pane only. */
+.ui-request-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 12vh;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.ui-request-box {
+  width: min(480px, 92%);
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 6px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.ui-request-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #333;
+}
+
+.ui-request-title {
+  flex: 1 1 0;
+  min-width: 0;
+  color: #eee;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.ui-request-badge {
+  color: #777;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.ui-request-body {
+  padding: 8px 12px;
+}
+
+.ui-request-message {
+  margin: 0 0 8px;
+  font: inherit;
+  color: #ccc;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.ui-request-options {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 40vh;
+  overflow-y: auto;
+  outline: none;
+}
+
+.ui-option {
+  padding: 4px 8px;
+  color: #ccc;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.ui-option:hover {
+  background: #1c1c1c;
+}
+
+.ui-option.selected {
+  background: #24344d;
+  color: #fff;
+}
+
+.ui-request-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.ui-request-buttons button {
+  background: #1b1b1b;
+  color: #ccc;
+  border: 1px solid #2a2a2a;
+  font: inherit;
+  padding: 2px 14px;
+  cursor: pointer;
+}
+
+.ui-request-buttons button:hover,
+.ui-request-buttons button:focus-visible {
+  background: #252525;
+  color: #fff;
+}
+
+.ui-request-input,
+.ui-request-editor {
+  width: 100%;
+  box-sizing: border-box;
+  background: #000;
+  color: #ddd;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font: inherit;
+}
+
+.ui-request-editor {
+  resize: vertical;
+}
+
+.ui-request-hint {
+  margin-top: 4px;
+  color: #777;
+  font-size: 11px;
 }

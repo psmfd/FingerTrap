@@ -92,6 +92,28 @@ describe('Composer', () => {
     expect(textarea.value).toBe('keep me');
   });
 
+  it('setText replaces the whole draft and stashes the clobbered one', () => {
+    textarea.value = 'my careful draft';
+    composer.setText('extension pushed this');
+
+    expect(textarea.value).toBe('extension pushed this');
+    const restore = composer.container.querySelector<HTMLButtonElement>('.composer-restore')!;
+    expect(restore.hidden).toBe(false);
+
+    restore.click();
+    expect(textarea.value).toBe('my careful draft');
+    expect(restore.hidden).toBe(true);
+  });
+
+  it('setText over an empty draft offers no restore', () => {
+    composer.setText('pushed');
+
+    expect(textarea.value).toBe('pushed');
+    expect(composer.container.querySelector<HTMLButtonElement>('.composer-restore')!.hidden).toBe(
+      true,
+    );
+  });
+
   it('renders queue chips as text and hides the row when empty', () => {
     composer.setQueue(['<b>steer me</b>'], ['later']);
     const queue = composer.container.querySelector<HTMLElement>('.composer-queue')!;
