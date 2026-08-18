@@ -55,6 +55,24 @@ public sealed record RpcSetModelRequest(string SessionId, string Provider, strin
 public sealed record RpcSetThinkingLevelRequest(string SessionId, string Level);
 
 /// <summary>
+/// Answers one interactive <c>extension_ui_request</c> dialog —
+/// select/confirm/input/editor (FT-2 slice 4). Exactly one of
+/// <paramref name="Value"/> / <paramref name="Confirmed"/> /
+/// <paramref name="Cancelled"/> is set, mirroring pi's key-discriminated
+/// response union; the sidecar stays kind-unaware and forwards whichever
+/// key is present. <paramref name="RequestId"/> is the request event's own
+/// pi-assigned id echoed back verbatim — never a sidecar-minted
+/// <c>req_N</c>. Null defaults are the Newtonsoft.Json#2765 convention
+/// (see <see cref="RpcPromptRequest"/>).
+/// </summary>
+public sealed record RpcExtensionUiResponseRequest(
+    string SessionId,
+    string RequestId,
+    string? Value = null,
+    bool? Confirmed = null,
+    bool? Cancelled = null);
+
+/// <summary>
 /// A pi command's outcome with its envelope stripped: <paramref name="Data"/>
 /// is the response's <c>data</c> payload as an opaque parsed token (null
 /// when the command returns none), size-ceilinged sidecar-side. Untrusted

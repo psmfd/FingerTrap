@@ -81,6 +81,76 @@ public sealed class RpcSurfaceRoundTripTests
         await service.KillAsync("rt2", TestContext.Current.CancellationToken);
     }
 
+    [Fact]
+    public async Task RpcExtensionUiResponse_RoundTrips_ValueSurvivesTheCamelCaseWireUntouched()
+    {
+        // The FakePi script is sequential: get_state is only answered after
+        // the exact ui-response line matched, so the final assert proves the
+        // multi-field record deserialized (Newtonsoft.Json#2765 path) AND
+        // the value string crossed both JSON stacks verbatim — the
+        // camelCase resolver renames C# properties, never payload content.
+        await using var service = new RpcPaneService();
+        await SpawnAsync(service, "rt3",
+            Step("waitForLine", """{"id":"ui_7","type":"extension_ui_response","value":"Keep Going"}"""),
+            Step("waitForLine", "get_state"),
+            Step("writeLine",
+                """{"id":"{{lastId}}","type":"response","command":"get_state","success":true}"""),
+            Step("waitForEof", true));
+        using var surface = new RpcSurface(Substitute.For<IPtyService>(), rpcPanes: service);
+
+        var (clientRpc, serverRpc) = CreateConnectedPair(surface);
+        using (serverRpc)
+        using (clientRpc)
+        {
+            await clientRpc.InvokeWithParameterObjectAsync(
+                "rpc/extensionUiResponse",
+                new { sessionId = "rt3", requestId = "ui_7", value = "Keep Going" },
+                TestContext.Current.CancellationToken);
+
+            var result = await clientRpc.InvokeWithParameterObjectAsync<RpcCommandResult>(
+                "rpc/getState",
+                new { sessionId = "rt3" },
+                TestContext.Current.CancellationToken);
+            Assert.True(result.Success);
+        }
+
+        await service.KillAsync("rt3", TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task RpcExtensionUiResponse_RoundTrips_ConfirmedFalseIsNotCancelled()
+    {
+        // confirmed:false is an explicit denial, a different wire shape
+        // from cancelled — and false is the value most at risk of being
+        // conflated with an omitted field across the Newtonsoft leg.
+        await using var service = new RpcPaneService();
+        await SpawnAsync(service, "rt4",
+            Step("waitForLine", """{"id":"ui_8","type":"extension_ui_response","confirmed":false}"""),
+            Step("waitForLine", "get_state"),
+            Step("writeLine",
+                """{"id":"{{lastId}}","type":"response","command":"get_state","success":true}"""),
+            Step("waitForEof", true));
+        using var surface = new RpcSurface(Substitute.For<IPtyService>(), rpcPanes: service);
+
+        var (clientRpc, serverRpc) = CreateConnectedPair(surface);
+        using (serverRpc)
+        using (clientRpc)
+        {
+            await clientRpc.InvokeWithParameterObjectAsync(
+                "rpc/extensionUiResponse",
+                new { sessionId = "rt4", requestId = "ui_8", confirmed = false },
+                TestContext.Current.CancellationToken);
+
+            var result = await clientRpc.InvokeWithParameterObjectAsync<RpcCommandResult>(
+                "rpc/getState",
+                new { sessionId = "rt4" },
+                TestContext.Current.CancellationToken);
+            Assert.True(result.Success);
+        }
+
+        await service.KillAsync("rt4", TestContext.Current.CancellationToken);
+    }
+
     private static Task SpawnAsync(RpcPaneService service, string sessionId, params string[] steps)
     {
         var options = new RpcPaneSpawnOptions(

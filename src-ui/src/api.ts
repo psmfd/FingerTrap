@@ -144,6 +144,23 @@ export interface RpcSetThinkingLevelRequest {
 }
 
 /**
+ * Answers one interactive extension_ui_request dialog —
+ * select/confirm/input/editor (FT-2 slice 4). Exactly one of
+ * `value`/`confirmed`/`cancelled` is set: pi's response union is
+ * discriminated by key. `requestId` echoes the request event's own `id`.
+ * One-way on the pi wire — pi sends no ack and silently drops an
+ * unknown/expired id, so a resolved promise means "delivered to the
+ * child's stdin", never "pi applied it".
+ */
+export interface RpcExtensionUiResponseRequest {
+  sessionId: string;
+  requestId: string;
+  value?: string;
+  confirmed?: boolean;
+  cancelled?: boolean;
+}
+
+/**
  * A pi command's outcome, envelope stripped sidecar-side (FT-2 slice 3b):
  * `data` is the response's `data` payload verbatim, or absent/null when
  * the command returns none. Untrusted content in every field — read
@@ -282,6 +299,9 @@ const RpcSetThinkingLevelMethod = new RequestType1<
   RpcCommandResult,
   void
 >('rpc/setThinkingLevel');
+const RpcExtensionUiResponseMethod = new RequestType1<RpcExtensionUiResponseRequest, void, void>(
+  'rpc/extensionUiResponse',
+);
 const StatusRefreshMethod = new RequestType1<null, void, void>('status/refresh');
 const SettingsGetMethod = new RequestType1<null, SettingsGetResult, void>('settings/get');
 const StatusSnapshotNotif = new NotificationType1<StatusSnapshotNotification>('status/snapshot');
@@ -364,6 +384,12 @@ export async function rpcSetThinkingLevel(
   request: RpcSetThinkingLevelRequest,
 ): Promise<RpcCommandResult> {
   return require_().sendRequest(RpcSetThinkingLevelMethod, request);
+}
+
+export async function rpcExtensionUiResponse(
+  request: RpcExtensionUiResponseRequest,
+): Promise<void> {
+  await require_().sendRequest(RpcExtensionUiResponseMethod, request);
 }
 
 export function onRpcEvent(handler: (n: RpcEventNotification) => void): Disposable {

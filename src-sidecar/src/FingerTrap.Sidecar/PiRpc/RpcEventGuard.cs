@@ -25,11 +25,24 @@ internal static class RpcEventGuard
     internal const int MaxNotificationPayloadBytes = 3 * 1024 * 1024;
 
     /// <summary>
+    /// Longest identity string carried into a truncation marker. pi's ids
+    /// are UUIDs and its UI method names are short literals; anything
+    /// larger is dropped so the marker itself can never approach the
+    /// ceiling it exists to enforce.
+    /// </summary>
+    private const int MaxPreservedIdentityChars = 256;
+
+    /// <summary>
     /// Passes an event through unchanged, or — over the ceiling —
     /// substitutes a small well-formed <c>rpc_event_truncated</c> marker
     /// naming the original type and byte count. Never byte-truncates the
     /// JSON itself: a truncated JSON string is not JSON, and would break
-    /// the UI's parser instead of just losing content.
+    /// the UI's parser instead of just losing content. An oversized
+    /// <c>extension_ui_request</c> additionally keeps its <c>id</c> and
+    /// <c>method</c> (FT-2 slice 4): interactive dialog requests must stay
+    /// answerable — pi has no timeout on <c>editor</c> and guard-style
+    /// extensions opt out of one — so the host needs the id to send a
+    /// <c>cancelled</c> response instead of hanging the turn.
     /// </summary>
     internal static (string Json, bool Truncated) EnforceCeiling(string json, string? type)
     {
@@ -38,13 +51,54 @@ internal static class RpcEventGuard
             return (json, false);
         }
 
+        string? originalId = null;
+        string? originalMethod = null;
+        if (string.Equals(type, "extension_ui_request", StringComparison.Ordinal))
+        {
+            (originalId, originalMethod) = ExtractUiRequestIdentity(json);
+        }
+
         var marker = JsonSerializer.Serialize(
-            new TruncationMarker("rpc_event_truncated", type, Encoding.UTF8.GetByteCount(json)),
+            new TruncationMarker(
+                "rpc_event_truncated", type, Encoding.UTF8.GetByteCount(json), originalId, originalMethod),
             RpcEventGuardJsonContext.Default.TruncationMarker);
         return (marker, true);
     }
 
-    internal sealed record TruncationMarker(string Type, string? OriginalType, int OriginalBytes);
+    private static (string? Id, string? Method) ExtractUiRequestIdentity(string json)
+    {
+        try
+        {
+            using var document = JsonDocument.Parse(json);
+            return document.RootElement.ValueKind == JsonValueKind.Object
+                ? (ReadShortString(document.RootElement, "id"), ReadShortString(document.RootElement, "method"))
+                : (null, null);
+        }
+        catch (JsonException)
+        {
+            // The pump hands over whatever the supervisor read; an
+            // unparseable oversized line still gets the generic marker.
+            return (null, null);
+        }
+    }
+
+    private static string? ReadShortString(JsonElement root, string name) =>
+        root.TryGetProperty(name, out var value)
+            && value.ValueKind == JsonValueKind.String
+            && value.GetString() is { Length: <= MaxPreservedIdentityChars } text
+                ? text
+                : null;
+
+    internal sealed record TruncationMarker(
+        string Type,
+        string? OriginalType,
+        int OriginalBytes,
+        [property: System.Text.Json.Serialization.JsonIgnore(
+            Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        string? OriginalId,
+        [property: System.Text.Json.Serialization.JsonIgnore(
+            Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull)]
+        string? OriginalMethod);
 }
 
 [System.Text.Json.Serialization.JsonSerializable(typeof(RpcEventGuard.TruncationMarker))]

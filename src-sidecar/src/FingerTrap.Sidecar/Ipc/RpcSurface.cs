@@ -239,6 +239,42 @@ internal sealed class RpcSurface : IDisposable, IRpcPaneSink
         return SendCommandAsync(request.SessionId, "set_thinking_level", parameters, cancellationToken);
     }
 
+    /// <summary>
+    /// Answers an interactive <c>extension_ui_request</c> dialog (FT-2
+    /// slice 4). One-way by contract — pi emits no response frame for
+    /// <c>extension_ui_response</c> — so this deliberately bypasses
+    /// <see cref="SendCommandAsync"/> (whose await could only ever time
+    /// out) and returns once the message is on the child's stdin.
+    /// </summary>
+    [JsonRpcMethod("rpc/extensionUiResponse")]
+    public Task RpcExtensionUiResponseAsync(RpcExtensionUiResponseRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        // Exactly one payload key goes on the wire — pi's response union
+        // ({value} | {confirmed} | {cancelled: true}) discriminates by key.
+        var parameters = new JsonObject();
+        if (request.Cancelled == true)
+        {
+            parameters["cancelled"] = true;
+        }
+        else if (request.Confirmed is not null)
+        {
+            parameters["confirmed"] = request.Confirmed.Value;
+        }
+        else if (request.Value is not null)
+        {
+            parameters["value"] = request.Value;
+        }
+        else
+        {
+            throw new ArgumentException(
+                "one of value/confirmed/cancelled is required", nameof(request));
+        }
+
+        return RequireRpcPanes().SendExtensionUiResponseAsync(
+            request.SessionId, request.RequestId, parameters.ToJsonString(), cancellationToken);
+    }
+
     private async Task<RpcCommandResult> SendCommandAsync(
         string sessionId, string command, string? parametersJson, CancellationToken cancellationToken)
     {
