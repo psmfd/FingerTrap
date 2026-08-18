@@ -14,6 +14,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\FingerTrap.Sidecar\FingerTrap.Sidecar.csproj" />
     <ProjectReference Include="..\..\src\FingerTrap.Sidecar.Abstractions\FingerTrap.Sidecar.Abstractions.csproj" />
+    <!-- Build-order only: PiRpcClientTests spawns FakePi's built output as
+         a real child process (located relative to the test output dir),
+         never links against it. -->
+    <ProjectReference Include="..\FakePi\FakePi.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
