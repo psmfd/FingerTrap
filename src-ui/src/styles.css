@@ -367,9 +367,8 @@ main {
   color: #777;
 }
 
-/* Native RPC pane walking skeleton (FT-2 slice 2, ADR-0025). Raw relayed
-   event lines above a provisional prompt input; the slice-3 composer
-   replaces the input. */
+/* Native RPC pane (FT-2 slice 3, ADR-0025): structured transcript above a
+   provisional prompt input; the slice-3b composer replaces the input. */
 .rpc-pane {
   display: flex;
   flex-direction: column;
@@ -386,12 +385,66 @@ main {
   overflow-wrap: anywhere;
 }
 
-.rpc-system-info {
+/* Transcript blocks (transcript-view.ts). All content arrives as text
+   nodes; these classes only style, never structure. */
+.t-block {
+  padding: 2px 8px;
+}
+
+.t-block pre {
+  margin: 0;
+  font: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.t-label {
+  color: #6a9955;
+  font-weight: 600;
+}
+
+.t-user {
+  border-left: 2px solid #6a9955;
+  margin: 6px 0 2px;
+}
+
+.t-thinking summary,
+.t-tool-call summary {
+  color: #777;
+  cursor: pointer;
+  user-select: none;
+}
+
+.t-thinking .t-body {
+  color: #888;
+  font-style: italic;
+}
+
+.t-tool-head {
+  color: #9cdcfe;
+}
+
+.t-tool-call[data-status='error'] .t-tool-head {
+  color: #f48771;
+}
+
+.t-tool-result {
+  color: #aaa;
+  max-height: 14em;
+  overflow-y: auto;
+}
+
+.t-system.t-info {
   color: #d7ba7d;
 }
 
-.rpc-system-error {
+.t-system.t-error {
   color: #f48771;
+}
+
+.t-unknown-event {
+  color: #777;
+  font-style: italic;
 }
 
 .rpc-composer {
