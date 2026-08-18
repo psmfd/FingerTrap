@@ -33,17 +33,27 @@ multi-session daemon protocol (CBOR over Unix sockets). It is **not** what
 - **Demux rule** (from the reference client): a line with `type: "response"`
   and a known pending `id` resolves that request; every other parseable line is
   an event. Unparseable lines from the child are ignored client-side.
+  Verified against `rpc-client.ts` (slice-1 review): this two-way split is
+  literal — a response whose `id` is unknown, already timed out, or a
+  duplicate of one already resolved falls through to the **event
+  listeners**, not a drop path. A conforming supervisor mirrors that
+  fall-through rather than inventing a third demux bucket.
 - **Error shape:** uniform —
   `{ id?, type: "response", command: string, success: false, error: string }`.
   `error` is a plain string, no structured code; preserve `command` + `error`
   together on the .NET side. A malformed inbound line yields
-  `command: "parse"` with `id: undefined` and does **not** crash the process.
+  `command: "parse"` with `id: undefined` and does **not** crash the process
+  — on the wire the `id` key is **absent** (`JSON.stringify` drops
+  `undefined`), never JSON `null`; deserialize accordingly.
   Unknown command types return `Unknown command: <type>` with the request `id`
   preserved (the 5868 regression locks this in).
 - **stdout is protocol-only, guaranteed:** RPC mode reroutes any stray
   `process.stdout.write` (errant `console.log` in extensions or deps) to
   stderr; only the RPC writer touches real stdout. All diagnostics land on
-  stderr — capture it for error enrichment, never parse it. Output writes are
+  stderr — capture it for error enrichment, never parse it. pi does **not**
+  bound its own stderr volume (every stray extension `console.log` lands
+  there), so the supervisor must bound its capture — only the tail is ever
+  useful for enrichment. Output writes are
   backpressure-aware server-side, so a slow-reading supervisor throttles the
   child rather than ballooning it.
 
