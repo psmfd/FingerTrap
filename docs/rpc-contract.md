@@ -94,14 +94,31 @@ dropped.
 ## Event inventory
 
 Events are the `AgentSessionEvent` union, written as-is except `message_update`,
-whose nested cumulative `partial` snapshot is stripped on the wire
-(`message_start` provides the initial message, deltas build it, `message_end`
-is authoritative).
+which is rewritten by `json-event.ts` before it hits the wire (verified for the
+slice-3 transcript): **both** the top-level cumulative `message` field **and**
+the nested `assistantMessageEvent.partial` snapshot are dropped — only
+`{ type: "message_update", assistantMessageEvent: { type, contentIndex?,
+delta? | content? | toolCall? } }` survives. A client that wants a live
+partial message must assemble it itself, keyed by `contentIndex`, seeded by
+`message_start` and replaced by the authoritative `message_end`.
 
 - **Lifecycle:** `agent_start` → per turn: `turn_start`,
   `message_start`/`message_update`*/`message_end`,
   `tool_execution_start`/`_update`/`_end`, `turn_end` → `agent_end`
-  (`messages`, `willRetry`) → **`agent_settled`**.
+  (`messages`, `willRetry`) → **`agent_settled`**. Wire trap (slice-3
+  verification): `turn_start` is `{ type }` and `turn_end` is
+  `{ type, message, toolResults }` — **no `turnIndex`/`timestamp` on the
+  wire**. Those fields exist only on the extension-hook mirror types in
+  `extensions/types.ts`, a different consumer entirely.
+- **User messages are always echoed.** Every user-role message — the initial
+  `prompt`, and each queued `steer`/`follow_up` when it is finally
+  delivered — arrives as `message_start` + `message_end` (identical
+  `role: "user"` message objects) through the normal event stream, before
+  any assistant streaming. A host transcript renders user messages from
+  that echo, never from a local optimistic append: the echo is the single
+  source of truth for ordering, and a queued follow-up must not appear in
+  the transcript until pi actually delivers it (`queue_update` covers the
+  waiting state).
 - **`agent_settled` is the sole turn-completion boundary.** The reference
   client's `waitForIdle`/`collectEvents` key on it, and the server itself uses
   it as the graceful-shutdown checkpoint. Treat everything between `prompt` and

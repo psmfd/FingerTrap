@@ -2,6 +2,14 @@ import { Terminal } from '@xterm/xterm';
 import { FitAddon } from '@xterm/addon-fit';
 import { WebglAddon } from '@xterm/addon-webgl';
 import * as api from './api';
+import {
+  appendSystemBlock,
+  createTranscriptState,
+  reduceTranscript,
+  type BlockId,
+  type TranscriptState,
+} from './transcript';
+import { TranscriptView } from './transcript-view';
 
 /**
  * What the registry, layout tree, and tab chrome need from a pane's content,
@@ -169,11 +177,11 @@ export class PtyPaneContent implements PaneContent {
 }
 
 /**
- * The native RPC pane's walking skeleton (FT-2 slice 2): renders raw
- * relayed pi events as text lines, with a provisional single-line prompt
- * input so streaming is demonstrable — slice 3's composer replaces it.
+ * The native RPC pane (FT-2 slice 3): a structured transcript fed by the
+ * pure reducer in transcript.ts and projected by TranscriptView, with a
+ * provisional single-line prompt input the slice-3b composer replaces.
  * Everything relayed is untrusted content: rendering is text nodes only,
- * never markup (ADR-0022), and DOM appends are rAF-coalesced so
+ * never markup (ADR-0022), and DOM flushes are rAF-coalesced so
  * token-rate notification bursts cost one layout pass per frame.
  */
 export class RpcPaneContent implements PaneContent {
@@ -181,7 +189,9 @@ export class RpcPaneContent implements PaneContent {
   private readonly output: HTMLElement;
   private readonly input: HTMLInputElement;
   private readonly sessionId: string;
-  private pending: { text: string; className?: string }[] = [];
+  private readonly state: TranscriptState = createTranscriptState();
+  private readonly view: TranscriptView;
+  private readonly dirty = new Set<BlockId>();
   private flushScheduled = false;
 
   constructor(sessionId: string) {
@@ -192,12 +202,13 @@ export class RpcPaneContent implements PaneContent {
     this.output = document.createElement('div');
     this.output.className = 'rpc-output';
     this.container.appendChild(this.output);
+    this.view = new TranscriptView(this.output);
 
     const composer = document.createElement('form');
     composer.className = 'rpc-composer';
     this.input = document.createElement('input');
     this.input.type = 'text';
-    this.input.placeholder = 'prompt (provisional — slice 3 composer replaces this)';
+    this.input.placeholder = 'prompt (provisional — slice 3b composer replaces this)';
     composer.appendChild(this.input);
     composer.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -220,13 +231,22 @@ export class RpcPaneContent implements PaneContent {
     this.input.focus();
   }
 
-  /** One relayed event, appended as its raw JSON line. */
+  /** One relayed event, folded through the transcript reducer. */
   appendEvent(n: api.RpcEventNotification): void {
-    this.enqueue({ text: JSON.stringify(n.event) });
+    try {
+      this.markDirty(reduceTranscript(this.state, n));
+    } catch (err) {
+      // Backstop: one malformed event must not take down the pane's event
+      // handling for the rest of the session (mirrors the sidecar's
+      // ignore-unparseable-lines posture).
+      this.markDirty([
+        appendSystemBlock(this.state, `[event handling error: ${(err as Error).message}]`, 'error'),
+      ]);
+    }
   }
 
   writeSystemMessage(text: string, kind: 'info' | 'error'): void {
-    this.enqueue({ text, className: kind === 'error' ? 'rpc-system-error' : 'rpc-system-info' });
+    this.markDirty([appendSystemBlock(this.state, text, kind)]);
   }
 
   async close(): Promise<void> {
@@ -241,7 +261,10 @@ export class RpcPaneContent implements PaneContent {
     const message = this.input.value.trim();
     if (!message) return;
     this.input.value = '';
-    this.enqueue({ text: `> ${message}`, className: 'rpc-system-info' });
+    // No local echo: pi echoes every user message as message_start/end
+    // (docs/rpc-contract.md), and that echo is the transcript's single
+    // source of truth for ordering.
+    this.view.forcePin();
     api
       .rpcPrompt({ sessionId: this.sessionId, message })
       .then((result) => {
@@ -254,27 +277,15 @@ export class RpcPaneContent implements PaneContent {
       });
   }
 
-  private enqueue(line: { text: string; className?: string }): void {
-    this.pending.push(line);
-    if (this.flushScheduled) return;
+  private markDirty(ids: readonly BlockId[]): void {
+    for (const id of ids) this.dirty.add(id);
+    if (this.dirty.size === 0 || this.flushScheduled) return;
     this.flushScheduled = true;
     requestAnimationFrame(() => {
       this.flushScheduled = false;
-      this.flush();
+      const flushIds = [...this.dirty];
+      this.dirty.clear();
+      this.view.apply(this.state, flushIds);
     });
-  }
-
-  private flush(): void {
-    const lines = this.pending;
-    this.pending = [];
-    for (const line of lines) {
-      // Text nodes only — a text node never parses HTML, so untrusted
-      // relayed content cannot become markup (ADR-0022).
-      const el = document.createElement('div');
-      if (line.className) el.className = line.className;
-      el.appendChild(document.createTextNode(line.text));
-      this.output.appendChild(el);
-    }
-    this.output.scrollTop = this.output.scrollHeight;
   }
 }
