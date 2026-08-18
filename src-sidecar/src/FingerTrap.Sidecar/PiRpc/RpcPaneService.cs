@@ -171,6 +171,20 @@ internal sealed class RpcPaneService : IAsyncDisposable
         return new RpcCommandOutcome(true, null, dataJson);
     }
 
+    /// <summary>
+    /// Answers a pending <c>extension_ui_request</c> dialog (FT-2 slice 4).
+    /// Unlike <see cref="SendCommandAsync"/> this is a one-way stdin
+    /// message — pi emits no response frame, and the id on the wire is the
+    /// original request's pi-assigned id echoed back — so there is nothing
+    /// to await beyond the write (docs/rpc-contract.md).
+    /// </summary>
+    public Task SendExtensionUiResponseAsync(
+        string sessionId, string requestId, string? parametersJson, CancellationToken cancellationToken)
+    {
+        return GetEntry(sessionId).Client
+            .SendMessageAsync("extension_ui_response", requestId, parametersJson, cancellationToken);
+    }
+
     private static string? ExtractDataJson(string responseLine)
     {
         using var document = JsonDocument.Parse(responseLine);

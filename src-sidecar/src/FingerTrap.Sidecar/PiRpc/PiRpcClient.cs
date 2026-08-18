@@ -228,6 +228,49 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
     }
 
     /// <summary>
+    /// Writes one uncorrelated stdin message: caller-supplied id, no
+    /// pending-map entry, no response awaited — the shape
+    /// <c>extension_ui_response</c> requires (docs/rpc-contract.md: a
+    /// special stdin message, not a command; pi emits no response frame,
+    /// and an unknown/expired id is silently dropped). Do not route such
+    /// messages through <see cref="SendAsync"/>: its await would only ever
+    /// end in <see cref="TimeoutException"/>. Completes once the bytes are
+    /// flushed; failures surface exactly like <see cref="SendAsync"/>'s
+    /// write path (fail-fast against a dead child, richer exit fault when
+    /// the pipe broke because the child died).
+    /// </summary>
+    /// <param name="id">
+    /// Echoed verbatim — for <c>extension_ui_response</c> this is the
+    /// original request's pi-assigned id, never a fresh <c>req_N</c>.
+    /// </param>
+    public async Task SendMessageAsync(
+        string type,
+        string id,
+        string? parametersJson = null,
+        CancellationToken cancellationToken = default)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ArgumentException.ThrowIfNullOrEmpty(type);
+        ArgumentException.ThrowIfNullOrEmpty(id);
+        if (_shuttingDown)
+        {
+            throw new InvalidOperationException("pi rpc client is shutting down");
+        }
+
+        ThrowIfExited();
+
+        var payload = JsonlCodec.EncodeLine(BuildCommandJson(id, type, parametersJson));
+        try
+        {
+            await WriteStdinAsync(payload, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception writeFailure) when (writeFailure is IOException or ObjectDisposedException)
+        {
+            throw await ResolveWriteFailureAsync(writeFailure).ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
     /// Completes on the next <c>agent_settled</c> — the sole turn boundary
     /// (docs/rpc-contract.md). Register the waiter <em>before</em> sending
     /// the prompt it should observe, as the reference <c>promptAndWait</c>

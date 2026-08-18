@@ -88,8 +88,15 @@ are listed so the enumeration is complete against the pin.
 
 `extension_ui_response` (`{ type, id, value | confirmed | cancelled }`) is a
 special stdin message, not a command: it answers a pending
-`extension_ui_request`. A response for an unknown/expired id is silently
-dropped.
+`extension_ui_request`, with the payload key discriminating the shape
+(`value: string` for select/input/editor, `confirmed: boolean` for confirm,
+`cancelled: true` for any dialog kind). `id` is the request event's own
+pi-assigned id, echoed back verbatim. pi emits **no response frame** for it —
+a sender must not await one — and a response for an unknown/expired id is
+silently dropped. That silent drop is also the accepted-gap answer for the
+race where a host answers after pi's own per-request `timeout` already
+self-resolved the dialog: the late answer vanishes with no error anywhere
+(same class as the no-heartbeat gap).
 
 ## Event inventory
 
@@ -134,11 +141,38 @@ partial message must assemble it itself, keyed by `contentIndex`, seeded by
 - **Extension channels** (emitted by RPC mode itself, outside the session
   union): `extension_ui_request` and `extension_error`
   (`{ extensionPath, event, error }` — informational). UI request methods that
-  round-trip and expect an `extension_ui_response`: `select`, `confirm`,
-  `input`, `editor` (the first three honor an optional `timeout` after which
-  pi self-resolves with a default). Fire-and-forget: `notify`, `setStatus`,
-  `setWidget`, `setTitle`, `set_editor_text` — **`set_editor_text` is the hook
-  a host composer must listen for** (extensions pushing text at the editor).
+  round-trip and expect an `extension_ui_response`: `select`
+  (`title, options: string[], timeout?`), `confirm` (`title, message,
+  timeout?`), `input` (`title, placeholder?, timeout?`), `editor` (`title,
+  prefill?` — **no timeout field exists**). The first three honor an optional
+  `timeout` after which pi self-resolves with a default — but the timeout is
+  the *extension author's* opt-in, and guard-style extensions deliberately
+  omit it. Fire-and-forget: `notify` (`message, notifyType?:
+  info|warning|error`), `setStatus` (`statusKey, statusText | undefined`),
+  `setWidget` (`widgetKey, widgetLines: string[] | undefined,
+  widgetPlacement?: aboveEditor|belowEditor` — RPC mode forwards string
+  lines only, component factories are dropped server-side), `setTitle`,
+  `set_editor_text` — **`set_editor_text` is the hook a host composer must
+  listen for** (extensions pushing text at the editor; it replaces the whole
+  buffer, never inserts).
+- **Every dialog request must be answered — pi has no reliable backstop.**
+  An unanswered `select`/`confirm`/`input` with no extension-supplied
+  timeout, and any unanswered `editor`, leaves the extension's `await`
+  pending forever; because the blocked hook is part of turn execution,
+  `agent_settled` never fires. `abort` releases the dialog only when the
+  extension threaded `ctx.signal` into the call — the bundled examples do
+  not — so the only guaranteed release valve is the host answering
+  (`cancelled: true` is always valid) or the supervisor's kill ladder.
+  Requests can also arrive **before the first command**: extension
+  `session_start` hooks fire at spawn, so a host must be consuming stdout
+  from the moment the child starts (the supervisor's always-on channel
+  covers this).
+- **Truncation interplay (FT-2 slice 4):** an oversized
+  `extension_ui_request` is replaced by the sidecar's `rpc_event_truncated`
+  marker like any event, but the marker additionally preserves
+  `originalId`/`originalMethod` for this type so an interactive request
+  stays answerable — the host answers a truncated dialog with
+  `cancelled: true` instead of letting the turn hang.
 
 ## Prompt and queueing semantics
 

@@ -35,6 +35,40 @@ public sealed class RpcEventGuardTests
     }
 
     [Fact]
+    public void EnforceCeiling_OversizedExtensionUiRequest_MarkerKeepsIdAndMethod()
+    {
+        // An unanswerable interactive dialog hangs the agent turn (pi has
+        // no timeout on editor), so the marker must keep enough identity
+        // for the host to send a cancelled response.
+        var oversized = "{\"type\":\"extension_ui_request\",\"id\":\"ui_9\",\"method\":\"editor\"," +
+            "\"title\":\"t\",\"prefill\":\"" +
+            new string('x', RpcEventGuard.MaxNotificationPayloadBytes + 16) + "\"}";
+
+        var (json, truncated) = RpcEventGuard.EnforceCeiling(oversized, "extension_ui_request");
+
+        Assert.True(truncated);
+        using var parsed = JsonDocument.Parse(json);
+        Assert.Equal("ui_9", parsed.RootElement.GetProperty("originalId").GetString());
+        Assert.Equal("editor", parsed.RootElement.GetProperty("originalMethod").GetString());
+    }
+
+    [Fact]
+    public void EnforceCeiling_OversizedNonUiEvent_MarkerOmitsIdentityKeys()
+    {
+        // The id/method fields are extension_ui_request-only: other event
+        // types keep the original three-field marker shape.
+        var oversized = "{\"type\":\"tool_execution_update\",\"id\":\"tool_1\",\"blob\":\"" +
+            new string('x', RpcEventGuard.MaxNotificationPayloadBytes + 16) + "\"}";
+
+        var (json, truncated) = RpcEventGuard.EnforceCeiling(oversized, "tool_execution_update");
+
+        Assert.True(truncated);
+        using var parsed = JsonDocument.Parse(json);
+        Assert.False(parsed.RootElement.TryGetProperty("originalId", out _));
+        Assert.False(parsed.RootElement.TryGetProperty("originalMethod", out _));
+    }
+
+    [Fact]
     public void MaxNotificationPayloadBytes_LeavesHeadroomUnderFrameCeiling()
     {
         // Lockstep sanity: the relay ceiling must sit well under the UI
@@ -222,6 +256,34 @@ public sealed class RpcPaneServiceTests
         Assert.False(outcome.Success);
         Assert.Contains("relay ceiling", outcome.Error, StringComparison.Ordinal);
         Assert.Null(outcome.DataJson);
+    }
+
+    [Fact]
+    public async Task SendExtensionUiResponse_FireAndForget_EchoesIdAndNeedsNoReply()
+    {
+        var sink = new CollectingSink();
+        await using var service = new RpcPaneService();
+        service.AttachSink(sink);
+
+        // The exact-line match pins the wire shape: the original request's
+        // id echoed (never a fresh req_N) beside the single payload key.
+        // FakePi writes agent_settled only after the match, and never
+        // writes a response frame — a regression onto the command path
+        // (pending map + RequestTimeout) would hang the send instead of
+        // completing on flush.
+        await SpawnFakePiAsync(service, "s1",
+            Step("waitForLine", """{"id":"ui_42","type":"extension_ui_response","cancelled":true}"""),
+            Step("writeLine", """{"type":"agent_settled"}"""),
+            Step("waitForEof", true));
+
+        await service.SendExtensionUiResponseAsync(
+                "s1", "ui_42", """{"cancelled":true}""", TestContext.Current.CancellationToken)
+            .WaitAsync(TestBudget, TestContext.Current.CancellationToken);
+
+        await sink.WaitForEventsAsync(1);
+        await service.KillAsync("s1", TestContext.Current.CancellationToken);
+
+        Assert.Equal("agent_settled", sink.Events[0].EventType);
     }
 
     private static Task SpawnFakePiAsync(RpcPaneService service, string sessionId, params string[] steps)
