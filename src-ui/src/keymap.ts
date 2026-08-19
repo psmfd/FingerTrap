@@ -26,7 +26,8 @@ export type ActionId =
   | 'pane.prev'
   | 'pane.splitRight'
   | 'pane.splitDown'
-  | 'status.toggle';
+  | 'status.toggle'
+  | 'sessions.toggle';
 
 /**
  * Default chords deliberately avoid the WebView/OS-menu layer: on macOS the
@@ -41,6 +42,7 @@ const DEFAULT_CHORDS: Readonly<Record<ActionId, string>> = {
   'pane.splitRight': 'mod+shift+d',
   'pane.splitDown': 'mod+shift+f',
   'status.toggle': 'mod+shift+s',
+  'sessions.toggle': 'mod+shift+o',
 };
 
 const ACTION_IDS = Object.keys(DEFAULT_CHORDS) as readonly ActionId[];

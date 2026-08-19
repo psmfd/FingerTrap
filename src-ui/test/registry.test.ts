@@ -16,10 +16,12 @@ class FakeContent implements PaneContent {
   readonly container = document.createElement('div');
   readonly calls: string[] = [];
   readonly messages: { text: string; kind: 'info' | 'error' }[] = [];
+  openOpts: { cwd?: string; sessionPath?: string } | undefined;
   openBehavior: () => Promise<void> = () => Promise.resolve();
 
-  open(): Promise<void> {
+  open(opts: { cwd?: string; sessionPath?: string }): Promise<void> {
     this.calls.push('open');
+    this.openOpts = opts;
     return this.openBehavior();
   }
 
@@ -71,6 +73,12 @@ describe('PaneRegistry kind-dispatch', () => {
     expect(contents[0].calls.indexOf('resize')).toBeLessThan(contents[0].calls.indexOf('open'));
     expect(registry.active()?.sessionId).toBe(pane.sessionId);
     expect(pane.state).toBe('running');
+  });
+
+  it('open() threads cwd and sessionPath through to the content (FT-2 slice 5)', async () => {
+    await registry.open({ kind: 'pi-rpc', cwd: '/repo', sessionPath: '/s/one.jsonl' });
+
+    expect(contents[0].openOpts).toEqual({ cwd: '/repo', sessionPath: '/s/one.jsonl' });
   });
 
   it('a failed open renders the error into the pane and marks it exited', async () => {

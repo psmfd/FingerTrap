@@ -44,6 +44,10 @@ export interface OpenOptions {
   /** Working directory, resolved and validated sidecar-side; a bad path
    * fails the spawn loudly into the pane. */
   cwd?: string;
+  /** Stored pi session to resume (session browser, FT-2 slice 5) —
+   * threaded through to the pane content's spawn; only meaningful for pi
+   * pane kinds. */
+  sessionPath?: string;
 }
 
 /** What the tab bar renders — presentation projection of a tab. */
@@ -425,7 +429,7 @@ export class PaneRegistry {
     pane.content.resize();
 
     try {
-      await pane.content.open({ cwd: opts.cwd });
+      await pane.content.open({ cwd: opts.cwd, sessionPath: opts.sessionPath });
     } catch (err) {
       // Rendered into the pane the spawn failed to fill — where the
       // operator is already looking. A missing pi arrives here as an

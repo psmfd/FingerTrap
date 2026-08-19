@@ -3,6 +3,7 @@ import * as api from './api';
 import { Keymap } from './keymap';
 import { Palette, type Command } from './palette';
 import { PaneRegistry } from './registry';
+import { SessionBrowserPanel } from './session-browser-panel';
 import { StatusPanel } from './status';
 import { TabBar } from './tabbar';
 
@@ -15,7 +16,14 @@ async function main(): Promise<void> {
 
   const registry = new PaneRegistry(panesEl, () => tabbar.render());
   const status = new StatusPanel(panesEl);
+  // The session browser produces pane opens (FT-2 slice 5, ADR-0026); the
+  // resume actions land here so the panel never touches the registry.
+  const sessions = new SessionBrowserPanel(panesEl, {
+    resumeRpc: (sessionPath) => void registry.open({ kind: 'pi-rpc', sessionPath }),
+    resumePty: (sessionPath, cwd) => void registry.open({ kind: 'pi', sessionPath, cwd }),
+  });
   const tabbar = new TabBar(tabbarEl, registry, [
+    { label: '☰', ariaLabel: 'Toggle session browser', onClick: () => sessions.toggle() },
     { label: '⎔', ariaLabel: 'Toggle status panel', onClick: () => status.toggle() },
   ]);
 
@@ -54,6 +62,7 @@ async function main(): Promise<void> {
     { title: 'Next pane', run: () => registry.cyclePane(1) },
     { title: 'Previous pane', run: () => registry.cyclePane(-1) },
     { title: 'Toggle status panel', run: () => status.toggle() },
+    { title: 'Toggle session browser', run: () => sessions.toggle() },
   ];
   const palette = new Palette(panesEl, commands, () => registry.active()?.content.focus());
 
@@ -96,6 +105,7 @@ async function main(): Promise<void> {
     .on('pane.splitRight', () => void registry.split('row'))
     .on('pane.splitDown', () => void registry.split('col'))
     .on('status.toggle', () => status.toggle())
+    .on('sessions.toggle', () => sessions.toggle())
     .install();
 
   // xterm's onResize only fires from term.resize(...) — observe the shared
