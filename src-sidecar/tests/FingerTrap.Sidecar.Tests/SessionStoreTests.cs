@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FingerTrap.Sidecar.Sessions;
 using Xunit;
 
@@ -149,7 +150,7 @@ public sealed class SessionStoreTests
             // escapes below are JSON escapes: the store's JSON parser turns
             // them into real control characters before sanitization runs.
             WriteSession(root, "dir-a", "hostile.jsonl",
-                Header("id-1", "2026-08-18T10:00:00.000Z", "/no/such\\u001b[2J/dir"),
+                Header("id-1", "2026-08-18T10:00:00.000Z", "/no/such[2J/dir"),
                 """{"type":"session_info","name":"evil\u001b[2Jname\u0007"}""",
                 UserMessage("rtl\\u202egnp.exe attack", 1765965602000));
 
@@ -259,8 +260,11 @@ public sealed class SessionStoreTests
         Assert.Equal(0, result.TotalCount);
     }
 
+    /// <summary>Serialized rather than string-built so real filesystem
+    /// paths (Windows backslashes included) arrive JSON-escaped, exactly as
+    /// pi writes them.</summary>
     private static string Header(string id, string timestamp, string cwd) =>
-        $$"""{"type":"session","version":3,"id":"{{id}}","timestamp":"{{timestamp}}","cwd":"{{cwd}}"}""";
+        JsonSerializer.Serialize(new { type = "session", version = 3, id, timestamp, cwd });
 
     private static string UserMessage(string text, long epochMs) =>
         $$$"""{"type":"message","id":"m","timestamp":"2026-08-18T10:00:02.000Z","message":{"role":"user","content":[{"type":"text","text":"{{{text}}}"}],"timestamp":{{{epochMs}}}}}""";

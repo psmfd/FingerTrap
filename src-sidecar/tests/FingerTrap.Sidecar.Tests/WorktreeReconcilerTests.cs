@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FingerTrap.Sidecar.Sessions;
 using FingerTrap.Sidecar.Status;
 using Xunit;
@@ -207,9 +208,20 @@ public sealed class WorktreeReconcilerTests
         var repo = Directory.CreateTempSubdirectory("ft-repo-").FullName;
         try
         {
+            // Serialized rather than string-built: a real temp path carries
+            // backslashes on Windows and must arrive JSON-escaped.
             await File.WriteAllTextAsync(
                 Path.Combine(manifestsDir, "dead.json"),
-                $$"""{"v":1,"sessionId":"dead","repo":"{{repo}}","worktreePath":"{{repo}}/.worktrees/dead","branch":"feat/dead","pid":424242,"host":"otherhost"}""",
+                JsonSerializer.Serialize(new
+                {
+                    v = 1,
+                    sessionId = "dead",
+                    repo,
+                    worktreePath = $"{repo}/.worktrees/dead",
+                    branch = "feat/dead",
+                    pid = 424242,
+                    host = "otherhost",
+                }),
                 TestContext.Current.CancellationToken);
             await File.WriteAllTextAsync(
                 Path.Combine(manifestsDir, "bad.json"), "{not json",
