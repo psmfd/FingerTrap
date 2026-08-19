@@ -233,9 +233,9 @@ text) — not a reuse of the repo-dash panel.
 | FT-2 feature | Serving surface | Status |
 |---|---|---|
 | Model/status readouts | `get_state`, `get_session_stats` (context-fill ships as a percent), `get_available_models`; incremental usage via `message_update` | covered |
-| Session resume | `switch_session` (path known) or spawn-time `--session` | covered; reaped-cwd recovery blocked on pi#55 |
-| Session list | none — `SessionManager.list*()` is library-only; sidecar parses `~/.pi/agent/sessions/--<cwd-dashes>--/<timestamp>_<id>.jsonl` directly until pi#54 lands | gap (pi#54) |
-| Worktree-orphan surfacing | not RPC territory by design: read the worktree extension's per-session manifests (`~/.pi/agent/extensions/worktree/sessions/<sid>.json` — `{ v, sessionId, repo, worktreePath, branch, pid, host, createdAt, updatedAt, lastSnapshotSha }`) × `git worktree list --porcelain` lock reasons (`session:<sid> pid:<p> host:<h> started:<iso>`) × `refs/pi-wip/<sid>`; port the extension's reconcile algorithm read-only. Formats are extension-owned, not protocol-versioned — re-verify on pi_config bumps | covered (observe-from-outside) |
+| Session resume | `switch_session` (path known) or spawn-time `--session` | delivered in FT-2 slice 5 (session browser → RPC or PTY pane; ADR-0026 disables RPC resume on a missing cwd and offers the PTY fallback); reaped-cwd RPC recovery still blocked on pi#55 |
+| Session list | none — `SessionManager.list*()` is library-only; sidecar parses `~/.pi/agent/sessions/--<cwd-dashes>--/<timestamp>_<id>.jsonl` directly until pi#54 lands | delivered in FT-2 slice 5 (`sessions/list`, bounded direct scan); pi#54 remains the upstream ask |
+| Worktree-orphan surfacing | not RPC territory by design: read the worktree extension's per-session manifests (`~/.pi/agent/extensions/worktree/sessions/<sid>.json` — `{ v, sessionId, repo, worktreePath, branch, pid, host, createdAt, updatedAt, lastSnapshotSha }`) × `git worktree list --porcelain` lock reasons (`session:<sid> pid:<p> host:<h> started:<iso>`) × `refs/pi-wip/<sid>`; port the extension's reconcile algorithm read-only. Formats are extension-owned, not protocol-versioned — re-verify on pi_config bumps | delivered in FT-2 slice 5 (`worktrees/list`, read-only reconcile port; reap/unlock stay pi-side) |
 | Reference-into-prompt | host-owned composer + `steer`/`follow_up`/`prompt` to submit; listen for `set_editor_text` | covered natively |
 | Observability dashboards | pi_config meter JSONL files, read directly — no RPC involvement | out of this note's scope |
 

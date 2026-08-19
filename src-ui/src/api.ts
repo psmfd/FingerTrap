@@ -53,6 +53,13 @@ export interface PtySpawnRequest {
    * is rejected rather than silently defaulted.
    */
   kind?: PaneKind;
+  /**
+   * Session to resume (`--session` on the pi command line) — PTY-pane
+   * resume from the session browser (FT-2 slice 5, ADR-0026). Only
+   * meaningful for pi panes; interactive pi owns the missing-cwd fallback
+   * prompt.
+   */
+  sessionPath?: string;
 }
 
 export interface PtySpawnResult {
@@ -331,6 +338,9 @@ const RpcAbortMethod = new RequestType1<RpcSessionRequest, RpcCommandResult, voi
 const RpcGetStateMethod = new RequestType1<RpcSessionRequest, RpcCommandResult, void>(
   'rpc/getState',
 );
+const RpcGetMessagesMethod = new RequestType1<RpcSessionRequest, RpcCommandResult, void>(
+  'rpc/getMessages',
+);
 const RpcGetSessionStatsMethod = new RequestType1<RpcSessionRequest, RpcCommandResult, void>(
   'rpc/getSessionStats',
 );
@@ -413,6 +423,13 @@ export async function rpcAbort(request: RpcSessionRequest): Promise<RpcCommandRe
 
 export async function rpcGetState(request: RpcSessionRequest): Promise<RpcCommandResult> {
   return require_().sendRequest(RpcGetStateMethod, request);
+}
+
+/** Full history of the attached session — the post-resume transcript
+ * seed (FT-2 slice 5): no `since` cursor exists, so the first fetch is
+ * always the whole list. */
+export async function rpcGetMessages(request: RpcSessionRequest): Promise<RpcCommandResult> {
+  return require_().sendRequest(RpcGetMessagesMethod, request);
 }
 
 export async function rpcGetSessionStats(request: RpcSessionRequest): Promise<RpcCommandResult> {

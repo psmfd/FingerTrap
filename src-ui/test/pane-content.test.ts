@@ -14,6 +14,7 @@ vi.mock('../src/api', () => ({
   rpcFollowUp: vi.fn(() => Promise.resolve({ success: true })),
   rpcAbort: vi.fn(() => Promise.resolve({ success: true })),
   rpcGetState: vi.fn(() => Promise.resolve({ success: false })),
+  rpcGetMessages: vi.fn(() => Promise.resolve({ success: false })),
   rpcGetSessionStats: vi.fn(() => Promise.resolve({ success: false })),
   rpcGetAvailableModels: vi.fn(() => Promise.resolve({ success: false })),
   rpcGetAvailableThinkingLevels: vi.fn(() => Promise.resolve({ success: false })),
@@ -191,5 +192,52 @@ describe('RpcPaneContent extension UI routing', () => {
 
     expect(overlayRoot().hidden).toBe(true);
     expect(api.rpcExtensionUiResponse).not.toHaveBeenCalled();
+  });
+});
+
+describe('RpcPaneContent session resume (FT-2 slice 5)', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('threads sessionPath into rpcSpawn and seeds history from getMessages', async () => {
+    vi.mocked(api.rpcGetMessages).mockResolvedValue({
+      success: true,
+      data: {
+        messages: [
+          { role: 'user', content: 'earlier question' },
+          { role: 'assistant', content: [{ type: 'text', text: 'earlier answer' }] },
+        ],
+      },
+    } as never);
+
+    const pane = new RpcPaneContent('s1');
+    document.body.appendChild(pane.container);
+    await pane.open({ sessionPath: '/s/one.jsonl' });
+    // seed() runs unawaited by design; flush the promise chain + the
+    // rAF-coalesced view flush (shimmed onto setTimeout above).
+    await new Promise((resolve) => setTimeout(resolve, 5));
+
+    expect(api.rpcSpawn).toHaveBeenCalledWith({
+      sessionId: 's1',
+      cwd: undefined,
+      sessionPath: '/s/one.jsonl',
+    });
+    expect(api.rpcGetMessages).toHaveBeenCalledWith({ sessionId: 's1' });
+    // The transcript flush is rAF-coalesced — wait for it like the audit-line
+    // test above does.
+    await vi.waitFor(() => {
+      expect(pane.container.textContent).toContain('earlier question');
+      expect(pane.container.textContent).toContain('earlier answer');
+    });
+  });
+
+  it('a fresh (non-resume) open never fetches history', async () => {
+    const pane = new RpcPaneContent('s2');
+    document.body.appendChild(pane.container);
+    await pane.open({});
+    await new Promise((resolve) => setTimeout(resolve, 5));
+
+    expect(api.rpcGetMessages).not.toHaveBeenCalled();
   });
 });

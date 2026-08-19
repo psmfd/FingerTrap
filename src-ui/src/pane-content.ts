@@ -35,9 +35,10 @@ export interface PaneContent {
    * Start the pane's backing process/session. The registry calls this only
    * after a layout pass and a resize() — the cell-measurement choreography
    * PTY content depends on. Throws on failure; the registry renders the
-   * error into the pane.
+   * error into the pane. `sessionPath` resumes a stored pi session
+   * (session browser, FT-2 slice 5) — spawn-time-only in pi's protocol.
    */
-  open(opts: { cwd?: string }): Promise<void>;
+  open(opts: { cwd?: string; sessionPath?: string }): Promise<void>;
 
   /**
    * Called after every layout pass that could have changed on-screen size:
@@ -130,13 +131,14 @@ export class PtyPaneContent implements PaneContent {
     }
   }
 
-  async open(opts: { cwd?: string }): Promise<void> {
+  async open(opts: { cwd?: string; sessionPath?: string }): Promise<void> {
     await api.ptySpawn({
       sessionId: this.sessionId,
       kind: this.kind,
       cwd: opts.cwd,
       cols: this.term.cols,
       rows: this.term.rows,
+      sessionPath: opts.sessionPath,
     });
 
     // Wired only after a successful spawn — a pane whose spawn failed
@@ -258,11 +260,15 @@ export class RpcPaneContent implements PaneContent {
     });
   }
 
-  async open(opts: { cwd?: string }): Promise<void> {
-    await api.rpcSpawn({ sessionId: this.sessionId, cwd: opts.cwd });
+  async open(opts: { cwd?: string; sessionPath?: string }): Promise<void> {
+    await api.rpcSpawn({
+      sessionId: this.sessionId,
+      cwd: opts.cwd,
+      sessionPath: opts.sessionPath,
+    });
     // Seed the header/composer from session state; failures degrade the
     // chrome, not the pane, so this does not gate open().
-    void this.seed();
+    void this.seed(opts.sessionPath !== undefined);
   }
 
   resize(): void {
@@ -442,10 +448,44 @@ export class RpcPaneContent implements PaneContent {
       });
   }
 
+  /**
+   * Resumed-session history (FT-2 slice 5): pi replays nothing after a
+   * spawn-time `--session`, so the transcript starts from get_messages —
+   * the whole list; no `since` cursor exists. Each stored message folds
+   * through the same reducer live events use, as a synthetic
+   * message_start (user echo) or message_start+message_end pair
+   * (assistant text/thinking materialize at end). Historical tool calls
+   * have no tool_execution_* lifecycle to replay and render as part of
+   * the assistant text only.
+   */
+  private async seedHistory(): Promise<void> {
+    const result = await api.rpcGetMessages({ sessionId: this.sessionId });
+    const messages = asRecord(result.data)?.messages;
+    if (!result.success || !Array.isArray(messages)) return;
+    for (const item of messages) {
+      const message = asRecord(item);
+      if (message === null) continue;
+      const fold = (eventType: string): void => {
+        this.markDirty(
+          reduceTranscript(this.state, { eventType, event: { message }, truncated: false }),
+        );
+      };
+      if (message.role === 'user') {
+        fold('message_start');
+      } else if (message.role === 'assistant') {
+        fold('message_start');
+        fold('message_end');
+      }
+    }
+  }
+
   /** Header/composer seeding after spawn; each read degrades alone. */
-  private async seed(): Promise<void> {
+  private async seed(resumed = false): Promise<void> {
     const { sessionId } = this;
     try {
+      if (resumed) {
+        await this.seedHistory();
+      }
       const models = await api.rpcGetAvailableModels({ sessionId });
       const list = asRecord(models.data)?.models;
       if (models.success && Array.isArray(list)) {

@@ -214,6 +214,19 @@ internal sealed class RpcSurface : IDisposable, IRpcPaneSink
         return SendCommandAsync(request.SessionId, "get_state", null, cancellationToken);
     }
 
+    /// <summary>
+    /// Full message history of the attached session (FT-2 slice 5): the
+    /// post-resume transcript seed. pi has no <c>since</c> cursor, so the
+    /// first fetch after a resume is always the whole list — bounded by the
+    /// frame ceiling like every other response.
+    /// </summary>
+    [JsonRpcMethod("rpc/getMessages")]
+    public Task<RpcCommandResult> RpcGetMessagesAsync(RpcSessionRequest request, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+        return SendCommandAsync(request.SessionId, "get_messages", null, cancellationToken);
+    }
+
     [JsonRpcMethod("rpc/getSessionStats")]
     public Task<RpcCommandResult> RpcGetSessionStatsAsync(RpcSessionRequest request, CancellationToken cancellationToken)
     {
