@@ -1,4 +1,5 @@
 using FingerTrap.Sidecar.Abstractions;
+using FingerTrap.Sidecar.Text;
 
 namespace FingerTrap.Sidecar.Status;
 

@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using FingerTrap.Sidecar.Abstractions;
 using FingerTrap.Sidecar.Settings;
+using FingerTrap.Sidecar.Text;
 using CredentialCache = FingerTrap.Sidecar.Ipc.CredentialCache;
 
 namespace FingerTrap.Sidecar.Status;

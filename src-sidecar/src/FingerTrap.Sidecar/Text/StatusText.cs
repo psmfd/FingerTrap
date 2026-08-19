@@ -1,10 +1,13 @@
 using System.Text;
 
-namespace FingerTrap.Sidecar.Status;
+namespace FingerTrap.Sidecar.Text;
 
 /// <summary>
-/// The sanitization boundary for provider free-text (ADR-0022 §sanitization,
+/// The sanitization boundary for untrusted free-text (ADR-0022 §sanitization,
 /// applying repo-dash's rule): called at row CONSTRUCTION, never at render.
+/// Originally status-provider-scoped; the session browser (FT-2 slice 5)
+/// pushes session names, first messages, and cwds through the same boundary,
+/// so it lives under <c>Text/</c> rather than <c>Status/</c>.
 /// Strips every C0/C1 control character (ESC, BEL, CR, LF, CSI/OSC/DCS
 /// introducers — terminal-injection surface if the text is ever echoed near
 /// a PTY) and the Unicode BiDi/direction controls that let a string display
