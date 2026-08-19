@@ -44,6 +44,32 @@ public sealed class PtyServiceTests
     }
 
     [Fact]
+    public void ResolveCommandLine_ShellPane_IsLoginShellRegardlessOfSession()
+    {
+        string[] loginShell = ["-l"];
+        Assert.Equal(loginShell, PtyService.ResolveCommandLine(PaneKind.Shell));
+        // SessionPath is a pi concern; a shell pane ignores it.
+        Assert.Equal(loginShell, PtyService.ResolveCommandLine(PaneKind.Shell, "/s/one.jsonl"));
+    }
+
+    [Fact]
+    public void ResolveCommandLine_PiPane_NoSession_TakesNoArguments()
+    {
+        Assert.Empty(PtyService.ResolveCommandLine(PaneKind.Pi));
+        Assert.Empty(PtyService.ResolveCommandLine(PaneKind.Pi, null));
+        Assert.Empty(PtyService.ResolveCommandLine(PaneKind.Pi, string.Empty));
+    }
+
+    [Fact]
+    public void ResolveCommandLine_PiPane_WithSession_ResumesViaSessionFlag()
+    {
+        // PTY-pane resume from the session browser (FT-2 slice 5,
+        // ADR-0026) — same spawn-time `--session` the RPC pane uses.
+        string[] expected = ["--session", "/s/one.jsonl"];
+        Assert.Equal(expected, PtyService.ResolveCommandLine(PaneKind.Pi, "/s/one.jsonl"));
+    }
+
+    [Fact]
     public async Task Close_UnknownSession_IsANoOp()
     {
         // pty/kill's idempotency (ADR-0021) bottoms out here: closing a

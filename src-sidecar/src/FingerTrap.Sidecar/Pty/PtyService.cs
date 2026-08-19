@@ -44,7 +44,7 @@ internal sealed class PtyService : IPtyService
         var ptyOptions = new global::Porta.Pty.PtyOptions
         {
             App = shellPath,
-            CommandLine = ResolveCommandLine(options.Kind),
+            CommandLine = ResolveCommandLine(options.Kind, options.SessionPath),
             Cwd = ResolveCwd(options.Cwd),
             Cols = Math.Max(1, options.Cols),
             Rows = Math.Max(1, options.Rows),
@@ -171,11 +171,15 @@ internal sealed class PtyService : IPtyService
     /// login shell re-reads the profile files (<c>~/.zprofile</c> on macOS)
     /// where users put <c>PATH</c> additions — a non-login pane shell leaves
     /// user-installed tools unreachable (#77). pi panes are spawned by
-    /// resolved absolute path and take no arguments.
+    /// resolved absolute path and take no arguments, unless the session
+    /// browser is resuming a session (FT-2 slice 5) — then pi gets
+    /// <c>--session &lt;path&gt;</c>, mirroring the RPC-pane spawn
+    /// (<see cref="PiRpc.RpcPaneService"/>).
     /// </remarks>
-    internal static string[] ResolveCommandLine(PaneKind kind) => kind switch
+    internal static string[] ResolveCommandLine(PaneKind kind, string? sessionPath = null) => kind switch
     {
         PaneKind.Shell => new[] { "-l" },
+        PaneKind.Pi when !string.IsNullOrEmpty(sessionPath) => new[] { "--session", sessionPath },
         _ => Array.Empty<string>(),
     };
 

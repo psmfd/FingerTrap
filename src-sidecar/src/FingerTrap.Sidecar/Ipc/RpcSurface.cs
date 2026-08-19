@@ -1,6 +1,7 @@
 using System.Text.Json.Nodes;
 using FingerTrap.Sidecar.Abstractions;
 using FingerTrap.Sidecar.PiRpc;
+using FingerTrap.Sidecar.Sessions;
 using FingerTrap.Sidecar.Settings;
 using FingerTrap.Sidecar.Status;
 using Newtonsoft.Json.Linq;
@@ -33,13 +34,23 @@ internal sealed class RpcSurface : IDisposable, IRpcPaneSink
     /// Native RPC pane service (FT-2 slice 2), or null when the host wires
     /// no RPC panes (tests). This surface is its <see cref="IRpcPaneSink"/>.
     /// </param>
+    /// <param name="sessions">
+    /// Session-store scanner for the session browser (FT-2 slice 5), or
+    /// null when the host wires no browser (tests).
+    /// </param>
+    /// <param name="worktrees">
+    /// Worktree-orphan reconciler for the session browser (FT-2 slice 5),
+    /// or null when the host wires no browser (tests).
+    /// </param>
     public RpcSurface(
         IPtyService pty,
         PaneSettings? paneSettings = null,
         CredentialCache? credentials = null,
         StatusService? status = null,
         IReadOnlyDictionary<string, string>? keybindings = null,
-        RpcPaneService? rpcPanes = null)
+        RpcPaneService? rpcPanes = null,
+        SessionStore? sessions = null,
+        WorktreeReconciler? worktrees = null)
     {
         _pty = pty;
         _paneSettings = paneSettings;
@@ -47,10 +58,14 @@ internal sealed class RpcSurface : IDisposable, IRpcPaneSink
         _status = status;
         _keybindings = keybindings;
         _rpcPanes = rpcPanes;
+        _sessions = sessions;
+        _worktrees = worktrees;
     }
 
     private readonly StatusService? _status;
     private readonly IReadOnlyDictionary<string, string>? _keybindings;
+    private readonly SessionStore? _sessions;
+    private readonly WorktreeReconciler? _worktrees;
 
     private static readonly IReadOnlyDictionary<string, string> NoKeybindings =
         new Dictionary<string, string>();
@@ -101,7 +116,8 @@ internal sealed class RpcSurface : IDisposable, IRpcPaneSink
     {
         ArgumentNullException.ThrowIfNull(request);
         var kind = PaneKinds.Parse(request.Kind, _paneSettings);
-        var options = new PtySpawnOptions(request.Shell, request.Cwd, request.Cols, request.Rows, request.Env, kind);
+        var options = new PtySpawnOptions(
+            request.Shell, request.Cwd, request.Cols, request.Rows, request.Env, kind, request.SessionPath);
         var pid = await _pty.SpawnAsync(request.SessionId, options, cancellationToken).ConfigureAwait(false);
         return new PtySpawnResult(pid);
     }
@@ -352,6 +368,24 @@ internal sealed class RpcSurface : IDisposable, IRpcPaneSink
         return Task.FromResult(new SettingsGetResult(
             PaneKinds.ToWire(kind), _keybindings ?? NoKeybindings));
     }
+
+    /// <summary>
+    /// Session browser (FT-2 slice 5): the bounded session-store scan. No
+    /// request parameters — same pattern as <see cref="SettingsGetAsync"/>.
+    /// </summary>
+    [JsonRpcMethod("sessions/list")]
+    public Task<SessionsListResult> SessionsListAsync(CancellationToken cancellationToken) =>
+        (_sessions ?? throw new InvalidOperationException("the session browser is not wired on this host"))
+            .ListAsync(cancellationToken);
+
+    /// <summary>
+    /// Session browser (FT-2 slice 5): reconciled per-session worktrees and
+    /// orphan candidates. Read-only — reap/unlock stay pi-side commands.
+    /// </summary>
+    [JsonRpcMethod("worktrees/list")]
+    public Task<WorktreesListResult> WorktreesListAsync(CancellationToken cancellationToken) =>
+        (_worktrees ?? throw new InvalidOperationException("the session browser is not wired on this host"))
+            .ListAsync(cancellationToken);
 
     [JsonRpcMethod("status/refresh")]
     public Task StatusRefreshAsync()

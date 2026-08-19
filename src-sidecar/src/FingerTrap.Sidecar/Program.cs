@@ -1,6 +1,7 @@
 using FingerTrap.Sidecar.Abstractions;
 using FingerTrap.Sidecar.Ipc;
 using FingerTrap.Sidecar.Pty;
+using FingerTrap.Sidecar.Sessions;
 using FingerTrap.Sidecar.Settings;
 using FingerTrap.Sidecar.Status;
 using Nerdbank.Streams;
@@ -55,7 +56,13 @@ await using var status = new StatusService([
     new AdoStatusProvider(credentials, settings.Status?.Ado),
     new LocalGitStatusProvider(settings.Status?.Git),
 ]);
-using var surface = new RpcSurface(pty, settings.Pane, credentials, status, settings.Keybindings, rpcPanes);
+// Session browser (FT-2 slice 5, ADR-0026): read-only scans of pi's session
+// store and the worktree extension's durable orphan signals.
+var sessionStore = new SessionStore();
+var worktreeReconciler = new WorktreeReconciler();
+using var surface = new RpcSurface(
+    pty, settings.Pane, credentials, status, settings.Keybindings, rpcPanes,
+    sessionStore, worktreeReconciler);
 
 var rpc = new JsonRpc(handler);
 rpc.AddLocalRpcTarget(surface, new JsonRpcTargetOptions

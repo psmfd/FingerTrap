@@ -41,13 +41,19 @@ public enum PaneKind
 /// compatibility with the pre-FT-0 contract; it is the executable override for
 /// a pi pane just as much as for a shell pane.
 /// </param>
+/// <param name="SessionPath">
+/// Session file to resume (pi's <c>--session</c>), from the session browser
+/// (FT-2 slice 5). Only meaningful when <paramref name="Kind"/> is
+/// <see cref="PaneKind.Pi"/>.
+/// </param>
 public sealed record PtySpawnOptions(
     string? Shell,
     string? Cwd,
     int Cols,
     int Rows,
     IReadOnlyDictionary<string, string>? Env,
-    PaneKind Kind = PaneKind.Shell);
+    PaneKind Kind = PaneKind.Shell,
+    string? SessionPath = null);
 
 public sealed class PtyOutputEventArgs : EventArgs
 {

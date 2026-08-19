@@ -2,6 +2,7 @@ using FingerTrap.Sidecar.Abstractions;
 using FingerTrap.Sidecar.Ipc;
 using FingerTrap.Sidecar.Settings;
 using FingerTrap.Sidecar.Status;
+using FingerTrap.Sidecar.Text;
 using Xunit;
 
 namespace FingerTrap.Sidecar.Tests;

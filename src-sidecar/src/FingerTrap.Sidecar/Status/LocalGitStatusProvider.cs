@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text;
 using FingerTrap.Sidecar.Abstractions;
 using FingerTrap.Sidecar.Settings;
+using FingerTrap.Sidecar.Text;
 
 namespace FingerTrap.Sidecar.Status;
 

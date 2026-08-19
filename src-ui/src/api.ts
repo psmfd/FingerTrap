@@ -265,6 +265,57 @@ export interface SettingsGetResult {
   keybindings: Record<string, string>;
 }
 
+/**
+ * Session browser (FT-2 slice 5, ADR-0026). `sessionPath` is the only
+ * functional resume key — everything else is sanitized display data. When
+ * `cwdMissing` is true, RPC-pane resume is disabled (pi hard-exits on a
+ * missing cwd in rpc mode); PTY-pane resume is offered with `originalRepo`
+ * as the pane cwd when the session was a reaped worktree.
+ */
+export interface SessionSummary {
+  sessionPath: string;
+  id: string;
+  cwd: string;
+  name: string | null;
+  firstMessage: string;
+  messageCount: number;
+  createdAt: string;
+  modifiedAt: string;
+  /** May dangle — treat unresolvable parents as fork-tree roots. */
+  parentSessionPath: string | null;
+  cwdMissing: boolean;
+  reapedWorktree: boolean;
+  originalRepo: string | null;
+}
+
+/** `totalCount` can exceed `sessions.length` — the sidecar deep-parses only
+ * the most recently modified N files, so the UI shows "N of totalCount". */
+export interface SessionsListResult {
+  sessions: SessionSummary[];
+  totalCount: number;
+}
+
+/**
+ * One reconciled per-session worktree (read-only surfacing — reap/unlock
+ * stay pi-side `/worktree` commands). `host` is display-only: a recorded
+ * pid is only meaningful on the host that recorded it (pi_config#1019).
+ */
+export interface WorktreeRecord {
+  sid: string;
+  worktreePath: string | null;
+  branch: string | null;
+  repo: string | null;
+  host: string | null;
+  wipSha: string | null;
+  pid: number | null;
+  alive: boolean;
+  shape: 'live' | 'dead' | 'gone' | 'stray';
+}
+
+export interface WorktreesListResult {
+  records: WorktreeRecord[];
+}
+
 const PtySpawnMethod = new RequestType1<PtySpawnRequest, PtySpawnResult, void>('pty/spawn');
 const PtyWriteMethod = new RequestType1<PtyWriteRequest, void, void>('pty/write');
 const PtyResizeMethod = new RequestType1<PtyResizeRequest, void, void>('pty/resize');
@@ -304,6 +355,8 @@ const RpcExtensionUiResponseMethod = new RequestType1<RpcExtensionUiResponseRequ
 );
 const StatusRefreshMethod = new RequestType1<null, void, void>('status/refresh');
 const SettingsGetMethod = new RequestType1<null, SettingsGetResult, void>('settings/get');
+const SessionsListMethod = new RequestType1<null, SessionsListResult, void>('sessions/list');
+const WorktreesListMethod = new RequestType1<null, WorktreesListResult, void>('worktrees/list');
 const StatusSnapshotNotif = new NotificationType1<StatusSnapshotNotification>('status/snapshot');
 const PtyOutputNotif = new NotificationType1<PtyOutputNotification>('pty/output');
 const PtyExitNotif = new NotificationType1<PtyExitNotification>('pty/exit');
@@ -411,4 +464,12 @@ export function onStatusSnapshot(handler: (n: StatusSnapshotNotification) => voi
 
 export async function settingsGet(): Promise<SettingsGetResult> {
   return require_().sendRequest(SettingsGetMethod, null);
+}
+
+export async function sessionsList(): Promise<SessionsListResult> {
+  return require_().sendRequest(SessionsListMethod, null);
+}
+
+export async function worktreesList(): Promise<WorktreesListResult> {
+  return require_().sendRequest(WorktreesListMethod, null);
 }

@@ -8,6 +8,13 @@ namespace FingerTrap.Sidecar.Ipc;
 /// default" — see <see cref="PaneKinds.Parse"/>. An unrecognised value is an
 /// error, never a silent fall-back to the default.
 /// </param>
+/// <param name="SessionPath">
+/// Session to resume (<c>--session</c> on the pi command line), for
+/// PTY-pane resume from the session browser (FT-2 slice 5, ADR-0026).
+/// Only meaningful for pi panes; ignored for shell panes. Interactive pi
+/// owns the missing-cwd fallback prompt — the sidecar never mutates
+/// session state to force a resume.
+/// </param>
 public sealed record PtySpawnRequest(
     string SessionId,
     string? Shell,
@@ -15,7 +22,8 @@ public sealed record PtySpawnRequest(
     int Cols,
     int Rows,
     IReadOnlyDictionary<string, string>? Env,
-    string? Kind = null);
+    string? Kind = null,
+    string? SessionPath = null);
 
 /// <summary>
 /// Wire-string ↔ <see cref="PaneKind"/> conversion, and the host default.
