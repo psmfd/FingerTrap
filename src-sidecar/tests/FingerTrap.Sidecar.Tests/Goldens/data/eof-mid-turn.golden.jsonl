@@ -1,12 +1,13 @@
 {"ctl":"spawn","args":["--mode","rpc","--provider","canned","--model","canned-model"],"cwd":"@CWD:main@"}
 {"dir":"out","line":"{\"id\":\"req_1\",\"type\":\"prompt\",\"message\":\"Start.\"}"}
 {"dir":"in","line":"{\"id\":\"req_1\",\"type\":\"response\",\"command\":\"prompt\",\"success\":true}"}
+{"dir":"in","line":"{\"type\":\"hello\",\"piVersion\":\"0.84.2\",\"protocol\":1,\"capabilities\":[\"extension_ui\",\"queue_modes\",\"fork\",\"get_commands\",\"list_sessions\"]}"}
 {"dir":"in","line":"{\"type\":\"agent_start\"}"}
 {"dir":"in","line":"{\"type\":\"turn_start\"}"}
 {"dir":"in","line":"{\"type\":\"message_start\",\"message\":{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"Start.\"}],\"timestamp\":\"@TS:1@\"}}"}
 {"dir":"in","line":"{\"type\":\"message_end\",\"message\":{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"Start.\"}],\"timestamp\":\"@TS:1@\"}}"}
 {"dir":"in","line":"{\"type\":\"message_start\",\"message\":{\"role\":\"assistant\",\"content\":[],\"api\":\"openai-completions\",\"provider\":\"canned\",\"model\":\"canned-model\",\"usage\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0,\"totalTokens\":0,\"cost\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0,\"total\":0}},\"stopReason\":\"pending\",\"timestamp\":\"@TS:2@\",\"responseId\":\"chatcmpl-canned\"}}"}
-{"dir":"in","line":"{\"type\":\"message_update\",\"assistantMessageEvent\":{\"type\":\"text_start\",\"contentIndex\":0}}"}
-{"dir":"in","line":"{\"type\":\"message_update\",\"assistantMessageEvent\":{\"type\":\"text_delta\",\"contentIndex\":0,\"delta\":\"never\"}}"}
+{"dir":"in","line":"{\"type\":\"message_update\",\"usage\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0,\"totalTokens\":0,\"cost\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0,\"total\":0}},\"assistantMessageEvent\":{\"type\":\"text_start\",\"contentIndex\":0}}"}
+{"dir":"in","line":"{\"type\":\"message_update\",\"usage\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0,\"totalTokens\":0,\"cost\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0,\"total\":0}},\"assistantMessageEvent\":{\"type\":\"text_delta\",\"contentIndex\":0,\"delta\":\"never\"}}"}
 {"ctl":"stdin_eof"}
 {"ctl":"exit","code":0}

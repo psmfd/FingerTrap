@@ -1,7 +1,8 @@
 # pi `--mode rpc` contract study (FT-2 gate)
 
-**Verified against:** pi tag `v0.84.1-psmfd.1` (commit `18b98782f39a`, the version
-pinned by `pi_config`), by reading
+**Verified against:** pi tag `v0.84.2-psmfd.1` (commit `6bdcb3089026`, the version
+pinned by `pi_config`) — re-verified at this bump by the golden re-record diff
+(the pin-bump ritual below, its first live exercise) — originally built by reading
 `packages/coding-agent/src/modes/rpc/{rpc-types,rpc-mode,rpc-client,jsonl}.ts`,
 the type chain into `pi-agent-core`/`pi-ai`, and the RPC test suite (including
 the 5868 unknown-command-id regression). This note satisfies the FT-2 gate in
@@ -9,8 +10,9 @@ the 5868 unknown-command-id regression). This note satisfies the FT-2 gate in
 files the gaps as issues (listed at the end). Re-verify against the source on
 every pi pin bump — event-name drift across pi versions is a previously-hit bug
 class (pi_config's subagent extension once listened for a `tool_result_end`
-event that pi 0.80.2 no longer emitted), and the protocol has no version
-handshake (psmfd/pi#56).
+event that pi 0.80.2 no longer emitted). Since `v0.84.2-psmfd.1` the protocol
+HAS a version handshake: the `hello` first line (psmfd/pi#56, psmfd-patch-010;
+see Wire framing).
 
 A caution for future readers of the pi source: `packages/protocol` +
 `packages/server` (`pi-server`) is an experimental, unused-by-the-CLI
@@ -46,6 +48,18 @@ keyless, token-free, and deterministic; ids/timestamps/paths are tokenized
 to catch response-prose drift cheaply.
 
 ## Wire framing
+
+**Hello (first stdout line, since `v0.84.2-psmfd.1` / psmfd-patch-010):**
+`{"type":"hello","piVersion":"0.84.2","protocol":1,"capabilities":[
+"extension_ui","queue_modes","fork","get_commands","list_sessions"]}` —
+emitted before extension binding and before the stdin reader attaches. It is
+the ready gate (no more sleep-and-probe; "died before hello" is a
+distinguishable spawn-failure class) and the capability-discovery surface
+(additions are advertised, never probed, and never bump `protocol`).
+`piVersion` carries the upstream base version (`0.84.2`), not the psmfd tag.
+Golden note: hello is an event-class line, so window canonicalization hoists
+an id-correlated response above it inside the same inbound window — per the
+canonical form, not wire order (on the wire hello is always first).
 
 - **Strict LF-only JSONL in both directions.** One JSON object per `\n`-terminated
   line. Do **not** split on other Unicode separators: U+2028/U+2029 are legal
@@ -98,6 +112,7 @@ are listed so the enumeration is complete against the pin.
 | `abort` | → none | ● |
 | `get_state` | → `RpcSessionState` (model, thinkingLevel, isStreaming, isCompacting, steering/followUp modes, sessionFile, sessionId, sessionName, autoCompactionEnabled, messageCount, pendingMessageCount) | ● |
 | `get_session_stats` | → `SessionStats` (per-role message counts, toolCalls, `tokens{input,output,cacheRead,cacheWrite,total}`, `cost`, `contextUsage?{tokens,contextWindow,percent}`) | ● |
+| `list_sessions` | `cwd?`, `all?` → `{ sessions: [{path, id, cwd, name?, parentSessionPath?, created, modified, messageCount, firstMessage}] }` — header fields only, `allMessagesText` deliberately off the wire (since `v0.84.2-psmfd.1`, psmfd-patch-011; golden `list-sessions`) | ● |
 | `get_available_models` | → `{ models: Model[] }` (contextWindow, maxTokens, per-token cost, supportedThinkingLevels, authenticated) | ● |
 | `set_model` | `provider`, `modelId` → `Model` | ● |
 | `cycle_model` / `set_thinking_level` / `cycle_thinking_level` / `get_available_thinking_levels` | model/thinking controls | ● |
@@ -198,14 +213,15 @@ partial message must assemble it itself, keyed by `contentIndex`, seeded by
   Requests can also arrive **before the first command**: extension
   `session_start` hooks fire at spawn, so a host must be consuming stdout
   from the moment the child starts (the supervisor's always-on channel
-  covers this). **But recorded (golden `session-start-dialog-exit`): a
-  spawn-time dialog is UNANSWERABLE in this pin.** RPC mode attaches its
-  stdin reader only after `session_start` hooks complete, so the hook's
-  await can never be resolved by the host; once pi's startup work drains
-  the event loop, the process exits **0** — silently, no error on either
-  stream. A supervisor must treat an `extension_ui_request` that arrives
-  before its first command's response as fatal-in-progress (expect child
-  exit), not as an answerable dialog. Upstream fix tracked as psmfd/pi#57.
+  covers this). **Since `v0.84.2-psmfd.1` (psmfd-patch-012, closing
+  psmfd/pi#57) spawn-time dialogs are ANSWERABLE** — the stdin reader
+  attaches before extensions bind, pre-ready `extension_ui_response` lines
+  resolve immediately, and other pre-ready input replays in order once the
+  command loop is up. Recorded: golden `session-start-dialog-roundtrip`.
+  Under earlier pins the same dialog was unanswerable and pi exited **0**
+  silently once its event loop drained (the retired golden
+  `session-start-dialog-exit` pinned that death; FT#147's treat-as-fatal
+  supervisor policy is obsolete from this pin on).
 - **Truncation interplay (FT-2 slice 4):** an oversized
   `extension_ui_request` is replaced by the sidecar's `rpc_event_truncated`
   marker like any event, but the marker additionally preserves
@@ -280,23 +296,25 @@ text) — not a reuse of the repo-dash panel.
 |---|---|---|
 | Model/status readouts | `get_state`, `get_session_stats` (context-fill ships as a percent), `get_available_models`; incremental usage via `message_update` | covered |
 | Session resume | `switch_session` (path known) or spawn-time `--session` | delivered in FT-2 slice 5 (session browser → RPC or PTY pane; ADR-0026 disables RPC resume on a missing cwd and offers the PTY fallback); reaped-cwd RPC recovery still blocked on pi#55 |
-| Session list | none — `SessionManager.list*()` is library-only; sidecar parses `~/.pi/agent/sessions/--<cwd-dashes>--/<timestamp>_<id>.jsonl` directly until pi#54 lands | delivered in FT-2 slice 5 (`sessions/list`, bounded direct scan); pi#54 remains the upstream ask |
+| Session list | `list_sessions` RPC command (since `v0.84.2-psmfd.1`, psmfd-patch-011); the sidecar's bounded direct scan of `~/.pi/agent/sessions/` remains the shipping path until #140 migrates it | delivered in FT-2 slice 5 via the direct scan; pi#54 landed — retiring the scan (ADR-0025's plan) rides #140 |
 | Worktree-orphan surfacing | not RPC territory by design: read the worktree extension's per-session manifests (`~/.pi/agent/extensions/worktree/sessions/<sid>.json` — `{ v, sessionId, repo, worktreePath, branch, pid, host, createdAt, updatedAt, lastSnapshotSha }`) × `git worktree list --porcelain` lock reasons (`session:<sid> pid:<p> host:<h> started:<iso>`) × `refs/pi-wip/<sid>`; port the extension's reconcile algorithm read-only. Formats are extension-owned, not protocol-versioned — re-verify on pi_config bumps | delivered in FT-2 slice 5 (`worktrees/list`, read-only reconcile port; reap/unlock stay pi-side) |
 | Reference-into-prompt | host-owned composer + `steer`/`follow_up`/`prompt` to submit; listen for `set_editor_text` | covered natively |
 | Observability dashboards | pi_config meter JSONL files, read directly — no RPC involvement | out of this note's scope |
 
 ## Filed gaps
 
-- [psmfd/pi#54](https://github.com/psmfd/pi/issues/54) — no scriptable
-  session-list surface (RPC command or `pi sessions list --json`).
+- [psmfd/pi#54](https://github.com/psmfd/pi/issues/54) — **RESOLVED at
+  `v0.84.2-psmfd.1`** (psmfd-patch-011): `list_sessions` RPC command; golden
+  `list-sessions`. FT adoption rides #140.
 - [psmfd/pi#55](https://github.com/psmfd/pi/issues/55) — `switch_session`
   lacks `cwdOverride`; `MissingSessionCwdError` unrecoverable over RPC.
-- [psmfd/pi#56](https://github.com/psmfd/pi/issues/56) — no protocol version
-  handshake or ready signal.
-- [psmfd/pi#57](https://github.com/psmfd/pi/issues/57) — an
-  `extension_ui_request` raised during `session_start` is unanswerable
-  (stdin reader attaches after the hooks); pi exits 0 silently. Pinned by
-  golden `session-start-dialog-exit`.
+- [psmfd/pi#56](https://github.com/psmfd/pi/issues/56) — **RESOLVED at
+  `v0.84.2-psmfd.1`** (psmfd-patch-010): the `hello` first line (see Wire
+  framing). FT adoption (ready gate in `PiRpcClient`) rides #148.
+- [psmfd/pi#57](https://github.com/psmfd/pi/issues/57) — **RESOLVED at
+  `v0.84.2-psmfd.1`** (psmfd-patch-012): spawn-time dialogs answerable;
+  golden `session-start-dialog-roundtrip` (replaces
+  `session-start-dialog-exit`). FT#147's supervisor policy is obsolete.
 - [psmfd/pi_config#1018](https://github.com/psmfd/pi_config/issues/1018) —
   repo-dash panels crash under RPC mode (informational here; FT-2 goes
   native).

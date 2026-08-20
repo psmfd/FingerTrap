@@ -1,0 +1,7 @@
+{"ctl":"spawn","args":["--mode","rpc","--provider","canned","--model","canned-model","--extension","@FIXTURE:session-start-dialog.ts@"],"cwd":"@CWD:main@"}
+{"dir":"in","line":"{\"type\":\"hello\",\"piVersion\":\"0.84.2\",\"protocol\":1,\"capabilities\":[\"extension_ui\",\"queue_modes\",\"fork\",\"get_commands\",\"list_sessions\"]}"}
+{"dir":"in","line":"{\"type\":\"extension_ui_request\",\"id\":\"@UUID:1@\",\"method\":\"confirm\",\"title\":\"golden-spawn-confirm\",\"message\":\"Answerable before the first command?\"}"}
+{"dir":"out","line":"{\"id\":\"@UUID:1@\",\"type\":\"extension_ui_response\",\"confirmed\":true}"}
+{"dir":"in","line":"{\"type\":\"extension_ui_request\",\"id\":\"@UUID:2@\",\"method\":\"notify\",\"message\":\"golden-spawn-confirm-resolved:true\",\"notifyType\":\"info\"}"}
+{"ctl":"stdin_eof"}
+{"ctl":"exit","code":0}

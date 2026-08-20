@@ -139,7 +139,9 @@ or this repo's `docs/` — enumerating the `pi --mode rpc` methods and events
 FT-2 consumes, verified against the pinned pi version, with gaps filed as
 issues. **Satisfied:** FT-1 complete ([#58](https://github.com/psmfd/FingerTrap/issues/58));
 the study note is [rpc-contract.md](rpc-contract.md) (verified against
-`v0.84.1-psmfd.1`; gaps filed as psmfd/pi#54–#56 and psmfd/pi_config#1018).
+`v0.84.1-psmfd.1`, re-verified at `v0.84.2-psmfd.1` via the #139 golden
+re-record; gaps filed as psmfd/pi#54–#57 and psmfd/pi_config#1018, of which
+pi#54/#56/#57 shipped in `v0.84.2-psmfd.1`).
 Tracked as [#120](https://github.com/psmfd/FingerTrap/issues/120).
 
 The sidecar drives `pi --mode rpc`: session list and resume, worktree-orphan

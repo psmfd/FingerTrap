@@ -1,5 +1,6 @@
 {"ctl":"spawn","args":["--mode","rpc","--provider","canned","--model","canned-model"],"cwd":"@CWD:main@"}
 {"dir":"out","line":"this is not json"}
 {"dir":"in","line":"{\"type\":\"response\",\"command\":\"parse\",\"success\":false,\"error\":\"Failed to parse command: JSON Parse error: Unexpected identifier \\\"this\\\"\"}"}
+{"dir":"in","line":"{\"type\":\"hello\",\"piVersion\":\"0.84.2\",\"protocol\":1,\"capabilities\":[\"extension_ui\",\"queue_modes\",\"fork\",\"get_commands\",\"list_sessions\"]}"}
 {"ctl":"stdin_eof"}
 {"ctl":"exit","code":0}

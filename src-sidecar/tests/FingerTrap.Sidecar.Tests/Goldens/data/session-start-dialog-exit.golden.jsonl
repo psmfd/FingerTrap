@@ -1,3 +1,0 @@
-{"ctl":"spawn","args":["--mode","rpc","--provider","canned","--model","canned-model","--extension","@FIXTURE:session-start-dialog.ts@"],"cwd":"@CWD:main@"}
-{"dir":"in","line":"{\"type\":\"extension_ui_request\",\"id\":\"@UUID:1@\",\"method\":\"confirm\",\"title\":\"golden-spawn-confirm\",\"message\":\"Answerable before the first command?\"}"}
-{"ctl":"exit","code":0}
