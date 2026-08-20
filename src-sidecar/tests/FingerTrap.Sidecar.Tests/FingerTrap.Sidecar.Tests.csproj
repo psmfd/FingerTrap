@@ -24,4 +24,11 @@
     <PackageReference Include="xunit.v3" />
     <PackageReference Include="NSubstitute" />
   </ItemGroup>
+
+  <ItemGroup>
+    <!-- RPC contract goldens (#139): committed transcripts consumed by the
+         replay lane, plus the recorder's pi extension fixture. -->
+    <Content Include="Goldens\data\**" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Goldens\fixtures\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

@@ -166,6 +166,28 @@ Review-checklist lines for any new or changed test:
 2. **A guard only guards if the regression fails it** — before trusting a new conformance or guard test, introduce the regression, watch the suite go red, revert. Record the red-first proof in the PR body.
 3. **Test the real entry path** — the kept smoke (`scripts/smoke-pty.py`) drives the real sidecar binary over stdio and spawns real pi the way the app does, not the source plane; it stays a kept check, never a one-time verification.
 
+### RPC contract goldens (#139, ADR-0027 P1)
+
+The pi RPC contract is pinned by record–replay goldens:
+`src-sidecar/tests/FingerTrap.Sidecar.Tests/Goldens/data/*.golden.jsonl`.
+Every PR replays them keylessly through `PiRpcClient` against FakePi
+(`GoldenReplayTests`) — that lane is just part of `dotnet test`. Recording
+is opt-in and only needed on a pi pin bump or when adding a scenario:
+
+```bash
+FT_RECORD_GOLDENS=1 dotnet test src-sidecar -c Release \
+  -- --filter-method "*Record_Scenario*"
+```
+
+The recorder needs a real `pi` on PATH (macOS/Linux; it self-skips
+otherwise) but no API keys and no tokens — model turns are served by a
+local canned endpoint from a hermetic temp HOME. Each scenario is recorded
+twice and must normalize byte-identically before it writes; the resulting
+working-tree diff of `Goldens/data/` is the pin-bump drift report (see the
+ritual in `docs/rpc-contract.md`). Scenario definitions live in
+`GoldenScenarios.cs` and drive both lanes, so recorder and replay cannot
+drift apart.
+
 ## Verifying changes in a clean environment (SmolVM)
 
 Some classes of change cannot be honestly verified on your daily-driver

@@ -202,7 +202,7 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
 
         try
         {
-            var payload = JsonlCodec.EncodeLine(BuildCommandJson(id, type, parametersJson));
+            var payload = BuildCommandJson(id, type, parametersJson);
             try
             {
                 await WriteStdinAsync(payload, cancellationToken).ConfigureAwait(false);
@@ -259,7 +259,7 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
 
         ThrowIfExited();
 
-        var payload = JsonlCodec.EncodeLine(BuildCommandJson(id, type, parametersJson));
+        var payload = BuildCommandJson(id, type, parametersJson);
         try
         {
             await WriteStdinAsync(payload, cancellationToken).ConfigureAwait(false);
@@ -269,6 +269,17 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
             throw await ResolveWriteFailureAsync(writeFailure).ConfigureAwait(false);
         }
     }
+
+    /// <summary>
+    /// Conformance-golden seam (#139): writes one raw stdin line verbatim —
+    /// deliberately malformed input included — so the recorder can pin pi's
+    /// <c>command: "parse"</c> error response. Bypasses command
+    /// construction and correlation entirely (pi's reply, carrying no
+    /// known id, surfaces via <see cref="Events"/>); the wire tap still
+    /// observes the line. Test-only by convention; no product call sites.
+    /// </summary>
+    internal Task SendRawLineForConformanceAsync(string line, CancellationToken cancellationToken = default) =>
+        WriteStdinAsync(line, cancellationToken);
 
     /// <summary>
     /// Completes on the next <c>agent_settled</c> — the sole turn boundary
@@ -436,6 +447,7 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
             await foreach (var line in JsonlCodec.ReadLinesAsync(
                 _process.StandardOutput.BaseStream, _options.MaxLineBytes).ConfigureAwait(false))
             {
+                _options.WireTap?.Invoke(PiWireDirection.FromChild, line);
                 await DispatchLineAsync(line).ConfigureAwait(false);
             }
         }
@@ -585,8 +597,9 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
         }
     }
 
-    private async Task WriteStdinAsync(byte[] payload, CancellationToken cancellationToken)
+    private async Task WriteStdinAsync(string json, CancellationToken cancellationToken)
     {
+        var payload = JsonlCodec.EncodeLine(json);
         await _stdinLock.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
@@ -594,6 +607,12 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
             {
                 throw new InvalidOperationException("pi rpc client is shutting down");
             }
+
+            // Tap before the write, inside the lock: the child can answer a
+            // flushed line before this task resumes, and a tap fired after
+            // the flush could then record the answer ahead of its own
+            // question. Send-attempt-ordered is the recording invariant.
+            _options.WireTap?.Invoke(PiWireDirection.ToChild, json);
 
             var stdin = _process.StandardInput.BaseStream;
             await stdin.WriteAsync(payload, cancellationToken).ConfigureAwait(false);
