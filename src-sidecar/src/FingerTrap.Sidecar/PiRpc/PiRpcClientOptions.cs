@@ -1,6 +1,19 @@
 namespace FingerTrap.Sidecar.PiRpc;
 
 /// <summary>
+/// Direction of one raw JSONL wire line relative to the sidecar, for
+/// <see cref="PiRpcClientOptions.WireTap"/>.
+/// </summary>
+internal enum PiWireDirection
+{
+    /// <summary>Supervisor → child (a line written to pi's stdin).</summary>
+    ToChild,
+
+    /// <summary>Child → supervisor (a line read from pi's stdout).</summary>
+    FromChild,
+}
+
+/// <summary>
 /// Spawn and supervision configuration for one <see cref="PiRpcClient"/>.
 /// The executable path and arguments are caller-supplied — resolution of
 /// where pi lives (PATH, settings) stays with the caller, mirroring
@@ -65,4 +78,17 @@ internal sealed record PiRpcClientOptions
     /// the first reader attaches occupy the same bounded capacity.
     /// </summary>
     public int EventChannelCapacity { get; init; } = 1024;
+
+    /// <summary>
+    /// Optional observer of every raw wire line, both directions — the
+    /// record–replay seam for the RPC contract goldens (#139). Outbound
+    /// lines are reported at send attempt, under the stdin lock and before
+    /// the write, so a fast answer can never be observed ahead of its own
+    /// question; inbound lines are reported before demux, exactly as
+    /// decoded by <see cref="JsonlCodec"/> (no trailing newline either
+    /// way). Invoked synchronously on the send/pump paths,
+    /// so implementations must be fast and must not throw — a throwing tap
+    /// is connection-fatal for the child, same as any pump failure.
+    /// </summary>
+    public Action<PiWireDirection, string>? WireTap { get; init; }
 }

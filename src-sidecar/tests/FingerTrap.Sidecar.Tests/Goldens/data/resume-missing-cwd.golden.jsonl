@@ -1,0 +1,21 @@
+{"ctl":"spawn","args":["--mode","rpc","--provider","canned","--model","canned-model"],"cwd":"@CWD:doomed@"}
+{"dir":"out","line":"{\"id\":\"req_1\",\"type\":\"prompt\",\"message\":\"Say ok.\"}"}
+{"dir":"in","line":"{\"id\":\"req_1\",\"type\":\"response\",\"command\":\"prompt\",\"success\":true}"}
+{"dir":"in","line":"{\"type\":\"agent_start\"}"}
+{"dir":"in","line":"{\"type\":\"turn_start\"}"}
+{"dir":"in","line":"{\"type\":\"message_start\",\"message\":{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"Say ok.\"}],\"timestamp\":\"@TS:1@\"}}"}
+{"dir":"in","line":"{\"type\":\"message_end\",\"message\":{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"Say ok.\"}],\"timestamp\":\"@TS:1@\"}}"}
+{"dir":"in","line":"{\"type\":\"message_start\",\"message\":{\"role\":\"assistant\",\"content\":[],\"api\":\"openai-completions\",\"provider\":\"canned\",\"model\":\"canned-model\",\"usage\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0,\"totalTokens\":0,\"cost\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0,\"total\":0}},\"stopReason\":\"pending\",\"timestamp\":\"@TS:2@\",\"responseId\":\"chatcmpl-canned\"}}"}
+{"dir":"in","line":"{\"type\":\"message_update\",\"assistantMessageEvent\":{\"type\":\"text_start\",\"contentIndex\":0}}"}
+{"dir":"in","line":"{\"type\":\"message_update\",\"assistantMessageEvent\":{\"type\":\"text_delta\",\"contentIndex\":0,\"delta\":\"ok\"}}"}
+{"dir":"in","line":"{\"type\":\"message_update\",\"assistantMessageEvent\":{\"type\":\"text_end\",\"contentIndex\":0,\"content\":\"ok\"}}"}
+{"dir":"in","line":"{\"type\":\"message_end\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"ok\"}],\"api\":\"openai-completions\",\"provider\":\"canned\",\"model\":\"canned-model\",\"usage\":{\"input\":7,\"output\":3,\"cacheRead\":0,\"cacheWrite\":0,\"reasoning\":0,\"totalTokens\":10,\"cost\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0,\"total\":0}},\"stopReason\":\"stop\",\"timestamp\":\"@TS:2@\",\"responseId\":\"chatcmpl-canned\",\"rawStopReason\":\"stop\"}}"}
+{"dir":"in","line":"{\"type\":\"turn_end\",\"message\":{\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"ok\"}],\"api\":\"openai-completions\",\"provider\":\"canned\",\"model\":\"canned-model\",\"usage\":{\"input\":7,\"output\":3,\"cacheRead\":0,\"cacheWrite\":0,\"reasoning\":0,\"totalTokens\":10,\"cost\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0,\"total\":0}},\"stopReason\":\"stop\",\"timestamp\":\"@TS:2@\",\"responseId\":\"chatcmpl-canned\",\"rawStopReason\":\"stop\"},\"toolResults\":[]}"}
+{"dir":"in","line":"{\"type\":\"agent_end\",\"messages\":[{\"role\":\"user\",\"content\":[{\"type\":\"text\",\"text\":\"Say ok.\"}],\"timestamp\":\"@TS:1@\"},{\"role\":\"assistant\",\"content\":[{\"type\":\"text\",\"text\":\"ok\"}],\"api\":\"openai-completions\",\"provider\":\"canned\",\"model\":\"canned-model\",\"usage\":{\"input\":7,\"output\":3,\"cacheRead\":0,\"cacheWrite\":0,\"reasoning\":0,\"totalTokens\":10,\"cost\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0,\"total\":0}},\"stopReason\":\"stop\",\"timestamp\":\"@TS:2@\",\"responseId\":\"chatcmpl-canned\",\"rawStopReason\":\"stop\"}],\"willRetry\":false}"}
+{"dir":"in","line":"{\"type\":\"agent_settled\"}"}
+{"dir":"out","line":"{\"id\":\"req_2\",\"type\":\"get_state\"}"}
+{"dir":"in","line":"{\"id\":\"req_2\",\"type\":\"response\",\"command\":\"get_state\",\"success\":true,\"data\":{\"model\":{\"id\":\"canned-model\",\"name\":\"canned-model\",\"api\":\"openai-completions\",\"provider\":\"canned\",\"baseUrl\":\"@MODEL_BASE_URL@\",\"reasoning\":false,\"input\":[\"text\"],\"cost\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0},\"contextWindow\":32768,\"maxTokens\":4096},\"thinkingLevel\":\"off\",\"isStreaming\":false,\"isCompacting\":false,\"steeringMode\":\"one-at-a-time\",\"followUpMode\":\"one-at-a-time\",\"sessionFile\":\"@HOME@/.pi/agent/sessions/-@CWD:doomed@--/@TS:3@Z_@UUID:1@.jsonl\",\"sessionId\":\"@UUID:1@\",\"autoCompactionEnabled\":true,\"messageCount\":2,\"pendingMessageCount\":0}}"}
+{"ctl":"stdin_eof"}
+{"ctl":"exit","code":0}
+{"ctl":"spawn","args":["--mode","rpc","--provider","canned","--model","canned-model","--session","@HOME@/.pi/agent/sessions/-@CWD:doomed@--/@TS:3@Z_@UUID:1@.jsonl"],"cwd":"@CWD:main@"}
+{"ctl":"exit","code":1}

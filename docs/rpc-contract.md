@@ -18,6 +18,33 @@ multi-session daemon protocol (CBOR over Unix sockets). It is **not** what
 `pi --mode rpc` speaks. Everything below is the JSONL stdin/stdout protocol in
 `packages/coding-agent/src/modes/rpc/`.
 
+## Pin-bump ritual (record–replay goldens, #139)
+
+This study is now backed by committed wire transcripts —
+`src-sidecar/tests/FingerTrap.Sidecar.Tests/Goldens/data/*.golden.jsonl` —
+recorded from the real pinned pi and replayed keylessly through
+`PiRpcClient` on every PR (`GoldenReplayTests`). On a pin bump, do **not**
+re-read the pi source as the first move. Instead:
+
+1. Install the new pi on PATH, then re-record:
+   `FT_RECORD_GOLDENS=1 dotnet test src-sidecar --filter-method "*Record_Scenario*"`
+   (self-skips without the env var, without pi on PATH, and on Windows; each
+   scenario records twice and must be byte-identical before it writes — see
+   CONTRIBUTING for details).
+2. **The working-tree diff of `Goldens/data/` IS the drift report.** An
+   empty diff means the wire behaviors this suite covers are unchanged. A
+   non-empty diff enumerates exactly what moved.
+3. Update this study from that diff, then commit the new goldens with the
+   pin bump. Go source-diving only for changes the diff surfaces but does
+   not explain.
+
+The recorder serves model turns from a local canned OpenAI-completions
+endpoint (temp HOME + scenario-owned `models.json`), so recordings are
+keyless, token-free, and deterministic; ids/timestamps/paths are tokenized
+(`@UUID:1@`, `@TS:1@`, `@CWD:main@`, …). One scenario
+(`malformed-line-parse-error`) commits fully pinned — no volatile values —
+to catch response-prose drift cheaply.
+
 ## Wire framing
 
 - **Strict LF-only JSONL in both directions.** One JSON object per `\n`-terminated
@@ -131,6 +158,11 @@ partial message must assemble it itself, keyed by `contentIndex`, seeded by
   it as the graceful-shutdown checkpoint. Treat everything between `prompt` and
   `agent_settled` as one unit of work; attach the event listener *before*
   sending the prompt (the reference `promptAndWait` does) to avoid a race.
+  **Recorded (golden `follow-up-queue`): queued `steer`/`follow_up` messages
+  are delivered inside the SAME agent block** — `turn_end` → `turn_start`
+  with one `agent_end` carrying every message — so a block that absorbs
+  queued messages still settles exactly ONCE. Do not count one settled per
+  queued message.
 - **Streaming deltas:** `message_update.assistantMessageEvent` carries
   `text_delta` / `thinking_delta` / `toolcall_delta` (+ start/end per content
   block) with `contentIndex`.
@@ -166,7 +198,14 @@ partial message must assemble it itself, keyed by `contentIndex`, seeded by
   Requests can also arrive **before the first command**: extension
   `session_start` hooks fire at spawn, so a host must be consuming stdout
   from the moment the child starts (the supervisor's always-on channel
-  covers this).
+  covers this). **But recorded (golden `session-start-dialog-exit`): a
+  spawn-time dialog is UNANSWERABLE in this pin.** RPC mode attaches its
+  stdin reader only after `session_start` hooks complete, so the hook's
+  await can never be resolved by the host; once pi's startup work drains
+  the event loop, the process exits **0** — silently, no error on either
+  stream. A supervisor must treat an `extension_ui_request` that arrives
+  before its first command's response as fatal-in-progress (expect child
+  exit), not as an answerable dialog. Upstream fix tracked as psmfd/pi#57.
 - **Truncation interplay (FT-2 slice 4):** an oversized
   `extension_ui_request` is replaced by the sidecar's `rpc_event_truncated`
   marker like any event, but the marker additionally preserves
@@ -186,6 +225,13 @@ partial message must assemble it itself, keyed by `contentIndex`, seeded by
   its processing waits for the current turn. `steer` interrupts; `follow_up`
   queues; `set_steering_mode`/`set_follow_up_mode` pick `"all"` vs
   `"one-at-a-time"` delivery. `abort` cancels the in-flight run.
+  **Recorded (golden `steer-interrupt`): "interrupt" does not mean the
+  in-flight model request is aborted.** A `steer` sent mid-stream acks,
+  emits `queue_update` (`steering: [...]`), and waits for the current
+  model turn to finish streaming; only `abort` cancels the HTTP request
+  itself. A host that steers against a stalled model stream must expect
+  the steer to land only when the stream ends (or after an explicit
+  `abort`).
 
 ## Session selection and process lifecycle
 
@@ -247,6 +293,10 @@ text) — not a reuse of the repo-dash panel.
   lacks `cwdOverride`; `MissingSessionCwdError` unrecoverable over RPC.
 - [psmfd/pi#56](https://github.com/psmfd/pi/issues/56) — no protocol version
   handshake or ready signal.
+- [psmfd/pi#57](https://github.com/psmfd/pi/issues/57) — an
+  `extension_ui_request` raised during `session_start` is unanswerable
+  (stdin reader attaches after the hooks); pi exits 0 silently. Pinned by
+  golden `session-start-dialog-exit`.
 - [psmfd/pi_config#1018](https://github.com/psmfd/pi_config/issues/1018) —
   repo-dash panels crash under RPC mode (informational here; FT-2 goes
   native).

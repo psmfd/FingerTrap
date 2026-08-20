@@ -1,0 +1,5 @@
+{"ctl":"spawn","args":["--mode","rpc","--provider","canned","--model","canned-model"],"cwd":"@CWD:main@"}
+{"dir":"out","line":"{\"id\":\"forged_1\",\"type\":\"get_state\"}"}
+{"dir":"in","line":"{\"id\":\"forged_1\",\"type\":\"response\",\"command\":\"get_state\",\"success\":true,\"data\":{\"model\":{\"id\":\"canned-model\",\"name\":\"canned-model\",\"api\":\"openai-completions\",\"provider\":\"canned\",\"baseUrl\":\"@MODEL_BASE_URL@\",\"reasoning\":false,\"input\":[\"text\"],\"cost\":{\"input\":0,\"output\":0,\"cacheRead\":0,\"cacheWrite\":0},\"contextWindow\":32768,\"maxTokens\":4096},\"thinkingLevel\":\"off\",\"isStreaming\":false,\"isCompacting\":false,\"steeringMode\":\"one-at-a-time\",\"followUpMode\":\"one-at-a-time\",\"sessionFile\":\"@HOME@/.pi/agent/sessions/-@CWD:main@--/@TS:1@Z_@UUID:1@.jsonl\",\"sessionId\":\"@UUID:1@\",\"autoCompactionEnabled\":true,\"messageCount\":0,\"pendingMessageCount\":0}}"}
+{"ctl":"stdin_eof"}
+{"ctl":"exit","code":0}
