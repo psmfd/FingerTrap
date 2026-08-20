@@ -23,9 +23,13 @@ namespace FingerTrap.Sidecar.PiRpc;
 /// <para>
 /// Demux mirrors the reference client (<c>rpc-client.ts</c>, verified
 /// against the pinned pi): a line with <c>type: "response"</c> and a
-/// <em>known pending</em> id resolves that request; every other parseable
-/// line — including a response whose id is unknown, already timed out, or
-/// duplicated — is published as an event. Unparseable lines are ignored.
+/// <em>known pending</em> id resolves that request; a <c>type: "hello"</c>
+/// line — the child's first stdout write since <c>v0.84.2-psmfd.1</c> — is
+/// consumed by the supervisor as the ready gate (see
+/// <see cref="WaitForHelloAsync"/>) and, like the reference client, never
+/// published as an event; every other parseable line — including a response
+/// whose id is unknown, already timed out, or duplicated — is published as
+/// an event. Unparseable lines are ignored.
 /// </para>
 /// <para>
 /// Events flow through one always-on bounded channel, live from spawn.
@@ -52,6 +56,13 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
     private const int Sigterm = 15;
 
     /// <summary>
+    /// The RPC protocol this supervisor implements. A hello frame
+    /// advertising a higher number is refused — capability additions never
+    /// bump this (docs/rpc-contract.md, "Wire framing").
+    /// </summary>
+    internal const int SupportedRpcProtocol = 1;
+
+    /// <summary>
     /// How long after process exit to wait for the pipe readers to drain
     /// before building the exit fault — bounds the window in which the
     /// stderr tail completes.
@@ -68,11 +79,16 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
     private readonly TaskCompletionSource<PiProcessExitedException> _exited =
         new(TaskCreationOptions.RunContinuationsAsynchronously);
     private readonly List<TaskCompletionSource> _settledWaiters = [];
+    private readonly TaskCompletionSource<PiHelloInfo?> _helloReady =
+        new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private readonly CancellationTokenSource _helloGraceCts = new();
     private readonly Task _stdoutTask;
     private readonly Task _stderrTask;
     private readonly Task _monitorTask;
 
     private long _nextRequestId;
+    private volatile PiHelloInfo? _helloInfo;
+    private volatile Exception? _helloFault;
     private volatile PiProcessExitedException? _exitFault;
     private volatile Exception? _streamFault;
     private volatile bool _shuttingDown;
@@ -92,15 +108,28 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
         _stdoutTask = Task.Run(ReadStdoutAsync);
         _stderrTask = Task.Run(ReadStderrAsync);
         _monitorTask = Task.Run(MonitorExitAsync);
+        _ = Task.Run(WatchHelloGraceAsync);
     }
 
     /// <summary>
     /// All non-response lines from the child, verbatim (thin relay,
-    /// ADR-0025 decision 3). Completes once the child has exited and the
-    /// buffered tail is consumed; child death itself is observed via
-    /// <see cref="Exited"/>, not as a channel error.
+    /// ADR-0025 decision 3) — with one carve-out: the <c>hello</c>
+    /// handshake frame is consumed by the supervisor (ready gate +
+    /// capability discovery, mirroring the reference client) and never
+    /// appears here; surface it via <see cref="Hello"/> /
+    /// <see cref="WaitForHelloAsync"/> instead. The wire tap still records
+    /// hello — it fires before demux. Completes once the child has exited
+    /// and the buffered tail is consumed; child death itself is observed
+    /// via <see cref="Exited"/>, not as a channel error.
     /// </summary>
     public ChannelReader<PiRpcEvent> Events => _events.Reader;
+
+    /// <summary>
+    /// The parsed hello frame, or null before it arrives / on a legacy
+    /// (pre-hello) pin. Synchronous read of already-resolved state — use
+    /// <see cref="WaitForHelloAsync"/> to await the handshake outcome.
+    /// </summary>
+    public PiHelloInfo? Hello => _helloInfo;
 
     /// <summary>
     /// Completes when the child is fully down — exit observed, pipes
@@ -111,10 +140,13 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
     public Task<PiProcessExitedException> Exited => _exited.Task;
 
     /// <summary>
-    /// Spawns the child. There is no ready signal or version handshake in
-    /// the protocol (psmfd/pi#56) — the pin is the protection, and a child
-    /// that exits before ever responding surfaces as
-    /// <see cref="PiProcessExitedException"/> from the first send. Spawn
+    /// Spawns the child. Since pi <c>v0.84.2-psmfd.1</c> the protocol HAS a
+    /// ready signal and version handshake — the <c>hello</c> first stdout
+    /// line (psmfd/pi#56) — surfaced via <see cref="WaitForHelloAsync"/>;
+    /// this method itself still returns immediately after the OS spawn, so
+    /// callers that skip the gate keep today's behavior (a child that exits
+    /// before ever responding surfaces as
+    /// <see cref="PiProcessExitedException"/> from the first send). Spawn
     /// uses <see cref="ProcessStartInfo.ArgumentList"/> exclusively — one
     /// element per argument, never a concatenated string — with
     /// <see cref="ProcessStartInfo.UseShellExecute"/> false (required for
@@ -312,6 +344,36 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
     }
 
     /// <summary>
+    /// The ready gate (psmfd/pi#56, FT#148): completes when the handshake
+    /// outcome is known. Returns the parsed hello frame; or null when
+    /// <see cref="PiRpcClientOptions.HelloGrace"/> expired first — a legacy
+    /// (pre-hello) pin, in which case the client works exactly as it did
+    /// before the handshake existed. Throws
+    /// <see cref="PiProtocolMismatchException"/> when the child advertised
+    /// a newer protocol (the client has already taken the child down), and
+    /// the <see cref="PiProcessExitedException"/> exit fault when the child
+    /// died before hello — the distinguishable spawn-failure class that
+    /// grounds ADR-0026's missing-cwd exit-1 case, which dies before the
+    /// JSONL channel is up. The outcome is memoized: one shared task
+    /// resolves once, so later calls return instantly; the token only
+    /// abandons this caller's wait, never the class-lifetime grace timer.
+    /// </summary>
+    public async Task<PiHelloInfo?> WaitForHelloAsync(CancellationToken cancellationToken = default)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        return await _helloReady.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    /// <summary>
+    /// Capability advertisement replaces probing (docs/rpc-contract.md,
+    /// "Wire framing"). Synchronous read of already-resolved state — false
+    /// before hello arrives and in legacy mode, deliberately never an
+    /// implicit await that could block or pay grace latency from an
+    /// unexpected call site.
+    /// </summary>
+    public bool Supports(string capability) => _helloInfo?.Supports(capability) ?? false;
+
+    /// <summary>
     /// The contract's shutdown ladder: close stdin (EOF — the clean
     /// trigger; pi flushes and exits 0), then SIGTERM (exit 143, no
     /// flush), then <see cref="Process.Kill(bool)"/> with the entire
@@ -384,6 +446,8 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
 
         _process.Dispose();
         _stdinLock.Dispose();
+        TryCancelHelloGrace();
+        _helloGraceCts.Dispose();
     }
 
     // The BCL has no API to send SIGTERM to a child on any platform —
@@ -479,6 +543,15 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
             return;
         }
 
+        if (string.Equals(envelope.Type, "hello", StringComparison.Ordinal))
+        {
+            // Consumed by the supervisor, never published as an event —
+            // the reference client withholds it from listeners too. The
+            // wire tap already recorded the line (it fires before demux).
+            OnHello(line);
+            return;
+        }
+
         if (string.Equals(envelope.Type, "response", StringComparison.Ordinal)
             && envelope.Id is not null
             && _pending.TryRemove(envelope.Id, out var pending))
@@ -499,6 +572,89 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
         }
 
         await _events.Writer.WriteAsync(new PiRpcEvent(envelope.Type, line)).ConfigureAwait(false);
+    }
+
+    private void OnHello(string line)
+    {
+        var info = ParseHello(line);
+        if (info.Protocol > SupportedRpcProtocol)
+        {
+            // Fault the ready task FIRST so the typed refusal
+            // deterministically wins the race against MonitorExitAsync's
+            // generic exit fault once the kill below lands.
+            var refusal = new PiProtocolMismatchException(info.Protocol, SupportedRpcProtocol);
+            _helloFault = refusal;
+            _helloReady.TrySetException(refusal);
+            TryCancelHelloGrace();
+            TryKillTree();
+            return;
+        }
+
+        _helloInfo = info;
+        _helloReady.TrySetResult(info);
+        TryCancelHelloGrace();
+    }
+
+    // Field-tolerant by design: the envelope parse already proved the line
+    // is a JSON object, and a hello missing a field degrades to defaults
+    // (protocol 0 is accepted) rather than faulting the channel.
+    private static PiHelloInfo ParseHello(string line)
+    {
+        using var document = JsonDocument.Parse(line);
+        var root = document.RootElement;
+
+        var piVersion = root.TryGetProperty("piVersion", out var version)
+            && version.ValueKind == JsonValueKind.String
+                ? version.GetString() ?? string.Empty
+                : string.Empty;
+
+        var protocol = root.TryGetProperty("protocol", out var protocolValue)
+            && protocolValue.ValueKind == JsonValueKind.Number
+            && protocolValue.TryGetInt32(out var parsed)
+                ? parsed
+                : 0;
+
+        var capabilities = new List<string>();
+        if (root.TryGetProperty("capabilities", out var caps)
+            && caps.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var capability in caps.EnumerateArray())
+            {
+                if (capability.ValueKind == JsonValueKind.String)
+                {
+                    capabilities.Add(capability.GetString()!);
+                }
+            }
+        }
+
+        return new PiHelloInfo(piVersion, protocol, capabilities);
+    }
+
+    private async Task WatchHelloGraceAsync()
+    {
+        try
+        {
+            await Task.Delay(_options.HelloGrace, _helloGraceCts.Token).ConfigureAwait(false);
+            // Grace expired with no hello: a pre-hello pin. Legacy mode.
+            _helloReady.TrySetResult(null);
+        }
+        catch (OperationCanceledException)
+        {
+            // The handshake resolved some other way (hello, refusal, exit).
+        }
+    }
+
+    // The grace CTS can be raced by a monitor task DisposeAsync abandoned;
+    // cancelling a disposed CTS throws, and none of the callers care.
+    private void TryCancelHelloGrace()
+    {
+        try
+        {
+            _helloGraceCts.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
     }
 
     private async Task ReadStderrAsync()
@@ -537,6 +693,13 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
 
         var fault = new PiProcessExitedException(_process.ExitCode, _stderr.Snapshot(), _streamFault);
         _exitFault = fault;
+
+        // Fourth fan-out target beside _pending/_settledWaiters/Events: a
+        // child dead before hello resolves the ready gate with the exit
+        // fault ("died before hello"). TrySet* no-ops when the handshake
+        // already resolved (hello received, legacy grace, or refusal).
+        _helloReady.TrySetException(fault);
+        TryCancelHelloGrace();
 
         foreach (var entry in _pending.ToArray())
         {
@@ -579,6 +742,15 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
 
     private void ThrowIfExited()
     {
+        // The protocol refusal outranks the exit fault it causes (the
+        // refusal path kills the child, so both are set afterwards): a
+        // caller that bypassed WaitForHelloAsync still gets the typed
+        // refusal, not the generic kill diagnostics.
+        if (_helloFault is { } refusal)
+        {
+            throw refusal;
+        }
+
         if (_exitFault is { } fault)
         {
             throw fault;

@@ -60,6 +60,11 @@ distinguishable spawn-failure class) and the capability-discovery surface
 Golden note: hello is an event-class line, so window canonicalization hoists
 an id-correlated response above it inside the same inbound window — per the
 canonical form, not wire order (on the wire hello is always first).
+Supervisor note: `PiRpcClient` consumes hello as ready-gate/capability state
+(`WaitForHelloAsync`/`Supports`) and deliberately never publishes it to the
+`Events` relay, mirroring the reference client — do not "fix" the filter;
+surfacing hello to the UI is a deliberate accessor (FT#150). The wire tap
+still records it, which is why the goldens carry it.
 
 - **Strict LF-only JSONL in both directions.** One JSON object per `\n`-terminated
   line. Do **not** split on other Unicode separators: U+2028/U+2029 are legal
@@ -272,10 +277,11 @@ partial message must assemble it itself, keyed by `contentIndex`, seeded by
   map with per-request timeout; on child `exit`/`error` reject *all* in-flight
   requests with the exit code/signal and captured stderr; guard `send` on
   process liveness so calls fail fast instead of hanging. There is no
-  heartbeat/health command — liveness is process-level only. There is also no
-  ready signal at startup (the reference client sleeps 100 ms and checks for
-  early exit); psmfd/pi#56 proposes a hello line that would fix both this and
-  versioning.
+  heartbeat/health command — liveness is process-level only. Startup readiness
+  is the `hello` line (see Wire framing; since `v0.84.2-psmfd.1`): gate on it
+  with a grace-window fallback so pre-hello pins keep working — the reference
+  client's old sleep-100 ms-and-probe is retired. `PiRpcClient` implements
+  this as `WaitForHelloAsync`, gated at pane spawn (FT#148).
 
 ## Extensions under RPC mode
 
@@ -310,7 +316,9 @@ text) — not a reuse of the repo-dash panel.
   lacks `cwdOverride`; `MissingSessionCwdError` unrecoverable over RPC.
 - [psmfd/pi#56](https://github.com/psmfd/pi/issues/56) — **RESOLVED at
   `v0.84.2-psmfd.1`** (psmfd-patch-010): the `hello` first line (see Wire
-  framing). FT adoption (ready gate in `PiRpcClient`) rides #148.
+  framing). FT adoption delivered via #148: `PiRpcClient.WaitForHelloAsync`
+  ready gate (legacy grace fallback, typed protocol refusal,
+  died-before-hello spawn errors), gated in `RpcPaneService.SpawnAsync`.
 - [psmfd/pi#57](https://github.com/psmfd/pi/issues/57) — **RESOLVED at
   `v0.84.2-psmfd.1`** (psmfd-patch-012): spawn-time dialogs answerable;
   golden `session-start-dialog-roundtrip` (replaces

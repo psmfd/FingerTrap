@@ -47,6 +47,19 @@ internal sealed record PiRpcClientOptions
     public TimeSpan RequestTimeout { get; init; } = TimeSpan.FromSeconds(30);
 
     /// <summary>
+    /// How long to wait for the <c>hello</c> handshake frame before
+    /// treating the child as a pre-hello pin (legacy mode — see
+    /// <see cref="PiRpcClient.WaitForHelloAsync"/>). Deliberately above the
+    /// reference client's 250 ms: a too-short grace on a current pin under
+    /// transient scheduling load silently downgrades it to legacy (losing
+    /// capability discovery), which is worse than a slower legacy spawn —
+    /// the only thing this window costs on old pins, paid once per spawn.
+    /// Injectable like <see cref="RequestTimeout"/>; suites under full
+    /// parallel load should set it large.
+    /// </summary>
+    public TimeSpan HelloGrace { get; init; } = TimeSpan.FromMilliseconds(500);
+
+    /// <summary>
     /// How long after stdin-EOF (the clean-shutdown trigger — flushes,
     /// exit 0) to wait before escalating.
     /// </summary>
