@@ -115,8 +115,8 @@ internal static class GoldenScenarios
             {
                 // The fixture raises its dialogs from the first agent_start
                 // — turn-time, the way guard extensions do. (Spawn-time
-                // dialogs are a separate, fatal case: see
-                // session-start-dialog-exit.)
+                // dialogs are the separate case pinned by
+                // session-start-dialog-roundtrip.)
                 host.EnqueueTurn(new CannedTurn { Chunks = ["ok"] });
                 await host.SpawnAsync(new ScenarioSpawn { ExtensionFixture = "dialog-fixture.ts" });
 
@@ -147,13 +147,15 @@ internal static class GoldenScenarios
         },
         new()
         {
-            // Recorded discovery (this pin): a dialog awaited inside
-            // session_start is UNANSWERABLE over RPC — the stdin reader
-            // attaches only after session_start hooks complete, so the
-            // await deadlocks and pi exits 0 once its event loop drains.
-            // The golden pins the silent death; the supervisor must treat
-            // a spawn-time extension_ui_request as fatal under this pin.
-            Name = "session-start-dialog-exit",
+            // Flipped at pin v0.84.2-psmfd.1 (psmfd-patch-012, closing
+            // psmfd/pi#57): the stdin reader now attaches BEFORE extensions
+            // bind, so a dialog awaited inside session_start is answerable.
+            // Under earlier pins this scenario (as session-start-dialog-exit)
+            // pinned the silent death instead: the request could never be
+            // answered and pi exited 0 once its event loop drained. The
+            // fixture notifies after the confirm resolves, so the completed
+            // round-trip is observable on the wire.
+            Name = "session-start-dialog-roundtrip",
             RunAsync = static async (host, ct) =>
             {
                 await host.SpawnAsync(new ScenarioSpawn { ExtensionFixture = "session-start-dialog.ts" });
@@ -161,9 +163,36 @@ internal static class GoldenScenarios
                 var request = await host.NextEventAsync("extension_ui_request", ct);
                 Assert.Contains("golden-spawn-confirm", request.Json, StringComparison.Ordinal);
 
-                // Deliberately unanswered — an answer could not be read
-                // anyway. pi dies on its own, exit 0, no error anywhere.
-                Assert.Equal(0, await host.AwaitChildExitAsync(ct));
+                await host.Client.SendMessageAsync(
+                    "extension_ui_response", RequestId(request), """{"confirmed":true}""", ct);
+
+                var notify = await host.NextEventAsync("extension_ui_request", ct);
+                Assert.Contains("golden-spawn-confirm-resolved:true", notify.Json, StringComparison.Ordinal);
+
+                Assert.Equal(0, await host.ShutdownChildAsync(ct));
+            },
+        },
+        new()
+        {
+            // psmfd-patch-011 (psmfd/pi#54): list_sessions returns
+            // header-only session metadata (no allMessagesText). A settled
+            // turn persists the session first — pi only writes the file
+            // once an assistant message exists.
+            Name = "list-sessions",
+            RunAsync = static async (host, ct) =>
+            {
+                host.EnqueueTurn(new CannedTurn { Chunks = ["ok"] });
+                await host.SpawnAsync(new ScenarioSpawn());
+
+                var ack = await host.Client.SendAsync("prompt", """{"message":"Say ok."}""", ct);
+                Assert.True(ack.Success, ack.Error);
+                await host.NextEventAsync("agent_settled", ct);
+
+                var list = await host.Client.SendAsync("list_sessions", cancellationToken: ct);
+                Assert.True(list.Success, list.Error);
+                Assert.Equal(1, SessionCount(list));
+
+                Assert.Equal(0, await host.ShutdownChildAsync(ct));
             },
         },
         new()
@@ -333,5 +362,11 @@ internal static class GoldenScenarios
     {
         using var parsed = JsonDocument.Parse(state.Json);
         return parsed.RootElement.GetProperty("data").GetProperty("messageCount").GetInt32();
+    }
+
+    private static int SessionCount(PiRpcResponse list)
+    {
+        using var parsed = JsonDocument.Parse(list.Json);
+        return parsed.RootElement.GetProperty("data").GetProperty("sessions").GetArrayLength();
     }
 }
