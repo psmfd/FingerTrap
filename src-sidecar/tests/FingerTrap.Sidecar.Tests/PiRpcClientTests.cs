@@ -14,6 +14,110 @@ public sealed class PiRpcClientTests
 {
     private static readonly TimeSpan TestBudget = TimeSpan.FromSeconds(15);
 
+    /// <summary>
+    /// The pinned pi's handshake frame verbatim (docs/rpc-contract.md,
+    /// "Wire framing"). Tests that script it use a large HelloGrace so a
+    /// slow child spawn under full-suite load can never lose the race to
+    /// the grace timer and silently downgrade the test to legacy mode —
+    /// the flake class the fork-side suite hit at 250 ms.
+    /// </summary>
+    private const string HelloLine =
+        """{"type":"hello","piVersion":"0.84.2","protocol":1,"capabilities":["extension_ui","queue_modes","fork","get_commands","list_sessions"]}""";
+
+    [Fact]
+    public async Task Hello_Present_ResolvesReadyGateAndCapabilities_NeverSurfacesAsEvent()
+    {
+        await using var client = StartFakePi(
+            options => options with { HelloGrace = TimeSpan.FromSeconds(10) },
+            Step("writeLine", HelloLine),
+            Step("writeLine", """{"type":"turn_start"}"""),
+            Step("waitForEof", true));
+
+        var hello = await client.WaitForHelloAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(TestBudget, TestContext.Current.CancellationToken);
+
+        Assert.NotNull(hello);
+        Assert.Equal("0.84.2", hello.PiVersion);
+        Assert.Equal(PiRpcClient.SupportedRpcProtocol, hello.Protocol);
+        Assert.True(client.Supports("list_sessions"));
+        Assert.False(client.Supports("time_travel"));
+        Assert.Same(hello, client.Hello);
+
+        // The hello carve-out from the Events relay: the first published
+        // event is the line AFTER hello, which never appears in the stream.
+        var first = await NextEventAsync(client, "turn_start");
+        Assert.Equal("turn_start", first.Type);
+
+        await client.ShutdownAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(TestBudget, TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Hello_Absent_GraceExpiryFallsBackToLegacyMode()
+    {
+        // A pre-hello pin: the handshake resolves null after HelloGrace and
+        // the client behaves exactly as it did before the handshake existed.
+        await using var client = StartFakePi(
+            options => options with { HelloGrace = TimeSpan.FromMilliseconds(150) },
+            Step("waitForLine", "get_state"),
+            Step("writeLine", """{"id":"{{lastId}}","type":"response","command":"get_state","success":true}"""),
+            Step("waitForEof", true));
+
+        var hello = await client.WaitForHelloAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(TestBudget, TestContext.Current.CancellationToken);
+
+        Assert.Null(hello);
+        Assert.Null(client.Hello);
+        Assert.False(client.Supports("list_sessions"));
+
+        var response = await client.SendAsync(
+            "get_state", cancellationToken: TestContext.Current.CancellationToken);
+        Assert.True(response.Success);
+
+        await client.ShutdownAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(TestBudget, TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Hello_UnsupportedProtocol_TypedRefusalNamingBothVersions_AndChildTakenDown()
+    {
+        await using var client = StartFakePi(
+            options => options with { HelloGrace = TimeSpan.FromSeconds(10) },
+            Step("writeLine", """{"type":"hello","piVersion":"9.9.9","protocol":99,"capabilities":[]}"""),
+            Step("waitForEof", true));
+
+        var refusal = await Assert.ThrowsAsync<PiProtocolMismatchException>(() =>
+            client.WaitForHelloAsync(TestContext.Current.CancellationToken));
+
+        Assert.Equal(99, refusal.ChildProtocol);
+        Assert.Equal(PiRpcClient.SupportedRpcProtocol, refusal.SupportedProtocol);
+        Assert.Contains("99", refusal.Message, StringComparison.Ordinal);
+        Assert.Contains(
+            PiRpcClient.SupportedRpcProtocol.ToString(), refusal.Message, StringComparison.Ordinal);
+
+        // Refusal takes the child down; the typed refusal — not the generic
+        // kill diagnostics — is what later sends surface.
+        await client.Exited.WaitAsync(TestBudget, TestContext.Current.CancellationToken);
+        await Assert.ThrowsAsync<PiProtocolMismatchException>(() => client.SendAsync(
+            "get_state", cancellationToken: TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public async Task Hello_ChildDiesFirst_ReadyGateSurfacesExitFault()
+    {
+        // The distinguishable spawn-failure class (ADR-0026's missing-cwd
+        // exit-1 dies before the JSONL channel is up): the ready gate
+        // faults with the exit evidence instead of waiting out the grace.
+        await using var client = StartFakePi(
+            options => options with { HelloGrace = TimeSpan.FromSeconds(10) },
+            Step("exit", 3));
+
+        var fault = await Assert.ThrowsAsync<PiProcessExitedException>(() =>
+            client.WaitForHelloAsync(TestContext.Current.CancellationToken));
+
+        Assert.Equal(3, fault.ExitCode);
+    }
+
     [Fact]
     public async Task SendAsync_RoundTrip_ResolvesWithCommandAndRawJson()
     {
@@ -166,9 +270,9 @@ public sealed class PiRpcClientTests
     [Fact]
     public async Task StartupEarlyExit_FirstSendSurfacesExitFault()
     {
-        // No ready signal exists in the protocol (psmfd/pi#56): a child
-        // that dies immediately must surface through the first send, not
-        // hang it.
+        // The hello ready gate (psmfd/pi#56) is opt-in via
+        // WaitForHelloAsync; a caller that skips it must still see a child
+        // that dies immediately surface through the first send, not hang it.
         await using var client = StartFakePi(Step("exit", 3));
 
         var fault = await Assert.ThrowsAsync<PiProcessExitedException>(() => client.SendAsync(

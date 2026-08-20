@@ -86,6 +86,15 @@ public sealed class RpcPaneServiceTests
 {
     private static readonly TimeSpan TestBudget = TimeSpan.FromSeconds(15);
 
+    /// <summary>
+    /// Scripts open with the pinned pi's hello frame so SpawnAsync's ready
+    /// gate resolves promptly instead of waiting out the legacy grace —
+    /// and every relay assertion below doubles as proof the hello line
+    /// never reaches the sink (the Events carve-out).
+    /// </summary>
+    private const string HelloLine =
+        """{"type":"hello","piVersion":"0.84.2","protocol":1,"capabilities":["extension_ui","queue_modes","fork","get_commands","list_sessions"]}""";
+
     [Fact]
     public async Task Pump_RelaysEventsInOrder_TaggedWithSession()
     {
@@ -94,6 +103,7 @@ public sealed class RpcPaneServiceTests
         service.AttachSink(sink);
 
         await SpawnFakePiAsync(service, "s1",
+            Step("writeLine", HelloLine),
             Step("writeLine", """{"type":"turn_start"}"""),
             Step("writeLine", """{"type":"message_start"}"""),
             Step("writeLine", """{"type":"agent_settled"}"""),
@@ -119,6 +129,7 @@ public sealed class RpcPaneServiceTests
         // ceiling but stays under the supervisor's 8 MB line ceiling.
         var blob = new string('x', RpcEventGuard.MaxNotificationPayloadBytes + 1024);
         await SpawnFakePiAsync(service, "s1",
+            Step("writeLine", HelloLine),
             Step("writeLine", "{\"type\":\"tool_execution_update\",\"blob\":\"" + blob + "\"}"),
             Step("writeLine", """{"type":"agent_settled"}"""),
             Step("waitForEof", true));
@@ -140,7 +151,10 @@ public sealed class RpcPaneServiceTests
         await using var service = new RpcPaneService();
         service.AttachSink(sink);
 
+        // hello first: this test pins the POST-ready exit relay — a death
+        // before hello is the spawn-failure class, covered separately below.
         await SpawnFakePiAsync(service, "s1",
+            Step("writeLine", HelloLine),
             Step("writeStderrLine", "relay: child exploded"),
             Step("delayMs", 50),
             Step("exit", 9));
@@ -151,7 +165,50 @@ public sealed class RpcPaneServiceTests
         Assert.Contains("relay: child exploded", exit.StderrTail, StringComparison.Ordinal);
 
         // The session retired: a new spawn under the same id succeeds.
-        await SpawnFakePiAsync(service, "s1", Step("exit", 0));
+        await SpawnFakePiAsync(service, "s1",
+            Step("writeLine", HelloLine),
+            Step("exit", 0));
+    }
+
+    [Fact]
+    public async Task Spawn_ChildDiesBeforeHello_ThrowsFromSpawn_AndLeavesNoPane()
+    {
+        // The ADR-0026 grounding: a missing-cwd --session resume hard-exits
+        // 1 before the JSONL channel is up. With the ready gate, that death
+        // is a spawn-time rpc/spawn error, not a later rpc/exit
+        // notification — and no pane entry lingers.
+        var sink = new CollectingSink();
+        await using var service = new RpcPaneService();
+        service.AttachSink(sink);
+
+        var fault = await Assert.ThrowsAsync<PiProcessExitedException>(() =>
+            SpawnFakePiAsync(service, "doa", Step("exit", 1)));
+        Assert.Equal(1, fault.ExitCode);
+
+        // No entry left behind: the same id spawns cleanly afterwards.
+        await SpawnFakePiAsync(service, "doa",
+            Step("writeLine", HelloLine),
+            Step("waitForEof", true));
+        await service.KillAsync("doa", TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task Spawn_LegacyChildWithoutHello_ProceedsAfterGrace()
+    {
+        // Pre-hello pins keep working: the gate resolves legacy (null)
+        // after HelloGrace and the pane comes up as before the handshake.
+        await using var service = new RpcPaneService();
+
+        await SpawnFakePiAsync(service, "legacy",
+            Step("waitForLine", "get_state"),
+            Step("writeLine", """{"id":"{{lastId}}","type":"response","command":"get_state","success":true}"""),
+            Step("waitForEof", true));
+
+        var outcome = await service.SendCommandAsync(
+            "legacy", "get_state", null, TestContext.Current.CancellationToken);
+        Assert.True(outcome.Success);
+
+        await service.KillAsync("legacy", TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -169,9 +226,13 @@ public sealed class RpcPaneServiceTests
         await using var service = new RpcPaneService();
         service.AttachSink(sink);
 
-        await SpawnFakePiAsync(service, "dup", Step("waitForEof", true));
+        await SpawnFakePiAsync(service, "dup",
+            Step("writeLine", HelloLine),
+            Step("waitForEof", true));
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            SpawnFakePiAsync(service, "dup", Step("waitForEof", true)));
+            SpawnFakePiAsync(service, "dup",
+                Step("writeLine", HelloLine),
+                Step("waitForEof", true)));
 
         await service.KillAsync("dup", TestContext.Current.CancellationToken);
     }
@@ -181,6 +242,7 @@ public sealed class RpcPaneServiceTests
     {
         await using var service = new RpcPaneService();
         await SpawnFakePiAsync(service, "s1",
+            Step("writeLine", HelloLine),
             Step("waitForLine", "get_state"),
             Step("writeLine",
                 """{"id":"{{lastId}}","type":"response","command":"get_state","success":true,"data":{"isStreaming":false,"thinkingLevel":"high"}}"""),
@@ -204,6 +266,7 @@ public sealed class RpcPaneServiceTests
     {
         await using var service = new RpcPaneService();
         await SpawnFakePiAsync(service, "s1",
+            Step("writeLine", HelloLine),
             Step("waitForLine", "abort"),
             Step("writeLine", """{"id":"{{lastId}}","type":"response","command":"abort","success":true}"""),
             Step("waitForEof", true));
@@ -221,6 +284,7 @@ public sealed class RpcPaneServiceTests
     {
         await using var service = new RpcPaneService();
         await SpawnFakePiAsync(service, "s1",
+            Step("writeLine", HelloLine),
             Step("waitForLine", "set_model"),
             Step("writeLine",
                 """{"id":"{{lastId}}","type":"response","command":"set_model","success":false,"error":"unknown model: nope"}"""),
@@ -244,6 +308,7 @@ public sealed class RpcPaneServiceTests
         // command, never a substitute marker.
         var blob = new string('x', RpcEventGuard.MaxNotificationPayloadBytes + 1024);
         await SpawnFakePiAsync(service, "s1",
+            Step("writeLine", HelloLine),
             Step("waitForLine", "get_messages"),
             Step("writeLine",
                 "{\"id\":\"{{lastId}}\",\"type\":\"response\",\"command\":\"get_messages\",\"success\":true,\"data\":{\"blob\":\"" + blob + "\"}}"),
@@ -272,6 +337,7 @@ public sealed class RpcPaneServiceTests
         // (pending map + RequestTimeout) would hang the send instead of
         // completing on flush.
         await SpawnFakePiAsync(service, "s1",
+            Step("writeLine", HelloLine),
             Step("waitForLine", """{"id":"ui_42","type":"extension_ui_response","cancelled":true}"""),
             Step("writeLine", """{"type":"agent_settled"}"""),
             Step("waitForEof", true));

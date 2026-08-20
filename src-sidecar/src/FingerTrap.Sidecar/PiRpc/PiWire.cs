@@ -34,6 +34,27 @@ internal sealed record PiWireEnvelope
 internal sealed record PiRpcEvent(string? Type, string Json);
 
 /// <summary>
+/// The parsed <c>hello</c> handshake frame — the child's first stdout line
+/// since pi <c>v0.84.2-psmfd.1</c> (psmfd/pi#56, docs/rpc-contract.md "Wire
+/// framing"). A deliberate one-off exception to the
+/// <see cref="PiWireEnvelope"/> discriminator-only principle: hello is
+/// channel bootstrap metadata the supervisor's own state machine consumes
+/// (ready gate + capability discovery), not a domain payload passed through.
+/// <paramref name="PiVersion"/> is the upstream base version
+/// (e.g. <c>0.84.2</c>), not the psmfd tag.
+/// </summary>
+internal sealed record PiHelloInfo(string PiVersion, int Protocol, IReadOnlyList<string> Capabilities)
+{
+    /// <summary>
+    /// Capability advertisement replaces probing (psmfd/pi#56): additions
+    /// are advertised here and never bump <see cref="Protocol"/>. The list
+    /// is a handful of entries, so a linear scan beats set overhead.
+    /// </summary>
+    public bool Supports(string capability) =>
+        Capabilities.Contains(capability, StringComparer.Ordinal);
+}
+
+/// <summary>
 /// A resolved command response. <see cref="Command"/> and
 /// <see cref="Error"/> are preserved together as the contract requires —
 /// the error shape has no structured code, so the pairing is the only

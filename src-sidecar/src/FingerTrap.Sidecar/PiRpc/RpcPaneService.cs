@@ -93,7 +93,17 @@ internal sealed class RpcPaneService : IAsyncDisposable
 
     /// <summary>
     /// Resolves pi (shared chain — <see cref="PiExecutableResolver"/>),
-    /// spawns <c>pi --mode rpc</c> for the session, and starts its pump.
+    /// spawns <c>pi --mode rpc</c> for the session, awaits the hello ready
+    /// gate, and starts its pump. Gating here (never inside the client's
+    /// send paths) means a child that dies before hello — the ADR-0026
+    /// missing-cwd exit-1 case, which exits before the JSONL channel is up —
+    /// throws <see cref="PiProcessExitedException"/> from this call, i.e.
+    /// as an <c>rpc/spawn</c> JSON-RPC error the UI renders as a failed
+    /// pane, instead of arriving later via the <c>rpc/exit</c> notification.
+    /// The spawn-time/mid-session distinction is positional by design:
+    /// same exception type, different arrival path. A pre-hello pin costs
+    /// one <see cref="PiRpcClientOptions.HelloGrace"/> wait and then
+    /// behaves exactly as before the handshake existed.
     /// </summary>
     public async Task SpawnAsync(string sessionId, RpcPaneSpawnOptions options, CancellationToken cancellationToken)
     {
@@ -117,6 +127,19 @@ internal sealed class RpcPaneService : IAsyncDisposable
             WorkingDirectory = options.Cwd,
             EnvironmentOverrides = options.Env,
         });
+
+        try
+        {
+            // Ready gate: hello, legacy-grace expiry (null — proceed), a
+            // protocol refusal, or died-before-hello. Fault paths never
+            // leave a pane entry behind.
+            await client.WaitForHelloAsync(cancellationToken).ConfigureAwait(false);
+        }
+        catch
+        {
+            await client.DisposeAsync().ConfigureAwait(false);
+            throw;
+        }
 
         var entry = new PaneEntry(client);
         if (!_sessions.TryAdd(sessionId, entry))
