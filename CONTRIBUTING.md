@@ -151,12 +151,20 @@ cargo tauri build --no-bundle
 scripts/check.sh                      # repo structure + ADR numbering + lock-file shape
 dotnet build src-sidecar -c Release   # 0 warnings, 0 errors
 dotnet test  src-sidecar -c Release   # all green
-python3 scripts/smoke-pty.py          # sidecar PTY end-to-end (macOS/Linux only)
+python3 scripts/smoke-pty.py          # sidecar PTY end-to-end incl. real pi spawn (macOS/Linux; pi case self-skips when pi is absent)
 cd src-ui && pnpm lint && pnpm build  # frontend
 cd src-tauri && cargo fmt --check && cargo clippy --all-targets
 ```
 
 CI runs the full matrix on Windows, macOS, and Linux automatically; the local checks above are the fastest signal.
+
+### Testing doctrine (ADR-0027 P10)
+
+Review-checklist lines for any new or changed test:
+
+1. **Verify the world, not the self-report** — e2e assertions re-read files or re-run commands externally; never keyword-probe the agent's or parser's own output for success.
+2. **A guard only guards if the regression fails it** — before trusting a new conformance or guard test, introduce the regression, watch the suite go red, revert. Record the red-first proof in the PR body.
+3. **Test the real entry path** — the kept smoke (`scripts/smoke-pty.py`) drives the real sidecar binary over stdio and spawns real pi the way the app does, not the source plane; it stays a kept check, never a one-time verification.
 
 ## Verifying changes in a clean environment (SmolVM)
 
