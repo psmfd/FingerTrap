@@ -296,10 +296,15 @@ export interface SessionSummary {
 }
 
 /** `totalCount` can exceed `sessions.length` — the sidecar deep-parses only
- * the most recently modified N files, so the UI shows "N of totalCount". */
+ * the most recently modified N files, so the UI shows "N of totalCount".
+ * `skippedFiles` counts files the scan attempted but could not parse
+ * (unreadable / no valid header) — rendered so corruption is a visible
+ * fact, not a silent absence (#140, ADR-0028); cap-excluded files are
+ * unattempted and never counted there. */
 export interface SessionsListResult {
   sessions: SessionSummary[];
   totalCount: number;
+  skippedFiles: number;
 }
 
 /**

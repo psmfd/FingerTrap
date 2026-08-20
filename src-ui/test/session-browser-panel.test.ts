@@ -26,10 +26,17 @@ function session(overrides: Partial<SessionSummary> & { sessionPath: string }): 
   };
 }
 
-function stubLists(sessions: SessionSummary[], worktrees: WorktreesListResult = { records: [] }) {
+function stubLists(
+  sessions: SessionSummary[],
+  worktrees: WorktreesListResult = { records: [] },
+  skippedFiles = 0,
+) {
   vi.mocked(api.sessionsList).mockResolvedValue({
     sessions,
-    totalCount: sessions.length,
+    // A skipped file is on disk but yields no row, exactly as the sidecar
+    // counts it.
+    totalCount: sessions.length + skippedFiles,
+    skippedFiles,
   } satisfies SessionsListResult);
   vi.mocked(api.worktreesList).mockResolvedValue(worktrees);
 }
@@ -140,6 +147,26 @@ describe('SessionBrowserPanel', () => {
     expect(orphans.textContent).toContain('dead');
     // Read-only: no resume/reap buttons in the orphan section.
     expect(orphans.querySelectorAll('button')).toHaveLength(0);
+  });
+
+  it('renders the unparseable-files line without disturbing normal rows', async () => {
+    stubLists([session({ sessionPath: '/s/a.jsonl', name: 'alpha' })], { records: [] }, 2);
+    panel.toggle();
+    await settled();
+
+    const root = host.querySelector<HTMLElement>('.session-browser')!;
+    expect(host.querySelector('.sb-skipped')?.textContent).toBe('2 unparseable session files');
+    // Normal rows untouched; the count line reflects on-disk totals.
+    expect(root.textContent).toContain('alpha');
+    expect(root.textContent).toContain('1 of 3 sessions');
+  });
+
+  it('omits the unparseable-files line when nothing was skipped', async () => {
+    stubLists([session({ sessionPath: '/s/a.jsonl' })]);
+    panel.toggle();
+    await settled();
+
+    expect(host.querySelector('.sb-skipped')).toBeNull();
   });
 
   it('filter input narrows rows and shows the shown-of-total count', async () => {

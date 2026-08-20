@@ -1,6 +1,6 @@
 # 0025 — FT-2 architecture: pi RPC supervisor and native RPC pane
 
-- Status: Accepted
+- Status: Accepted (decision 2's "pi#54's arrival deletes it cleanly" clause superseded by [0028](0028-retain-session-scan-defer-headless-listing.md); the no-headless-children principle itself is reaffirmed there)
 - Date: 2026-08-17
 
 ## Context and problem statement

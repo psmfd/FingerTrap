@@ -27,6 +27,7 @@ public sealed class SessionStoreTests
 
                 var summary = Assert.Single(result.Sessions);
                 Assert.Equal(1, result.TotalCount);
+                Assert.Equal(0, result.SkippedFiles);
                 Assert.Equal(file, summary.SessionPath);
                 Assert.Equal("11111111-aaaa-bbbb-cccc-000000000001", summary.Id);
                 Assert.Equal(cwd, summary.Cwd);
@@ -102,9 +103,79 @@ public sealed class SessionStoreTests
 
             Assert.Empty(result.Sessions);
             Assert.Equal(2, result.TotalCount);
+            // Both attempted, both headerless: visible as skipped, not a
+            // silent absence (#140).
+            Assert.Equal(2, result.SkippedFiles);
         }
         finally
         {
+            TryDelete(root);
+        }
+    }
+
+    [Fact]
+    public async Task CorruptFileYieldsFullListingPlusSkippedCount()
+    {
+        var root = Directory.CreateTempSubdirectory("ft-sessions-").FullName;
+        try
+        {
+            WriteSession(root, "dir-a", "good-1.jsonl",
+                Header("id-1", "2026-08-18T10:00:00.000Z", "/no/such/dir"),
+                UserMessage("alpha", 1765965602000));
+            WriteSession(root, "dir-a", "good-2.jsonl",
+                Header("id-2", "2026-08-18T11:00:00.000Z", "/no/such/dir"));
+            WriteSession(root, "dir-b", "corrupt.jsonl",
+                "%%% this was never JSON %%%");
+
+            var store = new SessionStore(root);
+            var result = await store.ListAsync(TestContext.Current.CancellationToken);
+
+            // ADR-0027 P10: assert against the files actually on disk, not
+            // the parser's self-report — the counts must reconcile with an
+            // independent enumeration.
+            var onDisk = Directory.GetFiles(root, "*.jsonl", SearchOption.AllDirectories).Length;
+            Assert.Equal(3, onDisk);
+            Assert.Equal(onDisk, result.TotalCount);
+            Assert.Equal(2, result.Sessions.Count);
+            Assert.Equal(1, result.SkippedFiles);
+            Assert.Equal(onDisk - result.Sessions.Count, result.SkippedFiles);
+        }
+        finally
+        {
+            TryDelete(root);
+        }
+    }
+
+    [Fact]
+    public async Task UnreadableRootRemainsDistinctTypedFailure()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            // Unix-mode permission bits do not translate; the Windows ACL
+            // equivalent is not worth the test complexity.
+            return;
+        }
+
+        var root = Directory.CreateTempSubdirectory("ft-sessions-").FullName;
+        try
+        {
+            WriteSession(root, "dir-a", "one.jsonl",
+                Header("id-1", "2026-08-18T10:00:00.000Z", "/no/such/dir"));
+            File.SetUnixFileMode(root, UnixFileMode.None);
+
+            var store = new SessionStore(root);
+
+            // Unreadable persistence is NOT the corrupt-record class (#140,
+            // ADR-0027 P3): it stays a typed failure the caller surfaces
+            // (the browser's error line), never an empty-but-successful
+            // listing with everything "skipped".
+            await Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
+                store.ListAsync(TestContext.Current.CancellationToken));
+        }
+        finally
+        {
+            File.SetUnixFileMode(
+                root, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
             TryDelete(root);
         }
     }
@@ -188,6 +259,9 @@ public sealed class SessionStoreTests
             Assert.Equal(5, result.TotalCount);
             Assert.Equal(2, result.Sessions.Count);
             Assert.Equal(["id-4", "id-3"], result.Sessions.Select(s => s.Id).ToArray());
+            // Cap-excluded files were never attempted: unattempted is not
+            // skipped — they live in the TotalCount-vs-rows gap.
+            Assert.Equal(0, result.SkippedFiles);
         }
         finally
         {
@@ -258,6 +332,7 @@ public sealed class SessionStoreTests
 
         Assert.Empty(result.Sessions);
         Assert.Equal(0, result.TotalCount);
+        Assert.Equal(0, result.SkippedFiles);
     }
 
     /// <summary>Serialized rather than string-built so real filesystem
