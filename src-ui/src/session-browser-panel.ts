@@ -104,6 +104,15 @@ export class SessionBrowserPanel {
         : `${model.shownCount} sessions`;
     this.root.appendChild(el('p', 'sb-count', count));
 
+    // Corruption is a visible fact, not a silent absence (#140): files the
+    // sidecar attempted but could not parse get one quiet line; normal
+    // rows are untouched.
+    const skipped = this.sessions?.skippedFiles ?? 0;
+    if (skipped > 0) {
+      const noun = skipped === 1 ? 'file' : 'files';
+      this.root.appendChild(el('p', 'sb-skipped', `${skipped} unparseable session ${noun}`));
+    }
+
     for (const group of model.groups) {
       const section = el('section', 'sb-group');
       section.appendChild(el('h3', 'sb-repo', group.repo));

@@ -71,6 +71,7 @@ internal sealed class SessionStore
         }
 
         var sessions = new List<SessionSummary>();
+        var skippedFiles = 0;
         foreach (var (path, mtime) in files
             .OrderByDescending(f => f.MtimeUtc)
             .Take(_deepParseCap))
@@ -80,12 +81,22 @@ internal sealed class SessionStore
             {
                 sessions.Add(summary);
             }
+            else
+            {
+                // Corruption is a visible fact, not an invisible absence
+                // (#140, ADR-0028): a file this scan attempted but could
+                // not turn into a row — unreadable, or no valid v3 header —
+                // is counted for the UI. Files beyond the deep-parse cap
+                // were never attempted and are NOT skipped; they live in
+                // the TotalCount-vs-rows gap instead.
+                skippedFiles++;
+            }
         }
 
         // mtime ordered the deep-parse budget; the rows themselves sort on
         // the content-derived timestamp, which is what the UI displays.
         sessions.Sort((a, b) => b.ModifiedAt.CompareTo(a.ModifiedAt));
-        return new SessionsListResult(sessions, files.Count);
+        return new SessionsListResult(sessions, files.Count, skippedFiles);
     }
 
     /// <summary>One file → one summary, or null when the file has no valid

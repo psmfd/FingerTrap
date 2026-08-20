@@ -302,7 +302,7 @@ text) — not a reuse of the repo-dash panel.
 |---|---|---|
 | Model/status readouts | `get_state`, `get_session_stats` (context-fill ships as a percent), `get_available_models`; incremental usage via `message_update` | covered |
 | Session resume | `switch_session` (path known) or spawn-time `--session` | delivered in FT-2 slice 5 (session browser → RPC or PTY pane; ADR-0026 disables RPC resume on a missing cwd and offers the PTY fallback); reaped-cwd RPC recovery still blocked on pi#55 |
-| Session list | `list_sessions` RPC command (since `v0.84.2-psmfd.1`, psmfd-patch-011); the sidecar's bounded direct scan of `~/.pi/agent/sessions/` remains the shipping path until #140 migrates it | delivered in FT-2 slice 5 via the direct scan; pi#54 landed — retiring the scan (ADR-0025's plan) rides #140 |
+| Session list | The sidecar's bounded direct scan of `~/.pi/agent/sessions/` — **deliberately retained** per ADR-0028 (the browser's primary case is zero panes open, and `list_sessions` only runs inside a live child; a headless child would fire operator extensions). The `list_sessions` RPC command (since `v0.84.2-psmfd.1`, psmfd-patch-011) remains available to live panes via the command passthrough; migration is deferred behind FT#151's prerequisites | delivered in FT-2 slice 5 via the direct scan; #140 added the `skippedFiles` visibility (ADR-0028) |
 | Worktree-orphan surfacing | not RPC territory by design: read the worktree extension's per-session manifests (`~/.pi/agent/extensions/worktree/sessions/<sid>.json` — `{ v, sessionId, repo, worktreePath, branch, pid, host, createdAt, updatedAt, lastSnapshotSha }`) × `git worktree list --porcelain` lock reasons (`session:<sid> pid:<p> host:<h> started:<iso>`) × `refs/pi-wip/<sid>`; port the extension's reconcile algorithm read-only. Formats are extension-owned, not protocol-versioned — re-verify on pi_config bumps | delivered in FT-2 slice 5 (`worktrees/list`, read-only reconcile port; reap/unlock stay pi-side) |
 | Reference-into-prompt | host-owned composer + `steer`/`follow_up`/`prompt` to submit; listen for `set_editor_text` | covered natively |
 | Observability dashboards | pi_config meter JSONL files, read directly — no RPC involvement | out of this note's scope |
@@ -311,7 +311,10 @@ text) — not a reuse of the repo-dash panel.
 
 - [psmfd/pi#54](https://github.com/psmfd/pi/issues/54) — **RESOLVED at
   `v0.84.2-psmfd.1`** (psmfd-patch-011): `list_sessions` RPC command; golden
-  `list-sessions`. FT adoption rides #140.
+  `list-sessions`. The session browser deliberately did NOT migrate to it —
+  the scan is retained per ADR-0028 (#140 delivered the `skippedFiles`
+  visibility instead); migration is deferred to FT#151 pending a
+  side-effect-free spawn in the fork.
 - [psmfd/pi#55](https://github.com/psmfd/pi/issues/55) — `switch_session`
   lacks `cwdOverride`; `MissingSessionCwdError` unrecoverable over RPC.
 - [psmfd/pi#56](https://github.com/psmfd/pi/issues/56) — **RESOLVED at

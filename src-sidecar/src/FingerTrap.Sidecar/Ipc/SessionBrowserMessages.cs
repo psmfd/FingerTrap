@@ -62,9 +62,17 @@ public sealed record SessionSummary(
 /// recently modified N files (SessionStore.DefaultDeepParseCap), so the UI
 /// can show "N of TotalCount".
 /// </param>
+/// <param name="SkippedFiles">
+/// Files the scan attempted but could not turn into a row — unreadable, or
+/// first line is not a valid v3 header (#140, ADR-0028). Per-file isolation
+/// is unchanged (one corrupt file never discards the listing); this makes
+/// the omission visible instead of silent. Cap-excluded files are
+/// unattempted, not skipped, and are never counted here.
+/// </param>
 public sealed record SessionsListResult(
     IReadOnlyList<SessionSummary> Sessions,
-    int TotalCount);
+    int TotalCount,
+    int SkippedFiles);
 
 /// <summary>
 /// One reconciled per-session worktree record (the pi_config worktree
