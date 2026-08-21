@@ -261,11 +261,13 @@ export class RpcPaneContent implements PaneContent {
   }
 
   async open(opts: { cwd?: string; sessionPath?: string }): Promise<void> {
-    await api.rpcSpawn({
+    const spawn = await api.rpcSpawn({
       sessionId: this.sessionId,
       cwd: opts.cwd,
       sessionPath: opts.sessionPath,
     });
+    // Show which pi the session is running, from the hello handshake (#150).
+    this.header.setPiVersion(spawn.piVersion, spawn.capabilities);
     // Seed the header/composer from session state; failures degrade the
     // chrome, not the pane, so this does not gate open().
     void this.seed(opts.sessionPath !== undefined);

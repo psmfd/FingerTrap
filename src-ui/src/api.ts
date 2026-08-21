@@ -109,6 +109,13 @@ export interface RpcSpawnRequest {
   env?: Record<string, string>;
 }
 
+/** The pi child's hello handshake, returned by rpc/spawn (#150). `piVersion`
+ * is null on a pre-hello (legacy) pin; `capabilities` is empty then. */
+export interface RpcSpawnResult {
+  piVersion: string | null;
+  capabilities: string[];
+}
+
 export interface RpcKillRequest {
   sessionId: string;
 }
@@ -333,7 +340,7 @@ const PtySpawnMethod = new RequestType1<PtySpawnRequest, PtySpawnResult, void>('
 const PtyWriteMethod = new RequestType1<PtyWriteRequest, void, void>('pty/write');
 const PtyResizeMethod = new RequestType1<PtyResizeRequest, void, void>('pty/resize');
 const PtyKillMethod = new RequestType1<PtyKillRequest, void, void>('pty/kill');
-const RpcSpawnMethod = new RequestType1<RpcSpawnRequest, void, void>('rpc/spawn');
+const RpcSpawnMethod = new RequestType1<RpcSpawnRequest, RpcSpawnResult, void>('rpc/spawn');
 const RpcKillMethod = new RequestType1<RpcKillRequest, void, void>('rpc/kill');
 const RpcPromptMethod = new RequestType1<RpcPromptRequest, RpcPromptResult, void>('rpc/prompt');
 const RpcSteerMethod = new RequestType1<RpcMessageRequest, RpcCommandResult, void>('rpc/steer');
@@ -403,8 +410,8 @@ export function onPtyExit(handler: (n: PtyExitNotification) => void): Disposable
   return require_().onNotification(PtyExitNotif, handler);
 }
 
-export async function rpcSpawn(request: RpcSpawnRequest): Promise<void> {
-  await require_().sendRequest(RpcSpawnMethod, request);
+export async function rpcSpawn(request: RpcSpawnRequest): Promise<RpcSpawnResult> {
+  return require_().sendRequest(RpcSpawnMethod, request);
 }
 
 export async function rpcKill(request: RpcKillRequest): Promise<void> {

@@ -474,6 +474,12 @@ main {
   border-bottom: 1px solid #1c1c1c;
 }
 
+.header-pi-version {
+  color: #7a7a7a;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
 .rpc-header select {
   background: #111;
   color: #ccc;

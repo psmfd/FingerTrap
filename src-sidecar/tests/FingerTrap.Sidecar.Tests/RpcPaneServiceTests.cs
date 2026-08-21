@@ -212,6 +212,39 @@ public sealed class RpcPaneServiceTests
     }
 
     [Fact]
+    public async Task Spawn_ReturnsHelloInfo_ForThePaneHeader()
+    {
+        // #150: SpawnAsync returns the hello so the pane header can show which
+        // pi is running. A hello pin yields the parsed version + capabilities.
+        await using var service = new RpcPaneService();
+        var options = new RpcPaneSpawnOptions(
+            Cwd: null, SessionPath: null, Env: null,
+            RequestedPath: WriteShim(Step("writeLine", HelloLine), Step("waitForEof", true)));
+
+        var hello = await service.SpawnAsync("s1", options, TestContext.Current.CancellationToken);
+        await service.KillAsync("s1", TestContext.Current.CancellationToken);
+
+        Assert.NotNull(hello);
+        Assert.Equal("0.84.2", hello.PiVersion);
+        Assert.Contains("list_sessions", hello.Capabilities);
+    }
+
+    [Fact]
+    public async Task Spawn_LegacyPin_ReturnsNullHello()
+    {
+        // Pre-hello pin → null hello → the header shows "pi (legacy)".
+        await using var service = new RpcPaneService();
+        var options = new RpcPaneSpawnOptions(
+            Cwd: null, SessionPath: null, Env: null,
+            RequestedPath: WriteShim(Step("waitForEof", true)));
+
+        var hello = await service.SpawnAsync("legacy", options, TestContext.Current.CancellationToken);
+        await service.KillAsync("legacy", TestContext.Current.CancellationToken);
+
+        Assert.Null(hello);
+    }
+
+    [Fact]
     public async Task Kill_UnknownSession_IsANoOp()
     {
         await using var service = new RpcPaneService();
@@ -352,7 +385,7 @@ public sealed class RpcPaneServiceTests
         Assert.Equal("agent_settled", sink.Events[0].EventType);
     }
 
-    private static Task SpawnFakePiAsync(RpcPaneService service, string sessionId, params string[] steps)
+    private static async Task SpawnFakePiAsync(RpcPaneService service, string sessionId, params string[] steps)
     {
         // RequestedPath override: the resolver returns the explicit request
         // verbatim, so the relay tests never depend on a real pi install.
@@ -364,7 +397,8 @@ public sealed class RpcPaneServiceTests
             SessionPath: null,
             Env: null,
             RequestedPath: WriteShim(steps));
-        return service.SpawnAsync(sessionId, options, TestContext.Current.CancellationToken);
+        // The hello result is unused by the relay tests; #150 covers it elsewhere.
+        await service.SpawnAsync(sessionId, options, TestContext.Current.CancellationToken);
     }
 
     private sealed record CollectedEvent(string SessionId, string? EventType, string Json, bool Truncated);
