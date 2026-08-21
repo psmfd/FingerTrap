@@ -201,6 +201,25 @@ else
     skip "rpc-pairing" "RpcSurface.cs or api.ts not present yet"
 fi
 
+# ---- 5b. Parameterless RPC methods must be RequestType0, not RequestType1<null> ----
+# A `RequestType1<null, R, void>` sends one positional `null` argument. The
+# paired sidecar method is parameterless (e.g. `SessionsListAsync(CancellationToken)`
+# — the token is auto-injected, so 0 bindable params), and StreamJsonRpc
+# rejects the extra arg ("Unable to find method 'sessions/list/1'"). This
+# shipped undetected on sessions/list, worktrees/list, settings/get, and
+# status/refresh because the UI tests mock the calls and no round-trip test
+# exercises them. Parameterless requests must use RequestType0.
+if [[ -f "$API" ]]; then
+    bad_reqtype=$(grep -nE 'new[[:space:]]+RequestType1<[[:space:]]*null\b' "$API" || true)
+    if [[ -z "$bad_reqtype" ]]; then
+        ok "rpc-reqtype0" "no parameterless method declared as RequestType1<null> in api.ts"
+    else
+        err "rpc-reqtype0" "parameterless RPC method(s) declared as RequestType1<null> — use RequestType0 (StreamJsonRpc rejects the stray positional null):"
+        while IFS= read -r line; do detail "$line"; done <<<"$bad_reqtype"
+        ((error_count++)) || true
+    fi
+fi
+
 # ---- Summary ----
 echo "=================================="
 if [[ "$error_count" -eq 0 ]]; then

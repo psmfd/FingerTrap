@@ -3,6 +3,7 @@ import {
   type Disposable,
   type MessageConnection,
   NotificationType1,
+  RequestType0,
   RequestType1,
 } from 'vscode-jsonrpc/browser';
 import { TauriMessageReader, TauriMessageWriter } from './transport';
@@ -368,10 +369,10 @@ const RpcSetThinkingLevelMethod = new RequestType1<
 const RpcExtensionUiResponseMethod = new RequestType1<RpcExtensionUiResponseRequest, void, void>(
   'rpc/extensionUiResponse',
 );
-const StatusRefreshMethod = new RequestType1<null, void, void>('status/refresh');
-const SettingsGetMethod = new RequestType1<null, SettingsGetResult, void>('settings/get');
-const SessionsListMethod = new RequestType1<null, SessionsListResult, void>('sessions/list');
-const WorktreesListMethod = new RequestType1<null, WorktreesListResult, void>('worktrees/list');
+const StatusRefreshMethod = new RequestType0<void, void>('status/refresh');
+const SettingsGetMethod = new RequestType0<SettingsGetResult, void>('settings/get');
+const SessionsListMethod = new RequestType0<SessionsListResult, void>('sessions/list');
+const WorktreesListMethod = new RequestType0<WorktreesListResult, void>('worktrees/list');
 const StatusSnapshotNotif = new NotificationType1<StatusSnapshotNotification>('status/snapshot');
 const PtyOutputNotif = new NotificationType1<PtyOutputNotification>('pty/output');
 const PtyExitNotif = new NotificationType1<PtyExitNotification>('pty/exit');
@@ -477,7 +478,7 @@ export function onRpcExit(handler: (n: RpcExitNotification) => void): Disposable
 
 /** Fire-and-forget by contract: the answer is the next status/snapshot. */
 export async function statusRefresh(): Promise<void> {
-  await require_().sendRequest(StatusRefreshMethod, null);
+  await require_().sendRequest(StatusRefreshMethod);
 }
 
 export function onStatusSnapshot(handler: (n: StatusSnapshotNotification) => void): Disposable {
@@ -485,13 +486,13 @@ export function onStatusSnapshot(handler: (n: StatusSnapshotNotification) => voi
 }
 
 export async function settingsGet(): Promise<SettingsGetResult> {
-  return require_().sendRequest(SettingsGetMethod, null);
+  return require_().sendRequest(SettingsGetMethod);
 }
 
 export async function sessionsList(): Promise<SessionsListResult> {
-  return require_().sendRequest(SessionsListMethod, null);
+  return require_().sendRequest(SessionsListMethod);
 }
 
 export async function worktreesList(): Promise<WorktreesListResult> {
-  return require_().sendRequest(WorktreesListMethod, null);
+  return require_().sendRequest(WorktreesListMethod);
 }
