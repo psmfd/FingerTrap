@@ -81,6 +81,29 @@ describe('PaneRegistry kind-dispatch', () => {
     expect(contents[0].openOpts).toEqual({ cwd: '/repo', sessionPath: '/s/one.jsonl' });
   });
 
+  it('a pane setTitle request renames its tab and re-renders (#133)', async () => {
+    await registry.open();
+    vi.mocked(onChange).mockClear();
+
+    // The registry wired content.onTitle at createPane; a pi setTitle event
+    // reaches it through this callback.
+    contents[0].onTitle?.('renamed by extension');
+
+    expect(registry.tabs()[0].title).toBe('renamed by extension');
+    expect(onChange).toHaveBeenCalled();
+  });
+
+  it('an empty or whitespace setTitle request is ignored (#133)', async () => {
+    await registry.open();
+    const before = registry.tabs()[0].title;
+    vi.mocked(onChange).mockClear();
+
+    contents[0].onTitle?.('   ');
+
+    expect(registry.tabs()[0].title).toBe(before);
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
   it('a failed open renders the error into the pane and marks it exited', async () => {
     let created: FakeContent | undefined;
     const failing = new PaneRegistry(host, onChange, () => {

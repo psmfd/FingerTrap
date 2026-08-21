@@ -149,6 +149,22 @@ describe('RpcPaneContent extension UI routing', () => {
     expect(draft.value).toBe('pushed text');
   });
 
+  it('setTitle invokes the onTitle callback for live tab rename (#133)', () => {
+    const onTitle = vi.fn();
+    pane.onTitle = onTitle;
+
+    pane.appendEvent(
+      event('extension_ui_request', {
+        type: 'extension_ui_request',
+        id: 'ui_t',
+        method: 'setTitle',
+        title: 'my session',
+      }),
+    );
+
+    expect(onTitle).toHaveBeenCalledWith('my session');
+  });
+
   it('setStatus and setWidget land in the keyed strips', () => {
     pane.appendEvent(
       event('extension_ui_request', {

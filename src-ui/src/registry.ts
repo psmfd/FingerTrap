@@ -25,7 +25,9 @@ export type PaneState = 'running' | 'exited';
  */
 export interface Pane {
   readonly sessionId: string;
-  readonly title: string;
+  /** Mutable so a pane can rename its own tab live (#133): an extension
+   * setTitle request flows content → onTitle → here → re-render. */
+  title: string;
   readonly content: PaneContent;
   state: PaneState;
 }
@@ -415,6 +417,17 @@ export class PaneRegistry {
       title: `${opts.kind ?? this.defaultKind} ${this.nextIndex++}`,
       content: this.contentFactory(sessionId, opts.kind),
       state: 'running',
+    };
+    // Live tab rename (#133): a pane's setTitle request updates its own title
+    // and re-renders the tab bar. Empty/whitespace requests are ignored so a
+    // misbehaving extension cannot blank a tab label.
+    pane.content.onTitle = (title: string) => {
+      const trimmed = title.trim();
+      if (trimmed.length === 0) {
+        return;
+      }
+      pane.title = trimmed;
+      this.onChange();
     };
     this.panes.set(sessionId, pane);
     return pane;

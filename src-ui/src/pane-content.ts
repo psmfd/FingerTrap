@@ -71,6 +71,13 @@ export interface PaneContent {
 
   /** Tear down local resources only; never talks to the sidecar. */
   dispose(): void;
+
+  /**
+   * Live tab rename (#133): the registry sets this so a pane can rename its
+   * own tab when an extension raises a setTitle request. Optional — only the
+   * RPC pane surfaces setTitle today; the registry ignores empty requests.
+   */
+  onTitle?: (title: string) => void;
 }
 
 /** What an open()/split() caller can request. */
@@ -200,6 +207,8 @@ export class PtyPaneContent implements PaneContent {
  */
 export class RpcPaneContent implements PaneContent {
   readonly container: HTMLElement;
+  /** Set by the registry; invoked on a pi setTitle request (#133). */
+  onTitle?: (title: string) => void;
   private readonly output: HTMLElement;
   private readonly sessionId: string;
   private readonly state: TranscriptState = createTranscriptState();
@@ -388,9 +397,10 @@ export class RpcPaneContent implements PaneContent {
         ]);
         break;
       case 'setTitle':
-        // Live tab rename needs registry plumbing that does not exist yet
-        // (#133); the transcript records the request meanwhile.
-        this.writeSystemMessage(`[ui: title set to "${asText(event.title)}"]`, 'info');
+        // Live tab rename (#133): hand the requested title to the registry,
+        // which updates the tab and re-renders. The title is untrusted pi
+        // extension text; the tab bar renders it via textContent (tabbar.ts).
+        this.onTitle?.(asText(event.title));
         break;
       case 'set_editor_text':
         this.composer.setText(asText(event.text));
