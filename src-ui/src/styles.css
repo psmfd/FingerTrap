@@ -4,6 +4,18 @@
   box-sizing: border-box;
 }
 
+/*
+ * The `hidden` attribute must win over every component's own `display`.
+ * The UA rule `[hidden] { display: none }` is author-overridable, so a
+ * component that sets `display: flex` on its class (e.g. .palette-overlay,
+ * .ui-request-overlay — both `inset: 0` overlays) stays visible even after
+ * code sets `element.hidden = true`, leaving the overlay stuck on screen.
+ * Every show/hide in the UI toggles `.hidden`, so make it authoritative.
+ */
+[hidden] {
+  display: none !important;
+}
+
 html,
 body {
   margin: 0;
