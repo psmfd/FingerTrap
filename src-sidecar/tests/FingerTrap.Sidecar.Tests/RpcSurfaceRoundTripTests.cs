@@ -151,11 +151,12 @@ public sealed class RpcSurfaceRoundTripTests
         await service.KillAsync("rt4", TestContext.Current.CancellationToken);
     }
 
-    private static Task SpawnAsync(RpcPaneService service, string sessionId, params string[] steps)
+    private static async Task SpawnAsync(RpcPaneService service, string sessionId, params string[] steps)
     {
         var options = new RpcPaneSpawnOptions(
             Cwd: null, SessionPath: null, Env: null, RequestedPath: WriteShim(steps));
-        return service.SpawnAsync(sessionId, options, TestContext.Current.CancellationToken);
+        // The hello result is unused here; these tests exercise the relay, not #150.
+        await service.SpawnAsync(sessionId, options, TestContext.Current.CancellationToken);
     }
 
     /// <summary>Mirrors Program.cs's transport setup on both ends of an

@@ -22,6 +22,16 @@ public sealed record RpcSpawnRequest(
 
 public sealed record RpcKillRequest(string SessionId);
 
+/// <summary>
+/// Result of a successful <c>rpc/spawn</c> (FT-2 #150): the pi child's
+/// <c>hello</c> handshake, surfaced so the pane header can show which pi the
+/// session is running. <paramref name="PiVersion"/> is null on a pre-hello
+/// (legacy) pin — the handshake did not arrive within the grace window;
+/// <paramref name="Capabilities"/> is empty in that case. Display data only;
+/// the header renders it via textContent (ADR-0022).
+/// </summary>
+public sealed record RpcSpawnResult(string? PiVersion, IReadOnlyList<string> Capabilities);
+
 /// <param name="StreamingBehavior">
 /// <c>"steer"</c> or <c>"followUp"</c> (pi's exact casing), required by pi
 /// when a prompt is sent mid-stream; omitted when idle. A plain string,

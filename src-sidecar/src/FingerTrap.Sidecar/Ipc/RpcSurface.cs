@@ -147,11 +147,15 @@ internal sealed class RpcSurface : IDisposable, IRpcPaneSink
     }
 
     [JsonRpcMethod("rpc/spawn")]
-    public async Task RpcSpawnAsync(RpcSpawnRequest request, CancellationToken cancellationToken)
+    public async Task<RpcSpawnResult> RpcSpawnAsync(RpcSpawnRequest request, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(request);
         var options = new RpcPaneSpawnOptions(request.Cwd, request.SessionPath, request.Env);
-        await RequireRpcPanes().SpawnAsync(request.SessionId, options, cancellationToken).ConfigureAwait(false);
+        var hello = await RequireRpcPanes().SpawnAsync(request.SessionId, options, cancellationToken).ConfigureAwait(false);
+        // Null hello = a legacy (pre-hello) pin — surface an unknown version
+        // rather than failing; the header shows the pane came up without a
+        // reported version (#150).
+        return new RpcSpawnResult(hello?.PiVersion, hello?.Capabilities ?? Array.Empty<string>());
     }
 
     [JsonRpcMethod("rpc/kill")]

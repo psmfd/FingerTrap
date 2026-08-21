@@ -31,6 +31,7 @@ export function clampPercent(value: number | null): number | null {
 
 export class RpcHeader {
   readonly container: HTMLElement;
+  private readonly piVersionLabel: HTMLElement;
   private readonly modelSelect: HTMLSelectElement;
   private readonly thinkingSelect: HTMLSelectElement;
   private readonly meterBar: HTMLElement;
@@ -40,6 +41,14 @@ export class RpcHeader {
   constructor(private readonly handlers: RpcHeaderHandlers) {
     this.container = document.createElement('div');
     this.container.className = 'rpc-header';
+
+    // pi version + capabilities from the hello handshake (#150). Untrusted
+    // text (the version string is provider-adjacent) — textContent only,
+    // capabilities on the title attribute (also textContent-set below).
+    this.piVersionLabel = document.createElement('span');
+    this.piVersionLabel.className = 'header-pi-version';
+    this.piVersionLabel.hidden = true;
+    this.container.appendChild(this.piVersionLabel);
 
     this.modelSelect = document.createElement('select');
     this.modelSelect.className = 'header-model';
@@ -78,6 +87,18 @@ export class RpcHeader {
       option.appendChild(document.createTextNode(model.name));
       this.modelSelect.appendChild(option);
     }
+  }
+
+  /**
+   * Show the pi version from the hello handshake (#150). A null version is a
+   * pre-hello (legacy) pin — render "pi (legacy)" rather than hiding, so the
+   * operator can tell the pane came up on an old pin. Capabilities land on
+   * the title attribute for hover. textContent only (untrusted).
+   */
+  setPiVersion(version: string | null, capabilities: readonly string[]): void {
+    this.piVersionLabel.hidden = false;
+    this.piVersionLabel.textContent = version === null ? 'pi (legacy)' : `pi ${version}`;
+    this.piVersionLabel.title = capabilities.length > 0 ? `capabilities: ${capabilities.join(', ')}` : '';
   }
 
   /** Marks the active model by id (no-op when unknown). */

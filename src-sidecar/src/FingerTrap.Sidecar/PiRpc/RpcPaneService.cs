@@ -105,7 +105,7 @@ internal sealed class RpcPaneService : IAsyncDisposable
     /// one <see cref="PiRpcClientOptions.HelloGrace"/> wait and then
     /// behaves exactly as before the handshake existed.
     /// </summary>
-    public async Task SpawnAsync(string sessionId, RpcPaneSpawnOptions options, CancellationToken cancellationToken)
+    public async Task<PiHelloInfo?> SpawnAsync(string sessionId, RpcPaneSpawnOptions options, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(sessionId);
         ArgumentNullException.ThrowIfNull(options);
@@ -128,12 +128,14 @@ internal sealed class RpcPaneService : IAsyncDisposable
             EnvironmentOverrides = options.Env,
         });
 
+        PiHelloInfo? hello;
         try
         {
             // Ready gate: hello, legacy-grace expiry (null — proceed), a
             // protocol refusal, or died-before-hello. Fault paths never
-            // leave a pane entry behind.
-            await client.WaitForHelloAsync(cancellationToken).ConfigureAwait(false);
+            // leave a pane entry behind. The hello (null on a legacy pin) is
+            // returned so the header can show which pi is running (#150).
+            hello = await client.WaitForHelloAsync(cancellationToken).ConfigureAwait(false);
         }
         catch
         {
@@ -150,6 +152,7 @@ internal sealed class RpcPaneService : IAsyncDisposable
 
         entry.PumpTask = Task.Run(() => PumpEventsAsync(sessionId, client), CancellationToken.None);
         entry.ExitTask = Task.Run(() => PumpExitAsync(sessionId, client), CancellationToken.None);
+        return hello;
     }
 
     /// <summary>

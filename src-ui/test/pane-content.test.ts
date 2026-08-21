@@ -7,7 +7,7 @@ globalThis.requestAnimationFrame ??= (cb: FrameRequestCallback): number =>
 
 vi.mock('../src/api', () => ({
   rpcExtensionUiResponse: vi.fn(() => Promise.resolve()),
-  rpcSpawn: vi.fn(() => Promise.resolve()),
+  rpcSpawn: vi.fn(() => Promise.resolve({ piVersion: '0.84.2', capabilities: [] })),
   rpcKill: vi.fn(() => Promise.resolve()),
   rpcPrompt: vi.fn(() => Promise.resolve({ success: true })),
   rpcSteer: vi.fn(() => Promise.resolve({ success: true })),
