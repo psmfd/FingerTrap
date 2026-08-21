@@ -27,7 +27,7 @@ individual item says otherwise.
 | M1 — Local PTY (Linux + macOS) | foundation | **complete** (v0.3.0) |
 | FT-0 — Revive + host | Home | **complete** ([#46](https://github.com/psmfd/FingerTrap/issues/46), PRs #47–#50, #53) |
 | FT-1 — Chrome | Home | **complete** ([#58](https://github.com/psmfd/FingerTrap/issues/58), ADR-0021; slices 1–3, follow-ups [#70](https://github.com/psmfd/FingerTrap/issues/70)/[#72](https://github.com/psmfd/FingerTrap/issues/72), and splits ([#118](https://github.com/psmfd/FingerTrap/issues/118), ADR-0024)) |
-| FT-2 — Structured control + observability | Home | **in progress** ([#120](https://github.com/psmfd/FingerTrap/issues/120); gate satisfied by [rpc-contract.md](rpc-contract.md)) |
+| FT-2 — Structured control + observability | Home | **control scope complete** ([#120](https://github.com/psmfd/FingerTrap/issues/120)): native RPC panes, session list/resume, worktree-orphan surfacing, model/status readouts, hello ready-gate/version — all delivered and operator-smoke-validated. The two additive panels are deferred to their own slices: observability dashboards [#157](https://github.com/psmfd/FingerTrap/issues/157), expertise drafts panel [#158](https://github.com/psmfd/FingerTrap/issues/158) |
 | FT-3 — Tool host | Home | not started |
 | N-1 — Settings and persistence | Native | **in progress** ([#51](https://github.com/psmfd/FingerTrap/issues/51); settings foundation landed, ADR-0014) |
 | N-2 — Packaging | Native | partially standing (semantic-release wired) |
@@ -145,13 +145,28 @@ pi#54/#56/#57 shipped in `v0.84.2-psmfd.1`).
 Tracked as [#120](https://github.com/psmfd/FingerTrap/issues/120).
 
 The sidecar drives `pi --mode rpc`: session list and resume, worktree-orphan
-surfacing, model and status readouts. Read-only observability dashboards over
-`pi_config`'s meter JSONL files — **observe from outside**: FingerTrap
-renders, the recorders stay in `pi_config`.
+surfacing, model and status readouts — **the control scope, delivered and
+validated by the first operator GUI smoke** (2026-08-21). That smoke also
+found and fixed three defects the unit tests structurally could not catch:
+a stuck command-palette overlay ([#154](https://github.com/psmfd/FingerTrap/pull/154)),
+a UI↔sidecar RPC arg-count mismatch on the session browser
+([#156](https://github.com/psmfd/FingerTrap/pull/156)), and a login-PATH gap
+that hid user tools from pi extensions on a Finder launch
+([#155](https://github.com/psmfd/FingerTrap/issues/155)); plus the control-finish
+follow-ups — hello version in the pane header ([#150](https://github.com/psmfd/FingerTrap/issues/150)),
+live tab rename ([#133](https://github.com/psmfd/FingerTrap/issues/133)), and
+crash-orphan reaping ([#124](https://github.com/psmfd/FingerTrap/issues/124)).
 
-Also the native counterpart of the expertise drafts-review panel (`pi_config`
-curated plan, Track 5 rung 4) — **display and intent only**. The single-use
-approval ledger and its semantics stay in `pi_config`.
+Two additive pieces of the original scope are **deferred to their own
+slices**, tracked and not dropped:
+
+- Read-only observability dashboards over `pi_config`'s meter JSONL files —
+  **observe from outside**; FingerTrap renders, the recorders stay in
+  `pi_config` ([#157](https://github.com/psmfd/FingerTrap/issues/157)).
+- The native counterpart of the expertise drafts-review panel (`pi_config`
+  curated plan, Track 5 rung 4) — **display and intent only**; the single-use
+  approval ledger and its semantics stay in `pi_config`
+  ([#158](https://github.com/psmfd/FingerTrap/issues/158)).
 
 ### FT-3 — Tool host
 
