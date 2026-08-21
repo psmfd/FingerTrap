@@ -131,6 +131,15 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
     /// </summary>
     public PiHelloInfo? Hello => _helloInfo;
 
+    /// <summary>The child's OS process id — for the crash-reap registry (#124).</summary>
+    public int ProcessId => _process.Id;
+
+    /// <summary>
+    /// The child's start time in UTC — the PID-reuse discriminator the reap
+    /// registry keys on (#124). Read at spawn, while the process is alive.
+    /// </summary>
+    public DateTime ProcessStartTimeUtc => _process.StartTime.ToUniversalTime();
+
     /// <summary>
     /// Completes when the child is fully down — exit observed, pipes
     /// drained, all in-flight requests rejected — yielding the fault that

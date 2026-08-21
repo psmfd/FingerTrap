@@ -71,14 +71,21 @@ internal sealed class RpcPaneService : IAsyncDisposable
 {
     private readonly ConcurrentDictionary<string, PaneEntry> _sessions = new(StringComparer.Ordinal);
     private readonly PiSettings? _piSettings;
+    private readonly RpcChildRegistry _childRegistry;
     private volatile IRpcPaneSink? _sink;
     private bool _disposed;
 
     /// <param name="piSettings">Same injected-settings pattern as
     /// <see cref="Pty.PtyService"/>: read once, in Program.cs.</param>
-    public RpcPaneService(PiSettings? piSettings = null)
+    /// <param name="childRegistry">
+    /// Crash-reap registry (#124): spawned children are recorded here and
+    /// removed on clean exit, so a sidecar crash leaves a trail the next
+    /// launch reaps. Defaults to the app-data-backed registry.
+    /// </param>
+    public RpcPaneService(PiSettings? piSettings = null, RpcChildRegistry? childRegistry = null)
     {
         _piSettings = piSettings;
+        _childRegistry = childRegistry ?? new RpcChildRegistry();
     }
 
     /// <summary>
@@ -150,8 +157,14 @@ internal sealed class RpcPaneService : IAsyncDisposable
             throw new InvalidOperationException($"rpc pane '{sessionId}' is already active");
         }
 
+        // Record before the pumps start (#124): if the child exits
+        // immediately, PumpExitAsync's Unregister must find the entry already
+        // present. Captured pid/start are read now, while the child is alive.
+        entry.ChildPid = client.ProcessId;
+        _childRegistry.Register(client.ProcessId, client.ProcessStartTimeUtc, sessionId);
+
         entry.PumpTask = Task.Run(() => PumpEventsAsync(sessionId, client), CancellationToken.None);
-        entry.ExitTask = Task.Run(() => PumpExitAsync(sessionId, client), CancellationToken.None);
+        entry.ExitTask = Task.Run(() => PumpExitAsync(sessionId, client, entry.ChildPid), CancellationToken.None);
         return hello;
     }
 
@@ -298,10 +311,13 @@ internal sealed class RpcPaneService : IAsyncDisposable
         }
     }
 
-    private async Task PumpExitAsync(string sessionId, PiRpcClient client)
+    private async Task PumpExitAsync(string sessionId, PiRpcClient client, int childPid)
     {
         var fault = await client.Exited.ConfigureAwait(false);
         _sessions.TryRemove(sessionId, out _);
+        // The child is gone (clean exit or killed): drop its reap entry so a
+        // future launch does not chase a dead pid (#124).
+        _childRegistry.Unregister(childPid);
 
         var sink = _sink;
         if (sink is not null)
@@ -327,6 +343,8 @@ internal sealed class RpcPaneService : IAsyncDisposable
         }
 
         public PiRpcClient Client { get; }
+
+        public int ChildPid { get; set; }
 
         public Task? PumpTask { get; set; }
 
