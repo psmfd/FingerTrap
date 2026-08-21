@@ -42,6 +42,15 @@ catch (SettingsException ex)
     return 1;
 }
 
+// Recover the operator's login-shell PATH so pane children — pi and the
+// extensions it spawns (github-read, repo-dash → gh) — can find
+// user-installed tools when the app was launched from Finder/Launchpad with
+// the bare launchd PATH (#155/#77). Shell panes get this via -l already; pi
+// panes spawn by absolute path with no shell, so applying it to this process
+// is what makes their inherited PATH correct. Fails soft — a broken profile
+// leaves PATH untouched.
+FingerTrap.Sidecar.Executables.LoginEnvironment.ApplyToProcess(TimeSpan.FromSeconds(5));
+
 // Single platform-agnostic PtyService backed by Porta.Pty (ADR-0008);
 // platform branching now lives inside the vendored library.
 await using var pty = new PtyService(settings.Pi);
