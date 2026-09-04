@@ -4,7 +4,7 @@ mod sidecar;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
+    let app = tauri::Builder::default()
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_opener::init())
         .manage(sidecar::SidecarState::default())
@@ -20,6 +20,14 @@ pub fn run() {
             credentials::credential_status,
             links::open_url,
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .build(tauri::generate_context!())
+        .expect("error while building tauri application");
+
+    app.run(|app, event| {
+        if let tauri::RunEvent::ExitRequested { api, .. } = event {
+            if sidecar::request_shutdown(app.clone()) {
+                api.prevent_exit();
+            }
+        }
+    });
 }

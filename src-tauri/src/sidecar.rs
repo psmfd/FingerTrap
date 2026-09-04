@@ -1,11 +1,18 @@
 use std::collections::HashSet;
-use std::sync::Mutex;
+use std::sync::atomic::{AtomicU8, Ordering};
+use std::sync::{Arc, Condvar, Mutex};
+use std::time::Duration;
 
 use tauri::{ipc::Channel, Manager, State};
 use tauri_plugin_shell::process::{CommandChild, CommandEvent};
 use tauri_plugin_shell::ShellExt;
 
-#[derive(Default)]
+const SHUTDOWN_GRACE: Duration = Duration::from_secs(8);
+const SHUTDOWN_PAYLOAD: &[u8] = br#"{"jsonrpc":"2.0","method":"shutdown"}"#;
+const SHUTDOWN_RUNNING: u8 = 0;
+const SHUTDOWN_WAITING: u8 = 1;
+const SHUTDOWN_ALLOW_EXIT: u8 = 2;
+
 pub struct SidecarState {
     child: Mutex<Option<CommandChild>>,
     output_channel: Mutex<Option<Channel<Vec<u8>>>>,
@@ -14,6 +21,20 @@ pub struct SidecarState {
     /// preload read stuck behind a keychain modal could otherwise land after
     /// a save/clear and push a stale token — or resurrect a cleared one.
     credential_overrides: Mutex<HashSet<String>>,
+    terminated: Arc<(Mutex<bool>, Condvar)>,
+    shutdown_phase: AtomicU8,
+}
+
+impl Default for SidecarState {
+    fn default() -> Self {
+        Self {
+            child: Mutex::new(None),
+            output_channel: Mutex::new(None),
+            credential_overrides: Mutex::new(HashSet::new()),
+            terminated: Arc::new((Mutex::new(false), Condvar::new())),
+            shutdown_phase: AtomicU8::new(SHUTDOWN_RUNNING),
+        }
+    }
 }
 
 impl SidecarState {
@@ -49,6 +70,82 @@ impl SidecarState {
         }
         self.write(frame)
     }
+
+    fn mark_terminated(&self) {
+        let (lock, ready) = &*self.terminated;
+        *lock.lock().unwrap() = true;
+        ready.notify_all();
+    }
+}
+
+fn shutdown_frame() -> Vec<u8> {
+    let mut frame = format!("Content-Length: {}\r\n\r\n", SHUTDOWN_PAYLOAD.len()).into_bytes();
+    frame.extend_from_slice(SHUTDOWN_PAYLOAD);
+    frame
+}
+
+#[derive(Debug, PartialEq, Eq)]
+enum ShutdownDecision {
+    Start,
+    Wait,
+    Exit,
+}
+
+fn shutdown_decision(state: &SidecarState) -> ShutdownDecision {
+    match state.shutdown_phase.compare_exchange(
+        SHUTDOWN_RUNNING,
+        SHUTDOWN_WAITING,
+        Ordering::AcqRel,
+        Ordering::Acquire,
+    ) {
+        Ok(_) => ShutdownDecision::Start,
+        Err(SHUTDOWN_WAITING) => ShutdownDecision::Wait,
+        Err(_) => ShutdownDecision::Exit,
+    }
+}
+
+/// Intercept native app exit and ask the sidecar to reap its own process
+/// trees. Every external duplicate is prevented while cleanup is in progress;
+/// only the final `AppHandle::exit` is allowed through.
+pub fn request_shutdown(app_handle: tauri::AppHandle) -> bool {
+    let state: State<SidecarState> = app_handle.state();
+    match shutdown_decision(&state) {
+        ShutdownDecision::Wait => return true,
+        ShutdownDecision::Exit => return false,
+        ShutdownDecision::Start => {}
+    }
+
+    if let Err(error) = state.write(&shutdown_frame()) {
+        eprintln!("failed to request graceful sidecar shutdown: {error}");
+    }
+
+    let terminated = Arc::clone(&state.terminated);
+    std::thread::spawn(move || {
+        let (lock, ready) = &*terminated;
+        let guard = lock.lock().unwrap();
+        let (guard, wait) = ready
+            .wait_timeout_while(guard, SHUTDOWN_GRACE, |done| !*done)
+            .unwrap();
+
+        if !*guard && wait.timed_out() {
+            eprintln!("sidecar shutdown grace expired; forcing direct child exit");
+            let state: State<SidecarState> = app_handle.state();
+            let child = state.child.lock().unwrap().take();
+            if let Some(child) = child {
+                if let Err(error) = child.kill() {
+                    eprintln!("failed to force sidecar exit: {error}");
+                }
+            }
+        }
+
+        app_handle
+            .state::<SidecarState>()
+            .shutdown_phase
+            .store(SHUTDOWN_ALLOW_EXIT, Ordering::Release);
+        app_handle.exit(0);
+    });
+
+    true
 }
 
 pub fn spawn(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
@@ -64,6 +161,13 @@ pub fn spawn(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         .spawn()?;
 
     let state: State<SidecarState> = app_handle.state();
+    state
+        .shutdown_phase
+        .store(SHUTDOWN_RUNNING, Ordering::Release);
+    {
+        let (lock, _) = &*state.terminated;
+        *lock.lock().unwrap() = false;
+    }
     *state.child.lock().unwrap() = Some(child);
 
     // The sidecar holds tokens in memory only; every (re)spawn starts empty
@@ -91,6 +195,7 @@ pub fn spawn(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
                 }
                 CommandEvent::Terminated(payload) => {
                     eprintln!("sidecar terminated: {:?}", payload);
+                    app_handle.state::<SidecarState>().mark_terminated();
                     break;
                 }
                 CommandEvent::Error(message) => {
@@ -116,4 +221,29 @@ pub fn subscribe_sidecar_output(
 ) -> Result<(), String> {
     *state.output_channel.lock().unwrap() = Some(channel);
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn shutdown_frame_is_one_complete_json_rpc_notification() {
+        assert_eq!(
+            shutdown_frame(),
+            b"Content-Length: 37\r\n\r\n{\"jsonrpc\":\"2.0\",\"method\":\"shutdown\"}"
+        );
+    }
+
+    #[test]
+    fn duplicate_exit_requests_wait_until_the_internal_exit_is_allowed() {
+        let state = SidecarState::default();
+
+        assert_eq!(shutdown_decision(&state), ShutdownDecision::Start);
+        assert_eq!(shutdown_decision(&state), ShutdownDecision::Wait);
+        state
+            .shutdown_phase
+            .store(SHUTDOWN_ALLOW_EXIT, Ordering::Release);
+        assert_eq!(shutdown_decision(&state), ShutdownDecision::Exit);
+    }
 }

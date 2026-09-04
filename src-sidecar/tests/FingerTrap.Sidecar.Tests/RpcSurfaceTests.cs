@@ -135,6 +135,19 @@ public sealed class RpcSurfaceTests
         Assert.False(cache.Has("ado"));
     }
 
+    [Fact]
+    public void Shutdown_SignalsTheHostOnce()
+    {
+        var requests = 0;
+        using var surface = new RpcSurface(
+            Substitute.For<IPtyService>(), requestShutdown: () => requests++);
+
+        surface.Shutdown();
+        surface.Shutdown();
+
+        Assert.Equal(1, requests);
+    }
+
     private static bool MemoryEquals(ReadOnlyMemory<byte> memory, byte[] expected) =>
         memory.Span.SequenceEqual(expected);
 }
