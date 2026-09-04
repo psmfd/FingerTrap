@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Buffers;
 using System.Collections.Concurrent;
 using FingerTrap.Sidecar.Abstractions;
@@ -18,6 +19,7 @@ internal sealed class PtyService : IPtyService
     private readonly ConcurrentDictionary<string, Session> _sessions = new(StringComparer.Ordinal);
 
     private readonly PiSettings? _piSettings;
+    private int _disposeStarted;
 
     /// <param name="piSettings">
     /// Persisted pi configuration (N-1, #52), or null to rely on the
@@ -38,6 +40,7 @@ internal sealed class PtyService : IPtyService
         ArgumentNullException.ThrowIfNull(sessionId);
         ArgumentNullException.ThrowIfNull(options);
         cancellationToken.ThrowIfCancellationRequested();
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposeStarted) != 0, this);
 
         var shellPath = ResolveExecutable(options.Kind, options.Shell, _piSettings);
 
@@ -64,10 +67,9 @@ internal sealed class PtyService : IPtyService
 
         connection.ProcessExited += (_, e) =>
         {
-            // The session may already be out of the map (Close() removes it
-            // before the process dies); dispose the captured session either
-            // way — Dispose is idempotent — so a killed session's timer, CTS
-            // and streams are still released.
+            // Signal waiters before disposing the connection; app shutdown
+            // keeps the PTY reader alive until the process tree is gone.
+            session.MarkExited();
             _sessions.TryRemove(sessionId, out Session? _);
             session.Dispose();
 
@@ -104,36 +106,74 @@ internal sealed class PtyService : IPtyService
 
     public void Close(string sessionId)
     {
-        // Kill, don't Dispose. Dispose tears the read loop down FIRST, and a
-        // PTY child dying with nothing draining the master can wedge
-        // uninterruptibly in terminal teardown on macOS — SIGKILL pending,
-        // waitpid never returning, no exit event (found by the FT-1 stdio
-        // probe; the process sat in `ps` state `?Es` indefinitely). Killing
-        // while the reader still drains lets the process actually exit; the
-        // ProcessExited handler then disposes the session and raises Exited,
-        // so a kill produces the same pty/exit notification as a self-exit.
+        // Kill while the PTY reader is still draining. Process.Kill(true) is
+        // shared with whole-app shutdown so shell grandchildren cannot outlive
+        // a closed pane; the Porta.Pty kill remains the fallback when process
+        // enumeration is unavailable.
         if (_sessions.TryRemove(sessionId, out var session))
         {
-            try
-            {
-                session.Connection.Kill();
-            }
-            catch
-            {
-                // Already exited — the ProcessExited handler owns cleanup.
-            }
+            KillTree(session);
         }
     }
 
-    public ValueTask DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
-        foreach (var session in _sessions.Values)
+        if (Interlocked.Exchange(ref _disposeStarted, 1) != 0)
+        {
+            return;
+        }
+
+        var sessions = _sessions.Values.ToArray();
+        _sessions.Clear();
+
+        foreach (var session in sessions)
+        {
+            KillTree(session);
+        }
+
+        try
+        {
+            await Task.WhenAll(sessions.Select(session => session.ExitedTask))
+                .WaitAsync(TimeSpan.FromSeconds(2))
+                .ConfigureAwait(false);
+        }
+        catch (TimeoutException)
+        {
+            // A broken PTY backend must not make application quit unbounded.
+        }
+
+        foreach (var session in sessions)
         {
             session.Dispose();
         }
+    }
 
-        _sessions.Clear();
-        return ValueTask.CompletedTask;
+    private static void KillTree(Session session)
+    {
+        try
+        {
+            using var process = Process.GetProcessById(session.Connection.Pid);
+            if (!process.HasExited)
+            {
+                process.Kill(entireProcessTree: true);
+            }
+
+            return;
+        }
+        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException
+            or System.ComponentModel.Win32Exception or NotSupportedException)
+        {
+            // Fall through to Porta.Pty's platform-specific direct kill.
+        }
+
+        try
+        {
+            session.Connection.Kill();
+        }
+        catch
+        {
+            // Already exited or already reaped.
+        }
     }
 
     /// <summary>
@@ -295,6 +335,8 @@ internal sealed class PtyService : IPtyService
         private int _pendingRows;
         private Timer? _resizeTimer;
         private bool _disposed;
+        private readonly TaskCompletionSource _exited =
+            new(TaskCreationOptions.RunContinuationsAsynchronously);
 
         public Session(string id, global::Porta.Pty.IPtyConnection connection)
         {
@@ -307,6 +349,10 @@ internal sealed class PtyService : IPtyService
         public global::Porta.Pty.IPtyConnection Connection { get; }
 
         public CancellationTokenSource Cancellation { get; } = new();
+
+        public Task ExitedTask => _exited.Task;
+
+        public void MarkExited() => _exited.TrySetResult();
 
         public void QueueResize(int cols, int rows)
         {
