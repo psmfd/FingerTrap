@@ -18,6 +18,8 @@
          a real child process (located relative to the test output dir),
          never links against it. -->
     <ProjectReference Include="..\FakePi\FakePi.csproj" ReferenceOutputAssembly="false" />
+    <!-- Build-order only: VM process tests launch FakeMcm's apphost directly. -->
+    <ProjectReference Include="..\FakeMcm\FakeMcm.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
