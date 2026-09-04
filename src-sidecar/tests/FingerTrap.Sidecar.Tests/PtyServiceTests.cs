@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using FingerTrap.Sidecar.Abstractions;
 using FingerTrap.Sidecar.Pty;
 using Xunit;
@@ -113,5 +114,88 @@ public sealed class PtyServiceTests
             exited.Task,
             Task.Delay(TimeSpan.FromSeconds(10), TestContext.Current.CancellationToken));
         Assert.Same(exited.Task, done);
+    }
+
+    [Fact]
+    public async Task DisposeAsync_LiveSession_KillsEntireProcessTree()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            return;
+        }
+
+        var root = Path.Combine(Path.GetTempPath(), $"fingertrap-pty-tree-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(root);
+        var scriptPath = Path.Combine(root, "parent.sh");
+        var childPidPath = Path.Combine(root, "child.pid");
+        await File.WriteAllTextAsync(
+            scriptPath,
+            $"#!/bin/sh\nsleep 300 &\necho $! > '{childPidPath}'\nwait\n",
+            TestContext.Current.CancellationToken);
+        File.SetUnixFileMode(
+            scriptPath,
+            UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+
+        var pty = new PtyService();
+        var options = new PtySpawnOptions(scriptPath, null, 80, 24, null, PaneKind.Shell);
+        var parentPid = await pty.SpawnAsync(
+            "dispose-tree", options, TestContext.Current.CancellationToken);
+        var childPid = await WaitForPidFileAsync(childPidPath);
+
+        try
+        {
+            await pty.DisposeAsync();
+
+            Assert.False(IsProcessAlive(parentPid));
+            Assert.False(IsProcessAlive(childPid));
+        }
+        finally
+        {
+            TryKillTree(parentPid);
+            TryKillTree(childPid);
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
+    private static async Task<int> WaitForPidFileAsync(string path)
+    {
+        for (var attempt = 0; attempt < 100; attempt++)
+        {
+            if (File.Exists(path)
+                && int.TryParse(await File.ReadAllTextAsync(path), out var pid))
+            {
+                return pid;
+            }
+
+            await Task.Delay(25, TestContext.Current.CancellationToken);
+        }
+
+        throw new TimeoutException("PTY child did not publish its pid");
+    }
+
+    private static bool IsProcessAlive(int pid)
+    {
+        try
+        {
+            using var process = Process.GetProcessById(pid);
+            return !process.HasExited;
+        }
+        catch (ArgumentException)
+        {
+            return false;
+        }
+    }
+
+    private static void TryKillTree(int pid)
+    {
+        try
+        {
+            using var process = Process.GetProcessById(pid);
+            process.Kill(entireProcessTree: true);
+        }
+        catch (Exception ex) when (ex is ArgumentException or InvalidOperationException)
+        {
+            // Already exited.
+        }
     }
 }

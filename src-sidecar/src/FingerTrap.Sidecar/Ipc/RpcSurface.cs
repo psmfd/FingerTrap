@@ -15,6 +15,8 @@ internal sealed class RpcSurface : IDisposable, IRpcPaneSink
     private readonly PaneSettings? _paneSettings;
     private readonly CredentialCache _credentials;
     private readonly RpcPaneService? _rpcPanes;
+    private readonly Action? _requestShutdown;
+    private int _shutdownRequested;
     private JsonRpc? _rpc;
     private bool _eventsBound;
 
@@ -50,7 +52,8 @@ internal sealed class RpcSurface : IDisposable, IRpcPaneSink
         IReadOnlyDictionary<string, string>? keybindings = null,
         RpcPaneService? rpcPanes = null,
         SessionStore? sessions = null,
-        WorktreeReconciler? worktrees = null)
+        WorktreeReconciler? worktrees = null,
+        Action? requestShutdown = null)
     {
         _pty = pty;
         _paneSettings = paneSettings;
@@ -60,6 +63,7 @@ internal sealed class RpcSurface : IDisposable, IRpcPaneSink
         _rpcPanes = rpcPanes;
         _sessions = sessions;
         _worktrees = worktrees;
+        _requestShutdown = requestShutdown;
     }
 
     private readonly StatusService? _status;
@@ -110,6 +114,21 @@ internal sealed class RpcSurface : IDisposable, IRpcPaneSink
     public Task<string> PingAsync(string message) =>
         Task.FromResult($"pong: {message}");
 #pragma warning restore CA1822
+
+    /// <summary>
+    /// Shell-originated application shutdown notification (#167). It is void
+    /// by design: the Rust host waits for process termination, not a response
+    /// frame, so the sidecar can close the JSON-RPC transport after this method
+    /// returns without racing a reply. Duplicate exit events are idempotent.
+    /// </summary>
+    [JsonRpcMethod("shutdown")]
+    public void Shutdown()
+    {
+        if (Interlocked.Exchange(ref _shutdownRequested, 1) == 0)
+        {
+            _requestShutdown?.Invoke();
+        }
+    }
 
     [JsonRpcMethod("pty/spawn")]
     public async Task<PtySpawnResult> PtySpawnAsync(PtySpawnRequest request, CancellationToken cancellationToken)

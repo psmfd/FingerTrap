@@ -80,9 +80,14 @@ await using var status = new StatusService([
 // store and the worktree extension's durable orphan signals.
 var sessionStore = new SessionStore();
 var worktreeReconciler = new WorktreeReconciler();
+// Rust intercepts ExitRequested and sends one shell-originated shutdown
+// notification. The signal lets this host leave its RPC wait and run every
+// async service disposer before the shell's bounded fallback exits the app.
+var shutdownRequested = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 using var surface = new RpcSurface(
     pty, settings.Pane, credentials, status, settings.Keybindings, rpcPanes,
-    sessionStore, worktreeReconciler);
+    sessionStore, worktreeReconciler,
+    requestShutdown: () => shutdownRequested.TrySetResult());
 
 var rpc = new JsonRpc(handler);
 rpc.AddLocalRpcTarget(surface, new JsonRpcTargetOptions
@@ -101,6 +106,16 @@ rpc.StartListening();
 status.Start();
 
 Console.Error.WriteLine("fingertrap-sidecar: listening on stdio");
-await rpc.Completion;
-Console.Error.WriteLine("fingertrap-sidecar: rpc completion");
+var completed = await Task.WhenAny(rpc.Completion, shutdownRequested.Task);
+if (ReferenceEquals(completed, shutdownRequested.Task))
+{
+    Console.Error.WriteLine("fingertrap-sidecar: graceful shutdown requested");
+    rpc.Dispose();
+}
+else
+{
+    await rpc.Completion;
+    Console.Error.WriteLine("fingertrap-sidecar: rpc completion");
+}
+
 return 0;
