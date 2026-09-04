@@ -6,11 +6,14 @@ The **Home track** (FT-0 … FT-3) delivers the pi Home interface — the shell 
 operator lives in. Its phases and gates are defined by `pi_config`'s curated
 feature plan (`notes/curated-feature-plan.md`, Track 6), which elevated
 FingerTrap from a long-horizon item to the Home interface on 2026-08-11.
-`pi_config` remains the governance home: the phase gates, the credential
-policy, and the migration map live there. FingerTrap **renders and hosts; it
-never owns policy, credential policy, or approval semantics**.
+`pi_config` remains the governance home for the Home track: its phase gates,
+credential policy, migration map, and pi approval semantics live there.
+FingerTrap **renders and hosts Home features; it never owns pi policy,
+credential policy, or approval semantics**. Native features may own narrowly
+scoped application-safety confirmations, such as executable integrity approval
+or destructive VM action confirmation, but never pi authority.
 
-The **Native track** (N-1 … N-4) carries FingerTrap's own terminal features —
+The **Native track** (N-1 … N-5) carries FingerTrap's own terminal features —
 the ones that predate the Home framing and have no place in it. They are
 sequenced separately so that elevating the Home work does not silently drop
 them. See [ADR-0012](../adrs/0012-home-phase-resequencing.md) for why the plan
@@ -22,7 +25,7 @@ individual item says otherwise.
 ## Status at a glance
 
 | Item | Track | State |
-|---|---|---|
+| --- | --- | --- |
 | M0 — Skeleton | foundation | **complete** |
 | M1 — Local PTY (Linux + macOS) | foundation | **complete** (v0.3.0) |
 | FT-0 — Revive + host | Home | **complete** ([#46](https://github.com/psmfd/FingerTrap/issues/46), PRs #47–#50, #53) |
@@ -33,6 +36,7 @@ individual item says otherwise.
 | N-2 — Packaging | Native | partially standing (semantic-release wired) |
 | N-3 — SSH terminal | Native | not started |
 | N-4 — SFTP tree | Native | not started |
+| N-5 — VM host | Native | **architecture in progress** ([#169](https://github.com/psmfd/FingerTrap/issues/169); first slice [#172](https://github.com/psmfd/FingerTrap/issues/172), ADR-0029) |
 
 Windows remains deferred across the PTY layer: `pty/spawn` throws
 `PlatformNotSupportedException` until a ConPty backend lands.
@@ -231,13 +235,39 @@ rail. File download and upload. Drag-and-drop into the active terminal pane.
 Depends on N-3 — the shared-auth constraint above is the reason the two are
 adjacent and ordered.
 
+### N-5 — VM host
+
+FingerTrap observes and eventually manages the Lima VMs owned by
+[mac-container-machine](https://github.com/psmfd/mac-container-machine) (mcm),
+and opens repo-scoped VM terminal panes without duplicating mcm's machine,
+profile, or provisioning semantics. The .NET sidecar invokes an explicitly
+approved mcm client entrypoint behind `IVmProvider`; mcm remains the source of
+machine state and lifecycle behavior.
+
+The first implementation slice is macOS-only, read-only status infrastructure:
+interfaces, a bounded subprocess runner exercised only against fake-mcm, a
+versioned source-generated JSON parser, and the trust/authorization seams. A
+later shell-approval slice and mcm's client-safe status contract
+([mcm#80](https://github.com/psmfd/mac-container-machine/issues/80)) gate real
+mcm launches. VM listing waits for normalized mcm-owned rows
+([mcm#81](https://github.com/psmfd/mac-container-machine/issues/81)); FingerTrap
+does not bind to raw Lima JSON.
+
+Later slices add endpoint resolution, VM terminal panes, repo mappings,
+lifecycle operations, destructive-action confirmation, and deep links. See
+[#169](https://github.com/psmfd/FingerTrap/issues/169) for the ledger and
+[ADR-0029](../adrs/0029-vm-provider-and-subprocess-trust-contract.md) for the
+provider, process, trust, and untrusted-output boundaries. N-5 may interleave
+with N-1 through N-4; its individual upstream gates, rather than the numeric
+order, control when each slice starts.
+
 ## M-number mapping
 
 Existing issues and ADRs cite M-numbers. This table keeps those references
 resolvable; the M-numbers themselves are retired.
 
 | Was | Now | Note |
-|---|---|---|
+| --- | --- | --- |
 | M0 | complete | unchanged, retained above |
 | M1 | complete | unchanged, retained above |
 | M2 — local terminal panes | **split**: pane *type* → FT-0; splits, focus, lifecycle chrome → FT-1 | the typed-pane concept is FT-0's deliverable; the chrome around it is FT-1's |
