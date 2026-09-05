@@ -5,6 +5,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/FakePi/FakePi.csproj" />
+    <Project Path="tests/FakeMcm/FakeMcm.csproj" />
     <Project Path="tests/FingerTrap.Sidecar.Tests/FingerTrap.Sidecar.Tests.csproj" />
   </Folder>
 </Solution>
