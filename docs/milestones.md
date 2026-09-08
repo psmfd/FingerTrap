@@ -36,7 +36,7 @@ individual item says otherwise.
 | N-2 — Packaging | Native | partially standing (semantic-release wired) |
 | N-3 — SSH terminal | Native | not started |
 | N-4 — SFTP tree | Native | not started |
-| N-5 — VM host | Native | **architecture in progress** ([#169](https://github.com/psmfd/FingerTrap/issues/169); first slice [#172](https://github.com/psmfd/FingerTrap/issues/172), ADR-0029) |
+| N-5 — VM host | Native | **provider foundation landed** ([#169](https://github.com/psmfd/FingerTrap/issues/169); contract [#172](https://github.com/psmfd/FingerTrap/issues/172), fake-only provider [#174](https://github.com/psmfd/FingerTrap/issues/174), Darwin spawn hardening [#175](https://github.com/psmfd/FingerTrap/issues/175), ADR-0029/0030). Production status remains blocked on [mcm#80](https://github.com/psmfd/mac-container-machine/issues/80); normalized list remains blocked on [mcm#81](https://github.com/psmfd/mac-container-machine/issues/81). |
 
 Windows remains deferred across the PTY layer: `pty/spawn` throws
 `PlatformNotSupportedException` until a ConPty backend lands.
