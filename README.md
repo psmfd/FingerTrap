@@ -8,9 +8,11 @@ Three processes, one app:
 
 1. **Tauri shell** (`src-tauri/`) — Rust. Window, WebView, sidecar lifecycle, stdio bridge. No business logic.
 2. **UI** (`src-ui/`) — TypeScript + Vite + xterm.js. Terminal panes, SFTP tree, status bar, command palette.
-3. **Sidecar** (`src-sidecar/`) — .NET 10. Pty.Net, SSH.NET, LibGit2Sharp, Octokit, Azure DevOps SDK. Owns 95% of the logic.
+3. **Sidecar** (`src-sidecar/`) — .NET 10. Porta.Pty, SSH.NET, Octokit, Azure DevOps SDK. Owns 95% of the logic.
 
 IPC is JSON-RPC 2.0 over stdio with `Content-Length` framing — `StreamJsonRpc` on the .NET side, `vscode-jsonrpc` on the TS side.
+
+On Darwin, every sidecar child launch shares a process-wide spawn coordinator so transient descriptors cannot leak across concurrent children; see `adrs/0030-process-wide-darwin-child-spawn-coordination.md`.
 
 ## Repo layout
 

@@ -17,11 +17,11 @@ for the decision rationale.
 
 ## Local patches
 
-None initially. As we apply local fixes, document each here:
+FingerTrap-specific fixes are recorded here and must be reapplied during a sync:
 
 | Date | File | Purpose | Upstream PR (if any) |
 |---|---|---|---|
-| _none yet_ | | | |
+| 2026-09-08 | `Porta.Pty.Native/porta_pty.c` | Mark the parent PTY master `FD_CLOEXEC` before releasing FingerTrap's process-wide Darwin spawn gate; fail closed and reap the child if marking fails (#175, ADR-0030). | None |
 
 The `Porta.Pty.csproj` here has been modified relative to upstream to drop
 NuGet packaging metadata and to invoke the C-shim CMake build as part of

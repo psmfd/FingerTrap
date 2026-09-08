@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using FingerTrap.Sidecar.Processes;
 
 namespace FingerTrap.Sidecar.Executables;
 
@@ -99,7 +100,7 @@ internal static class LoginEnvironment
             startInfo.ArgumentList.Add("-c");
             startInfo.ArgumentList.Add("printf %s \"$PATH\"");
 
-            using var process = Process.Start(startInfo);
+            using var process = ChildProcessLauncher.Start(startInfo);
             if (process is null)
             {
                 return null;

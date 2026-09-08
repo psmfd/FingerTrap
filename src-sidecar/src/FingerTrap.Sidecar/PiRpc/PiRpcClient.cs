@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Channels;
+using FingerTrap.Sidecar.Processes;
 
 namespace FingerTrap.Sidecar.PiRpc;
 
@@ -192,7 +193,7 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
         }
 
         var process = new Process { StartInfo = startInfo };
-        process.Start();
+        _ = ChildProcessLauncher.Start(process);
         return new PiRpcClient(process, options);
     }
 

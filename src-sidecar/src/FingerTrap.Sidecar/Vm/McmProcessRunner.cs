@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using FingerTrap.Sidecar.Processes;
 using Microsoft.Win32.SafeHandles;
 
 namespace FingerTrap.Sidecar.Vm;
@@ -21,6 +22,17 @@ internal sealed partial class McmProcessRunner : IMcmProcessRunner
     private const int NoSuchProcess = 3;
     private const int Interrupted = 4;
     private const int OpaqueBufferBytes = 1024;
+
+    private readonly Action? _afterDarwinChannelCreated;
+
+    public McmProcessRunner()
+    {
+    }
+
+    internal McmProcessRunner(Action afterDarwinChannelCreated)
+    {
+        _afterDarwinChannelCreated = afterDarwinChannelCreated;
+    }
 
     public async Task<McmProcessResult> RunAsync(
         McmProcessRequest request,
@@ -45,7 +57,7 @@ internal sealed partial class McmProcessRunner : IMcmProcessRunner
         SpawnedProcess spawned;
         try
         {
-            spawned = Spawn(request);
+            spawned = ChildSpawnCoordinator.Run(() => Spawn(request));
         }
         catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or InvalidOperationException)
         {
@@ -151,7 +163,7 @@ internal sealed partial class McmProcessRunner : IMcmProcessRunner
             exit?.Signal);
     }
 
-    private static unsafe SpawnedProcess Spawn(McmProcessRequest request)
+    private unsafe SpawnedProcess Spawn(McmProcessRequest request)
     {
         if (!Path.IsPathFullyQualified(request.ExecutablePath))
         {
@@ -413,7 +425,7 @@ internal sealed partial class McmProcessRunner : IMcmProcessRunner
         && request.Limits.MaxStdoutBytes is > 0 and <= 4 * 1024 * 1024
         && request.Limits.MaxStderrBytes is > 0 and <= 4 * 1024 * 1024;
 
-    private static unsafe int CreateChannel(int* fileDescriptors)
+    private unsafe int CreateChannel(int* fileDescriptors)
     {
         var socketType = SocketStream
             | (OperatingSystem.IsLinux() ? LinuxSocketCloseOnExec : 0);
@@ -423,12 +435,21 @@ internal sealed partial class McmProcessRunner : IMcmProcessRunner
             return result;
         }
 
-        // Darwin has no pipe2/SOCK_CLOEXEC. Mark both descriptors before
-        // leaving this synchronous spawn section; CLOEXEC_DEFAULT below also
-        // prevents concurrent Mcm spawns from inheriting unrelated handles.
-        // Coordinating this unavoidable two-syscall Darwin window with every
-        // non-Mcm child-launch path is tracked by #175 and blocks production
-        // VM wiring; #174 keeps this runner fake-only and unreachable.
+        // Darwin has no pipe2/SOCK_CLOEXEC. The test hook exposes this exact
+        // descriptor-creation window so the process-wide coordination regression
+        // can interleave a real PTY child deterministically.
+        try
+        {
+            _afterDarwinChannelCreated?.Invoke();
+        }
+        catch
+        {
+            _ = NativeClose(fileDescriptors[0]);
+            _ = NativeClose(fileDescriptors[1]);
+            throw;
+        }
+
+        // Mark both descriptors before leaving the synchronous spawn section.
         if (NativeFcntl(fileDescriptors[0], FileDescriptorSetFlags, FileDescriptorCloseOnExec) == 0
             && NativeFcntl(fileDescriptors[1], FileDescriptorSetFlags, FileDescriptorCloseOnExec) == 0)
         {

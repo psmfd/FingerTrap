@@ -25,6 +25,7 @@
 #include <termios.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include <fcntl.h>
 
 /* Export macro for shared library symbols */
 #if defined(_WIN32)
@@ -186,7 +187,22 @@ PTY_EXPORT pty_spawn_result_t pty_spawn(
         _exit(errno);
     }
     
-    /* Parent process */
+    /* Parent process: the managed process-wide spawn gate remains held until
+     * this function returns. Mark the master before releasing that gate so no
+     * later child can inherit the controller descriptor. */
+    int descriptor_flags = fcntl(master_fd, F_GETFD);
+    if (descriptor_flags == -1
+        || fcntl(master_fd, F_SETFD, descriptor_flags | FD_CLOEXEC) == -1) {
+        int saved_errno = errno;
+        close(master_fd);
+        kill(pid, SIGKILL);
+        while (waitpid(pid, NULL, 0) == -1 && errno == EINTR) {
+            /* Retry until the failed spawn's child is reaped. */
+        }
+        result.error = saved_errno;
+        return result;
+    }
+
     result.master_fd = master_fd;
     result.pid = pid;
     result.error = 0;
