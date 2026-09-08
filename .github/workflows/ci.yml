@@ -4,7 +4,8 @@ on:
   push:
     branches: [dev, main]
   pull_request:
-    branches: [dev, main]
+    # Stacked fixes need the same validation before their base reaches dev.
+    branches: [dev, main, "fix/**"]
 
 # All jobs only read the checkout; none write back to the repo. Explicit so
 # the workflow token is least-privilege (CodeQL actions/missing-workflow-permissions).
