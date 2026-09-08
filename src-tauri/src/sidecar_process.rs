@@ -88,6 +88,9 @@ impl SidecarProcess {
     }
 
     pub fn enqueue(&self, payload: &[u8]) -> Result<WriteReceipt, String> {
+        if self.child.try_wait().map_err(|e| e.to_string())?.is_some() {
+            return Err("sidecar is not running".into());
+        }
         if payload.len() > MAX_FRAME_BYTES {
             return Err("sidecar input frame exceeds the size limit".into());
         }
@@ -193,6 +196,9 @@ mod tests {
         let process = shell("exit 0");
         process.child.wait().unwrap();
         assert!(process.enqueue(&vec![0; MAX_FRAME_BYTES + 1]).is_err());
-        assert!(process.enqueue(b"frame").unwrap().wait().is_err());
+        assert!(process
+            .enqueue(b"frame")
+            .and_then(WriteReceipt::wait)
+            .is_err());
     }
 }
