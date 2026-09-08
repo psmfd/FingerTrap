@@ -179,6 +179,7 @@ jobs:
       - run: cargo fmt --check
       - run: cargo clippy --all-targets -- -D warnings
       - run: cargo check --locked
+      - run: cargo test --locked
 
   repo-check:
     name: repo-check

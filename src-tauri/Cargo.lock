@@ -1094,6 +1094,7 @@ dependencies = [
  "keyring",
  "serde",
  "serde_json",
+ "shared_child",
  "tauri",
  "tauri-build",
  "tauri-plugin-opener",
