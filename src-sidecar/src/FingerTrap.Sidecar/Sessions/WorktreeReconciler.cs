@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Text.Json;
 using FingerTrap.Sidecar.Ipc;
+using FingerTrap.Sidecar.Processes;
 using FingerTrap.Sidecar.Status;
 using FingerTrap.Sidecar.Text;
 
@@ -486,7 +487,7 @@ internal sealed class WorktreeReconciler
         using var process = new Process { StartInfo = startInfo };
         try
         {
-            if (!process.Start())
+            if (!ChildProcessLauncher.Start(process))
             {
                 throw new GitUnavailableException("git could not be started");
             }

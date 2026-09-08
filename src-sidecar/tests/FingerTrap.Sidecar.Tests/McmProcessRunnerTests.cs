@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Text.Json;
+using FingerTrap.Sidecar.Abstractions;
+using FingerTrap.Sidecar.Pty;
 using FingerTrap.Sidecar.Vm;
 using Xunit;
 
@@ -151,6 +153,57 @@ public sealed class McmProcessRunnerTests
         finally
         {
             foreach (var fake in fakes) fake.Dispose();
+        }
+    }
+
+    [Fact]
+    public async Task Run_DarwinDescriptorWindow_BlocksPtySpawnAndPreservesTimelyEof()
+    {
+        if (!OperatingSystem.IsMacOS()) return;
+
+        var cancellationToken = TestContext.Current.CancellationToken;
+        using var channelCreated = new ManualResetEventSlim();
+        using var releaseChannel = new ManualResetEventSlim();
+        using var fakeMcm = FakeMcmShim.Create(new { reportInvocation = true });
+        var hookCalls = 0;
+        var runner = new McmProcessRunner(() =>
+        {
+            if (Interlocked.Increment(ref hookCalls) != 1) return;
+            channelCreated.Set();
+            Assert.True(releaseChannel.Wait(TimeSpan.FromSeconds(5), cancellationToken));
+        });
+
+        var mcmTask = Task.Run(() => runner.RunAsync(
+            Request(fakeMcm.ExecutablePath, 32_768, 32_768),
+            cancellationToken),
+            cancellationToken);
+        Assert.True(channelCreated.Wait(TimeSpan.FromSeconds(5), cancellationToken));
+
+        var fakePi = FakePiShim.WriteShim(FakePiShim.Step("delayMs", 5_000));
+        await using var pty = new PtyService();
+        var ptyTask = pty.SpawnAsync(
+            "spawn-race",
+            new PtySpawnOptions(fakePi, null, 80, 24, null, PaneKind.Pi),
+            cancellationToken);
+
+        try
+        {
+            await Task.Delay(150, cancellationToken);
+            Assert.False(ptyTask.IsCompleted,
+                "the PTY spawn must wait until the Mcm descriptors are close-on-exec");
+
+            releaseChannel.Set();
+            var ptyPid = await ptyTask.WaitAsync(TimeSpan.FromSeconds(2), cancellationToken);
+            var result = await mcmTask.WaitAsync(TimeSpan.FromSeconds(2), cancellationToken);
+
+            Assert.Equal(McmProcessOutcome.Exited, result.Outcome);
+            Assert.True(IsAlive(ptyPid),
+                "Mcm output EOF must arrive while the unrelated PTY child remains alive");
+        }
+        finally
+        {
+            releaseChannel.Set();
+            pty.Close("spawn-race");
         }
     }
 

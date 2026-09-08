@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Text;
 using FingerTrap.Sidecar.Abstractions;
+using FingerTrap.Sidecar.Processes;
 using FingerTrap.Sidecar.Settings;
 using FingerTrap.Sidecar.Text;
 
@@ -171,7 +172,7 @@ internal sealed class LocalGitStatusProvider : IStatusProvider
         using var process = new Process { StartInfo = startInfo };
         try
         {
-            if (!process.Start())
+            if (!ChildProcessLauncher.Start(process))
             {
                 throw new GitUnavailableException("git could not be started");
             }
