@@ -130,29 +130,40 @@ public sealed class PtyServiceTests
         var childPidPath = Path.Combine(root, "child.pid");
         await File.WriteAllTextAsync(
             scriptPath,
-            $"#!/bin/sh\nsleep 300 &\necho $! > '{childPidPath}'\nwait\n",
+            $"#!/bin/sh\ntrap '' HUP\nsleep 300 &\necho $! > '{childPidPath}'\nwait\n",
             TestContext.Current.CancellationToken);
         File.SetUnixFileMode(
             scriptPath,
             UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
 
-        var pty = new PtyService();
+        await using var pty = new PtyService();
         var options = new PtySpawnOptions(scriptPath, null, 80, 24, null, PaneKind.Shell);
-        var parentPid = await pty.SpawnAsync(
-            "dispose-tree", options, TestContext.Current.CancellationToken);
-        var childPid = await WaitForPidFileAsync(childPidPath);
+        int? parentPid = null;
+        int? childPid = null;
 
         try
         {
+            parentPid = await pty.SpawnAsync(
+                "dispose-tree", options, TestContext.Current.CancellationToken);
+            childPid = await WaitForPidFileAsync(childPidPath);
             await pty.DisposeAsync();
 
-            Assert.False(IsProcessAlive(parentPid));
-            Assert.False(IsProcessAlive(childPid));
+            Assert.False(IsProcessAlive(parentPid.Value));
+            // Kill(true) requests descendant termination but does not wait
+            // for it. Parent exit can precede child exit on a busy runner.
+            // Ignoring HUP above ensures PTY hangup alone cannot pass this test.
+            var deadline = Stopwatch.StartNew();
+            while (IsProcessAlive(childPid.Value) && deadline.Elapsed < TimeSpan.FromSeconds(3))
+            {
+                await Task.Delay(25, TestContext.Current.CancellationToken);
+            }
+
+            Assert.False(IsProcessAlive(childPid.Value), "PTY descendant survived tree cleanup");
         }
         finally
         {
-            TryKillTree(parentPid);
-            TryKillTree(childPid);
+            if (parentPid is { } parent) TryKillTree(parent);
+            if (childPid is { } child) TryKillTree(child);
             Directory.Delete(root, recursive: true);
         }
     }
