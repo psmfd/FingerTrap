@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text;
 using FingerTrap.Sidecar.Processes;
 
 namespace FingerTrap.Sidecar.Executables;
@@ -79,54 +80,100 @@ internal static class LoginEnvironment
         }
 
         var shell = Environment.GetEnvironmentVariable("SHELL");
-        if (string.IsNullOrEmpty(shell))
-        {
-            shell = "/bin/sh";
-        }
+        var startInfo = new ProcessStartInfo(string.IsNullOrEmpty(shell) ? "/bin/sh" : shell);
+        var marker = $"FINGERTRAP_PATH_{Guid.NewGuid():N}";
+        startInfo.ArgumentList.Add("-l");
+        startInfo.ArgumentList.Add("-c");
+        startInfo.ArgumentList.Add($"printf '\n{marker}\n%s\n{marker}\n' \"$PATH\"");
+        return ProbeAsync(startInfo, marker, timeout).GetAwaiter().GetResult();
+    }
 
+    // Injectable process command keeps regression tests away from operator profiles.
+    // One budget covers both pipes and exit: waiting for EOF before starting the
+    // timer deadlocks on a hung profile or a descendant holding a pipe open.
+    internal static async Task<string?> ProbeAsync(ProcessStartInfo startInfo, string marker, TimeSpan timeout)
+    {
+        using var budget = new CancellationTokenSource(timeout);
+        using var process = new Process { StartInfo = startInfo };
+        startInfo.RedirectStandardOutput = true;
+        startInfo.RedirectStandardError = true;
+        startInfo.RedirectStandardInput = true;
+        startInfo.UseShellExecute = false;
+        startInfo.CreateNoWindow = true;
         try
         {
-            var startInfo = new ProcessStartInfo(shell)
-            {
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-            };
-            // -l re-reads the login profile (~/.zprofile, ~/.profile) where
-            // PATH additions live; printf keeps the output free of a trailing
-            // newline the shell's echo would add.
-            startInfo.ArgumentList.Add("-l");
-            startInfo.ArgumentList.Add("-c");
-            startInfo.ArgumentList.Add("printf %s \"$PATH\"");
-
-            using var process = ChildProcessLauncher.Start(startInfo);
-            if (process is null)
-            {
-                return null;
-            }
-
-            var stdout = process.StandardOutput.ReadToEnd();
-            if (!process.WaitForExit((int)timeout.TotalMilliseconds))
-            {
-                try
-                {
-                    process.Kill(entireProcessTree: true);
-                }
-                catch (Exception)
-                {
-                    // Best effort; a wedged login shell must not wedge startup.
-                }
-
-                return null;
-            }
-
-            return process.ExitCode == 0 ? stdout.Trim() : null;
+            await ChildSpawnCoordinator.RunAsync(() => Task.FromResult(process.Start()), budget.Token)
+                .ConfigureAwait(false);
+            process.StandardInput.Close();
+            var stdout = ReadBoundedAsync(process.StandardOutput, budget.Token);
+            var stderr = DrainAsync(process.StandardError, budget.Token);
+            await Task.WhenAll(stdout, stderr, process.WaitForExitAsync(budget.Token))
+                .WaitAsync(budget.Token).ConfigureAwait(false);
+            return process.ExitCode == 0 ? ExtractPath(await stdout.ConfigureAwait(false), marker) : null;
         }
         catch (Exception)
         {
+            // Profile discovery is optional. Cancellation also stops pipe reads;
+            // do not wait for inherited handles to reach EOF during cleanup.
+            await budget.CancelAsync().ConfigureAwait(false);
+            try
+            {
+                if (!process.HasExited)
+                {
+                    process.Kill(entireProcessTree: true);
+                }
+            }
+            catch (Exception)
+            {
+                // Spawn failed, process already gone, or cleanup unavailable.
+            }
+
             return null;
         }
+    }
+
+    private static async Task<string?> ReadBoundedAsync(StreamReader reader, CancellationToken cancellationToken)
+    {
+        const int maxChars = 64 * 1024;
+        var output = new StringBuilder();
+        var buffer = new char[4096];
+        var overflow = false;
+        int count;
+        while ((count = await reader.ReadAsync(buffer.AsMemory(), cancellationToken).ConfigureAwait(false)) != 0)
+        {
+            if (output.Length + count <= maxChars && !overflow)
+            {
+                output.Append(buffer, 0, count);
+            }
+            else
+            {
+                overflow = true;
+            }
+        }
+
+        return overflow ? null : output.ToString();
+    }
+
+    private static async Task DrainAsync(StreamReader reader, CancellationToken cancellationToken)
+    {
+        var buffer = new char[4096];
+        while (await reader.ReadAsync(buffer.AsMemory(), cancellationToken).ConfigureAwait(false) != 0)
+        {
+            // Drain profile diagnostics without retaining or logging their content.
+        }
+    }
+
+    private static string? ExtractPath(string? output, string marker)
+    {
+        if (output is null) return null;
+        var delimiter = $"\n{marker}\n";
+        var start = output.IndexOf(delimiter, StringComparison.Ordinal);
+        if (start < 0) return null;
+        start += delimiter.Length;
+        var end = output.IndexOf(delimiter, start, StringComparison.Ordinal);
+        if (end <= start) return null;
+        var path = output[start..end];
+        return path.Any(char.IsControl) ? null : path;
     }
 
     /// <summary>
