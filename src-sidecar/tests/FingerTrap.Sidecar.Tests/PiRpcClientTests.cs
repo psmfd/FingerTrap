@@ -25,6 +25,22 @@ public sealed class PiRpcClientTests
         """{"type":"hello","piVersion":"0.84.2","protocol":1,"capabilities":["extension_ui","queue_modes","fork","get_commands","list_sessions"]}""";
 
     [Fact]
+    public async Task ProcessIdentity_RemainsReadableAfterChildExit()
+    {
+        await using var client = StartFakePi(
+            options => options,
+            Step("writeLine", HelloLine),
+            Step("waitForEof", true));
+        await client.WaitForHelloAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(TestBudget, TestContext.Current.CancellationToken);
+        var start = client.ProcessStartTimeUtc;
+        Assert.NotNull(start);
+        await client.ShutdownAsync(TestContext.Current.CancellationToken)
+            .WaitAsync(TestBudget, TestContext.Current.CancellationToken);
+        Assert.Equal(start, client.ProcessStartTimeUtc);
+    }
+
+    [Fact]
     public async Task Hello_Present_ResolvesReadyGateAndCapabilities_NeverSurfacesAsEvent()
     {
         await using var client = StartFakePi(
