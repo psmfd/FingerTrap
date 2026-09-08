@@ -1,7 +1,8 @@
-using System.Diagnostics;
 using System.Buffers;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using FingerTrap.Sidecar.Abstractions;
+using FingerTrap.Sidecar.Processes;
 using FingerTrap.Sidecar.Settings;
 
 namespace FingerTrap.Sidecar.Pty;
@@ -56,7 +57,9 @@ internal sealed class PtyService : IPtyService
                 : new Dictionary<string, string>(),
         };
 
-        var connection = await global::Porta.Pty.PtyProvider.SpawnAsync(ptyOptions, cancellationToken).ConfigureAwait(false);
+        var connection = await ChildSpawnCoordinator.RunAsync(
+            () => global::Porta.Pty.PtyProvider.SpawnAsync(ptyOptions, cancellationToken),
+            cancellationToken).ConfigureAwait(false);
 
         var session = new Session(sessionId, connection);
         if (!_sessions.TryAdd(sessionId, session))
