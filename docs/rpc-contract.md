@@ -1,8 +1,10 @@
 # pi `--mode rpc` contract study (FT-2 gate)
 
-**Verified against:** pi tag `v0.84.2-psmfd.1` (commit `6bdcb3089026`, the version
-pinned by `pi_config`) — re-verified at this bump by the golden re-record diff
-(the pin-bump ritual below, its first live exercise) — originally built by reading
+**Verified against:** pi tag `v0.85.1-psmfd.1` (the version pinned by
+`pi_config`) — re-verified at this bump by the golden re-record diff (the
+pin-bump ritual below, second exercise; the only drift was the `hello` line:
+`piVersion` and the new `clear_queue` capability). Previously verified against
+`v0.84.2-psmfd.1` (commit `6bdcb3089026`) — originally built by reading
 `packages/coding-agent/src/modes/rpc/{rpc-types,rpc-mode,rpc-client,jsonl}.ts`,
 the type chain into `pi-agent-core`/`pi-ai`, and the RPC test suite (including
 the 5868 unknown-command-id regression). This note satisfies the FT-2 gate in
@@ -50,13 +52,13 @@ to catch response-prose drift cheaply.
 ## Wire framing
 
 **Hello (first stdout line, since `v0.84.2-psmfd.1` / psmfd-patch-010):**
-`{"type":"hello","piVersion":"0.84.2","protocol":1,"capabilities":[
-"extension_ui","queue_modes","fork","get_commands","list_sessions"]}` —
+`{"type":"hello","piVersion":"0.85.1","protocol":1,"capabilities":[
+"extension_ui","queue_modes","fork","get_commands","list_sessions","clear_queue"]}` —
 emitted before extension binding and before the stdin reader attaches. It is
 the ready gate (no more sleep-and-probe; "died before hello" is a
 distinguishable spawn-failure class) and the capability-discovery surface
 (additions are advertised, never probed, and never bump `protocol`).
-`piVersion` carries the upstream base version (`0.84.2`), not the psmfd tag.
+`piVersion` carries the upstream base version (`0.85.1`), not the psmfd tag.
 Golden note: hello is an event-class line, so window canonicalization hoists
 an id-correlated response above it inside the same inbound window — per the
 canonical form, not wire order (on the wire hello is always first).
