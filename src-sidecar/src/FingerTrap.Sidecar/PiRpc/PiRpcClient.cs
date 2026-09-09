@@ -98,6 +98,16 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
     private PiRpcClient(Process process, PiRpcClientOptions options)
     {
         _process = process;
+        try
+        {
+            ProcessStartTimeUtc = process.StartTime.ToUniversalTime();
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or System.ComponentModel.Win32Exception)
+        {
+            // A short-lived child can already be gone. Never invent a start
+            // time for the reap registry; the exit/hello paths still own its outcome.
+        }
+
         _options = options;
         _stderr = new BoundedTailBuffer(options.MaxStderrBytes);
         _events = Channel.CreateBounded<PiRpcEvent>(new BoundedChannelOptions(options.EventChannelCapacity)
@@ -137,9 +147,10 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
 
     /// <summary>
     /// The child's start time in UTC — the PID-reuse discriminator the reap
-    /// registry keys on (#124). Read at spawn, while the process is alive.
+    /// registry keys on (#124). Captured once at spawn, before the ready gate;
+    /// null if identity could not be obtained. Safe to read after process exit.
     /// </summary>
-    public DateTime ProcessStartTimeUtc => _process.StartTime.ToUniversalTime();
+    public DateTime? ProcessStartTimeUtc { get; }
 
     /// <summary>
     /// Completes when the child is fully down — exit observed, pipes

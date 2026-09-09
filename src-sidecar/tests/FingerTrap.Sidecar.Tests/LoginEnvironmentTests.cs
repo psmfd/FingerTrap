@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using FingerTrap.Sidecar.Executables;
 using Xunit;
 
@@ -52,22 +53,46 @@ public sealed class LoginEnvironmentTests
         Assert.Equal("/opt/homebrew/bin:/usr/bin", LoginEnvironment.AugmentPath(null, "/opt/homebrew/bin:/usr/bin"));
     }
 
-    [Fact]
-    public void ResolveLoginPath_NeverThrows_AndYieldsPosixPathOrNull()
+    [Theory]
+    [InlineData("printf 'profile banner\\nMARK\\n/opt/tools:/usr/bin\\nMARK\\nlogout banner'", "/opt/tools:/usr/bin")]
+    [InlineData("printf '/usr/bin'", null)]
+    [InlineData("printf '\\nMARK\\n/usr/bin\\nMARK\\n'; exit 1", null)]
+    [InlineData("head -c 131072 /dev/zero >&2; printf '\\nMARK\\n/usr/bin\\nMARK\\n'", "/usr/bin")]
+    [InlineData("head -c 131072 /dev/zero; printf '\\nMARK\\n/usr/bin\\nMARK\\n'", null)]
+    public async Task Probe_IsolatesProfileOutputAndBoundsCapture(string command, string? expected)
     {
-        // Real shell spawn — assert only the contract: it never throws, and on
-        // a POSIX host returns either null (soft failure) or a colon-path
-        // containing at least the system bin. Deterministic assertion is not
-        // possible (depends on the host profile), so this pins the safety
-        // guarantees, not the value.
-        var result = LoginEnvironment.ResolveLoginPath(TimeSpan.FromSeconds(10));
-        if (OperatingSystem.IsWindows())
-        {
-            Assert.Null(result);
-        }
-        else if (result is not null)
-        {
-            Assert.Contains("/", result);
-        }
+        if (OperatingSystem.IsWindows()) return;
+        var result = await LoginEnvironment.ProbeAsync(Shell(command), "MARK", TimeSpan.FromSeconds(3));
+        Assert.Equal(expected, result);
+    }
+
+    [Theory]
+    [InlineData("sleep 30")]
+    [InlineData("head -c 131072 /dev/zero >&2; sleep 30")]
+    public async Task Probe_HungShell_ReturnsWithinBudget(string command)
+    {
+        if (OperatingSystem.IsWindows()) return;
+        var result = await LoginEnvironment.ProbeAsync(Shell(command), "MARK", TimeSpan.FromMilliseconds(200))
+            .WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken);
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task Probe_ExitedShellWithInheritedPipe_DoesNotWaitForEof()
+    {
+        if (OperatingSystem.IsWindows()) return;
+        // A short-lived descendant outlives its shell and retains both pipes.
+        // It self-exits so the test never leaves an unbounded orphan behind.
+        var result = await LoginEnvironment.ProbeAsync(Shell("sleep 2 & exit 0"), "MARK", TimeSpan.FromMilliseconds(100))
+            .WaitAsync(TimeSpan.FromSeconds(1), TestContext.Current.CancellationToken);
+        Assert.Null(result);
+    }
+
+    private static ProcessStartInfo Shell(string command)
+    {
+        var start = new ProcessStartInfo("/bin/sh");
+        start.ArgumentList.Add("-c");
+        start.ArgumentList.Add(command);
+        return start;
     }
 }
