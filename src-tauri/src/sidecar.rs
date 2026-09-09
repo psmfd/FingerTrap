@@ -41,6 +41,10 @@ impl Default for SidecarState {
 }
 
 impl SidecarState {
+    pub fn is_shutting_down(&self) -> bool {
+        self.shutdown_phase.load(Ordering::Acquire) != SHUTDOWN_RUNNING
+    }
+
     /// Write raw bytes into the sidecar's stdin. Callers own framing; this
     /// deliberately never logs the payload (credentials/set frames carry
     /// secrets — ADR-0022).

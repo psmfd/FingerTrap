@@ -2,6 +2,13 @@
 
 Personal terminal application — local and SSH terminals, SFTP file tree, status surfaces, command palette.
 
+## Release support
+
+The next packaged release targets **macOS on Apple Silicon**. Intel Macs are
+unsupported for the foreseeable future. Linux and Windows remain in CI for
+regression coverage; they are not packaged release targets for this cycle.
+Repeated launches activate the existing window and preserve its sessions.
+
 ## Architecture
 
 Three processes, one app:
