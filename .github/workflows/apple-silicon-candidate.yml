@@ -1,0 +1,120 @@
+name: apple-silicon-candidate
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [dev]
+    paths:
+      - .github/workflows/apple-silicon-candidate.yml
+      - scripts/smoke-pty.py
+      - scripts/stage-native-lib.sh
+      - src-sidecar/**
+      - src-tauri/**
+      - src-ui/**
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  candidate:
+    name: package and smoke (Apple Silicon)
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "1"
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Require an Apple Silicon runner
+        run: test "$(uname -m)" = arm64
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: src-ui/pnpm-lock.yaml
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "10.0"
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - name: Restore locked dependencies
+        run: |
+          pnpm --dir src-ui install --frozen-lockfile
+          dotnet restore src-sidecar/FingerTrap.slnx --locked-mode
+      - name: Publish and stage the Apple Silicon sidecar
+        run: |
+          set -euo pipefail
+          publish_dir="$RUNNER_TEMP/sidecar-publish"
+          # The RID-specific restore is confined to this disposable checkout.
+          # The committed, RID-agnostic locks were validated in the prior step.
+          dotnet publish src-sidecar/src/FingerTrap.Sidecar/FingerTrap.Sidecar.csproj \
+            -c Release -r osx-arm64 --self-contained true \
+            -p:PublishSingleFile=true -p:DebugType=embedded -o "$publish_dir"
+          mkdir -p src-tauri/binaries
+          cp "$publish_dir/fingertrap-sidecar" src-tauri/binaries/fingertrap-sidecar-aarch64-apple-darwin
+          cp "$publish_dir/libporta_pty.dylib" src-tauri/binaries/libporta_pty.dylib
+      - name: Build candidate app and DMG
+        working-directory: src-tauri
+        run: pnpm dlx @tauri-apps/cli@2.11.4 build --ci --no-sign --target aarch64-apple-darwin --bundles app,dmg -- --locked
+      - name: Verify bundle layout and run the packaged sidecar
+        run: |
+          set -euo pipefail
+          app_dir="src-tauri/target/aarch64-apple-darwin/release/bundle/macos/FingerTrap.app"
+          for executable in fingertrap fingertrap-sidecar libporta_pty.dylib; do
+            test -f "$app_dir/Contents/MacOS/$executable"
+            test "$(lipo -archs "$app_dir/Contents/MacOS/$executable")" = arm64
+          done
+          mkdir -p candidate
+          python3 scripts/smoke-pty.py --sidecar "$app_dir/Contents/MacOS/fingertrap-sidecar" \
+            2>&1 | tee candidate/packaged-sidecar-smoke.log
+      - name: Archive candidate with validation instructions
+        run: |
+          set -euo pipefail
+          bundle_dir="src-tauri/target/aarch64-apple-darwin/release/bundle"
+          ditto -c -k --sequesterRsrc --keepParent "$bundle_dir/macos/FingerTrap.app" candidate/FingerTrap-apple-silicon.app.zip
+          cp "$bundle_dir"/dmg/*.dmg candidate/
+          cp scripts/smoke-pty.py candidate/
+          cp docs/apple-silicon-release-validation.md candidate/
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          config = json.loads(pathlib.Path("src-tauri/tauri.conf.json").read_text())
+          record = {
+              "commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "run": f"{os.environ['GITHUB_SERVER_URL']}/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}",
+              "app_version": config["version"],
+              "target": "aarch64-apple-darwin",
+              "tauri_cli": "2.11.4",
+              "distribution": "unsigned candidate; not notarized; not a published release",
+              "manual_validation": "pending Tart GUI, keychain, real pi and shutdown smoke",
+          }
+          pathlib.Path("candidate/build.json").write_text(json.dumps(record, indent=2) + "\n")
+          PY
+          cd candidate
+          shasum -a 256 ./*.zip ./*.dmg > SHA256SUMS
+      - name: Upload candidate
+        uses: actions/upload-artifact@v7
+        with:
+          name: apple-silicon-candidate-${{ github.sha }}
+          path: candidate/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload smoke diagnostics on failure
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: apple-silicon-smoke-failure-${{ github.sha }}
+          path: candidate/*.log
+          if-no-files-found: ignore

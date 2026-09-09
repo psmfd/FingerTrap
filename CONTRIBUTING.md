@@ -102,6 +102,11 @@ notarization and auto-update remain separate N-2 work. A successful build does
 not certify Finder launch, keychain interaction, second-instance activation or
 quit behavior; those require a packaged Apple Silicon smoke check.
 
+The `apple-silicon-candidate` workflow produces review artifacts and checks the
+sidecar inside the bundle. Use the
+[Tart acceptance checklist](docs/apple-silicon-release-validation.md) on an
+Apple Silicon workstation for clean installation and GUI validation.
+
 ```bash
 publish_dir=$(mktemp -d)
 dotnet publish src-sidecar/src/FingerTrap.Sidecar/FingerTrap.Sidecar.csproj \
@@ -297,17 +302,15 @@ no `not found` entries on either image.
 
 ### Notes on coverage and follow-ups
 
-- **smoke-pty.py is currently hardcoded** to `aarch64-apple-darwin`
-  (line 24). Until it is RID-parameterized (tracked against #17), the
-  SmolVM Linux runner recipe for the sidecar smoke test is deferred
-  — see #29 item 2.
+- **smoke-pty.py defaults** to `aarch64-apple-darwin`; use `--sidecar` to select another executable.
+  The SmolVM Linux runner recipe remains a separate follow-up (#29 item 2).
 - **A prebuilt `FingerTrap.smolmachine` dev box** (image preloaded
   with .NET 10, Node 22, rust + cargo-tauri, Tauri Linux deps) would
   let new contributors skip the `dev-setup.sh` loop entirely. Build
   and distribution policy for that artifact is a separate scope —
   see #29 item 3.
-- **A wrapper script** that runs `dev-setup.sh --check` + `check.sh`
-  + the bundle-install recipe in one go would shorten the pre-PR
+- **A wrapper script** that runs `dev-setup.sh --check`, `check.sh`
+  and the bundle-install recipe in one go would shorten the pre-PR
   loop. Optional polish — see #29 item 5.
 
 ## Architecture decisions

@@ -19,6 +19,7 @@ what "test the real entry path" costs.
 
 from __future__ import annotations
 
+import argparse
 import base64
 import json
 import os
@@ -28,6 +29,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import uuid
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -133,13 +135,23 @@ def smoke_pi(proc, pump, outputs_by_session, exited_sessions, responses) -> int:
 
 
 def main() -> int:
-    if not SIDECAR.exists():
-        print(f"ERROR sidecar not found at {SIDECAR}", file=sys.stderr)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--sidecar", type=Path, default=SIDECAR,
+                        help="sidecar executable to test, including one inside a packaged .app")
+    parser.add_argument("--require-pi", action="store_true",
+                        help="fail instead of skipping when real pi is unavailable")
+    args = parser.parse_args()
+    sidecar = args.sidecar.expanduser().resolve()
+    if not sidecar.is_file():
+        print(f"ERROR sidecar not found at {sidecar}", file=sys.stderr)
+        return 2
+    if args.require_pi and shutil.which("pi") is None and not os.environ.get("FINGERTRAP_PI"):
+        print("ERROR --require-pi needs pi on PATH or FINGERTRAP_PI", file=sys.stderr)
         return 2
 
-    print(f"INFO  spawning {SIDECAR}")
+    print(f"INFO  spawning {sidecar}")
     proc = subprocess.Popen(
-        [str(SIDECAR)],
+        [str(sidecar)],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -243,9 +255,11 @@ def main() -> int:
         # Give the shell a moment to print its prompt before we write.
         pump(time.monotonic() + 1.0)
 
-        # 2) pty/write — send "echo finger-trap-marker\n"
-        marker = "finger-trap-marker"
-        payload = f"echo {marker}\n".encode()
+        # The complete marker is absent from the command line, so terminal
+        # input echo alone cannot masquerade as successful shell execution.
+        nonce = uuid.uuid4().hex
+        marker = f"fingertrap-smoke-{nonce}"
+        payload = f"printf '%s%s\\n' fingertrap-smoke- {nonce}\n".encode()
         write_req = {
             "jsonrpc": "2.0",
             "id": 2,
@@ -266,14 +280,8 @@ def main() -> int:
 
         all_output = b"".join(output_chunks)
         text = all_output.decode("utf-8", errors="replace")
-        if marker in text and text.count(marker) >= 2:
-            # echo prints the marker itself, plus the shell echoes the
-            # command line — we expect to see it at least twice.
+        if marker in text:
             print("OK    [echo] shell output contains marker")
-            return smoke_pi(proc, pump, outputs_by_session, exited_sessions, responses)
-        elif marker in text:
-            print("WARN  [echo] marker present but shell echo of command line missing")
-            print("      (this can happen if ECHO is disabled on the slave; investigate stty)")
             return smoke_pi(proc, pump, outputs_by_session, exited_sessions, responses)
         elif not all_output:
             print(
@@ -294,6 +302,7 @@ def main() -> int:
             proc.wait(timeout=2)
         except subprocess.TimeoutExpired:
             proc.kill()
+            proc.wait(timeout=2)
 
 
 if __name__ == "__main__":
