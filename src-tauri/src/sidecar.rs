@@ -1,20 +1,23 @@
 use std::collections::HashSet;
+use std::io::Read;
 use std::sync::atomic::{AtomicU8, Ordering};
 use std::sync::{Arc, Condvar, Mutex};
 use std::time::Duration;
 
+use crate::sidecar_process::{finish_shutdown, SidecarProcess, WriteReceipt};
 use tauri::{ipc::Channel, Manager, State};
-use tauri_plugin_shell::process::{CommandChild, CommandEvent};
 use tauri_plugin_shell::ShellExt;
 
-const SHUTDOWN_GRACE: Duration = Duration::from_secs(8);
+// Covers the sidecar RPC disposer (10 s + 5 s drain), PTY cleanup (2 s),
+// and scheduling overhead. Keep this outer deadline above the inner budgets.
+const SHUTDOWN_GRACE: Duration = Duration::from_secs(20);
 const SHUTDOWN_PAYLOAD: &[u8] = br#"{"jsonrpc":"2.0","method":"shutdown"}"#;
 const SHUTDOWN_RUNNING: u8 = 0;
 const SHUTDOWN_WAITING: u8 = 1;
 const SHUTDOWN_ALLOW_EXIT: u8 = 2;
 
 pub struct SidecarState {
-    child: Mutex<Option<CommandChild>>,
+    child: Mutex<Option<SidecarProcess>>,
     output_channel: Mutex<Option<Channel<Vec<u8>>>>,
     /// Providers whose sidecar-side credential state an operator command has
     /// already set. The async preload (#105) must never clobber these: a
@@ -41,12 +44,19 @@ impl SidecarState {
     /// Write raw bytes into the sidecar's stdin. Callers own framing; this
     /// deliberately never logs the payload (credentials/set frames carry
     /// secrets — ADR-0022).
-    pub fn write(&self, payload: &[u8]) -> Result<(), String> {
-        let mut guard = self.child.lock().unwrap();
-        match guard.as_mut() {
-            Some(child) => child.write(payload).map_err(|e| e.to_string()),
+    pub fn enqueue(&self, payload: &[u8]) -> Result<WriteReceipt, String> {
+        if self.shutdown_phase.load(Ordering::Acquire) != SHUTDOWN_RUNNING {
+            return Err("sidecar is shutting down".into());
+        }
+        let guard = self.child.lock().unwrap();
+        match guard.as_ref() {
+            Some(child) => child.enqueue(payload),
             None => Err("sidecar is not running".into()),
         }
+    }
+
+    pub fn write(&self, payload: &[u8]) -> Result<(), String> {
+        self.enqueue(payload)?.wait()
     }
 
     /// Operator-command credential write: records the provider as
@@ -115,50 +125,56 @@ pub fn request_shutdown(app_handle: tauri::AppHandle) -> bool {
         ShutdownDecision::Start => {}
     }
 
-    if let Err(error) = state.write(&shutdown_frame()) {
-        eprintln!("failed to request graceful sidecar shutdown: {error}");
-    }
-
+    // Clone the OS process handle before starting the watchdog. Neither this
+    // lock nor SharedChild's kill path is held by the pipe writer.
+    let child = state
+        .child
+        .lock()
+        .unwrap()
+        .as_ref()
+        .map(|p| Arc::clone(&p.child));
     let terminated = Arc::clone(&state.terminated);
+    let shutdown_handle = app_handle.clone();
     std::thread::spawn(move || {
-        let (lock, ready) = &*terminated;
-        let guard = lock.lock().unwrap();
-        let (guard, wait) = ready
-            .wait_timeout_while(guard, SHUTDOWN_GRACE, |done| !*done)
-            .unwrap();
-
-        if !*guard && wait.timed_out() {
-            eprintln!("sidecar shutdown grace expired; forcing direct child exit");
-            let state: State<SidecarState> = app_handle.state();
-            let child = state.child.lock().unwrap().take();
-            if let Some(child) = child {
-                if let Err(error) = child.kill() {
-                    eprintln!("failed to force sidecar exit: {error}");
-                }
-            }
+        match finish_shutdown(child.as_deref(), &terminated, SHUTDOWN_GRACE) {
+            Ok(true) => eprintln!("sidecar shutdown grace expired; forced direct child exit"),
+            Ok(false) => {}
+            Err(error) => eprintln!("failed to force sidecar exit: {error}"),
         }
 
-        app_handle
+        shutdown_handle
             .state::<SidecarState>()
             .shutdown_phase
             .store(SHUTDOWN_ALLOW_EXIT, Ordering::Release);
-        app_handle.exit(0);
+        shutdown_handle.exit(0);
     });
+
+    // Non-blocking admission only. If the queue is already full, the watchdog
+    // still runs and kills the stalled sidecar at the deadline.
+    if let Some(process) = state.child.lock().unwrap().as_ref() {
+        if let Err(error) = process.enqueue(&shutdown_frame()) {
+            eprintln!("failed to queue graceful sidecar shutdown: {error}");
+        }
+    }
 
     true
 }
 
 pub fn spawn(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let app_handle = app.handle().clone();
-    // set_raw_out: deliver stdout as raw bytes. The default reader splits on
-    // \r or \n, which fragments LSP-style JSON-RPC framing
-    // (`Content-Length: N\r\n\r\n{...}`) and pty/output payloads that
-    // contain CR/LF inside the JSON body.
-    let (mut rx, child) = app
-        .shell()
-        .sidecar("fingertrap-sidecar")?
-        .set_raw_out(true)
-        .spawn()?;
+    // Keep Tauri's sidecar path resolution, environment and Windows flags.
+    // Own the pipes separately so stdin backpressure cannot lock out kill().
+    let mut command: std::process::Command = app.shell().sidecar("fingertrap-sidecar")?.into();
+    let process = SidecarProcess::spawn(&mut command)?;
+    let mut stdout = process
+        .child
+        .take_stdout()
+        .ok_or("missing sidecar stdout")?;
+    let mut stderr = process
+        .child
+        .take_stderr()
+        .ok_or("missing sidecar stderr")?;
+    let child = Arc::clone(&process.child);
 
     let state: State<SidecarState> = app_handle.state();
     state
@@ -168,7 +184,7 @@ pub fn spawn(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         let (lock, _) = &*state.terminated;
         *lock.lock().unwrap() = false;
     }
-    *state.child.lock().unwrap() = Some(child);
+    *state.child.lock().unwrap() = Some(process);
 
     // The sidecar holds tokens in memory only; every (re)spawn starts empty
     // until the shell re-pushes what the keychain holds (ADR-0022). Runs on
@@ -180,38 +196,50 @@ pub fn spawn(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         crate::credentials::preload_into_sidecar(&preload_handle.state::<SidecarState>());
     });
 
-    tauri::async_runtime::spawn(async move {
-        while let Some(event) = rx.recv().await {
-            match event {
-                CommandEvent::Stdout(bytes) => {
-                    let state: State<SidecarState> = app_handle.state();
-                    let guard = state.output_channel.lock().unwrap();
-                    if let Some(channel) = guard.as_ref() {
-                        let _ = channel.send(bytes);
-                    }
-                }
-                CommandEvent::Stderr(bytes) => {
-                    eprintln!("sidecar stderr: {}", String::from_utf8_lossy(&bytes));
-                }
-                CommandEvent::Terminated(payload) => {
-                    eprintln!("sidecar terminated: {:?}", payload);
-                    app_handle.state::<SidecarState>().mark_terminated();
-                    break;
-                }
-                CommandEvent::Error(message) => {
-                    eprintln!("sidecar error: {message}");
-                }
-                _ => {}
+    let output_handle = app_handle.clone();
+    std::thread::spawn(move || {
+        let mut buffer = [0; 16 * 1024];
+        while let Ok(count) = stdout.read(&mut buffer) {
+            if count == 0 {
+                break;
+            }
+            let state: State<SidecarState> = output_handle.state();
+            let guard = state.output_channel.lock().unwrap();
+            if let Some(channel) = guard.as_ref() {
+                let _ = channel.send(buffer[..count].to_vec());
             }
         }
+    });
+    std::thread::spawn(move || {
+        let mut buffer = [0; 4096];
+        while let Ok(count) = stderr.read(&mut buffer) {
+            if count == 0 {
+                break;
+            }
+            eprintln!(
+                "sidecar stderr: {}",
+                String::from_utf8_lossy(&buffer[..count])
+            );
+        }
+    });
+    // Exit observation does not wait for descendants to close inherited pipes.
+    std::thread::spawn(move || match child.wait() {
+        Ok(status) => {
+            eprintln!("sidecar terminated: {status}");
+            app_handle.state::<SidecarState>().mark_terminated();
+        }
+        Err(error) => eprintln!("sidecar wait failed: {error}"),
     });
 
     Ok(())
 }
 
 #[tauri::command]
-pub fn sidecar_write(state: State<'_, SidecarState>, payload: Vec<u8>) -> Result<(), String> {
-    state.write(&payload)
+pub async fn sidecar_write(state: State<'_, SidecarState>, payload: Vec<u8>) -> Result<(), String> {
+    let receipt = state.enqueue(&payload)?;
+    tauri::async_runtime::spawn_blocking(move || receipt.wait())
+        .await
+        .map_err(|_| "sidecar input worker failed".to_string())?
 }
 
 #[tauri::command]

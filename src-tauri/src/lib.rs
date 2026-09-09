@@ -1,6 +1,7 @@
 mod credentials;
 mod links;
 mod sidecar;
+mod sidecar_process;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
