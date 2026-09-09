@@ -161,7 +161,14 @@ internal sealed class RpcPaneService : IAsyncDisposable
         // immediately, PumpExitAsync's Unregister must find the entry already
         // present. Captured pid/start are read now, while the child is alive.
         entry.ChildPid = client.ProcessId;
-        _childRegistry.Register(client.ProcessId, client.ProcessStartTimeUtc, sessionId);
+        if (client.ProcessStartTimeUtc is DateTime childStart)
+        {
+            _childRegistry.Register(client.ProcessId, childStart, sessionId);
+        }
+        else
+        {
+            Console.Error.WriteLine("fingertrap-sidecar: rpc child identity unavailable; crash recovery registration skipped");
+        }
 
         entry.PumpTask = Task.Run(() => PumpEventsAsync(sessionId, client), CancellationToken.None);
         entry.ExitTask = Task.Run(() => PumpExitAsync(sessionId, client, entry.ChildPid), CancellationToken.None);

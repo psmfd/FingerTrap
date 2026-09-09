@@ -90,10 +90,17 @@ To produce a real `.app` / `.deb` / `.AppImage` locally, you must first
 publish the sidecar so the companion native lib lands in
 `src-tauri/binaries/` alongside the sidecar binary, then run the Tauri
 bundler. See [`ADR-0010`](adrs/0010-tauri-bundle-companion-libs.md) for the
-full mechanism (`bundle.macOS.frameworks` on macOS, `bundle.resources` +
-RPATH on Linux).
+original mechanism. The current macOS configuration uses `bundle.macOS.files`
+to place `libporta_pty.dylib` in `Contents/MacOS/` beside the sidecar, where its
+loader resolves it. Linux uses `bundle.resources` plus RPATH. ADR-0032 records
+the current Apple Silicon release scope and accepts this existing macOS layout.
 
 ### macOS (arm64)
+
+This is the packaged release target. Intel Macs are unsupported. Signing,
+notarization and auto-update remain separate N-2 work. A successful build does
+not certify Finder launch, keychain interaction, second-instance activation or
+quit behavior; those require a packaged Apple Silicon smoke check.
 
 ```bash
 publish_dir=$(mktemp -d)
@@ -254,8 +261,8 @@ For Linux bundle changes (ADR-0010 territory). Produces a `.deb` on
 the host via the [Production bundle workflow](#production-bundle-workflow),
 then verifies it installs and the binary's dynamic-linker chain
 resolves on a fresh Debian 13 / Ubuntu 24.04 image. Does **not**
-launch the GUI — SmolVM has no display server. GUI launch is covered
-by CI's `tauri` matrix and your own manual `cargo tauri build` run.
+launch the GUI — SmolVM has no display server. CI's `tauri` matrix compiles and
+tests components; GUI launch requires a separate manual packaged-app check.
 
 ```bash
 # Assumes you have already produced the .deb per CONTRIBUTING.md's

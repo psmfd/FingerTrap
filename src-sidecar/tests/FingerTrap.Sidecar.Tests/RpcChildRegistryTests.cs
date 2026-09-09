@@ -1,3 +1,4 @@
+using System.Text.Json;
 using FingerTrap.Sidecar.PiRpc;
 using Xunit;
 
@@ -117,6 +118,57 @@ public sealed class RpcChildRegistryTests : IDisposable
     public void ReapOrphans_NoFile_ReturnsZero()
     {
         Assert.Equal(0, Make(Alive(), _ => Assert.Fail("nothing to kill"), (100, OwnerAStart)).ReapOrphans());
+    }
+
+    [Theory]
+    [InlineData("[null]")]
+    [InlineData("[{}]")]
+    [InlineData("[123, \"invalid\", false]")]
+    [InlineData("{\"not\":\"an array\"}")]
+    [InlineData("invalid json")]
+    public void ReapOrphans_InvalidState_DoesNotProbeOrKill(string json)
+    {
+        File.WriteAllText(_path, json);
+        var registry = Make(_ => throw new InvalidOperationException("invalid entry must not be probed"),
+            _ => Assert.Fail("invalid entry must not be killed"), (100, OwnerAStart));
+        Assert.Equal(0, registry.ReapOrphans());
+        // The same invalid file must not prevent future launches either.
+        Assert.Equal(0, registry.ReapOrphans());
+    }
+
+    [Fact]
+    public void ReapOrphans_InvalidNeighbors_PreservesLiveOwnerAndReapsValidOrphan()
+    {
+        var live = new RpcChildRegistry.Entry(200, ChildStart.Ticks, "live", 100, OwnerAStart.Ticks);
+        var orphan = new RpcChildRegistry.Entry(201, ChildStart.Ticks, "orphan", 101, OwnerBStart.Ticks);
+        var invalidTime = orphan with { Pid = 202, StartTimeUtcTicks = long.MinValue };
+        var invalidPid = orphan with { Pid = -1 };
+        File.WriteAllText(_path, "[null,{\"Pid\":\"invalid\"}," + string.Join(',',
+            new[] { live, orphan, invalidTime, invalidPid }.Select(e => JsonSerializer.Serialize(e))) + "]");
+        var killed = new List<int>();
+        var registry = Make(Alive((100, OwnerAStart), (200, ChildStart), (201, ChildStart)), killed.Add, (300, OwnerBStart));
+        Assert.Equal(1, registry.ReapOrphans());
+        Assert.Equal(201, Assert.Single(killed));
+        Assert.Equal(live, Assert.Single(JsonSerializer.Deserialize<List<RpcChildRegistry.Entry>>(File.ReadAllText(_path))!));
+    }
+
+    [Fact]
+    public void ReapOrphans_OversizedOrUnreadableFile_DegradesWithoutKilling()
+    {
+        File.WriteAllText(_path, new string(' ', 1024 * 1024 + 1));
+        var registry = Make(_ => throw new InvalidOperationException("must not probe"),
+            _ => Assert.Fail("must not kill"), (100, OwnerAStart));
+        Assert.Equal(0, registry.ReapOrphans());
+        File.Delete(_path);
+        Directory.CreateDirectory(_path);
+        try
+        {
+            Assert.Equal(0, registry.ReapOrphans());
+        }
+        finally
+        {
+            Directory.Delete(_path);
+        }
     }
 
     /// <summary>A start-time probe from a fixed alive-set; unknown pid → null.</summary>

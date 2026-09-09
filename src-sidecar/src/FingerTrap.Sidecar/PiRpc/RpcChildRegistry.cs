@@ -136,21 +136,73 @@ internal sealed class RpcChildRegistry
 
     private List<Entry> Read()
     {
+        const int maxBytes = 1024 * 1024;
+        const int maxEntries = 4096;
         try
         {
-            if (!File.Exists(_path))
+            using var stream = new FileStream(_path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+            var buffer = new byte[maxBytes + 1];
+            var count = stream.ReadAtLeast(buffer, buffer.Length, throwOnEndOfStream: false);
+            if (count > maxBytes)
             {
-                return new List<Entry>();
+                ReportInvalidState();
+                return [];
             }
 
-            return JsonSerializer.Deserialize<List<Entry>>(File.ReadAllText(_path)) ?? new List<Entry>();
+            using var document = JsonDocument.Parse(buffer.AsMemory(0, count), new JsonDocumentOptions { MaxDepth = 16 });
+            if (document.RootElement.ValueKind != JsonValueKind.Array || document.RootElement.GetArrayLength() > maxEntries)
+            {
+                ReportInvalidState();
+                return [];
+            }
+
+            var entries = new List<Entry>();
+            var invalid = false;
+            foreach (var element in document.RootElement.EnumerateArray())
+            {
+                try
+                {
+                    var entry = element.Deserialize<Entry>();
+                    if (entry is not null && IsValid(entry))
+                    {
+                        entries.Add(entry);
+                    }
+                    else
+                    {
+                        invalid = true;
+                    }
+                }
+                catch (JsonException)
+                {
+                    // A valid neighboring record must survive a malformed row.
+                    invalid = true;
+                }
+            }
+
+            if (invalid) ReportInvalidState();
+            return entries;
+        }
+        catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException)
+        {
+            return [];
         }
         catch (Exception)
         {
-            // Corrupt/unreadable registry: start clean rather than fail startup.
-            return new List<Entry>();
+            // Recovery metadata is optional, unlike the operator's settings.
+            ReportInvalidState();
+            return [];
         }
     }
+
+    private static bool IsValid(Entry entry) =>
+        entry.Pid > 0 && entry.OwnerPid > 0 && entry.Pid != entry.OwnerPid
+        && entry.StartTimeUtcTicks > 0 && entry.StartTimeUtcTicks <= DateTime.MaxValue.Ticks
+        && entry.OwnerStartTimeUtcTicks > 0 && entry.OwnerStartTimeUtcTicks <= DateTime.MaxValue.Ticks
+        && !string.IsNullOrWhiteSpace(entry.SessionId) && entry.SessionId.Length <= 256
+        && !entry.SessionId.Any(char.IsControl);
+
+    private static void ReportInvalidState() =>
+        Console.Error.WriteLine("fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data");
 
     private void Write(List<Entry> entries)
     {
