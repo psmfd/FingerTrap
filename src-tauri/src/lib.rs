@@ -1,3 +1,4 @@
+mod activation;
 mod credentials;
 mod links;
 mod sidecar;
@@ -6,6 +7,9 @@ mod sidecar_process;
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let app = tauri::Builder::default()
+        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+            activation::request(app);
+        }))
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_opener::init())
         .manage(sidecar::SidecarState::default())
@@ -25,6 +29,9 @@ pub fn run() {
         .expect("error while building tauri application");
 
     app.run(|app, event| {
+        if matches!(event, tauri::RunEvent::Ready) {
+            activation::ready(app);
+        }
         if let tauri::RunEvent::ExitRequested { api, .. } = event {
             if sidecar::request_shutdown(app.clone()) {
                 api.prevent_exit();
