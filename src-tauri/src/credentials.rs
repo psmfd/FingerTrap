@@ -13,7 +13,7 @@
 //! `store-unavailable` and nothing is ever written to a plaintext fallback.
 
 use keyring::v1::Entry;
-use tauri::State;
+use tauri::{AppHandle, Manager};
 use zeroize::Zeroizing;
 
 use crate::sidecar::SidecarState;
@@ -78,11 +78,19 @@ fn push_to_sidecar(
 /// The WebView calls this once with operator-pasted input and never sees the
 /// token again — there is deliberately no `credential_get`.
 #[tauri::command]
-pub fn credential_save(
-    state: State<'_, SidecarState>,
+pub async fn credential_save(
+    app: AppHandle,
     provider: String,
     token: String,
 ) -> Result<(), String> {
+    tauri::async_runtime::spawn_blocking(move || {
+        save(&app.state::<SidecarState>(), provider, token)
+    })
+    .await
+    .map_err(|_| "credential worker failed".to_string())?
+}
+
+fn save(state: &SidecarState, provider: String, token: String) -> Result<(), String> {
     let token = Zeroizing::new(token);
     validate_provider(&provider)?;
     if token.is_empty() || token.len() > MAX_TOKEN_LEN {
@@ -95,12 +103,18 @@ pub fn credential_save(
     entry_for(&provider)?
         .set_password(&token)
         .map_err(|e| format!("credential store error: {e}"))?;
-    push_to_sidecar(&state, &provider, Some(&token))
+    push_to_sidecar(state, &provider, Some(&token))
 }
 
 /// Remove a provider's token from the keychain and clear it sidecar-side.
 #[tauri::command]
-pub fn credential_clear(state: State<'_, SidecarState>, provider: String) -> Result<(), String> {
+pub async fn credential_clear(app: AppHandle, provider: String) -> Result<(), String> {
+    tauri::async_runtime::spawn_blocking(move || clear(&app.state::<SidecarState>(), provider))
+        .await
+        .map_err(|_| "credential worker failed".to_string())?
+}
+
+fn clear(state: &SidecarState, provider: String) -> Result<(), String> {
     validate_provider(&provider)?;
     match entry_for(&provider)?.delete_credential() {
         Ok(()) => {}
@@ -108,13 +122,19 @@ pub fn credential_clear(state: State<'_, SidecarState>, provider: String) -> Res
         Err(keyring::v1::Error::NoEntry) => {}
         Err(e) => return Err(format!("credential store error: {e}")),
     }
-    push_to_sidecar(&state, &provider, None)
+    push_to_sidecar(state, &provider, None)
 }
 
 /// `configured` | `not-configured` | `store-unavailable` — the UI renders
 /// states, never blanks (ADR-0022), and the token itself never crosses back.
 #[tauri::command]
-pub fn credential_status(provider: String) -> Result<String, String> {
+pub async fn credential_status(provider: String) -> Result<String, String> {
+    tauri::async_runtime::spawn_blocking(move || status(provider))
+        .await
+        .map_err(|_| "credential worker failed".to_string())?
+}
+
+fn status(provider: String) -> Result<String, String> {
     validate_provider(&provider)?;
     match entry_for(&provider)?.get_password() {
         Ok(secret) => {
