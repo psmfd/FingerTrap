@@ -11,12 +11,12 @@
 # copying the companion lib next to the sidecar in target/<profile>/.
 #
 # Why this is a gate, not a copier: the actual placement inside the bundle
-# is controlled declaratively by tauri.macos.conf.json (bundle.macOS.frameworks)
+# is controlled declaratively by tauri.macos.conf.json (bundle.macOS.files)
 # and tauri.linux.conf.json (bundle.resources). Tauri's bundler reads its
 # manifest after beforeBundleCommand runs, so a copy here would not affect
 # the bundle. This script's job is to make a missing source file a loud
 # pre-bundle failure rather than a confusing post-bundle runtime crash.
-# See ADR-0010 for the full mechanism design.
+# See ADR-0010 and ADR-0032 for the mechanism and current macOS layout.
 #
 # Required environment (injected by Tauri CLI per the v2 hooks contract):
 #   TAURI_ENV_PLATFORM       darwin | linux | windows
