@@ -19,6 +19,9 @@ This directory contains:
   common contract fixtures, local verification and remaining launch gates.
 - [S2 import/test manifests](import-manifests.md): complete package accounting,
   reviewed suite registration and independent restore evidence.
+- [S3 launch-isolation plan (HTML)](s3-launch-isolation-plan.html): focused
+  implementation proposal awaiting the requested approval; six checkpoints,
+  native environment semantics, discovery gates and acceptance evidence.
 - [Issue ledger](issue-ledger.md): all 199 open pi_config issues, three pending
   PRs, public distribution requests, extension-mirror maintenance, and relevant
   external dependencies, mapped to successor work.

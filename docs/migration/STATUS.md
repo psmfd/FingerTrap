@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-20 15:20 UTC.
+Updated: 2026-10-20 16:09 UTC.
 
 ## Authorization and scope
 
@@ -12,25 +12,25 @@ The initial request said #210; the plan disclosed its failed lookup and
 proposed #201. The subsequent plan approval is the working authorization
 for that disclosed scope. No requirements are invented for #210.
 
-Proceed through the six approved steps without repeating plan approval.
+The overall six-step approval persists. The maintainer subsequently requested
+a focused S3 implementation plan for approval; prepare that review document
+and await the requested S3 decision before implementing this slice.
 Executable/RPC and Pi `v0.85.1-psmfd.1` remain the migration baseline.
 Production SDK adoption, managed distribution/activation, new trusted
 approval capabilities and repository retirement retain their separate gates.
 
 ## Resume here
 
-**Next slice: S3 — launch isolation. S1 and S2 are committed and backed up.**
+**Current activity: S3 plan presented for approval. No S3 code changed.**
 
-1. Inspect the working tree and latest PR checks. S2 (`92137c4`) passed all
-   hosted checks; a subsequent documentation-only handoff commit may trigger
-   new checks. Do not confuse source-checkpoint evidence with a newer head.
-2. Implement explicit inherited/replacement environment semantics in
-   `PiRpcClientOptions` and Porta.Pty, including the Unix native launcher.
-   Preserve Darwin spawn coordination; update vendor `UPSTREAM.md`.
-3. Build the host-resolved launch context on the S1 profile contract, with
-   verified runtime/resource selection and real PTY/RPC environment probes.
-   Keep managed activation blocked until all launch/discovery gates pass.
-4. Collect hosted results for the newest checkpoint before claiming CI green.
+1. Review the [focused S3 plan](s3-launch-isolation-plan.html). Document checks
+   and desktop/mobile rendering passed; await the requested S3 decision.
+2. Record that decision here and in the activity log before implementation.
+3. After S3 approval, begin S3-A: launch contract, ADR and discovery audit.
+   Then follow S3-B through S3-F, with explicit environment semantics in RPC
+   and both PTY layers and evidence for each checkpoint.
+4. Preserve Darwin spawn coordination and managed activation gates; collect
+   hosted results for each new source checkpoint before claiming CI green.
 
 No managed launch is enabled.
 Read the latest [activity entry](WORK_LOG.md) before resuming; compare this
@@ -44,7 +44,7 @@ record with `git status`, `git log` and any active process/test output.
 | M1a | Token/cache-meter source package | Verified, backed up, inactive | [Report](m1a-import.md); runtime package CI passed on all three platforms at `6a999c9` |
 | S1 | Profile schema, compatibility and baseline | Verified locally and in CI; backed up | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed |
 | S2 | Reviewed import slices and test registration | Verified locally and in CI; backed up | `92137c4`; [manifest report](import-manifests.md); all platform checks and Apple Silicon package/smoke passed |
-| S3 | PTY/RPC launch isolation | Pending | RPC inheritance plus both PTY merge/native layers must change |
+| S3 | PTY/RPC launch isolation | Plan ready; awaiting focused approval | [S3 plan](s3-launch-isolation-plan.html); no S3 implementation |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
 | S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |
 | S5-B | Guards and typed tools | Pending | Enforcement tests, identity, tool ownership, vendor notices |
@@ -83,6 +83,8 @@ validation after resuming an incomplete edit and update this record.
 - Dependency repair: `44455f5`; S1 foundation: `52fc6bc`. Both pushed to the
   same remote branch. Source remains inactive.
 - S2 import/test manifests: `92137c4`, pushed to the same remote branch.
+- S1/S2 handoff: `a10f2c3`, committed and pushed. Its documentation-only
+  checks are distinct from the verified S2 source checkpoint.
 - Draft review: [PR #207](https://github.com/psmfd/FingerTrap/pull/207),
   targeting `dev`; no merge or activation.
 - Existing M1a local results: [recorded report](m1a-import.md).
@@ -112,6 +114,10 @@ validation after resuming an incomplete edit and update this record.
   [Apple Silicon run](https://github.com/psmfd/FingerTrap/actions/runs/39445278068).
 - The final status/log update changes documentation only. Its new head may
   have a fresh CI run; the source evidence above names the verified commits.
+- S3 planning: standalone HTML, 42 links and 12 unique IDs checked; script
+  syntax, 390-pixel mobile layout, desktop layout and current-section
+  navigation passed. Markdown, structural and whitespace checks passed.
+  These are document checks, not S3 implementation acceptance.
 
 ## Commands for the next session
 

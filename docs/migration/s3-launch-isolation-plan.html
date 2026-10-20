@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>FingerTrap · S3 launch isolation approval plan</title>
+  <style>
+    :root { --ink:#1c2932; --muted:#53636c; --paper:#fffefa; --canvas:#f2f2ec; --line:#d9dfd8; --green:#205b49; --pale:#eaf2ec; --amber:#78510e; --amber-bg:#fff4d9; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-padding-top:30px; }
+    body { margin:0; color:var(--ink); background:var(--canvas); font:17px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    a { color:var(--green); text-underline-offset:3px; }
+    a:hover { text-decoration-thickness:2px; }
+    a:focus-visible,button:focus-visible { outline:3px solid #92722b; outline-offset:4px; }
+    .skip { position:fixed; left:16px; top:-90px; padding:8px 16px; background:white; z-index:5; }
+    .skip:focus { top:12px; }
+    .layout { max-width:1440px; margin:auto; display:grid; grid-template-columns:250px minmax(0,1fr); gap:44px; padding:36px 44px 90px; }
+    aside { position:sticky; top:32px; align-self:start; max-height:calc(100vh - 64px); overflow:auto; padding:8px 0; }
+    .brand { font-size:14px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--green); }
+    .sidebar-title { font-size:21px; line-height:1.3; font-weight:650; margin:14px 0 24px; }
+    nav ol { list-style:none; padding:0; margin:0; counter-reset:toc; }
+    nav li { counter-increment:toc; margin:4px 0; }
+    nav a { display:flex; gap:12px; padding:9px 10px; border-radius:6px; text-decoration:none; color:var(--muted); font-size:14px; line-height:1.4; }
+    nav a::before { content:counter(toc,decimal-leading-zero); font-variant-numeric:tabular-nums; color:var(--green); }
+    nav a:hover,nav a[aria-current="location"] { background:#e2e9e1; color:var(--ink); }
+    .sidebar-note { margin-top:26px; border-top:1px solid var(--line); padding-top:18px; font-size:13px; color:var(--muted); }
+    button { font:inherit; cursor:pointer; border:1px solid #a6b9ac; border-radius:6px; padding:8px 13px; background:transparent; color:var(--green); }
+    .print-button { margin-top:14px; font-size:13px; }
+    main { min-width:0; background:var(--paper); border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:0 10px 35px #263c2e05; }
+    header { padding:54px 54px 36px; background:linear-gradient(125deg,#edf4eb,#fffefa 85%); border-bottom:1px solid var(--line); }
+    .eyebrow { color:var(--green); font-size:12px; letter-spacing:.13em; font-weight:750; text-transform:uppercase; }
+    h1 { font-family:Georgia,"Times New Roman",serif; font-weight:500; font-size:clamp(36px,4vw,52px); letter-spacing:-.035em; line-height:1.12; margin:18px 0 22px; }
+    .lead { font-size:20px; line-height:1.55; max-width:680px; }
+    .meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:26px; }
+    .tag { padding:5px 10px; border:1px solid #c9d5c7; border-radius:30px; font-size:12px; font-weight:650; color:var(--green); background:#ffffff90; }
+    section { padding:40px 54px; border-bottom:1px solid var(--line); scroll-margin-top:20px; }
+    section:last-child { border-bottom:0; }
+    .section-number { color:var(--green); font-size:12px; font-weight:750; letter-spacing:.13em; }
+    h2 { font-size:29px; font-weight:650; letter-spacing:-.025em; line-height:1.25; margin:8px 0 22px; }
+    h3 { font-size:20px; line-height:1.4; margin:29px 0 10px; }
+    p { margin:0 0 16px; }
+    p:last-child { margin-bottom:0; }
+    ul,ol { padding-left:24px; margin:12px 0 20px; }
+    li { margin:7px 0; padding-left:3px; }
+    strong { font-weight:700; }
+    .callout { border-left:4px solid var(--green); border-radius:0 7px 7px 0; padding:18px 21px; background:var(--pale); margin:22px 0; }
+    .caution { border-color:#b27b21; background:var(--amber-bg); color:#59431e; }
+    .callout p { margin-bottom:9px; }
+    .callout p:last-child { margin-bottom:0; }
+    .cards { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:22px 0; }
+    .card { border:1px solid var(--line); padding:21px; border-radius:8px; }
+    .card h3 { margin:4px 0 10px; font-size:19px; }
+    .card p { font-size:15px; line-height:1.6; }
+    .status { font-size:11px; font-weight:750; text-transform:uppercase; letter-spacing:.08em; color:var(--green); }
+    .muted { color:var(--muted); }
+    .small { font-size:14px; line-height:1.6; }
+    code { font: .88em/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; background:#eef0eb; border-radius:3px; padding:2px 4px; overflow-wrap:anywhere; }
+    .table-wrap { overflow-x:auto; margin:18px 0 24px; border:1px solid var(--line); border-radius:7px; }
+    table { width:100%; border-collapse:collapse; text-align:left; font-size:14px; line-height:1.6; }
+    caption { text-align:left; padding:12px 16px; font-weight:650; background:#f4f6f0; }
+    th,td { padding:13px 16px; vertical-align:top; border-top:1px solid var(--line); }
+    thead th { border-top:0; background:#eef2ea; color:#35493e; font-size:12px; letter-spacing:.02em; }
+    tbody th { font-weight:650; width:25%; }
+    .phase { border:1px solid var(--line); border-radius:8px; padding:23px; margin:20px 0; }
+    .phase h3 { margin:0 0 12px; }
+    .phase .exit { margin:18px -23px -23px; padding:13px 23px; border-top:1px solid var(--line); background:#f4f7f1; font-size:14px; border-radius:0 0 8px 8px; }
+    .phase-label { display:block; color:var(--green); font-size:11px; font-weight:750; letter-spacing:.1em; text-transform:uppercase; margin-bottom:7px; }
+    .flow { list-style:none; padding:0; display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:26px 0; }
+    .flow li { margin:0; padding:17px 13px; border-top:3px solid var(--green); background:#eef3eb; font-size:13px; line-height:1.5; }
+    .flow b { display:block; margin-bottom:7px; font-size:14px; }
+    .approval { background:#f1f6ed; }
+    blockquote { margin:20px 0; padding:18px 23px; background:white; border:1px solid #c4d3bd; border-radius:7px; font-size:18px; }
+    .sources li { font-size:14px; margin:12px 0; }
+    footer { font-size:12px; color:var(--muted); padding:22px 54px; background:#f5f6f0; }
+    @media (max-width:1050px) {
+      .layout { grid-template-columns:205px minmax(0,1fr); gap:24px; padding:24px; }
+      header,section { padding:34px; }
+      .flow { grid-template-columns:1fr 1fr; }
+    }
+    @media (max-width:760px) {
+      .layout { display:block; padding:18px 12px 45px; }
+      aside { position:static; max-height:none; padding:8px 10px 24px; }
+      .sidebar-title { margin:8px 0 15px; }
+      nav ol { display:grid; grid-template-columns:1fr 1fr; }
+      nav a { padding:7px 5px; font-size:13px; }
+      .sidebar-note { display:none; }
+      header,section { padding:28px 22px; }
+      h1 { font-size:38px; }
+      h2 { font-size:26px; }
+      body { font-size:16px; }
+      .lead { font-size:18px; }
+      .cards { grid-template-columns:1fr; }
+      th,td { padding:11px; }
+      footer { padding:20px 22px; }
+    }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+    @media print {
+      @page { margin:16mm; }
+      body { background:white; font-size:10.5pt; line-height:1.5; }
+      .layout { display:block; max-width:none; padding:0; }
+      aside,.skip,.print-button { display:none; }
+      main { border:0; border-radius:0; box-shadow:none; overflow:visible; }
+      header,section { padding:18px 0; background:white; }
+      h1 { font-size:30pt; } h2 { font-size:19pt; } h3 { font-size:13pt; }
+      .lead { font-size:13pt; }
+      h2,h3 { break-after:avoid; }
+      .card,.phase,.callout,blockquote,.flow li { break-inside:avoid; }
+      .table-wrap { overflow:visible; }
+      tr { break-inside:avoid; }
+      table { font-size:9pt; }
+      a { text-decoration:underline; color:#205b49; }
+      footer { padding:15px 0; }
+    }
+  </style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to plan</a>
+<div class="layout">
+  <aside aria-label="Document navigation">
+    <div class="brand">FingerTrap</div>
+    <div class="sidebar-title">S3 · Launch isolation<br>Implementation proposal</div>
+    <nav aria-label="Contents">
+      <ol>
+        <li><a href="#decision">Decision &amp; scope</a></li>
+        <li><a href="#baseline">What the code does today</a></li>
+        <li><a href="#contract">Proposed launch contract</a></li>
+        <li><a href="#environment">Environment &amp; discovery</a></li>
+        <li><a href="#sequence">Implementation checkpoints</a></li>
+        <li><a href="#files">Files &amp; responsibilities</a></li>
+        <li><a href="#verification">Acceptance &amp; evidence</a></li>
+        <li><a href="#handoff">Recovery &amp; remaining gates</a></li>
+        <li><a href="#approval">Approval requested</a></li>
+        <li><a href="#references">Source references</a></li>
+      </ol>
+    </nav>
+    <div class="sidebar-note">
+      Prepared 20 October 2026<br>
+      Status: awaiting S3 approval<br>
+      Standalone, offline document
+    </div>
+    <button class="print-button" type="button" id="print">Print / save as PDF</button>
+  </aside>
+  <main id="main">
+    <header>
+      <div class="eyebrow">Runtime migration · #201 · Supports #200</div>
+      <h1>Make each Pi launch belong to one explicit profile.</h1>
+      <p class="lead">Build a shared launch context and carry its environment, working directory and verified runtime selection through both RPC and native PTY process creation.</p>
+      <div class="meta">
+        <span class="tag">Proposal · no S3 code implemented</span>
+        <span class="tag">Executable / RPC retained</span>
+        <span class="tag">Production activation stays gated</span>
+      </div>
+    </header>
+
+    <section id="decision">
+      <div class="section-number">01 / Decision &amp; scope</div>
+      <h2>Approve S3 as six reviewable checkpoints.</h2>
+      <p>I recommend implementing the isolated launch foundation now, using the existing Pi executable architecture. S1 established profile identity and compatibility; S2 established reproducible imports. S3 makes those profiles meaningful at the process boundary, preparing the storage and extension work in S4 and S5.</p>
+      <div class="callout">
+        <p><strong>Expected result:</strong> two concurrent managed test profiles can launch through RPC and PTY without borrowing the operator’s environment or each other’s state. Invalid runtime selection fails before execution. Existing user-managed Pi and ordinary shell panes retain their behavior.</p>
+        <p><strong>Approval covers implementation and verification of this foundation.</strong> The normal application will continue rejecting managed activation until storage, discovery and runtime qualification gates are satisfied.</p>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <div class="status">S3 delivers</div>
+          <h3>Explicit, verified launch inputs</h3>
+          <p>Host-owned context; executable/resource validation; replacement environments; native compatibility; shared service integration; process and regression evidence.</p>
+        </article>
+        <article class="card">
+          <div class="status">Subsequent work</div>
+          <h3>Complete product activation</h3>
+          <p>Profile-aware browsing/resume/meters in S4; imported dispatchers and tools in S5; full assembled-runtime qualification in S6 and #202; installation/login through #187/#203.</p>
+        </article>
+      </div>
+      <p class="small">The overall <a href="implementation-plan-200-profile.html">#200/#201 implementation plan</a> remains approved. This document supplies the focused S3 review you requested. It does not reopen the earlier ownership or executable-versus-SDK decision.</p>
+    </section>
+
+    <section id="baseline">
+      <div class="section-number">02 / Current evidence</div>
+      <h2>Inheritance survives both current launch paths.</h2>
+      <div class="table-wrap">
+        <table>
+          <caption>Reviewed code at documentation checkpoint a10f2c3</caption>
+          <thead><tr><th scope="col">Area</th><th scope="col">Current behavior</th><th scope="col">S3 implication</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">S1 + S2</th><td>Profile contracts and import/test manifests are committed and backed up. Source checkpoints <code>52fc6bc</code> and <code>92137c4</code> passed hosted checks.</td><td>Reuse these contracts and provenance. They do not yet establish launch isolation.</td></tr>
+            <tr><th scope="row">RPC</th><td><code>PiRpcClient</code> adds overrides to an inherited <code>ProcessStartInfo.Environment</code>.</td><td>Add an explicit replacement mode that clears inheritance.</td></tr>
+            <tr><th scope="row">PTY / C#</th><td>Porta.Pty merges parent variables, platform defaults and caller values.</td><td>Replacement must bypass that merge without changing the default inherited mode.</td></tr>
+            <tr><th scope="row">PTY / Unix</th><td>The native shim applies supplied variables over its inherited environment, then calls <code>execvp</code>. Empty dictionaries become a null environment pointer.</td><td>Fix native execution too; an empty replacement must remain empty.</td></tr>
+            <tr><th scope="row">PTY / Windows</th><td>The provider creates an environment block; executable lookup can consult the parent PATH.</td><td>Pass an explicit block and absolute executable in replacement mode, with no ambient lookup.</td></tr>
+            <tr><th scope="row">Application gate</th><td>The common resolver rejects managed settings before request, environment or PATH fallback.</td><td>Keep this protection in production while testing the new path through an internal host seam.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Pi remains pinned to <code>v0.85.1-psmfd.1</code>, source revision <code>e7d09c9dc5fca409f46a5476669e3c0404054d69</code>. The package’s npm development typings are not proof of the fork executable’s behavior.</p>
+      <p class="small">Evidence: <a href="../../src-sidecar/src/FingerTrap.Sidecar/PiRpc/PiRpcClient.cs">RPC launcher</a>, <a href="../../src-sidecar/external/Porta.Pty/Porta.Pty/PtyProvider.cs">PTY merge</a>, <a href="../../src-sidecar/external/Porta.Pty/Porta.Pty.Native/porta_pty.c">native shim</a>, <a href="../../src-sidecar/external/Porta.Pty/Porta.Pty/Windows/PtyProvider.cs">Windows provider</a>, <a href="STATUS.md">checkpoint status and CI links</a>.</p>
+    </section>
+
+    <section id="contract">
+      <div class="section-number">03 / Proposed design</div>
+      <h2>Resolve once, then pass immutable launch inputs.</h2>
+      <ol class="flow" aria-label="Launch resolution flow">
+        <li><b>1. Trusted selection</b>Host selects profile, runtime descriptor and permitted resources.</li>
+        <li><b>2. Validation</b>Check identities, real paths, files, digests and launch policy.</li>
+        <li><b>3. Launch context</b>Freeze argv, cwd, environment and non-secret profile identity.</li>
+        <li><b>4. Transport</b>RPC or PTY consumes that same context and supervises the child.</li>
+      </ol>
+      <h3>One resolver for Pi panes</h3>
+      <p>Introduce an internal <code>PiLaunchContextResolver</code> and immutable <code>PiLaunchContext</code>. Both pane services use them. User-managed resolution delegates to the existing executable precedence; managed resolution accepts only host-selected profile/runtime inputs. Transport-specific arguments, such as <code>--mode rpc</code>, are composed centrally and passed as individual arguments.</p>
+      <p>The managed context contains the profile/runtime IDs, absolute executable, verified resource selection, explicit working directory, environment mode and copied environment map. It contains no raw credentials. No per-launch code changes the sidecar’s process-wide environment or current directory.</p>
+      <h3>Runtime descriptor and filesystem checks</h3>
+      <p>Define a versioned host-owned runtime descriptor: runtime ID, fork revision, target OS/architecture, relative executable path and digest, resource entry points, and a bounded inventory of required files and dependency digests. Its expected identity comes from trusted host configuration, not a manifest supplied beside an arbitrary WebView path. Keep immutable runtime files separate from writable profile state.</p>
+      <p>Check descriptor/profile agreement, executable permissions, required dependencies and canonical containment before spawning. Reject missing files, mismatched hashes, traversal, duplicate/case-alias paths, and symlinks or Windows reparse points that escape the selected roots. Create profile directories only beneath the supplied application-data root, with appropriately restrictive access. A string-prefix path check is insufficient.</p>
+      <p>The descriptor is a launch-verification contract, not an installer. S3 fixtures supply reviewed temporary artifacts; #187 supplies production installation and activation later. Define size/count limits and actionable error categories with the contract. Diagnostics identify the failed check without dumping the child environment.</p>
+      <h3>Request boundaries</h3>
+      <p>The WebView can request a pane and working directory; it cannot select a managed executable, rewrite profile roots, inject reserved environment variables, disable verification or grant trust. Validate and canonicalize the working directory independently of profile storage. Reject raw managed environment/executable overrides. Until S4 implements profile-aware resume, reject managed <code>SessionPath</code> requests rather than resolving arbitrary historical paths.</p>
+      <p>Tests inject a verified host fixture into the same resolver and pane services. No environment variable, settings switch or public RPC parameter will bypass the production activation gate. Add an ADR extending ADR-0035 for these launch and native-environment semantics.</p>
+    </section>
+
+    <section id="environment">
+      <div class="section-number">04 / Isolation policy</div>
+      <h2>A replacement environment starts empty.</h2>
+      <div class="table-wrap">
+        <table>
+          <caption>Proposed managed launch policy</caption>
+          <thead><tr><th scope="col">Input</th><th scope="col">How S3 supplies it</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Pi state</th><td>Set <code>PI_CODING_AGENT_DIR</code> and <code>PI_CODING_AGENT_SESSION_DIR</code> to the S1 profile paths; use an explicit session-directory argument where supported and verified.</td></tr>
+            <tr><th scope="row">Home and caches</th><td>Set HOME/USERPROFILE and platform app-data/XDG locations beneath the selected profile. Set TMPDIR/TMP/TEMP to its temporary directory. Cover supported platform aliases so a library cannot silently return to the operator’s home.</td></tr>
+            <tr><th scope="row">Executable and PATH</th><td>Launch the verified absolute binary. Construct PATH from reviewed runtime/tool locations and necessary platform directories; reject relative or empty segments. Do not copy the startup login-shell PATH.</td></tr>
+            <tr><th scope="row">Terminal / platform</th><td>Supply TERM for PTY explicitly; carry only documented locale and essential OS variables. Windows system directories come from validated host/platform values. Test the allowlist on each platform.</td></tr>
+            <tr><th scope="row">Credentials and hooks</th><td>Exclude ambient provider keys, cloud profiles, agent sockets, credential-helper overrides, proxy configuration, NODE_OPTIONS/NODE_PATH and dynamic-loader hooks. S3 uses synthetic credentials or no credentials; unresolved credential references fail.</td></tr>
+            <tr><th scope="row">Profile context</th><td>Propagate only non-secret IDs and profile paths to controlled children. Real credential retrieval remains a trusted-host responsibility; no secrets in argv, descriptors, fixtures or logs.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Validate names, NUL characters, duplicate keys and platform case rules before spawning. In replacement mode, an empty map means an empty environment and an empty string is a literal empty value. The inherited mode retains each existing API’s compatibility behavior, including PTY’s historical empty-value removal.</p>
+      <h3>Discovery must be proved separately</h3>
+      <p>The pinned fork exposes explicit agent/session directories and resource-disabling flags. However, its resource loader resolves packages before final extension selection, and startup settings are read before the final runtime trust decision. Auth storage also supports configuration-value resolution. These observations make a complete startup audit necessary; the flags alone do not certify isolation.</p>
+      <p>Audit settings, models, auth, packages, extensions, skills, prompts, themes, AGENTS/CLAUDE context, SYSTEM/APPEND_SYSTEM prompts, trust state and credential helpers. Establish a fixed managed argv/resource policy using only verified controls. Exercise both initial launch and reload paths. Start with no optional resources, then one harmless explicitly selected fixture extension; do not auto-load the imported meters yet.</p>
+      <div class="callout caution">
+        <p><strong>First decision gate:</strong> if the exact executable cannot suppress an ambient source or enforce the required resource policy, record the gap under #201/#202 and keep that managed scenario disabled. Continue independently verifiable launch plumbing, but do not label the blocked discovery acceptance complete. A fork change, pin bump or SDK switch needs its own review.</p>
+      </div>
+      <p class="small">This is configuration and process-launch isolation. It does not prevent a deliberately malicious process from reading files accessible to the OS user. Likewise, an environment cannot stop Git or a shell from intentionally loading repository/system configuration: the controlled child probe belongs here, while migrated tool/dispatcher policies and their real helper chains remain S5 work.</p>
+    </section>
+
+    <section id="sequence">
+      <div class="section-number">05 / Execution order</div>
+      <h2>Six checkpoints, each with a clear exit.</h2>
+      <article class="phase">
+        <span class="phase-label">S3-A · Contracts and pinned-runtime audit</span>
+        <h3>Define the launch boundary before enabling a path.</h3>
+        <p>Add the launch ADR, immutable context, descriptor contract and discovery matrix. Map every relevant Pi source to its control and required probe. Specify failure categories and bounds; retain the production gate. Reuse S1 profile definitions rather than adding another profile schema.</p>
+        <div class="exit"><strong>Exit:</strong> contracts reject invalid identities and requests; every discovery category has evidence or an explicit blocker. No unresolved control is treated as supported.</div>
+      </article>
+      <article class="phase">
+        <span class="phase-label">S3-B · Context and artifact resolution</span>
+        <h3>Construct the complete managed launch input.</h3>
+        <p>Implement verified artifact selection, filesystem checks, profile-directory preparation, explicit cwd, replacement environment and resource arguments. Use immutable snapshots so concurrent launches cannot share a mutable dictionary. Keep credentials unresolved outside the trusted host seam; use empty or synthetic selections in tests.</p>
+        <div class="exit"><strong>Exit:</strong> two profiles produce independent contexts; missing or modified artifacts and escaped paths prevent process creation; a permissive request cannot weaken managed policy.</div>
+      </article>
+      <article class="phase">
+        <span class="phase-label">S3-C · RPC transport</span>
+        <h3>Make replacement an explicit client option.</h3>
+        <p>Add <code>Inherit</code>/<code>Replace</code> semantics to <code>PiRpcClientOptions</code>, defaulting to inherited behavior. Clear <code>ProcessStartInfo.Environment</code> for replacement, then apply the validated snapshot. Extend FakePi to report selected synthetic variables, cwd and a controlled child’s observations.</p>
+        <p>Preserve hello/request deadlines, bounded JSONL/stderr/event buffers, backpressure and EOF → TERM → KILL cleanup. Verify cancellation during startup and normal shutdown through the real process boundary.</p>
+        <div class="exit"><strong>Exit:</strong> inherited-mode regression tests remain green; replacement RPC children lack synthetic parent-only values and retain exactly the permitted test values.</div>
+      </article>
+      <article class="phase">
+        <span class="phase-label">S3-D · PTY and native ABI</span>
+        <h3>Carry replacement all the way to the OS.</h3>
+        <p>Add the same explicit mode to <code>PtyOptions</code>. In replacement mode bypass parent/platform merging, copy inputs, and never mutate the caller’s options. Preserve the current inherited path for shell panes and existing callers.</p>
+        <p>On macOS/Linux, introduce a distinct native export for replacement execution, leaving the existing export compatible. Pass a non-null terminated environment array even when empty; use absolute-path <code>execve</code> with the supplied environment. Construct TERM and other defaults before the native call, avoiding replacement-mode child-side environment mutation.</p>
+        <p>Update both P/Invoke wrappers. A missing new export or stale native companion produces an actionable error; never retry through inherited execution. Preserve Darwin’s spawn gate and FD_CLOEXEC handling, including failure cleanup. Verify exec failure, descriptor ownership and cancellation/reaping behavior with real native launches.</p>
+        <p>On Windows, provide a correctly terminated explicit Unicode block, handle key casing and literal empty values, and bypass ambient PATH lookup for replacement. Update the vendor patch table and verify the new native library reaches the published sidecar and Apple Silicon package.</p>
+        <div class="exit"><strong>Exit:</strong> real PTY probes prove replacement on supported test platforms; old-companion failure is safe; inherited shell behavior and spawn coordination remain covered.</div>
+      </article>
+      <article class="phase">
+        <span class="phase-label">S3-E · Shared pane-service integration</span>
+        <h3>Use the same policy in RPC and Pi PTY panes.</h3>
+        <p>Wire the resolver into <code>RpcPaneService</code> and Pi launches in <code>PtyService</code>. Compose production dependencies in <code>Program.cs</code> with managed activation still unavailable. Keep ordinary shell-pane launch logic intact. Verify managed request rejection and service cleanup using an internal host fixture, without exposing a public activation bypass.</p>
+        <div class="exit"><strong>Exit:</strong> both services launch the verified fixture with the same profile policy; production settings still fail closed; user-managed and shell compatibility tests pass.</div>
+      </article>
+      <article class="phase">
+        <span class="phase-label">S3-F · Integration evidence and handoff</span>
+        <h3>Prove behavior under contamination and concurrency.</h3>
+        <p>Run the acceptance matrix below. Use a harness with synthetic operator files and secrets, never the developer’s real credentials. Exercise the exact pinned Pi artifact where available and record its digest; keep fake-process results distinct from pinned-runtime results. Retain a reproducible probe command and fixtures in the repository.</p>
+        <p>Run the affected package, sidecar, native, structural and hosted checks. Record representative deliberate regressions that make the new guards fail, restore the code, then run the final checks. Publish checkpoint evidence to the existing draft PR and durable records.</p>
+        <div class="exit"><strong>Exit:</strong> all applicable S3 acceptance cases have evidence; unresolved platform/runtime gaps remain named and block the corresponding completion claim. The next slice is S4, with managed activation still gated.</div>
+      </article>
+    </section>
+
+    <section id="files">
+      <div class="section-number">06 / Change map</div>
+      <h2>Keep policy in the host; keep transports mechanical.</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Location</th><th scope="col">Planned responsibility</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><code>Sidecar/Runtime/</code> + <code>Executables/</code></th><td>New launch context/resolver, runtime descriptor validation and environment policy; reuse RuntimeProfile and preserve user-managed PiExecutableResolver precedence.</td></tr>
+            <tr><th scope="row"><code>PiRpcClientOptions.cs</code>, <code>PiRpcClient.cs</code></th><td>Explicit environment mode and OS process-start semantics; existing supervision remains authoritative.</td></tr>
+            <tr><th scope="row"><code>RpcPaneService.cs</code>, <code>PtyService.cs</code>, <code>Program.cs</code></th><td>One resolver dependency, transport arguments, test seam and production gate. Shell panes retain their login behavior.</td></tr>
+            <tr><th scope="row"><code>external/Porta.Pty/</code></th><td>Options, common provider, Mac/Linux wrappers and native export; Windows block/path handling; UPSTREAM.md patch record and companion packaging checks.</td></tr>
+            <tr><th scope="row"><code>tests/FakePi/</code>, <code>tests/FingerTrap.Sidecar.Tests/</code>, <code>scripts/</code></th><td>Real child observations, concurrent RPC/PTY tests, tampered-resource fixtures, native-companion mismatch and pinned-runtime probe.</td></tr>
+            <tr><th scope="row"><code>adrs/</code>, <code>docs/migration/</code></th><td>Launch ADR, discovery report, validation results, current checkpoint and exact resume instructions.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Public RPC DTO changes are not expected: the launch authority stays internal. If implementation proves a wire change necessary, update <code>RpcSurface.cs</code> and <code>src-ui/src/api.ts</code> together with their contract tests. Any new package fixture must also be registered in S2 provenance/test manifests.</p>
+    </section>
+
+    <section id="verification">
+      <div class="section-number">07 / Completion criteria</div>
+      <h2>Measure what the child actually receives and does.</h2>
+      <div class="table-wrap">
+        <table>
+          <caption>S3 acceptance matrix — required evidence, not results already obtained</caption>
+          <thead><tr><th scope="col">Case</th><th scope="col">Proof required</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Contaminated parent</th><td>Launch a harness with synthetic provider keys, PATH decoys, home files and injection-variable sentinels. RPC and native PTY children receive only approved values; synthetic operator files remain unchanged.</td></tr>
+            <tr><th scope="row">Two profiles at once</th><td>Interleave A/B RPC and PTY launches, including the same project cwd. Observe distinct home/state/temp paths and values; verify files externally. A’s cancellation or failure leaves B running.</td></tr>
+            <tr><th scope="row">Environment edge cases</th><td>Empty replacement, literal empty value, Unicode, invalid names/NUL, Windows case collisions and missing PATH. A no-PATH launch uses the absolute verified executable.</td></tr>
+            <tr><th scope="row">Artifact / request rejection</th><td>Missing executable/dependency, hash or runtime-ID mismatch, wrong platform, traversal, escaping link/reparse point, unapproved resource, raw overrides and managed resume request all fail without spawning a child.</td></tr>
+            <tr><th scope="row">Native boundary</th><td>Real PTY process and controlled grandchild observe replacement; stale native library fails closed; missing cwd/exec and cancellation leave no live child or descriptor leak. Darwin coordination tests remain green.</td></tr>
+            <tr><th scope="row">Exact Pi discovery</th><td>At the recorded fork/artifact digest, synthetic global/project packages, extensions, context, prompts, settings and auth helpers cannot enter the managed selection. One explicit harmless extension works. Reload preserves policy; network/package installation is neither needed nor silently permitted.</td></tr>
+            <tr><th scope="row">Supervision</th><td>Pre-hello exit, timeout, malformed/oversize output, bounded stderr/backpressure and process-tree shutdown still pass. Parent environment/cwd remain unchanged.</td></tr>
+            <tr><th scope="row">Compatibility / gate</th><td>Legacy settings and user-managed overrides retain their precedence; ordinary shells remain login shells. Both production Pi pane entry paths still reject managed activation.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Local and hosted validation</h3>
+      <p>Use audited locked .NET restore, a Release build, the sidecar suite, real native probes and <code>scripts/smoke-pty.py</code>. Run runtime-package provenance/lint/typecheck/tests when that package changes. Run repository/whitespace checks for every checkpoint. Preserve RPC goldens and bound checks.</p>
+      <p>Collect Linux, Windows and macOS CI results for the source commit being reviewed. macOS ARM64 receives local native and packaged-companion evidence. A platform job that skips a required native scenario is recorded as a coverage gap, not a pass for that scenario. Full product/Finder/login acceptance stays with the later release gates.</p>
+      <p>Demonstrate at least the inherited-environment regression, native replacement regression, resource-verification omission and managed-gate bypass fail their intended tests. Keep only meaningful behavioral tests, and restore each temporary mutation before committing.</p>
+      <div class="callout">
+        <p><strong>S3 is complete only when its applicable acceptance evidence is recorded.</strong> FakePi proves host plumbing; real PTY probes prove native semantics; the pinned executable proves discovery behavior. None substitutes for the others. S3 alone does not close #200 or #201.</p>
+      </div>
+    </section>
+
+    <section id="handoff">
+      <div class="section-number">08 / Continuity and limits</div>
+      <h2>Every checkpoint leaves a precise resume point.</h2>
+      <p>Before S3-A through S3-F, update <a href="STATUS.md">STATUS.md</a> with the active checkpoint, intended change and validation. Append meaningful results and failures to <a href="WORK_LOG.md">WORK_LOG.md</a> as they occur. Record source hash, commands, test counts/skips, remote backup, CI identity and remaining blockers separately.</p>
+      <p>Use scoped commits on the current migration branch and back them up to the existing <a href="https://github.com/psmfd/FingerTrap/pull/207">draft PR #207</a>. The final report belongs in the repository, with only supplementary raw logs in temporary storage. A handoff identifies the next command or file to change; it never relies on chat memory.</p>
+      <h3>Rollback and deployment boundary</h3>
+      <p>The inherited mode remains the default for existing callers and the managed production gate remains closed. Source rollback is a scoped revert of the affected checkpoint. Build/package rollback must keep the sidecar and native companion together; an older native companion must cause an explicit replacement-mode error.</p>
+      <p>No operator state is migrated, no global runtime is installed and no live profile is activated by S3. S4 handles stores, browsing, resume, recovery metadata and meters. S5 handles actual imported subagents/tools and their credential/configuration policies. S6/#202 handles the assembled runtime; #187/#203 handles production installation, credential authority and activation. SDK evaluation and pi_config retirement retain their existing separate gates.</p>
+      <p class="small">Principal uncertainty: whether every required discovery control exists in this exact fork. Resolve it early and preserve the evidence. Environment replacement and artifact validation can advance independently; a known discovery gap must remain visible in the work board.</p>
+    </section>
+
+    <section id="approval" class="approval">
+      <div class="section-number">09 / Requested decision</div>
+      <h2>Approve implementation of S3-A through S3-F.</h2>
+      <p>The requested approval authorizes the shared host launch contract, runtime/resource verification, RPC and native PTY replacement semantics, pane-service integration, tests, ADR/vendor records and durable source checkpoints described here.</p>
+      <blockquote>Approve S3 launch-isolation implementation, retaining the executable/RPC backend and the production managed-activation gate.</blockquote>
+      <p>After approval, begin with S3-A’s pinned-runtime discovery audit and launch contract, then proceed through the checkpoints without repeating this approval. Raise a separate decision only if evidence requires changing the runtime pin, backend, activation boundary or other approved scope.</p>
+      <p class="small"><strong>Current state:</strong> plan prepared; S3 implementation has not started. This document records a proposal, not an approval or a test pass.</p>
+    </section>
+
+    <section id="references">
+      <div class="section-number">10 / Evidence</div>
+      <h2>Review anchors</h2>
+      <ul class="sources">
+        <li><a href="implementation-plan-200-profile.html">Approved overall plan</a>; <a href="STATUS.md">durable status</a>; <a href="WORK_LOG.md">activity log</a>.</li>
+        <li><a href="../../adrs/0034-own-agent-runtime-and-retire-pi-config.md">ADR-0034: runtime ownership and executable baseline</a>; <a href="../../adrs/0035-version-managed-runtime-profiles.md">ADR-0035: profile, settings and activation contract</a>.</li>
+        <li><a href="../../src-sidecar/src/FingerTrap.Sidecar/Executables/PiExecutableResolver.cs">Shared executable resolver</a>; <a href="../../src-sidecar/src/FingerTrap.Sidecar/PiRpc/RpcPaneService.cs">RPC pane service</a>; <a href="../../src-sidecar/src/FingerTrap.Sidecar/Pty/PtyService.cs">PTY service</a>; <a href="../../src-sidecar/src/FingerTrap.Sidecar/Processes/ChildSpawnCoordinator.cs">spawn coordination</a>.</li>
+        <li><a href="../../src-sidecar/external/Porta.Pty/UPSTREAM.md">Porta.Pty provenance and patch requirements</a>; <a href="../../CONTRIBUTING.md">repository validation and testing doctrine</a>.</li>
+        <li>Pinned Pi source: <a href="https://github.com/psmfd/pi/blob/e7d09c9dc5fca409f46a5476669e3c0404054d69/packages/coding-agent/src/main.ts">startup/trust/session selection</a>; <a href="https://github.com/psmfd/pi/blob/e7d09c9dc5fca409f46a5476669e3c0404054d69/packages/coding-agent/src/cli/args.ts">CLI arguments</a>; <a href="https://github.com/psmfd/pi/blob/e7d09c9dc5fca409f46a5476669e3c0404054d69/packages/coding-agent/src/config.ts">state-directory controls</a>.</li>
+        <li>Pinned Pi source: <a href="https://github.com/psmfd/pi/blob/e7d09c9dc5fca409f46a5476669e3c0404054d69/packages/coding-agent/src/core/resource-loader.ts">resource loader</a>; <a href="https://github.com/psmfd/pi/blob/e7d09c9dc5fca409f46a5476669e3c0404054d69/packages/coding-agent/src/core/settings-manager.ts">settings manager</a>; <a href="https://github.com/psmfd/pi/blob/e7d09c9dc5fca409f46a5476669e3c0404054d69/packages/coding-agent/src/core/auth-storage.ts">auth storage</a>; <a href="https://github.com/psmfd/pi/blob/e7d09c9dc5fca409f46a5476669e3c0404054d69/packages/coding-agent/src/core/package-manager.ts">package resolution</a>.</li>
+        <li><a href="https://github.com/psmfd/FingerTrap/issues/201">#201: profiles/isolation</a>; <a href="https://github.com/psmfd/FingerTrap/issues/200">#200: source integration</a>; <a href="https://github.com/psmfd/FingerTrap/issues/202">#202: runtime/backend qualification</a>; <a href="https://github.com/psmfd/FingerTrap/pull/207">draft PR #207</a>.</li>
+      </ul>
+      <p class="small">Local code and pinned fork source were reviewed on 20 October 2026. This review establishes the basis for the proposal; the acceptance results above remain future implementation work.</p>
+    </section>
+    <footer>FingerTrap · S3 launch isolation · Prepared 20 October 2026 · Awaiting focused approval</footer>
+  </main>
+</div>
+<script>
+  document.getElementById("print").addEventListener("click", () => window.print());
+  const links = [...document.querySelectorAll('nav a[href^="#"]')];
+  const sections = links.map(link => document.querySelector(link.getAttribute("href")));
+  let scheduled = false;
+  function updateSection() {
+    let active = sections[0];
+    for (const section of sections) {
+      if (section.getBoundingClientRect().top <= 150) active = section;
+    }
+    for (const link of links) {
+      if (link.hash === "#" + active.id) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    }
+    scheduled = false;
+  }
+  window.addEventListener("scroll", () => {
+    if (!scheduled) { scheduled = true; requestAnimationFrame(updateSection); }
+  }, { passive:true });
+  updateSection();
+</script>
+</body>
+</html>

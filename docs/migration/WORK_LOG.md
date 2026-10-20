@@ -166,3 +166,37 @@ The compact [status board](STATUS.md) is the starting point for a new session.
 - **Next action:** S3 environment replacement through RPC, Porta.Pty and its
   Unix shim, followed by verified runtime/resource launch selection. No
   managed activation, issue closure, PR merge or source-repo retirement.
+
+## 2026-10-20 16:03 UTC — S3 focused approval plan
+
+- **Request:** the maintainer asked for an S3 implementation plan for approval.
+  The overall plan remains approved; this turn prepares the requested focused
+  review, with no S3 implementation.
+- **Review:** inspected RPC additive environment handling, both PTY inheritance
+  layers, native ABI, Windows path fallback, profile/activation contracts and
+  the exact pinned Pi startup/settings/resource/auth sources.
+- **Finding:** discovery flags alone are insufficient evidence. Package
+  resolution occurs before resource selection; startup settings and credential
+  resolution also require explicit controls and real-process probes.
+- **Planned artifact:** a standalone HTML plan covering staged changes,
+  file ownership, native compatibility, acceptance tests, activation boundaries
+  and durable checkpoints. Validate document links, navigation and rendering.
+- **Next:** finish the document and present it for the requested S3 approval.
+
+## 2026-10-20 16:09 UTC — S3 approval document ready
+
+- **Artifact:** [S3 launch-isolation plan](s3-launch-isolation-plan.html),
+  with S3-A through S3-F, proposed host/transport/native contracts, exact-pin
+  discovery gate, change map, acceptance matrix and checkpoint discipline.
+- **Document validation:** 42 links and 12 unique IDs checked; no external
+  assets; JavaScript syntax passed. Headless browser verified 390-pixel
+  mobile width without horizontal overflow, readable desktop/mobile sections,
+  and current-section navigation. Markdown, whitespace and structural checks
+  passed with no errors.
+- **Scope:** documentation only. No S3 runtime code, managed activation,
+  provider login, dependency change or issue closure.
+- **Checkpoint intent:** commit and back up these four documentation files on
+  the existing migration branch. Preserve all unrelated/private local files.
+- **Resume:** await the requested S3 decision; after approval record it and
+  begin S3-A's launch contract and pinned-runtime discovery audit. The broader
+  six-step approval remains in effect.
