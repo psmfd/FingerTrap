@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-20 14:19 UTC.
+Updated: 2026-10-20 14:48 UTC.
 
 ## Authorization and scope
 
@@ -19,15 +19,15 @@ approval capabilities and repository retirement retain their separate gates.
 
 ## Resume here
 
-**Active slice: S1 — profile contract and reviewable baseline.**
+**Current boundary: checkpoint S1; next slice S2 — import/test manifests.**
 
-1. Save the existing ADR/inventory/M1a source and approved plan as reviewed,
-   scoped commits; exclude private local artifacts.
-2. Specify a versioned profile/resource contract and implement contract
-   validation fixtures across the sidecar and runtime package.
-3. Extend the reviewed import/test manifests (S2), then proceed to S3.
+1. Commit the bounded MessagePack dependency repair separately from S1.
+2. Checkpoint the locally verified S1 contract/fixtures and push to PR #207.
+3. Replace the fixed 20-file verifier and two-extension discovery with
+   reviewed per-slice file/source/test manifests, including authored suites.
+   Prove missing/changed/unaccounted files and omitted suites fail.
 
-The initial handoff is being checkpointed. No new managed launch is enabled.
+No managed launch is enabled.
 Read the latest [activity entry](WORK_LOG.md) before resuming; compare this
 record with `git status`, `git log` and any active process/test output.
 
@@ -35,9 +35,9 @@ record with `git status`, `git log` and any active process/test output.
 
 | ID | Approved result | Status | Evidence / remaining work |
 | --- | --- | --- | --- |
-| M0 | Ownership ADR, inventory and successors | Implemented locally | ADR-0034 accepted; inventory and #200–#206 exist; checkpoint pending |
-| M1a | Token/cache-meter source package | Locally verified, inactive | [Report](m1a-import.md): 20 files, six suites, 41 tests; hosted CI pending |
-| S1 | Profile schema, compatibility and baseline | In progress | Durable tracker created; contract/fixtures next |
+| M0 | Ownership ADR, inventory and successors | Committed and backed up | `6a999c9`; ADR-0034 accepted; inventory and #200–#206 exist |
+| M1a | Token/cache-meter source package | Verified, backed up, inactive | [Report](m1a-import.md); runtime package CI passed on all three platforms at `6a999c9` |
+| S1 | Profile schema, compatibility and baseline | Locally verified; checkpointing | [Foundation report](profile-foundation.md); ADR-0035 and shared fixtures; hosted result pending |
 | S2 | Reviewed import slices and test registration | Pending | Replace fixed 20-file verifier and two-extension runner without losing coverage |
 | S3 | PTY/RPC launch isolation | Pending | RPC inheritance plus both PTY merge/native layers must change |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
@@ -73,7 +73,10 @@ validation after resuming an incomplete edit and update this record.
 
 - Branch: `docs/pi-runtime-migration`.
 - Base: `8ffeae809f7b4579d6b4f006c3f6e8414df60620`.
-- New commits / remote backup / draft PR: pending.
+- Baseline checkpoint: `6a999c9`, pushed to
+  `psmfd/FingerTrap:docs/pi-runtime-migration`.
+- Draft review: [PR #207](https://github.com/psmfd/FingerTrap/pull/207),
+  targeting `dev`; no merge or activation.
 - Existing M1a local results: [recorded report](m1a-import.md).
 - Checkpoint revalidation: all 20 provenance entries, lint, typecheck and
   41 meter tests passed; staged-export secret scan found no leaks.
@@ -81,7 +84,13 @@ validation after resuming an incomplete edit and update this record.
   390-pixel mobile render checked; navigation works; no remote assets.
 - Latest repository structural check: passed, zero errors/warnings, during
   baseline checkpoint preparation.
-- New S1 tests and hosted CI: not run.
+- S1 local: package provenance/lint/typecheck; 69 runtime tests; Release
+  sidecar build zero warnings/errors; 359 sidecar tests passed, 12 skipped.
+  Managed fallback mutation detected by both guard cases; restored suite green.
+- Baseline CI: runtime/UI matrix, structural checks and CodeQL passed. All
+  sidecar/Tauri jobs failed restore on MessagePack 2.5.302 (NU1902).
+  Patched 2.5.303 plus affected locks now pass local audited locked restore;
+  a new hosted run is required.
 
 ## Known gates and protected local state
 

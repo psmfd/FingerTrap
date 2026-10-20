@@ -32,5 +32,7 @@
          replay lane, plus the recorder's pi extension fixture. -->
     <Content Include="Goldens\data\**" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Goldens\fixtures\**" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="..\..\..\packages\agent-runtime\contracts\runtime-profile.v1.cases.json"
+             Link="RuntimeFixtures\runtime-profile.v1.cases.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

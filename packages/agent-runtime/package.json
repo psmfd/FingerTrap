@@ -11,7 +11,7 @@
   },
   "scripts": {
     "check:provenance": "node scripts/check-provenance.mjs",
-    "lint": "eslint extensions",
+    "lint": "eslint extensions runtime",
     "typecheck": "tsc -p tsconfig.json",
     "test": "node scripts/test.mjs"
   },

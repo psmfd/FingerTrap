@@ -6,6 +6,9 @@ M1a contains token-meter and cache-meter. The app does not load this package,
 and it has no Pi package registration, entry point, or installer integration.
 Managed activation waits for [#201](https://github.com/psmfd/FingerTrap/issues/201)
 and runtime qualification.
+The authored [profile contract helper](runtime/profile.ts) validates profile
+definitions and projects paths under ADR-0035. It does not yet redirect the
+meter entry points or enable a managed launcher.
 
 ## Develop and verify
 
@@ -27,7 +30,8 @@ The runtime imports TypeBox and Node builtins; it does not create an SDK
 session. These npm types do not establish equivalence with the patched Pi
 executable or change FingerTrap's `v0.85.1-psmfd.1` runtime selection.
 
-`pnpm test` runs all six inherited `node:test` files in child processes with
+`pnpm test` runs all six inherited `node:test` files and the shared profile
+contract tests in child processes with
 an isolated home and temporary storage. Provider credentials, Pi configuration,
 meter environment variables, and `NODE_OPTIONS` are not inherited. Temporary
 files are removed after the run, including scratch files from inherited tests.
@@ -39,6 +43,7 @@ This is test isolation, not a security sandbox for arbitrary extensions.
 | --- | --- | --- |
 | [token-meter](extensions/token-meter/README.md) | Per-session JSONL usage, model/provider/tier/policy aggregation, enabled-only child environment propagation, optional UI status and `token_usage` | Replace legacy settings/session paths through the common profile contract |
 | [cache-meter](extensions/cache-meter/README.md) | Config-gated observational JSONL recorder, provider attribution, optional status | Replace legacy log path and qualify child environment propagation |
+| [profile contract](runtime/profile.ts) | Validated definition, explicit root, common C#/TypeScript fixtures | Launcher verification and all-consumer integration; no filesystem authority from path projection alone |
 
 The recorder logic, schemas and defaults retain the source behavior. Both
 extensions still construct legacy `~/.pi/agent` paths when no storage root is

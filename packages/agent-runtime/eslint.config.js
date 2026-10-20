@@ -7,9 +7,9 @@ import security from "eslint-plugin-security";
 export default tseslint.config(
   { ignores: ["node_modules/**"] },
   ...tseslint.configs.recommendedTypeChecked,
-  { ...security.configs.recommended, files: ["extensions/**/*.ts"] },
+  { ...security.configs.recommended, files: ["extensions/**/*.ts", "runtime/**/*.ts"] },
   {
-    files: ["extensions/**/*.ts"],
+    files: ["extensions/**/*.ts", "runtime/**/*.ts"],
     languageOptions: {
       parserOptions: {
         projectService: true,
@@ -46,7 +46,7 @@ export default tseslint.config(
   },
   {
     // node:test owns the promises returned by top-level test registrations.
-    files: ["extensions/**/*.test.ts"],
+    files: ["extensions/**/*.test.ts", "runtime/**/*.test.ts"],
     rules: { "@typescript-eslint/no-floating-promises": "off" },
   },
 );

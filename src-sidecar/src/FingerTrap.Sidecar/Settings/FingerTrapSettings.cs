@@ -61,6 +61,16 @@ internal sealed record FingerTrapSettings
 
 internal sealed record PiSettings
 {
+    /// <summary>Explicit user-managed or managed selection (ADR-0035).</summary>
+    [JsonPropertyName("mode")]
+    public string? Mode { get; init; }
+
+    [JsonPropertyName("profileId")]
+    public string? ProfileId { get; init; }
+
+    [JsonPropertyName("runtimeId")]
+    public string? RuntimeId { get; init; }
+
     /// <summary>
     /// Explicit pi executable path. Outranks <c>$FINGERTRAP_PI</c> and the
     /// <c>PATH</c> search; outranked by a path named in the spawn request.

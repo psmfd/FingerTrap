@@ -13,9 +13,10 @@ namespace FingerTrap.Sidecar.Settings;
 internal static class SettingsLoader
 {
     /// <summary>
-    /// The only schema version this build understands.
+    /// Default legacy schema version; managed selection requires version 2.
     /// </summary>
     internal const int SupportedVersion = 1;
+    internal const int ManagedVersion = 2;
 
     /// <summary>Directory name under the platform's application-data root.</summary>
     private const string AppDirectoryName = "fingertrap";
@@ -142,16 +143,55 @@ internal static class SettingsLoader
                 $"is missing the \"version\" key; add \"version\": {SupportedVersion}");
         }
 
-        if (parsed.Version != SupportedVersion)
+        if (parsed.Version is not (SupportedVersion or ManagedVersion))
         {
             // Refuse rather than best-effort. A future schema may reuse a key
             // with different meaning, so reading it under version-1 rules
             // could apply a setting the operator never intended — worse than
             // declining to start the pane.
             throw new SettingsException(
-                $"schema version {parsed.Version} is not supported by this build (expected {SupportedVersion})");
+                $"schema version {parsed.Version} is not supported by this build (expected 1 or 2)");
         }
 
+        ValidateRuntimeSelection(parsed);
         return parsed;
+    }
+
+    private static void ValidateRuntimeSelection(FingerTrapSettings settings)
+    {
+        var pi = settings.Pi;
+        var mode = pi?.Mode;
+        if (settings.Version == ManagedVersion && mode is null)
+        {
+            throw new SettingsException("settings version 2 requires pi.mode");
+        }
+
+        if (mode is not (null or "user-managed" or "managed"))
+        {
+            throw new SettingsException("pi.mode must be user-managed or managed");
+        }
+
+        if (mode == "managed")
+        {
+            if (settings.Version != ManagedVersion)
+            {
+                throw new SettingsException("managed profiles require settings version 2");
+            }
+
+            if (pi!.Path is not null)
+            {
+                throw new SettingsException("managed profiles cannot set pi.path; select pi.runtimeId");
+            }
+
+            if (!Runtime.RuntimeProfile.IsIdentifier(pi.ProfileId, profileId: true)
+                || !Runtime.RuntimeProfile.IsIdentifier(pi.RuntimeId))
+            {
+                throw new SettingsException("managed profiles require valid pi.profileId and pi.runtimeId");
+            }
+        }
+        else if (pi?.ProfileId is not null || pi?.RuntimeId is not null)
+        {
+            throw new SettingsException("pi.profileId and pi.runtimeId require managed mode");
+        }
     }
 }

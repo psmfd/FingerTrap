@@ -180,7 +180,10 @@
     "tsconfig.json",
     "eslint.config.js",
     "scripts/test.mjs",
-    "scripts/check-provenance.mjs"
+    "scripts/check-provenance.mjs",
+    "contracts/runtime-profile.v1.cases.json",
+    "runtime/profile.ts",
+    "runtime/test/profile.test.ts"
   ],
   "tooling_reference": [
     {

@@ -1,0 +1,127 @@
+{
+  "schemaVersion": 1,
+  "layout": {
+    "agentDir": "agent",
+    "sessionsDir": "agent/sessions",
+    "extensionsDir": "agent/extensions",
+    "worktreeManifestsDir": "agent/extensions/worktree/sessions",
+    "cacheDir": "cache",
+    "tempDir": "tmp",
+    "homeDir": "home"
+  },
+  "cases": [
+    {
+      "name": "alpha with explicit credential reference",
+      "valid": true,
+      "input": {"version":1,"id":"alpha","runtimeId":"pi-0.85.1-psmfd.1","credentialRefs":[{"provider":"test-provider","reference":"alpha-provider"}]}
+    },
+    {
+      "name": "beta without credentials",
+      "valid": true,
+      "input": {"version":1,"id":"beta","runtimeId":"pi-0.85.1-psmfd.1","credentialRefs":[]}
+    },
+    {
+      "name": "unknown definition version",
+      "valid": false,
+      "input": {"version":2,"id":"alpha","runtimeId":"pi-0.85.1","credentialRefs":[]}
+    },
+    {
+      "name": "string definition version",
+      "valid": false,
+      "input": {"version":"1","id":"alpha","runtimeId":"pi-0.85.1","credentialRefs":[]}
+    },
+    {
+      "name": "boolean definition version",
+      "valid": false,
+      "input": {"version":true,"id":"alpha","runtimeId":"pi-0.85.1","credentialRefs":[]}
+    },
+    {
+      "name": "parent traversal",
+      "valid": false,
+      "input": {"version":1,"id":"../alpha","runtimeId":"pi-0.85.1","credentialRefs":[]}
+    },
+    {
+      "name": "absolute path as profile ID",
+      "valid": false,
+      "input": {"version":1,"id":"/tmp/alpha","runtimeId":"pi-0.85.1","credentialRefs":[]}
+    },
+    {
+      "name": "Windows path as profile ID",
+      "valid": false,
+      "input": {"version":1,"id":"C:\\alpha","runtimeId":"pi-0.85.1","credentialRefs":[]}
+    },
+    {
+      "name": "case alias",
+      "valid": false,
+      "input": {"version":1,"id":"Alpha","runtimeId":"pi-0.85.1","credentialRefs":[]}
+    },
+    {
+      "name": "trailing newline in profile ID",
+      "valid": false,
+      "input": {"version":1,"id":"alpha\n","runtimeId":"pi-0.85.1","credentialRefs":[]}
+    },
+    {
+      "name": "Windows device name",
+      "valid": false,
+      "input": {"version":1,"id":"con","runtimeId":"pi-0.85.1","credentialRefs":[]}
+    },
+    {
+      "name": "suffixed Windows device runtime",
+      "valid": false,
+      "input": {"version":1,"id":"alpha","runtimeId":"lpt1.fixture","credentialRefs":[]}
+    },
+    {
+      "name": "trailing dot runtime alias",
+      "valid": false,
+      "input": {"version":1,"id":"alpha","runtimeId":"pi.","credentialRefs":[]}
+    },
+    {
+      "name": "runtime path override",
+      "valid": false,
+      "input": {"version":1,"id":"alpha","runtimeId":"../../pi","credentialRefs":[]}
+    },
+    {
+      "name": "oversized profile ID",
+      "valid": false,
+      "input": {"version":1,"id":"abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz","runtimeId":"pi-0.85.1","credentialRefs":[]}
+    },
+    {
+      "name": "missing credential references",
+      "valid": false,
+      "input": {"version":1,"id":"alpha","runtimeId":"pi-0.85.1"}
+    },
+    {
+      "name": "null credential references",
+      "valid": false,
+      "input": {"version":1,"id":"alpha","runtimeId":"pi-0.85.1","credentialRefs":null}
+    },
+    {
+      "name": "duplicate credential provider",
+      "valid": false,
+      "input": {"version":1,"id":"alpha","runtimeId":"pi-0.85.1","credentialRefs":[{"provider":"test-provider","reference":"first"},{"provider":"test-provider","reference":"second"}]}
+    },
+    {
+      "name": "credential file path",
+      "valid": false,
+      "input": {"version":1,"id":"alpha","runtimeId":"pi-0.85.1","credentialRefs":[{"provider":"test-provider","reference":"/operator/auth.json"}]}
+    },
+    {
+      "name": "inline credential field",
+      "valid": false,
+      "input": {"version":1,"id":"alpha","runtimeId":"pi-0.85.1","credentialRefs":[{"provider":"test-provider","reference":"alpha-provider","token":"synthetic-not-a-credential"}]}
+    },
+    {
+      "name": "caller supplied storage root",
+      "valid": false,
+      "input": {"version":1,"id":"alpha","runtimeId":"pi-0.85.1","credentialRefs":[],"root":"/operator"}
+    },
+    {
+      "name": "numeric profile ID",
+      "valid": false,
+      "input": {"version":1,"id":123,"runtimeId":"pi-0.85.1","credentialRefs":[]}
+    },
+    {"name":"null definition","valid":false,"input":null},
+    {"name":"array definition","valid":false,"input":[]},
+    {"name":"prototype-named field","valid":false,"input":{"version":1,"id":"alpha","runtimeId":"pi-0.85.1","credentialRefs":[],"__proto__":{}}}
+  ]
+}

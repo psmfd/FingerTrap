@@ -38,6 +38,7 @@ try {
       .map((name) => join(dir, name));
   });
   if (files.length === 0) throw new Error("No meter tests found");
+  files.push(join(packageRoot, "runtime", "test", "profile.test.ts"));
   const result = spawnSync(process.execPath, ["--import", "tsx", "--test", ...files], {
     cwd: packageRoot,
     env,

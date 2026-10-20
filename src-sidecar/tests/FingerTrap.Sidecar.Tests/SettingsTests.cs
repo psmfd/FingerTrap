@@ -99,9 +99,57 @@ public sealed class SettingsTests
         // Refuse rather than best-effort: a future schema may reuse a key with
         // different meaning, so reading it under version-1 rules could apply a
         // setting the operator never intended.
-        var ex = Assert.Throws<SettingsException>(() => SettingsLoader.Parse("""{"version": 2}"""));
+        var ex = Assert.Throws<SettingsException>(() => SettingsLoader.Parse("""{"version": 42}"""));
 
-        Assert.Contains("version 2", ex.Message, StringComparison.Ordinal);
+        Assert.Contains("version 42", ex.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Parse_ManagedVersionTwo_PreservesExplicitSelection()
+    {
+        var settings = SettingsLoader.Parse("""
+            {"version":2,"pi":{"mode":"managed","profileId":"alpha","runtimeId":"pi-0.85.1-psmfd.1"}}
+            """);
+        Assert.Equal("managed", settings.Pi?.Mode);
+        Assert.Equal("alpha", settings.Pi?.ProfileId);
+        Assert.Equal("pi-0.85.1-psmfd.1", settings.Pi?.RuntimeId);
+    }
+
+    [Theory]
+    [InlineData("""{"version":1,"pi":{"mode":"managed","profileId":"alpha","runtimeId":"pi-0.85.1"}}""")]
+    [InlineData("""{"version":2}""")]
+    [InlineData("""{"version":2,"pi":{"mode":"Managed","profileId":"alpha","runtimeId":"pi-0.85.1"}}""")]
+    [InlineData("""{"version":2,"pi":{"mode":"managed","profileId":"../alpha","runtimeId":"pi-0.85.1"}}""")]
+    [InlineData("""{"version":2,"pi":{"mode":"managed","profileId":"alpha","runtimeId":"/operator/pi"}}""")]
+    [InlineData("""{"version":2,"pi":{"mode":"managed","profileId":"alpha"}}""")]
+    [InlineData("""{"version":2,"pi":{"mode":"managed","profileId":"alpha","runtimeId":"pi-0.85.1","path":"/operator/pi"}}""")]
+    [InlineData("""{"version":2,"pi":{"mode":"user-managed","profileId":"alpha"}}""")]
+    public void Parse_InvalidManagedSelection_FailsClosed(string json)
+    {
+        Assert.Throws<SettingsException>(() => SettingsLoader.Parse(json));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("/explicit/pi")]
+    public void ResolvePi_UnactivatedManagedSelection_NeverUsesLegacyFallback(string? requested)
+    {
+        using var piEnv = EnvScope("FINGERTRAP_PI", "/ambient/pi");
+        var settings = SettingsLoader.Parse("""
+            {"version":2,"pi":{"mode":"managed","profileId":"alpha","runtimeId":"pi-0.85.1"}}
+            """);
+        var error = Assert.Throws<PiNotFoundException>(() =>
+            PtyService.ResolveExecutable(PaneKind.Pi, requested, settings.Pi));
+        Assert.Contains("managed runtime activation", error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ResolvePi_ExplicitUserManagedVersionTwo_RetainsLegacyPrecedence()
+    {
+        using var piEnv = EnvScope("FINGERTRAP_PI", "/ambient/pi");
+        var settings = SettingsLoader.Parse("""{"version":2,"pi":{"mode":"user-managed","path":"/configured/pi"}}""");
+        Assert.Equal("/configured/pi", PtyService.ResolveExecutable(PaneKind.Pi, null, settings.Pi));
+        Assert.Equal("/requested/pi", PtyService.ResolveExecutable(PaneKind.Pi, "/requested/pi", settings.Pi));
     }
 
     [Fact]

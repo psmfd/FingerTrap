@@ -29,6 +29,15 @@ internal static class PiExecutableResolver
     /// </summary>
     internal static string ResolvePi(string? requested, PiSettings? settings = null)
     {
+        // ADR-0035: a parsed managed selection must never enter legacy
+        // fallback, even when the request supplies an explicit executable.
+        if (settings?.Mode == "managed")
+        {
+            throw new PiNotFoundException(
+                "managed runtime activation is not available in this build; " +
+                "profile isolation and runtime qualification must complete first");
+        }
+
         if (!string.IsNullOrEmpty(requested))
         {
             return requested;
