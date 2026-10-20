@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-20 14:48 UTC.
+Updated: 2026-10-20 15:01 UTC.
 
 ## Authorization and scope
 
@@ -19,13 +19,16 @@ approval capabilities and repository retirement retain their separate gates.
 
 ## Resume here
 
-**Current boundary: checkpoint S1; next slice S2 — import/test manifests.**
+**Current boundary: checkpoint S2; next slice S3 — launch isolation.**
 
-1. Commit the bounded MessagePack dependency repair separately from S1.
-2. Checkpoint the locally verified S1 contract/fixtures and push to PR #207.
-3. Replace the fixed 20-file verifier and two-extension discovery with
-   reviewed per-slice file/source/test manifests, including authored suites.
-   Prove missing/changed/unaccounted files and omitted suites fail.
+1. Commit/push locally verified S2 and update PR #207's review description.
+2. Implement explicit inherited/replacement environment semantics in
+   `PiRpcClientOptions` and Porta.Pty, including the Unix native launcher.
+   Preserve Darwin spawn coordination; update vendor `UPSTREAM.md`.
+3. Build the host-resolved launch context on the S1 profile contract, with
+   verified runtime/resource selection and real PTY/RPC environment probes.
+   Keep managed activation blocked until all launch/discovery gates pass.
+4. Collect hosted results for the newest checkpoint before claiming CI green.
 
 No managed launch is enabled.
 Read the latest [activity entry](WORK_LOG.md) before resuming; compare this
@@ -37,8 +40,8 @@ record with `git status`, `git log` and any active process/test output.
 | --- | --- | --- | --- |
 | M0 | Ownership ADR, inventory and successors | Committed and backed up | `6a999c9`; ADR-0034 accepted; inventory and #200–#206 exist |
 | M1a | Token/cache-meter source package | Verified, backed up, inactive | [Report](m1a-import.md); runtime package CI passed on all three platforms at `6a999c9` |
-| S1 | Profile schema, compatibility and baseline | Locally verified; checkpointing | [Foundation report](profile-foundation.md); ADR-0035 and shared fixtures; hosted result pending |
-| S2 | Reviewed import slices and test registration | Pending | Replace fixed 20-file verifier and two-extension runner without losing coverage |
+| S1 | Profile schema, compatibility and baseline | Locally verified and backed up | `52fc6bc`; [foundation report](profile-foundation.md); hosted result pending |
+| S2 | Reviewed import slices and test registration | Locally verified; checkpointing | [Manifest report](import-manifests.md); 84 tests and independent offline package restore passed |
 | S3 | PTY/RPC launch isolation | Pending | RPC inheritance plus both PTY merge/native layers must change |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
 | S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |
@@ -75,6 +78,8 @@ validation after resuming an incomplete edit and update this record.
 - Base: `8ffeae809f7b4579d6b4f006c3f6e8414df60620`.
 - Baseline checkpoint: `6a999c9`, pushed to
   `psmfd/FingerTrap:docs/pi-runtime-migration`.
+- Dependency repair: `44455f5`; S1 foundation: `52fc6bc`. Both pushed to the
+  same remote branch. Source remains inactive.
 - Draft review: [PR #207](https://github.com/psmfd/FingerTrap/pull/207),
   targeting `dev`; no merge or activation.
 - Existing M1a local results: [recorded report](m1a-import.md).
@@ -91,6 +96,12 @@ validation after resuming an incomplete edit and update this record.
   sidecar/Tauri jobs failed restore on MessagePack 2.5.302 (NU1902).
   Patched 2.5.303 plus affected locks now pass local audited locked restore;
   a new hosted run is required.
+- S1 hosted update: sidecar/runtime/UI matrices pass on Linux, Windows and
+  macOS; Tauri macOS/Linux and Apple Silicon package/smoke pass.
+  Tauri Windows and Rust analysis were still pending at the latest read.
+- S2 local: complete 35-file package inventory, eight suites, 84 passing tests,
+  independent offline frozen restore/validation, and omitted-suite mutation
+  detected. No imported implementation changed.
 
 ## Known gates and protected local state
 

@@ -17,6 +17,8 @@ This directory contains:
   maintainer-approved sequence for #200 and #201, recorded 2026-10-20.
 - [S1 profile foundation](profile-foundation.md): settings compatibility,
   common contract fixtures, local verification and remaining launch gates.
+- [S2 import/test manifests](import-manifests.md): complete package accounting,
+  reviewed suite registration and independent restore evidence.
 - [Issue ledger](issue-ledger.md): all 199 open pi_config issues, three pending
   PRs, public distribution requests, extension-mirror maintenance, and relevant
   external dependencies, mapped to successor work.

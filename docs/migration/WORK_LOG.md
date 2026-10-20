@@ -95,3 +95,44 @@ The compact [status board](STATUS.md) is the starting point for a new session.
 - **Durable evidence:** [profile-foundation.md](profile-foundation.md).
 - **Next:** separate dependency/S1 checkpoints, remote backup and hosted CI;
   then S2 reviewed import/test manifest generalization.
+
+## 2026-10-20 — S1 checkpoint backed up; begin S2
+
+- **Committed/pushed:** dependency repair `44455f5`; S1 foundation `52fc6bc`.
+  PR #207 contains both. Staged S1 secret scan found no leaks; Markdown lint
+  passed (one pre-existing bare issue reference was made an explicit link).
+- **S2 intent:** introduce reviewed per-slice source/file/test selections and
+  authored-test registration. Account for every package file outside installed
+  dependencies, reject symlink/path escapes, retain hashes/transformations,
+  support multiple source revisions and reject omitted regression suites.
+- **Validation planned:** keep all 69 existing tests; add negative verifier
+  fixtures for tampering, missing/unaccounted paths, changed source selection
+  and omitted tests. Restore/validate a fresh package-only copy.
+- **Next:** implement the manifest verifier and update the test runner to
+  consume the reviewed registry. No new extension import or activation.
+- **First S2 check:** provenance/lint/typecheck passed. One new fixture compared
+  `/var` with the verifier's canonical `/private/var` on macOS; canonicalized
+  the fixture root so the assertion tests the promised resolved-path contract.
+- **Hosted S1 update:** sidecar, runtime-package and UI jobs passed on Linux,
+  Windows and macOS after the dependency repair. Tauri/Apple Silicon packaging
+  and Rust analysis were still pending when read; no full-green claim yet.
+
+## 2026-10-20 15:01 UTC — S2 verified locally
+
+- **Implementation:** explicit import/test selections; provenance schema v2
+  with per-file source identity and patch-source support; full authored/imported
+  package accounting; test runner consumes the verified suite registry.
+- **Results:** all 84 tests passed (15 new verifier cases); provenance
+  20/20, lint/typecheck and JavaScript syntax passed. Eight suites and 35
+  package files accounted for. No imported meter implementation changed.
+- **Regression proof:** removed only suite-accounting validation; both
+  omission tests failed, including the authored-suite missing-exception case.
+  Restored original bytes and verified the complete package successfully.
+- **Independent restore:** fresh package-only export, offline/frozen restore
+  with install scripts disabled, then provenance/lint/typecheck/84 tests all
+  passed. The initial default-cache attempt lacked a tarball; using the
+  existing populated temporary store succeeded without a network download.
+- **Hosted S1 update:** Apple Silicon package/smoke and Tauri macOS/Linux
+  passed; Windows Tauri and Rust analysis still pending at last read.
+- **Next:** checkpoint S2 and update PR evidence, then S3's explicit
+  replacement environment and actual managed launch context.

@@ -1,14 +1,7 @@
 {
-  "schema_version": 1,
-  "slice": "M1a",
+  "schema_version": 2,
   "imported_on": "2026-10-20",
   "status": "source-imported-not-activated",
-  "source": {
-    "repo": "psmfd/pi_config",
-    "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
-    "license": "MIT",
-    "selection": "../../docs/migration/first-import.json"
-  },
   "activation": "No app wiring, Pi package registration or installer integration; managed use waits for profile isolation and runtime qualification.",
   "files": [
     {
@@ -16,7 +9,13 @@
       "source_path": "LICENSE",
       "source_blob": "30bde73114ebfb6661dad88811a2e2221b747577",
       "sha256": "a74922615ad264c8ae7bed586363075ab0c922f1c472a8e69da23763ef1e093c",
-      "transformations": []
+      "transformations": [],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/cache-meter/README.md",
@@ -25,7 +24,13 @@
       "sha256": "25cd30ab72ba07956fb27a8befdf96f06748f23c1e107484961829b1df783c19",
       "transformations": [
         "Rewrote documentation for the inactive FingerTrap package; removed legacy install/analysis instructions, private ADR links, and unqualified provider claims."
-      ]
+      ],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/cache-meter/index.ts",
@@ -34,14 +39,26 @@
       "sha256": "4dcb8042f16f6017e8e2b76bd7aec45380b63edb85d59e62f96f88ea4dc47c4f",
       "transformations": [
         "Comments only: identify the historical capability declaration and source ADR, and note that analysis helpers were not imported."
-      ]
+      ],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/cache-meter/record.ts",
       "source_path": "agent/extensions/cache-meter/record.ts",
       "source_blob": "a5bccf7ffdec4c44cefe6b93f1de169b7a703b4b",
       "sha256": "bf7b70534262f4ff8bec78e3f30595bedb5e1c3033a17d0fc2cb944817c1290a",
-      "transformations": []
+      "transformations": [],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/cache-meter/state.ts",
@@ -50,14 +67,26 @@
       "sha256": "0792946efed1df663ddb05061af24baa5f2e1ddaac430e0a25baa0838022cb15",
       "transformations": [
         "Comments only: identify the retained legacy storage path and pending managed-profile isolation; remove source installer/symlink assumptions."
-      ]
+      ],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/cache-meter/test/record.test.ts",
       "source_path": "agent/extensions/cache-meter/test/record.test.ts",
       "source_blob": "1bf80f37226e242142e397998adc9dc43edacb51",
       "sha256": "4d27fc07abe1414db92b74565b58aa4be0f8fde4be0f220184c80bed56c41811",
-      "transformations": []
+      "transformations": [],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/cache-meter/test/state.test.ts",
@@ -66,14 +95,26 @@
       "sha256": "232a092d2d9533c558da8ed2189aa2829b11a55f258731286eabbd7ba3da5744",
       "transformations": [
         "Use path.join in the namespace assertion so the same path contract is checked on Windows and Unix."
-      ]
+      ],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/cache-meter/tsconfig.json",
       "source_path": "agent/extensions/cache-meter/tsconfig.json",
       "source_blob": "3aa715c37d28efa9b5040251421f00c1b147116c",
       "sha256": "c7ea0b80596a62aca70450041e61cfba50d4f9979f1b2daa49a1518bce77867c",
-      "transformations": []
+      "transformations": [],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/cache-meter/types.ts",
@@ -82,7 +123,13 @@
       "sha256": "de0be3f91f892c633da11b1353f064b64b4cb40fb0936448a757624553adb737",
       "transformations": [
         "Comment only: qualify the historical ADR and issue references as pi_config."
-      ]
+      ],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/token-meter/README.md",
@@ -91,7 +138,13 @@
       "sha256": "bc081620d18f9e0e18b7e05667291a28435d44fddd30cd0041616d1b7ea9fb88",
       "transformations": [
         "Rewrote documentation for the inactive FingerTrap package; retained schemas and lifecycle/storage limits, removed legacy installation/helper instructions and private ADR links."
-      ]
+      ],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/token-meter/index.ts",
@@ -100,14 +153,26 @@
       "sha256": "9ff0fee1e5bbad02e0d8f37a35476cccb507729f491190b471fd9aea17dee33c",
       "transformations": [
         "Comments only: identify source ADRs and omitted shell helper; correct the blanket secret-free-log claim because labels are recorded verbatim."
-      ]
+      ],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/token-meter/record.ts",
       "source_path": "agent/extensions/token-meter/record.ts",
       "source_blob": "da690dc7e29d01cf6a5baf6b983a4d9993f07bbd",
       "sha256": "52c2675311973a761945471db8aeae90c4390e11835b2bacceec040f333b73c1",
-      "transformations": []
+      "transformations": [],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/token-meter/state.ts",
@@ -116,7 +181,13 @@
       "sha256": "42394933dbf644fe88fd81398e05cd3af272f8147d9185faa20fd92249167128",
       "transformations": [
         "Comments only: identify retained storage defaults and pending profile isolation; remove installer/symlink assumptions and unqualified cross-process atomicity claims."
-      ]
+      ],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/token-meter/test/index.test.ts",
@@ -125,7 +196,13 @@
       "sha256": "894400b335d6b8f05d02c99937a021da5a56556958904af4361c05044e666456",
       "transformations": [
         "Save, override and restore USERPROFILE alongside HOME so the existing settings-isolation tests also use a temporary home on Windows."
-      ]
+      ],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/token-meter/test/record.test.ts",
@@ -134,42 +211,78 @@
       "sha256": "db20f72105a0c6c260b7a5448dc09e26be5be56c589794351edde7d1e9d2c8d4",
       "transformations": [
         "Removed one trailing blank line to pass new-file whitespace checks; test assertions are unchanged."
-      ]
+      ],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/token-meter/test/state.test.ts",
       "source_path": "agent/extensions/token-meter/test/state.test.ts",
       "source_blob": "64b805d899f4635cdee6f57a45ad6f36e4a8ffa7",
       "sha256": "03e378e28590e420ab1728290eb255ca33731e68f03ab0a5c71fc55f4580e33a",
-      "transformations": []
+      "transformations": [],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/token-meter/test/tiers.test.ts",
       "source_path": "agent/extensions/token-meter/test/tiers.test.ts",
       "source_blob": "60fc3aefaa52338776cf21b1bae1461a88dc7f9a",
       "sha256": "028ef4166a1ede912b81ed6f905e6498c2c4c7f343640b352aaa6fdb90a2bdfa",
-      "transformations": []
+      "transformations": [],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/token-meter/tiers.json",
       "source_path": "agent/extensions/token-meter/tiers.json",
       "source_blob": "21923f20ab9c90ada848241142329cf60a44da77",
       "sha256": "d72c4d1cff0207cc737b40d4e58205bb0d0a528849726fa79a2d70ead9e98ab7",
-      "transformations": []
+      "transformations": [],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/token-meter/tsconfig.json",
       "source_path": "agent/extensions/token-meter/tsconfig.json",
       "source_blob": "3aa715c37d28efa9b5040251421f00c1b147116c",
       "sha256": "c7ea0b80596a62aca70450041e61cfba50d4f9979f1b2daa49a1518bce77867c",
-      "transformations": []
+      "transformations": [],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     },
     {
       "path": "extensions/token-meter/types.ts",
       "source_path": "agent/extensions/token-meter/types.ts",
       "source_blob": "46e63a87a4bf36cb1fb61ebc4f51287638854d29",
       "sha256": "a737c9b3adfb88199a87ba800dbdbc3a5bae29950624cbc556b6fef8fd37dc4a",
-      "transformations": []
+      "transformations": [],
+      "slice": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      }
     }
   ],
   "authored_files": [
@@ -183,7 +296,10 @@
     "scripts/check-provenance.mjs",
     "contracts/runtime-profile.v1.cases.json",
     "runtime/profile.ts",
-    "runtime/test/profile.test.ts"
+    "runtime/test/profile.test.ts",
+    "import-slices.json",
+    "scripts/lib/import-manifest.mjs",
+    "scripts/test/import-manifest.test.mjs"
   ],
   "tooling_reference": [
     {
@@ -210,5 +326,14 @@
       "path": "eslint.config.js",
       "blob": "1c4171bab438adfaad4514354b94aecf450413ee"
     }
-  ]
+  ],
+  "initial_import": {
+    "slice": "M1a",
+    "source": {
+      "repo": "psmfd/pi_config",
+      "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+      "license": "MIT",
+      "selection": "../../docs/migration/first-import.json"
+    }
+  }
 }

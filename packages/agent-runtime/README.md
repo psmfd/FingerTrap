@@ -30,8 +30,10 @@ The runtime imports TypeBox and Node builtins; it does not create an SDK
 session. These npm types do not establish equivalence with the patched Pi
 executable or change FingerTrap's `v0.85.1-psmfd.1` runtime selection.
 
-`pnpm test` runs all six inherited `node:test` files and the shared profile
-contract tests in child processes with
+`pnpm test` runs the suites explicitly registered in
+[import-slices.json](import-slices.json): all six inherited `node:test` files,
+the shared profile contract tests and the manifest-verifier regression tests.
+It validates file/suite completeness before starting child processes with
 an isolated home and temporary storage. Provider credentials, Pi configuration,
 meter environment variables, and `NODE_OPTIONS` are not inherited. Temporary
 files are removed after the run, including scratch files from inherited tests.
@@ -53,13 +55,27 @@ hosting, and SDK-worker adoption are outside this import.
 
 ## Provenance and changes
 
-[provenance.json](provenance.json) records all 20 selected source paths/blobs,
-the exact source commit, local transformations, and destination SHA-256 hashes.
+[import-slices.json](import-slices.json) is the reviewed per-slice allowlist:
+source identities, exact files/blobs, inherited suites and authored suites.
+[provenance.json](provenance.json) schema v2 records each selected file's
+slice/source identity, local transformations, destination SHA-256 and any
+separately reviewed patch-source identities. It also inventories authored files.
+There are currently 20 imported files in the original M1a slice.
 The [candidate manifest](../../docs/migration/first-import.json) remains the
 original selection. `pnpm check:provenance` verifies imported file integrity
 without requiring private repository access; it is not a source attestation.
 When editing an imported file, review and update its transformation description
 and digest in the same change.
+
+The verifier checks every package file outside root `node_modules` against
+the imported/authored inventory. It rejects missing/unaccounted files,
+duplicate or escaped paths, symlinks, inconsistent source/patch identities
+and omitted test suites. Tests currently use `.test.ts` or `.test.mjs`; another
+`.test.*` suffix requires an explicit runner change. Installed dependencies
+are verified by the frozen pnpm lock, not by this source-file inventory.
+Adding a slice requires its actual dependency/test closure and activation
+disposition to be reviewed in the migration records before changing these
+manifests. Source import does not register extensions with Pi.
 
 The original MIT notice is retained in [LICENSE](LICENSE). Extension READMEs
 were rewritten for this package; implementation comments now identify legacy
