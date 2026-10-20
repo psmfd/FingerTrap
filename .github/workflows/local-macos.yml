@@ -1,0 +1,75 @@
+name: local-macos
+
+# The dedicated runner group permits this file only at this trusted branch.
+# No pull_request trigger, caller-supplied checkout ref or hosted fallback.
+on:
+  push:
+    branches: [ci/tart-runner-pilot]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: local-macos-pilot
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    if: github.repository == 'psmfd/FingerTrap' && github.ref == 'refs/heads/ci/tart-runner-pilot'
+    name: macOS tests and Apple Silicon package (Tart)
+    runs-on:
+      group: fingertrap-tart-pilot
+      labels: [self-hosted, macOS, ARM64, fingertrap-tart]
+    timeout-minutes: 60
+    env:
+      DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER: "1"
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "1"
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Record guest identity
+        run: |
+          sw_vers
+          test "$(uname -m)" = arm64
+          test "$RUNNER_ENVIRONMENT" = self-hosted
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10.34.5
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: |
+            src-ui/pnpm-lock.yaml
+            packages/agent-runtime/pnpm-lock.yaml
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: "10.0"
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri
+      - name: Validate and package
+        run: bash scripts/ci/validate-macos.sh
+      - name: Upload candidate
+        uses: actions/upload-artifact@v7
+        with:
+          name: local-apple-silicon-candidate-${{ github.sha }}
+          path: candidate/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: local-macos-diagnostics-${{ github.sha }}
+          path: |
+            candidate/*.log
+            src-sidecar/tests/**/TestResults/
+          if-no-files-found: ignore

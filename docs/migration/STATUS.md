@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-20 17:12 UTC.
+Updated: 2026-10-20, after the S3 package retry and local-runner request.
 
 ## Authorization and scope
 
@@ -20,17 +20,23 @@ approval capabilities and repository retirement retain their separate gates.
 
 ## Resume here
 
-**Current activity: S3 foundation locally verified; checkpoint and hosted CI.**
+**Current activity: preparing the local Tart runner pilot; S3 source checks passed.**
 
 1. Follow the [approved S3 plan](s3-launch-isolation-plan.html).
 2. Read [S3 discovery audit](s3-discovery-audit.md): project migrations precede
    trust in the pin, blocking arbitrary-project activation. ADR-0036 records
    the controlled-fixture restriction and launch contract.
-3. Read the [S3 implementation report](s3-launch-foundation.md). Audited
-   restore/build, 401 tests, four mutations, published sidecar smoke and native
-   companion probes passed. Commit/back up the source and collect hosted CI.
-4. Preserve Darwin spawn coordination and managed activation gates; collect
-   hosted results for each new source checkpoint before claiming CI green.
+3. Read the [S3 implementation report](s3-launch-foundation.md). Source
+   `95424b3` is committed/pushed. Hosted sidecar/runtime/UI/Tauri passed on all
+   three platforms. Rust analysis passed. The unchanged-source Apple Silicon
+   retry passed packaging, packaged-sidecar smoke and artifact upload
+   ([job](https://github.com/psmfd/FingerTrap/actions/runs/39469041145/job/118790720905)).
+4. The maintainer requested local GitHub Actions capacity, potentially Tart,
+   to reduce hosted builds. Inspect and prepare an isolated macOS runner first;
+   macOS-first pilot is the working scope. See the
+   [runner runbook](../local-github-runner.md). No new hosted builds during
+   setup. Publish the pilot on its dedicated branch, configure the restricted
+   group, then verify isolation and run one local job before routine CI cutover.
 
 No managed launch is enabled.
 Read the latest [activity entry](WORK_LOG.md) before resuming; compare this
@@ -44,7 +50,8 @@ record with `git status`, `git log` and any active process/test output.
 | M1a | Token/cache-meter source package | Verified, backed up, inactive | [Report](m1a-import.md); runtime package CI passed on all three platforms at `6a999c9` |
 | S1 | Profile schema, compatibility and baseline | Verified locally and in CI; backed up | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed |
 | S2 | Reviewed import slices and test registration | Verified locally and in CI; backed up | `92137c4`; [manifest report](import-manifests.md); all platform checks and Apple Silicon package/smoke passed |
-| S3 | PTY/RPC launch isolation | Foundation locally verified; CI pending; discovery blocked | [Report](s3-launch-foundation.md); exact-pin project migrations prevent full S3 qualification |
+| S3 | PTY/RPC launch isolation | Foundation backed up and CI verified; discovery blocked | `95424b3`; [report](s3-launch-foundation.md); package retry passed; exact-pin project migrations prevent full qualification |
+| CI-local | Reduce hosted builds with a local runner | Pilot prepared locally, unverified | ADR-0037; template and privileged Softnet helper prepared; publish trusted pilot branch before runner-group creation; no active runner yet |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
 | S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |
 | S5-B | Guards and typed tools | Pending | Enforcement tests, identity, tool ownership, vendor notices |
@@ -76,7 +83,10 @@ validation after resuming an incomplete edit and update this record.
 
 ## Current checkpoint / validation state
 
-- Branch: `docs/pi-runtime-migration`.
+- Migration branch: `docs/pi-runtime-migration`; draft PR #207.
+- Active infrastructure pilot branch: `ci/tart-runner-pilot`, based on the
+  S3 source checkpoint. This keeps pilot pushes outside the PR's hosted matrix.
+  The pilot branch also preserves the latest S3 handoff.
 - Base: `8ffeae809f7b4579d6b4f006c3f6e8414df60620`.
 - Baseline checkpoint: `6a999c9`, pushed to
   `psmfd/FingerTrap:docs/pi-runtime-migration`.
@@ -87,6 +97,8 @@ validation after resuming an incomplete edit and update this record.
   checks are distinct from the verified S2 source checkpoint.
 - S3 approval plan: `dac31ce`, committed and pushed; approved by the
   maintainer in the subsequent turn.
+- S3 implementation/audit: `95424b3`, committed and pushed. PR #207 now
+  describes profile/import/launch foundations and the explicit discovery gap.
 - Draft review: [PR #207](https://github.com/psmfd/FingerTrap/pull/207),
   targeting `dev`; no merge or activation.
 - Existing M1a local results: [recorded report](m1a-import.md).

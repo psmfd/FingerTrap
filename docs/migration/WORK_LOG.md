@@ -277,3 +277,80 @@ The compact [status board](STATUS.md) is the starting point for a new session.
 - **Remaining:** source checkpoint/remote backup, hosted matrices and package
   results. Full S3 discovery qualification remains blocked by the reproduced
   pinned CLI migration behavior. No activation or issue closure.
+
+## 2026-10-20 — S3 checkpoint backed up; hosted platform tests passed
+
+- **Committed/pushed:** `95424b3` contains the S3 foundation, tests, probes,
+  ADR-0036, discovery evidence and tracking. Default-rule scan of the 34-file
+  review export found no secrets. Unrelated private local artifacts remain
+  untouched and untracked.
+- **PR #207:** title/body updated for managed profiles and launch isolation,
+  with local/mutation/publish evidence and the explicit qualification blocker.
+  It remains a draft against `dev`.
+- **Hosted observation:** sidecar, runtime-package, UI and Tauri checks passed
+  on Windows, macOS and Linux, as did repository/workflow checks and
+  actions/C#/JavaScript/Python analysis. Rust analysis and Apple Silicon
+  package/smoke were still pending at this observation.
+- **Next:** collect those final checks, record exact run/source identities,
+  and leave the missing pinned-runtime control as the next decision.
+
+## 2026-10-20 17:52 UTC — Hosted DMG bundling failure; unchanged-source retry
+
+- **Failure:** Apple Silicon run `39469041145`, first attempt, failed in
+  `bundle_dmg.sh` after Rust/UI build, native staging and `.app` creation
+  succeeded. The available log gives no more specific DMG diagnostic.
+  This is not a passing package/smoke result.
+- **Action:** requested one rerun of the failed job at unchanged source
+  `95424b3`. Do not alter implementation or weaken checks on this evidence.
+  If repeated, collect additional bundler diagnostics before choosing a fix.
+- **Other results:** all three platform sidecar/runtime/UI/Tauri jobs passed;
+  Rust analysis remained pending at the last read. Production stays gated.
+
+## 2026-10-20 — S3 source checks complete; local runner requested
+
+- **Final source result:** Rust analysis passed. Apple Silicon retry job
+  `118790720905` in run `39469041145` passed at unchanged `95424b3`, including
+  DMG creation, packaged-sidecar smoke and candidate upload. The initial DMG
+  failure remains recorded; a retry pass does not establish its root cause.
+  Full S3 discovery qualification remains blocked; no managed activation.
+- **New direction:** maintainer requested reducing GitHub-hosted builds with
+  a local runner, possibly Tart. No additional hosted builds will be started
+  during investigation. Existing completed checks are retained.
+- **Initial evidence:** Tart 2.32.1 and Softnet 0.19.0 installed; cached macOS
+  Sequoia base; existing acceptance VMs stopped and preserved. Host has 18 CPUs,
+  128 GiB RAM and approximately 122 GiB free. Repository is public; authorized
+  identity has repository administration; no repository runners registered.
+- **Next:** determine organization runner-group restrictions and prepare a
+  disposable, isolated macOS job VM. Optional question asks whether to move
+  macOS CI/package lanes first or begin with manual validation. ADR-0033's
+  acceptance-only runner boundary needs an explicit successor.
+- **Durability:** these status updates are local and not yet committed or
+  pushed. A push to this PR would trigger hosted CI under current workflows.
+
+## 2026-10-20 — Local Tart pilot prepared; activation verification next
+
+- **Implementation:** ADR-0037, runner runbook, dedicated workflow, combined
+  macOS validation/package script, exact runner/base preparation, isolated
+  single-job controller and server-side group-policy checks prepared locally.
+- **Host/guest:** separate base `ft-actions-base-20261020`, 8 CPUs/16 GiB/80 GB
+  sparse disk. Guest macOS 15.7.7 / 24G720. Official runner 2.338.0 archive
+  checksum verified; installed unregistered in `~/fingertrap-actions-runner`;
+  clean base shut down. Existing acceptance VMs preserved.
+- **Privilege step:** initial Softnet boot failed because no privileged helper
+  was available. With macOS administrator authorization, installed the reviewed
+  binary under `/Library/PrivilegedHelperTools/fingertrap-softnet`, root-owned
+  mode 4755. Installer and launcher pin its SHA-256. No sudoers/Homebrew changes.
+- **Checks:** three policy tests passed (11 invalid-boundary cases); bypassing
+  the validator in memory made all 11 cases fail. Shell syntax/ShellCheck,
+  Python compilation, structural and Markdown checks passed. Initial actionlint
+  required declaring the custom runner label; config added and lint passed.
+- **GitHub setup:** authorized identity can administer organization runner
+  groups. Creation rejected HTTP 400 because the exact trusted pilot branch
+  does not yet exist. No broader group was substituted.
+- **Next:** commit and publish the scoped pilot to `ci/tart-runner-pilot`
+  without a PR; existing hosted CI push triggers do not match that branch.
+  Read back actual run routing, configure restricted group, prove network
+  isolation, then run the complete local macOS job. Do not call the runner
+  operational or switch routine CI until the pilot and cleanup pass.
+- **Branch isolation:** switched the staged pilot to `ci/tart-runner-pilot`
+  from `95424b3`; the migration PR branch itself remains unchanged.
