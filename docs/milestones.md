@@ -1,17 +1,31 @@
 # Milestones
 
+**Migration accepted (2026-10-20):**
+[ADR-0034](../adrs/0034-own-agent-runtime-and-retire-pi-config.md) establishes
+FingerTrap as the development home for functionality migrating from pi_config.
+The approved sequence covers component inventory, source import, an isolated
+managed profile, SDK-worker evaluation, managed distribution, and eventual
+pi_config retirement. The [component inventory and issue ledger](migration/README.md)
+are recorded, with successor issues #200–#206.
+[M1a: token/cache meters](migration/m1a-import.md) is imported and validated
+locally in an inactive package. Remaining M1 imports and managed-profile
+isolation are pending. The executable/RPC backend stays in use.
+Production SDK adoption requires a subsequent decision. Existing approval,
+credential, platform, and release
+gates remain in force.
+
 FingerTrap is sequenced as **two parallel tracks**.
 
 The **Home track** (FT-0 … FT-3) delivers the pi Home interface — the shell the
-operator lives in. Its phases and gates are defined by `pi_config`'s curated
-feature plan (`notes/curated-feature-plan.md`, Track 6), which elevated
-FingerTrap from a long-horizon item to the Home interface on 2026-08-11.
-`pi_config` remains the governance home for the Home track: its phase gates,
-credential policy, migration map, and pi approval semantics live there.
-FingerTrap **renders and hosts Home features; it never owns pi policy,
-credential policy, or approval semantics**. Native features may own narrowly
-scoped application-safety confirmations, such as executable integrity approval
-or destructive VM action confirmation, but never pi authority.
+operator lives in. Its phases originated in `pi_config`'s curated feature
+plan (`notes/curated-feature-plan.md`, Track 6), which elevated FingerTrap to
+the Home interface on 2026-08-11. Under ADR-0034, FingerTrap now owns planning
+and development of the migrating runtime, policy, and approval semantics.
+Existing runtime enforcement remains in place until each component is migrated
+and verified. Source ownership does not grant the WebView approval authority:
+it renders output and collects intent; protected operations retain their
+current refusal/TUI path until a trusted native approval design is implemented.
+Existing application-safety confirmations retain their established scope.
 
 The **Native track** (N-1 … N-5) carries FingerTrap's own terminal features —
 the ones that predate the Home framing and have no place in it. They are
@@ -32,6 +46,7 @@ individual item says otherwise.
 | FT-1 — Chrome | Home | **complete** ([#58](https://github.com/psmfd/FingerTrap/issues/58), ADR-0021; slices 1–3, follow-ups [#70](https://github.com/psmfd/FingerTrap/issues/70)/[#72](https://github.com/psmfd/FingerTrap/issues/72), and splits ([#118](https://github.com/psmfd/FingerTrap/issues/118), ADR-0024)) |
 | FT-2 — Structured control + observability | Home | **control scope complete** ([#120](https://github.com/psmfd/FingerTrap/issues/120)): native RPC panes, session list/resume, worktree-orphan surfacing, model/status readouts, hello ready-gate/version — all delivered and operator-smoke-validated. The two additive panels are deferred to their own slices: observability dashboards [#157](https://github.com/psmfd/FingerTrap/issues/157), expertise drafts panel [#158](https://github.com/psmfd/FingerTrap/issues/158) |
 | FT-3 — Tool host | Home | not started |
+| Agent runtime migration | Home | **inventory and M1a source import complete locally** (ADR-0034, [import report](migration/m1a-import.md)); package inactive; remaining imports [#200](https://github.com/psmfd/FingerTrap/issues/200) and profile isolation [#201](https://github.com/psmfd/FingerTrap/issues/201) pending; SDK adoption undecided ([#202](https://github.com/psmfd/FingerTrap/issues/202)) |
 | N-1 — Settings and persistence | Native | **in progress** ([#51](https://github.com/psmfd/FingerTrap/issues/51); settings foundation landed, ADR-0014) |
 | N-2 — Packaging | Native | partially standing (semantic-release wired) |
 | N-3 — SSH terminal | Native | not started |
@@ -131,8 +146,8 @@ the status bar rendering providers dynamically off provider events), and the
 whole of M6 (global keymap, command palette on Cmd/Ctrl+P, configurable
 bindings, commands invoking RPC methods or UI actions).
 
-Credentials at this phase are **bounded static** under policy stated in
-`pi_config`: fine-grained PATs or ADO equivalents, read-only scopes only,
+Credentials at this phase remain **bounded static** under the inherited policy
+now maintained in FingerTrap: fine-grained PATs or ADO equivalents, read-only scopes only,
 native expiry required (no non-expiring tokens), OS-keychain-or-equivalent
 storage. FT-3's minted leases are the terminus.
 
@@ -164,26 +179,31 @@ crash-orphan reaping ([#124](https://github.com/psmfd/FingerTrap/issues/124)).
 Two additive pieces of the original scope are **deferred to their own
 slices**, tracked and not dropped:
 
-- Read-only observability dashboards over `pi_config`'s meter JSONL files —
-  **observe from outside**; FingerTrap renders, the recorders stay in
-  `pi_config` ([#157](https://github.com/psmfd/FingerTrap/issues/157)).
-- The native counterpart of the expertise drafts-review panel (`pi_config`
-  curated plan, Track 5 rung 4) — **display and intent only**; the single-use
-  approval ledger and its semantics stay in `pi_config`
-  ([#158](https://github.com/psmfd/FingerTrap/issues/158)).
+- Read-only observability dashboards over the runtime's meter JSONL files —
+  **observe from outside**; the recorders and schemas migrate from pi_config
+  into FingerTrap's runtime package under ADR-0034
+  ([#157](https://github.com/psmfd/FingerTrap/issues/157)).
+- The native counterpart of the expertise drafts-review panel (originally
+  pi_config curated plan, Track 5 rung 4) — **display and intent only** until
+  the trusted native approval design is implemented. The ledger and policy
+  source migrate under ADR-0034 while current approval restrictions remain
+  enforced ([#158](https://github.com/psmfd/FingerTrap/issues/158)).
 
 ### FT-3 — Tool host
 
-**Gate:** `pi_config`'s Track 3 Phase 2 — credential broker and grant
-enforcement — live. Phase 1's engine alone is insufficient, because FT-3's
-deliverable is a credential-holding backend.
+**Gate:** credential broker and grant enforcement live — the requirement
+inherited from pi_config's Track 3 Phase 2, now owned by FingerTrap under
+ADR-0034. Phase 1's engine alone is insufficient, because FT-3's deliverable
+is a credential-holding backend.
 
 Sidecar JSON-RPC methods exposed as digest-reviewed descriptors: the .NET
 tool-authoring path. The sidecar becomes a credential-holding backend behind
 the broker's discipline, using minted leases.
 
-Descriptor authoring, review, digests, grants, and approval ledgers remain in
-`pi_config`. FingerTrap hosts tool *backends*, never tool *authority*.
+Descriptor authoring, review, digests, grants, and approval ledgers migrate
+into FingerTrap's runtime under ADR-0034. Tool backends remain subject to
+those controls; source ownership does not authorize a generic sidecar bridge
+or make WebView intent an approval.
 
 ## Native track
 

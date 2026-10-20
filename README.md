@@ -21,11 +21,24 @@ IPC is JSON-RPC 2.0 over stdio with `Content-Length` framing — `StreamJsonRpc`
 
 On Darwin, every sidecar child launch shares a process-wide spawn coordinator so transient descriptors cannot leak across concurrent children; see `adrs/0030-process-wide-darwin-child-spawn-coordination.md`.
 
+[ADR-0034](adrs/0034-own-agent-runtime-and-retire-pi-config.md) establishes
+FingerTrap as the development home for functionality migrating from pi_config.
+The accepted plan retains executable/RPC integration during migration and
+evaluates a Pi SDK worker for managed native sessions. It includes the component
+migration map and SDK adoption criteria. The first meter source slice is
+imported into an inactive package; remaining imports and managed activation
+are pending. Production SDK adoption requires a subsequent decision.
+The [migration inventory and issue ledger](docs/migration/README.md) record
+the immutable inputs, successor issues, and first import slice.
+For ongoing work, start with the [migration status and resume guide](docs/migration/STATUS.md);
+the [activity log](docs/migration/WORK_LOG.md) records checkpoints and validation.
+
 ## Repo layout
 
 ```text
 adrs/        Architecture Decision Records (MADR minimal)
 docs/        Project documentation (milestones, design notes)
+packages/    Curated agent runtime (source imported; app activation pending)
 scripts/     Repo-level scripts (check.sh, etc.)
 src-sidecar/ .NET 10 sidecar (FingerTrap.sln)
 src-tauri/   Tauri 2 shell (Rust crate)
@@ -75,8 +88,16 @@ cd src-tauri && cargo fmt --check && cargo clippy -- -D warnings && cargo check
 
 # Repo-level
 scripts/check.sh
+
+# Agent runtime (independent package; not loaded by the app yet)
+cd packages/agent-runtime
+pnpm install --frozen-lockfile
+pnpm check:provenance && pnpm lint && pnpm typecheck && pnpm test
 ```
 
 ## Status
 
-M1 — local PTY (Linux, macOS). Windows deferred. See `docs/milestones.md` for the full M0–M8 sequence.
+FT-0 and FT-1 are complete; FT-2's structured control is delivered. Managed
+runtime installation and the remaining native features are in progress or
+planned. Windows PTY support remains deferred. See [milestones](docs/milestones.md)
+for the Home and Native tracks and the accepted runtime ownership migration.

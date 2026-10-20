@@ -2,6 +2,9 @@
 
 - Status: Accepted (decision 2's "pi#54's arrival deletes it cleanly" clause superseded by [0028](0028-retain-session-scan-defer-headless-listing.md); the no-headless-children principle itself is reaffirmed there)
 - Date: 2026-08-17
+- Partially superseded by [0034](0034-own-agent-runtime-and-retire-pi-config.md):
+  policy development ownership moves to FingerTrap. The executable supervisor,
+  process boundaries, and existing approval restrictions remain in force.
 
 ## Context and problem statement
 
@@ -108,7 +111,7 @@ reachable by opening the same session in a PTY pane instead.
 ### Slices
 
 | Slice | Deliverable |
-|---|---|
+| --- | --- |
 | 1 | Supervisor + fake-pi conformance tests (sidecar-only) |
 | 2 | Pane content abstraction + event relay — native pane walking skeleton rendering raw streamed text |
 | 3 | Transcript + composer MVP: turns, tool blocks, steer/follow-up/abort, model/thinking picker, context meter |

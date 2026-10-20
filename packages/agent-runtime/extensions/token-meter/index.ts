@@ -1,0 +1,251 @@
+/**
+ * token-meter — per-session, per-model token-usage counter (pi_config ADR-0073).
+ *
+ * A `message_end` handler appends one JSONL record per assistant turn to
+ * ~/.pi/agent/extensions/token-meter/sessions/<session-id>.jsonl, and the
+ * `token_usage` tool aggregates those records by model. The legacy shell
+ * aggregation helper is outside this import.
+ *
+ * Toggle (hybrid, inert by default):
+ *   - persistent default: extensionSettings.tokenMeter.enabled in
+ *     ~/.pi/agent/settings.json (USER layer only — a project layer cannot flip
+ *     metering, closing the "hostile repo hides its cost" trust gap);
+ *   - per-session: `--token-meter` launch flag or `/token-meter on|off|status`.
+ *
+ * Whole-tree accounting: when enabled the ROOT process exports TOKEN_METER_SESSION
+ * (its own session id) and TOKEN_METER_ENABLED=1 into process.env. pi spawns
+ * subagents as child processes inheriting env, so every descendant records to the
+ * ROOT session's file — the session total includes all subagent usage.
+ *
+ * Invariants (from cache-meter / pi_config ADR-0034): the `message_end` handler is
+ * OBSERVATIONAL — always returns undefined, never a replacement `{ message }`
+ * (rewriting the message would churn the provider's cached prefix). No network
+ * calls; usage and model/provider/policy labels are recorded, never message
+ * bodies. Labels are not secret-scanned and may contain operator-supplied text.
+ */
+
+import { promises as fs } from "node:fs";
+import { homedir } from "node:os";
+import { join } from "node:path";
+
+import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import { Type } from "typebox";
+
+import {
+  aggregateByModel, aggregateByProvider, aggregateByTier, buildRecord,
+  formatProviderSection, formatStatus, formatTable, formatTerse, formatTierSection, UNTAGGED,
+} from "./record.ts";
+import { appendTurn, loadTierMap, readSession, safeSessionKey } from "./state.ts";
+import type { AssistantMessageLike } from "./types.ts";
+
+interface MessageEndEvent {
+  message?: AssistantMessageLike;
+}
+interface ModelContext {
+  model?: { provider?: string };
+  sessionManager?: { getSessionId?: () => string; getSessionFile?: () => string | undefined };
+}
+
+const ENV_SESSION = "TOKEN_METER_SESSION";
+const ENV_ENABLED = "TOKEN_METER_ENABLED";
+/** Floor between live footer recomputes (each one re-reads the session log). */
+const STATUS_MIN_INTERVAL_MS = 2000;
+// #521: operator A/B label. Read from env (inherited by subagent children like
+// the two vars above), normalized to "untagged", and captured at spawn time —
+// a mid-session `export` in the invoking shell is never seen (same env-snapshot
+// semantics ADR-0073 documents for TOKEN_METER_ENABLED).
+const ENV_POLICY_TAG = "TOKEN_METER_POLICY_TAG";
+
+/** Read the USER-layer settings toggle only (project layer is untrusted here). */
+async function readSettingsEnabled(): Promise<boolean> {
+  try {
+    const p = join(homedir(), ".pi", "agent", "settings.json");
+    const j = JSON.parse(await fs.readFile(p, "utf8")) as {
+      extensionSettings?: { tokenMeter?: { enabled?: unknown } };
+    };
+    return j?.extensionSettings?.tokenMeter?.enabled === true;
+  } catch {
+    return false;
+  }
+}
+
+/** Resolve this process's session key: an inherited root id (child) or our own. */
+function resolveSessionKey(ctx: ExtensionContext): string {
+  const inherited = process.env[ENV_SESSION]?.trim();
+  if (inherited) return safeSessionKey(inherited);
+  const sm = (ctx as unknown as ModelContext).sessionManager;
+  const own = sm?.getSessionId?.() ?? sm?.getSessionFile?.()?.replace(/\.jsonl$/, "");
+  return safeSessionKey(own);
+}
+
+export default function tokenMeter(pi: ExtensionAPI): void {
+  // A child (subagent) process inherits enablement + the root session key.
+  let enabled = process.env[ENV_ENABLED] === "1";
+  let sessionKey = "unknown-session";
+  let turn = 0;
+  // #521: normalized once here (in-memory only). The env write-back that keeps
+  // the whole descendant tree on the same literal (a child of an untagged root
+  // sees "untagged", not "") happens in propagate(), i.e. the enabled path only
+  // — writing it unconditionally at load broke the "inert when disabled"
+  // invariant (#807).
+  let policyTag = process.env[ENV_POLICY_TAG]?.trim() || UNTAGGED;
+
+  // Export env so subagent child processes inherit enablement + the root key.
+  // Only the ROOT stamps the session id (guarded) — descendants keep the root's.
+  // The policy tag is stamped here too so it rides the same enabled-only path:
+  // a disabled load leaves the environment untouched.
+  const propagate = (): void => {
+    if (!process.env[ENV_SESSION]) process.env[ENV_SESSION] = sessionKey;
+    process.env[ENV_ENABLED] = "1";
+    process.env[ENV_POLICY_TAG] = policyTag;
+  };
+
+  // Live footer counter (ADR-0105): whole-tree totals from the session log,
+  // so subagent usage appended by child processes shows up too. The read is
+  // skipped entirely (not just the display call) when there is no UI —
+  // headless children never pay it — and throttled so a pathological burst
+  // of message_end events cannot turn the per-turn re-read into hot-path
+  // work. `force` bypasses the throttle for explicit user actions.
+  let lastStatusMs = 0;
+  const updateStatus = async (ctx: ExtensionContext, force = false): Promise<void> => {
+    if (!enabled || !ctx.hasUI) return;
+    const now = Date.now();
+    if (!force && now - lastStatusMs < STATUS_MIN_INTERVAL_MS) return;
+    lastStatusMs = now;
+    let totals: ReturnType<typeof aggregateByModel> = [];
+    try {
+      totals = aggregateByModel(await readSession(sessionKey));
+    } catch {
+      // Unreadable log → fall back to the plain "on" indicator.
+    }
+    ctx.ui.setStatus("token-meter", formatStatus(totals));
+  };
+
+  pi.registerFlag("token-meter", {
+    description: "Count per-model token usage for this session",
+    type: "boolean",
+    default: false,
+  });
+
+  pi.on("session_start", async (_event, ctx) => {
+    turn = 0;
+    sessionKey = resolveSessionKey(ctx);
+    if (!enabled) {
+      enabled = (await readSettingsEnabled()) || pi.getFlag("token-meter") === true;
+    }
+    if (enabled) {
+      propagate();
+      // Resumed sessions show their running totals immediately; a fresh log
+      // renders the plain "on" indicator until the first record lands.
+      await updateStatus(ctx, true);
+    }
+  });
+
+  pi.registerCommand("token-meter", {
+    description: "Token counter: /token-meter [on|off|status|policy <tag>]",
+    handler: async (args, ctx) => {
+      const raw = (args ?? "").trim();
+      const sub = raw.toLowerCase();
+      if (sub === "on") {
+        enabled = true;
+        propagate();
+        await updateStatus(ctx, true);
+      } else if (sub === "off") {
+        enabled = false;
+        process.env[ENV_ENABLED] = "0";
+        if (ctx.hasUI) ctx.ui.setStatus("token-meter", "");
+      } else if (sub === "policy" || sub.startsWith("policy ")) {
+        // #521: retag from here forward. Subagents spawned earlier keep the
+        // old tag (env is copied at spawn — the ADR-0073 caveat applies).
+        policyTag = raw.slice("policy".length).trim() || UNTAGGED;
+        process.env[ENV_POLICY_TAG] = policyTag;
+      }
+      let summary = "no usage recorded yet";
+      try {
+        summary = formatTerse(aggregateByModel(await readSession(sessionKey)));
+      } catch {
+        /* status still reported below */
+      }
+      ctx.ui.notify(
+        `token-meter: ${enabled ? "ON" : "OFF"} (policy: ${policyTag}) — ${summary}`,
+        "info",
+      );
+      // Any explicit /token-meter interaction also refreshes the footer.
+      await updateStatus(ctx, true);
+    },
+  });
+
+  pi.on("message_end", async (event, ctx) => {
+    // Observational only — never return a replacement message (no prefix churn).
+    try {
+      if (!enabled) return undefined;
+      const message = (event as unknown as MessageEndEvent).message;
+      if (message?.role === "assistant") {
+        turn += 1;
+        const record = buildRecord(message, {
+          ts: new Date().toISOString(),
+          turn,
+          providerFallback: (ctx as unknown as ModelContext).model?.provider ?? "unknown",
+          policyTag,
+        });
+        if (record) await appendTurn(sessionKey, record);
+      }
+      // Refresh the live footer on every message_end, not just assistant
+      // turns: a toolResult end is when freshly-appended subagent usage
+      // becomes visible in the log. No-op without a UI (headless children).
+      await updateStatus(ctx);
+    } catch {
+      // Accounting must never disturb a turn.
+    }
+    return undefined;
+  });
+
+  pi.registerTool({
+    name: "token_usage",
+    label: "Token Usage",
+    description:
+      "Report token usage for the current pi session, broken down by model. " +
+      "Reads token-meter's local per-session log; requires token-meter to be enabled. " +
+      "Returns a terse one-line total by default, or per-model, per-provider, and " +
+      "per-tier (frontier vs local) tables with verbose:true.",
+    promptSnippet: "Report this session's token usage with token_usage (per-model totals).",
+    promptGuidelines: [
+      "token_usage reports THIS session's token counts by model from a local log; it makes no network call.",
+      "token_usage returns nothing meaningful unless token-meter is enabled (settings or /token-meter on).",
+    ],
+    parameters: Type.Object({
+      verbose: Type.Optional(
+        Type.Boolean({ description: "Return the full per-model table instead of a one-line total." }),
+      ),
+    }),
+    async execute(_toolCallId, params) {
+      let records;
+      try {
+        records = await readSession(sessionKey);
+      } catch (err) {
+        return {
+          content: [{ type: "text" as const, text: `token_usage: could not read the session log — ${(err as Error).message}` }],
+          details: undefined,
+          isError: true,
+        };
+      }
+      const totals = aggregateByModel(records);
+      let text: string;
+      if (params.verbose) {
+        // Tier map load is fail-quiet: missing/corrupt tiers.json → all "unmapped".
+        const tiers = aggregateByTier(records, await loadTierMap());
+        text = [
+          formatTable(totals),
+          formatProviderSection(aggregateByProvider(records)),
+          formatTierSection(tiers),
+        ].join("\n\n");
+      } else {
+        text = formatTerse(totals);
+      }
+      return {
+        content: [{ type: "text" as const, text }],
+        details: { enabled, session: sessionKey, policy: policyTag, models: totals.length },
+      };
+    },
+  });
+}

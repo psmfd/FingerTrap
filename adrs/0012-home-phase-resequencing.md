@@ -2,6 +2,9 @@
 
 - Status: Accepted
 - Date: 2026-08-15
+- Partially superseded by [0034](0034-own-agent-runtime-and-retire-pi-config.md):
+  FingerTrap owns Home-track development and policy planning. The two-track
+  structure and existing implementation gates remain in force.
 
 ## Context and problem statement
 
@@ -30,7 +33,7 @@ Three forces shape the resolution:
    substantive problem. Mapping them out:
 
    | Milestone | Covered by a Home phase? |
-   |---|---|
+   | --- | --- |
    | M2 local terminal panes | yes — split across FT-0 and FT-1 |
    | M5 status providers | yes — FT-1 (already names Octokit and ADO clients) |
    | M6 command palette and keymap | yes — FT-1 |
