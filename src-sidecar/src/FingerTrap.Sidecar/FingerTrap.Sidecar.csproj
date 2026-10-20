@@ -12,6 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Pin StreamJsonRpc's transitive dependency above GHSA-qhrr-8q5h-9q3h. -->
+    <PackageReference Include="MessagePack" />
     <PackageReference Include="Nerdbank.MessagePack" />
     <PackageReference Include="Octokit" />
     <PackageReference Include="StreamJsonRpc" />
