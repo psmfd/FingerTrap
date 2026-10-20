@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-20 15:01 UTC.
+Updated: 2026-10-20 15:20 UTC.
 
 ## Authorization and scope
 
@@ -19,9 +19,11 @@ approval capabilities and repository retirement retain their separate gates.
 
 ## Resume here
 
-**Current boundary: checkpoint S2; next slice S3 — launch isolation.**
+**Next slice: S3 — launch isolation. S1 and S2 are committed and backed up.**
 
-1. Commit/push locally verified S2 and update PR #207's review description.
+1. Inspect the working tree and latest PR checks. S2 (`92137c4`) passed all
+   hosted checks; a subsequent documentation-only handoff commit may trigger
+   new checks. Do not confuse source-checkpoint evidence with a newer head.
 2. Implement explicit inherited/replacement environment semantics in
    `PiRpcClientOptions` and Porta.Pty, including the Unix native launcher.
    Preserve Darwin spawn coordination; update vendor `UPSTREAM.md`.
@@ -40,8 +42,8 @@ record with `git status`, `git log` and any active process/test output.
 | --- | --- | --- | --- |
 | M0 | Ownership ADR, inventory and successors | Committed and backed up | `6a999c9`; ADR-0034 accepted; inventory and #200–#206 exist |
 | M1a | Token/cache-meter source package | Verified, backed up, inactive | [Report](m1a-import.md); runtime package CI passed on all three platforms at `6a999c9` |
-| S1 | Profile schema, compatibility and baseline | Locally verified and backed up | `52fc6bc`; [foundation report](profile-foundation.md); hosted result pending |
-| S2 | Reviewed import slices and test registration | Locally verified; checkpointing | [Manifest report](import-manifests.md); 84 tests and independent offline package restore passed |
+| S1 | Profile schema, compatibility and baseline | Verified locally and in CI; backed up | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed |
+| S2 | Reviewed import slices and test registration | Verified locally and in CI; backed up | `92137c4`; [manifest report](import-manifests.md); all platform checks and Apple Silicon package/smoke passed |
 | S3 | PTY/RPC launch isolation | Pending | RPC inheritance plus both PTY merge/native layers must change |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
 | S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |
@@ -80,6 +82,7 @@ validation after resuming an incomplete edit and update this record.
   `psmfd/FingerTrap:docs/pi-runtime-migration`.
 - Dependency repair: `44455f5`; S1 foundation: `52fc6bc`. Both pushed to the
   same remote branch. Source remains inactive.
+- S2 import/test manifests: `92137c4`, pushed to the same remote branch.
 - Draft review: [PR #207](https://github.com/psmfd/FingerTrap/pull/207),
   targeting `dev`; no merge or activation.
 - Existing M1a local results: [recorded report](m1a-import.md).
@@ -94,14 +97,38 @@ validation after resuming an incomplete edit and update this record.
   Managed fallback mutation detected by both guard cases; restored suite green.
 - Baseline CI: runtime/UI matrix, structural checks and CodeQL passed. All
   sidecar/Tauri jobs failed restore on MessagePack 2.5.302 (NU1902).
-  Patched 2.5.303 plus affected locks now pass local audited locked restore;
-  a new hosted run is required.
-- S1 hosted update: sidecar/runtime/UI matrices pass on Linux, Windows and
-  macOS; Tauri macOS/Linux and Apple Silicon package/smoke pass.
-  Tauri Windows and Rust analysis were still pending at the latest read.
+  Patched 2.5.303 plus affected locks pass local audited locked restore and
+  the S1 hosted matrix.
+- S1 hosted: all checks passed, including sidecar/runtime/UI/Tauri on Linux,
+  Windows and macOS, CodeQL, and Apple Silicon package/smoke.
+  [CI run](https://github.com/psmfd/FingerTrap/actions/runs/39443316974);
+  [Apple Silicon run](https://github.com/psmfd/FingerTrap/actions/runs/39443316965).
 - S2 local: complete 35-file package inventory, eight suites, 84 passing tests,
   independent offline frozen restore/validation, and omitted-suite mutation
   detected. No imported implementation changed.
+- S2 hosted: all checks passed for `92137c4`, including the full platform
+  matrix, CodeQL and Apple Silicon package/smoke.
+  [CI run](https://github.com/psmfd/FingerTrap/actions/runs/39445278440);
+  [Apple Silicon run](https://github.com/psmfd/FingerTrap/actions/runs/39445278068).
+- The final status/log update changes documentation only. Its new head may
+  have a fresh CI run; the source evidence above names the verified commits.
+
+## Commands for the next session
+
+```sh
+git status --short --branch
+git log -5 --oneline
+gh pr checks 207 --repo psmfd/FingerTrap
+pnpm --dir packages/agent-runtime check:provenance
+pnpm --dir packages/agent-runtime test
+```
+
+Use the repository-authorized GitHub identity when checking a private source
+or writing this branch; do not change the operator's global active account.
+For sidecar changes, the reliable local path is audited locked restore, then
+`dotnet build src-sidecar -c Release --no-restore -m:1 -p:UseSharedCompilation=false`
+and `dotnet test src-sidecar -c Release --no-build --no-restore`.
+Native/process checks may need the tool's filesystem/process sandbox approval.
 
 ## Known gates and protected local state
 

@@ -136,3 +136,33 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   passed; Windows Tauri and Rust analysis still pending at last read.
 - **Next:** checkpoint S2 and update PR evidence, then S3's explicit
   replacement environment and actual managed launch context.
+
+## 2026-10-20 — S2 remote checkpoint and next-session boundary
+
+- **Committed/pushed:** `92137c4` contains S2 implementation and evidence.
+  Default-rule staged secret scan, Markdown lint, structural and whitespace
+  checks passed before committing. All task changes have scoped source
+  checkpoints; the three pre-existing local/private artifacts remain untouched.
+- **S1 final hosted result:** all checks passed, including all platform
+  matrices, CodeQL and Apple Silicon package/smoke. This certifies that
+  checkpoint's checks, not managed activation or future S2 changes.
+- **PR review record:** #207 was updated to describe the final S1/S2
+  foundations, separate dependency repair, mutation evidence and remaining
+  work. The PR remains a draft against `dev`; #200/#201 remain open.
+- **Resume:** read S2's new CI results, then start S3 at the RPC and Porta.Pty
+  environment-inheritance boundary. Use `STATUS.md` for commands and gates.
+  Approval persists; no additional plan confirmation is needed.
+
+## 2026-10-20 15:20 UTC — S2 hosted checks passed
+
+- **Observed:** every check passed for S2 `92137c4`, including Node runtime,
+  sidecar, UI and Tauri on all three platforms, CodeQL, structural checks,
+  and Apple Silicon package/smoke.
+  [CI run](https://github.com/psmfd/FingerTrap/actions/runs/39445278440);
+  [package/smoke](https://github.com/psmfd/FingerTrap/actions/runs/39445278068).
+- **Checkpoint boundary:** S1 and S2 are verified and remotely recoverable.
+  This final documentation-only update records their actual source hashes
+  and hosted results; a new CI run for the bookkeeping commit is distinct.
+- **Next action:** S3 environment replacement through RPC, Porta.Pty and its
+  Unix shim, followed by verified runtime/resource launch selection. No
+  managed activation, issue closure, PR merge or source-repo retirement.
