@@ -52,5 +52,8 @@ namespace Porta.Pty
         /// Gets or sets the process' environment variables.
         /// </summary>
         public IDictionary<string, string> Environment { get; set; } = new Dictionary<string, string>();
+
+        /// <summary>Replacement preserves empty values and never merges parent or platform variables.</summary>
+        public EnvironmentMode EnvironmentMode { get; set; } = EnvironmentMode.Inherit;
     }
 }

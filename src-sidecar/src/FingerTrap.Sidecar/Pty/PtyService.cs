@@ -4,6 +4,7 @@ using System.Diagnostics;
 using FingerTrap.Sidecar.Abstractions;
 using FingerTrap.Sidecar.Processes;
 using FingerTrap.Sidecar.Settings;
+using FingerTrap.Sidecar.Runtime;
 
 namespace FingerTrap.Sidecar.Pty;
 
@@ -20,6 +21,7 @@ internal sealed class PtyService : IPtyService
     private readonly ConcurrentDictionary<string, Session> _sessions = new(StringComparer.Ordinal);
 
     private readonly PiSettings? _piSettings;
+    private readonly PiLaunchContextResolver _launchResolver;
     private int _disposeStarted;
 
     /// <param name="piSettings">
@@ -27,9 +29,10 @@ internal sealed class PtyService : IPtyService
     /// environment and PATH alone. Injected rather than loaded here so the
     /// settings file is read exactly once per process, in Program.cs.
     /// </param>
-    public PtyService(PiSettings? piSettings = null)
+    public PtyService(PiSettings? piSettings = null, PiLaunchContextResolver? launchResolver = null)
     {
         _piSettings = piSettings;
+        _launchResolver = launchResolver ?? new PiLaunchContextResolver();
     }
 
     public event EventHandler<PtyOutputEventArgs>? Output;
@@ -43,16 +46,24 @@ internal sealed class PtyService : IPtyService
         cancellationToken.ThrowIfCancellationRequested();
         ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposeStarted) != 0, this);
 
-        var shellPath = ResolveExecutable(options.Kind, options.Shell, _piSettings);
+        var context = options.Kind == PaneKind.Pi
+            ? _launchResolver.Resolve(_piSettings, rpc: false, options.Shell, options.Cwd,
+                options.SessionPath, options.Env, cancellationToken)
+            : null;
+        var shellPath = context?.Executable ?? ResolveExecutable(options.Kind, options.Shell, _piSettings);
 
         var ptyOptions = new global::Porta.Pty.PtyOptions
         {
             App = shellPath,
-            CommandLine = ResolveCommandLine(options.Kind, options.SessionPath),
-            Cwd = ResolveCwd(options.Cwd),
+            CommandLine = context?.Arguments.ToArray() ?? ResolveCommandLine(options.Kind, options.SessionPath),
+            Cwd = context?.WorkingDirectory ?? ResolveCwd(options.Cwd),
             Cols = Math.Max(1, options.Cols),
             Rows = Math.Max(1, options.Rows),
-            Environment = options.Env is not null
+            EnvironmentMode = context?.EnvironmentMode == ChildEnvironmentMode.Replace
+                ? global::Porta.Pty.EnvironmentMode.Replace : global::Porta.Pty.EnvironmentMode.Inherit,
+            Environment = context is not null
+                ? new Dictionary<string, string>(context.Environment)
+                : options.Env is not null
                 ? new Dictionary<string, string>(options.Env)
                 : new Dictionary<string, string>(),
         };

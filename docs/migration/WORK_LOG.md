@@ -200,3 +200,80 @@ The compact [status board](STATUS.md) is the starting point for a new session.
 - **Resume:** await the requested S3 decision; after approval record it and
   begin S3-A's launch contract and pinned-runtime discovery audit. The broader
   six-step approval remains in effect.
+
+## 2026-10-20 — S3 approved; begin S3-A
+
+- **Authorization:** maintainer approved S3-A through S3-F. Approval persists;
+  managed production activation, pin/backend changes and later slices retain
+  the plan's separate gates.
+- **Previous checkpoint:** `dac31ce` contains the plan and was pushed to the
+  existing migration branch/draft PR #207.
+- **Active work:** launch ADR/contracts and exact-pin startup/discovery audit,
+  followed by verified resolution, RPC and native PTY replacement environments.
+- **Validation:** behavioral process probes, artifact/path rejection,
+  concurrency, inherited-mode compatibility, gate mutations and hosted checks.
+
+## 2026-10-20 — S3-A finding; launch implementation underway
+
+- **Audit finding:** pinned startup invokes project migrations before trust;
+  `.pi/commands` can be renamed despite resource-disable/deny-trust flags.
+  ADR-0036 and the discovery matrix record the activation blocker under
+  #201/#202. Internal host fixtures reject project `.pi` and profile startup
+  config. No pin/backend change.
+- **S3-B–E changes:** trusted descriptor/digest inventory, contained profile
+  paths, immutable launch contexts; explicit RPC replacement; PTY option
+  snapshots and distinct Unix execve ABI with bounded exec-status reporting;
+  Windows explicit block/path behavior; common pane-service composition.
+- **State:** source edits only, not yet built or verified. Next: first build,
+  behavioral tests and isolated exact-runtime migration reproduction.
+
+## 2026-10-20 — S3 first verification and exact-runtime blocker
+
+- **Build:** Release sidecar/native build passed, zero warnings/errors.
+- **Exact artifact:** retained probe verified the release archive digest,
+  extracted privately and reproduced `.pi/commands` → `.pi/prompts` before
+  trust despite all disable flags, deny trust and offline mode. RPC hello
+  observed; exit 0; synthetic operator state unchanged. Details in the audit.
+- **First tests:** 382 passed, 11 failed, 12 skipped. Five new process probes
+  exposed the FakePi apphost's dependency on ambient DOTNET_ROOT; six rejection
+  assertions incorrectly treated InvalidDataException as IOException.
+- **Correction:** assemble a test-only app-local .NET runtime closure from the
+  running runtime, inventory/hash it, and retain truly empty replacement
+  environments. Correct the rejection exception assertions. No production
+  environment allowance added to accommodate the test toolchain.
+- **Next:** rebuild and rerun; then native companion, mutation and packaging
+  evidence. Existing activation blocker remains.
+
+## 2026-10-20 — S3 real-process tests passed
+
+- **Results:** Release build passed with zero warnings/errors; 395 sidecar
+  tests passed, 12 existing skips, zero failures. Real RPC/PTY replacement
+  checks cover empty/literal-empty/Unicode environments, two concurrent profiles
+  and their grandchildren, failure rejection and production activation guards.
+- **Native compatibility:** an isolated test process loaded a compiled
+  old-ABI stub and verified an actionable missing-replacement-export error.
+  A first test build referenced the coordinator instead of its process-launch
+  adapter; corrected to ChildProcessLauncher and the test passed.
+- **Review correction:** omit PATH when no tools are selected; an empty Unix
+  PATH would search cwd. Copy host tool selection before resolving contexts.
+- **Active:** four controlled mutation checks, restoring source bytes after
+  each, followed by clean rebuild, published-companion smoke and remote CI.
+
+## 2026-10-20 17:12 UTC — S3 local verification complete; checkpoint next
+
+- **Final local checks:** audited locked restore; Release build zero warnings/
+  errors; 401 tests passed, 12 existing skips, zero failures. Structural,
+  Markdown, whitespace and strict native-C compiler checks passed.
+- **Mutations:** removing RPC clearing failed two RPC cases; replacing native
+  execve with execvp failed two PTY cases; omitting file-digest validation
+  failed the tamper case; disabling the managed resolver gate failed both
+  legacy-fallback guards. Source restored before the final clean pass.
+- **Publish:** self-contained ARM64 sidecar plus native library built; existing
+  PTY smoke passed using temporary keyless state and a verified Pi archive.
+  Original RID-agnostic locks restored, audited locked restore passed.
+- **Published ABI:** direct native probe verified exactly empty and explicit
+  two-entry environments, preserving an empty value. Results and digest are
+  in the new S3 implementation report.
+- **Remaining:** source checkpoint/remote backup, hosted matrices and package
+  results. Full S3 discovery qualification remains blocked by the reproduced
+  pinned CLI migration behavior. No activation or issue closure.

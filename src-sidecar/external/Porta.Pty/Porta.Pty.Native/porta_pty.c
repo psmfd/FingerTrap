@@ -11,6 +11,10 @@
  * Licensed under the MIT license.
  */
 
+#if !defined(__APPLE__) && !defined(_GNU_SOURCE)
+#define _GNU_SOURCE
+#endif
+
 #if defined(__APPLE__)
     #include <util.h>
     #include <sys/ioctl.h>
@@ -26,6 +30,8 @@
 #include <sys/wait.h>
 #include <signal.h>
 #include <fcntl.h>
+#include <poll.h>
+#include <time.h>
 
 /* Export macro for shared library symbols */
 #if defined(_WIN32)
@@ -85,15 +91,42 @@ typedef struct {
  * Returns:
  *   pty_spawn_result_t with master_fd and pid on success, or pid=-1 and error set on failure
  */
-PTY_EXPORT pty_spawn_result_t pty_spawn(
+static pty_spawn_result_t spawn_internal(
     const char* file,
     char* const argv[],
     char* const envp[],
     const char* working_dir,
     const pty_termios_t* termios_settings,
-    const pty_winsize_t* winsize_settings)
+    const pty_winsize_t* winsize_settings,
+    int replace_environment)
 {
     pty_spawn_result_t result = { -1, -1, 0 };
+    int exec_status[2] = { -1, -1 };
+    if (replace_environment) {
+        if (file == NULL || file[0] != '/' || argv == NULL || envp == NULL) {
+            result.error = EINVAL;
+            return result;
+        }
+#if defined(__APPLE__)
+        if (pipe(exec_status) != 0) {
+            result.error = errno;
+            return result;
+        }
+        /* FingerTrap's Darwin spawn gate covers pipe creation through exec. */
+        if (fcntl(exec_status[0], F_SETFD, FD_CLOEXEC) == -1
+            || fcntl(exec_status[1], F_SETFD, FD_CLOEXEC) == -1) {
+            result.error = errno;
+            close(exec_status[0]);
+            close(exec_status[1]);
+            return result;
+        }
+#else
+        if (pipe2(exec_status, O_CLOEXEC) != 0) {
+            result.error = errno;
+            return result;
+        }
+#endif
+    }
     
     /* Set up termios structure */
     struct termios term;
@@ -136,10 +169,29 @@ PTY_EXPORT pty_spawn_result_t pty_spawn(
     if (pid == -1) {
         /* forkpty failed */
         result.error = errno;
+        if (replace_environment) {
+            close(exec_status[0]);
+            close(exec_status[1]);
+        }
         return result;
     }
     
     if (pid == 0) {
+        if (replace_environment) {
+            close(exec_status[0]);
+            /* No allocation, environment mutation or PATH lookup after fork. */
+            if (working_dir != NULL && chdir(working_dir) != 0) {
+                int error = errno;
+                ssize_t ignored = write(exec_status[1], &error, sizeof(error));
+                (void)ignored;
+                _exit(127);
+            }
+            execve(file, argv, envp);
+            int error = errno;
+            ssize_t ignored = write(exec_status[1], &error, sizeof(error));
+            (void)ignored;
+            _exit(127);
+        }
         /* 
          * Child process - NO MANAGED CODE RUNS HERE!
          * This is the key to avoiding W^X issues.
@@ -187,6 +239,8 @@ PTY_EXPORT pty_spawn_result_t pty_spawn(
         _exit(errno);
     }
     
+    if (replace_environment) close(exec_status[1]);
+
     /* Parent process: the managed process-wide spawn gate remains held until
      * this function returns. Mark the master before releasing that gate so no
      * later child can inherit the controller descriptor. */
@@ -200,7 +254,45 @@ PTY_EXPORT pty_spawn_result_t pty_spawn(
             /* Retry until the failed spawn's child is reaped. */
         }
         result.error = saved_errno;
+        if (replace_environment) close(exec_status[0]);
         return result;
+    }
+
+    if (replace_environment) {
+        /* CLOEXEC closes the writer on success; a failed exec reports errno.
+         * Bound the wait so a failed child cannot wedge the spawn gate. */
+        struct pollfd status_fd = { exec_status[0], POLLIN, 0 };
+        struct timespec started, now;
+        int ready = -1;
+        if (clock_gettime(CLOCK_MONOTONIC, &started) == 0) {
+            int remaining_ms = 5000;
+            for (;;) {
+                ready = poll(&status_fd, 1, remaining_ms);
+                if (ready >= 0 || errno != EINTR) break;
+                if (clock_gettime(CLOCK_MONOTONIC, &now) != 0) break;
+                long elapsed_ms = (now.tv_sec - started.tv_sec) * 1000
+                    + (now.tv_nsec - started.tv_nsec) / 1000000;
+                if (elapsed_ms >= 5000) { ready = 0; break; }
+                remaining_ms = 5000 - (int)elapsed_ms;
+            }
+        }
+        int child_error = 0;
+        ssize_t count = -1;
+        if (ready > 0) {
+            do { count = read(exec_status[0], &child_error, sizeof(child_error)); }
+            while (count < 0 && errno == EINTR);
+        }
+        int saved_errno = errno;
+        close(exec_status[0]);
+        if (ready <= 0 || count != 0) {
+            result.error = ready == 0 ? ETIMEDOUT
+                : ready < 0 ? saved_errno
+                : count == sizeof(child_error) ? child_error : EIO;
+            close(master_fd);
+            kill(pid, SIGKILL);
+            while (waitpid(pid, NULL, 0) == -1 && errno == EINTR) {}
+            return result;
+        }
     }
 
     result.master_fd = master_fd;
@@ -208,6 +300,22 @@ PTY_EXPORT pty_spawn_result_t pty_spawn(
     result.error = 0;
     
     return result;
+}
+
+/* Original ABI: inherited environment plus overrides. */
+PTY_EXPORT pty_spawn_result_t pty_spawn(
+    const char* file, char* const argv[], char* const envp[], const char* working_dir,
+    const pty_termios_t* termios_settings, const pty_winsize_t* winsize_settings)
+{
+    return spawn_internal(file, argv, envp, working_dir, termios_settings, winsize_settings, 0);
+}
+
+/* New ABI: complete replacement; NULL envp is invalid, { NULL } is empty. */
+PTY_EXPORT pty_spawn_result_t pty_spawn_replace(
+    const char* file, char* const argv[], char* const envp[], const char* working_dir,
+    const pty_termios_t* termios_settings, const pty_winsize_t* winsize_settings)
+{
+    return spawn_internal(file, argv, envp, working_dir, termios_settings, winsize_settings, 1);
 }
 
 /*

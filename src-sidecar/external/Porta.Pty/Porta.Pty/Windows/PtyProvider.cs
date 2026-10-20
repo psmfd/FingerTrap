@@ -181,6 +181,7 @@ namespace Porta.Pty.Windows
 
             // An extra null at the end indicates end of list.
             result.Append('\0');
+            if (environment.Count == 0) result.Append('\0');
 
             return result.ToString();
         }
@@ -244,7 +245,8 @@ namespace Porta.Pty.Windows
                 
                 try
                 {
-                    string app = GetAppOnPath(options.App, options.Cwd, options.Environment);
+                    string app = options.EnvironmentMode == EnvironmentMode.Replace
+                        ? options.App : GetAppOnPath(options.App, options.Cwd, options.Environment);
                     string arguments = options.VerbatimCommandLine ?
                         WindowsArguments.FormatVerbatim(options.CommandLine) :
                         WindowsArguments.Format(options.CommandLine);
@@ -290,7 +292,7 @@ namespace Porta.Pty.Windows
                             // Call the Win32 CreateProcess
                             var processInfoRaw = new PROCESS_INFORMATION();
                             success = CreateProcessW(
-                                null!,   // lpApplicationName
+                                options.EnvironmentMode == EnvironmentMode.Replace ? app : null!, // lpApplicationName
                                 commandLine.ToString(),
                                 IntPtr.Zero,   // lpProcessAttributes
                                 IntPtr.Zero,   // lpThreadAttributes

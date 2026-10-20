@@ -7,6 +7,7 @@ namespace Porta.Pty
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Runtime.InteropServices;
     using System.Threading;
     using System.Threading.Tasks;
@@ -28,6 +29,7 @@ namespace Porta.Pty
             PtyOptions options,
             CancellationToken cancellationToken)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             if (string.IsNullOrEmpty(options.App))
             {
                 throw new ArgumentNullException(nameof(options.App));
@@ -48,12 +50,72 @@ namespace Porta.Pty
                 throw new ArgumentNullException(nameof(options.Environment));
             }
 
-            IDictionary<string, string> environment = MergeEnvironment(PlatformServices.PtyEnvironment, null);
-            environment = MergeEnvironment(options.Environment, environment);
+            if (!Enum.IsDefined(typeof(EnvironmentMode), options.EnvironmentMode))
+            {
+                throw new ArgumentException("Invalid environment mode.", nameof(options));
+            }
 
-            options.Environment = environment;
+            var supplied = new Dictionary<string, string>(PlatformServices.EnvironmentVariableComparer);
+            foreach (var entry in options.Environment)
+            {
+                if (string.IsNullOrEmpty(entry.Key) || entry.Key.IndexOfAny(new[] { '=', '\0' }) >= 0
+                    || entry.Value == null || entry.Value.IndexOf('\0') >= 0 || supplied.ContainsKey(entry.Key))
+                {
+                    throw new ArgumentException("Invalid or duplicate environment entry.", nameof(options));
+                }
 
-            return PlatformServices.PtyProvider.StartTerminalAsync(options, Trace, cancellationToken);
+                supplied.Add(entry.Key, entry.Value);
+            }
+
+            IDictionary<string, string> environment;
+            if (options.EnvironmentMode == EnvironmentMode.Replace)
+            {
+                if (!Path.IsPathRooted(options.App) || Path.GetFullPath(options.App) != options.App
+                    || (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Path.GetPathRoot(options.App).Length <= 1))
+                {
+                    throw new ArgumentException("Replacement requires an absolute executable.", nameof(options));
+                }
+
+                environment = supplied;
+            }
+            else
+            {
+                environment = MergeEnvironment(PlatformServices.PtyEnvironment, null);
+                environment = MergeEnvironment(supplied, environment);
+            }
+
+            // Never mutate the caller's options or dictionaries: callers may spawn concurrently.
+            var snapshot = new PtyOptions
+            {
+                App = options.App, Cwd = options.Cwd, Name = options.Name,
+                Rows = options.Rows, Cols = options.Cols,
+                CommandLine = (string[])options.CommandLine.Clone(),
+                VerbatimCommandLine = options.VerbatimCommandLine,
+                Environment = environment, EnvironmentMode = options.EnvironmentMode,
+            };
+            return StartSnapshotAsync(snapshot, cancellationToken);
+        }
+
+        private static async Task<IPtyConnection> StartSnapshotAsync(PtyOptions snapshot, CancellationToken cancellationToken)
+        {
+            var connection = await PlatformServices.PtyProvider.StartTerminalAsync(snapshot, Trace, cancellationToken)
+                .ConfigureAwait(false);
+            if (cancellationToken.IsCancellationRequested)
+            {
+                try
+                {
+                    connection.Kill();
+                    connection.WaitForExit(5000);
+                }
+                finally
+                {
+                    connection.Dispose();
+                }
+
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
+            return connection;
         }
 
         private static IDictionary<string, string> MergeEnvironment(IDictionary<string, string> enviromentToMerge, IDictionary<string, string>? environment)

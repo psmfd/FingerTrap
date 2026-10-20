@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using FingerTrap.Sidecar.Executables;
 using FingerTrap.Sidecar.Settings;
+using FingerTrap.Sidecar.Runtime;
 
 namespace FingerTrap.Sidecar.PiRpc;
 
@@ -71,6 +72,7 @@ internal sealed class RpcPaneService : IAsyncDisposable
 {
     private readonly ConcurrentDictionary<string, PaneEntry> _sessions = new(StringComparer.Ordinal);
     private readonly PiSettings? _piSettings;
+    private readonly PiLaunchContextResolver _launchResolver;
     private readonly RpcChildRegistry _childRegistry;
     private volatile IRpcPaneSink? _sink;
     private bool _disposed;
@@ -82,9 +84,11 @@ internal sealed class RpcPaneService : IAsyncDisposable
     /// removed on clean exit, so a sidecar crash leaves a trail the next
     /// launch reaps. Defaults to the app-data-backed registry.
     /// </param>
-    public RpcPaneService(PiSettings? piSettings = null, RpcChildRegistry? childRegistry = null)
+    public RpcPaneService(PiSettings? piSettings = null, RpcChildRegistry? childRegistry = null,
+        PiLaunchContextResolver? launchResolver = null)
     {
         _piSettings = piSettings;
+        _launchResolver = launchResolver ?? new PiLaunchContextResolver();
         _childRegistry = childRegistry ?? new RpcChildRegistry();
     }
 
@@ -119,20 +123,16 @@ internal sealed class RpcPaneService : IAsyncDisposable
         ObjectDisposedException.ThrowIf(_disposed, this);
         cancellationToken.ThrowIfCancellationRequested();
 
-        var executablePath = PiExecutableResolver.ResolvePi(options.RequestedPath, _piSettings);
-        var arguments = new List<string> { "--mode", "rpc" };
-        if (!string.IsNullOrEmpty(options.SessionPath))
-        {
-            arguments.Add("--session");
-            arguments.Add(options.SessionPath);
-        }
+        var context = _launchResolver.Resolve(_piSettings, rpc: true, options.RequestedPath,
+            options.Cwd, options.SessionPath, options.Env, cancellationToken);
 
         var client = PiRpcClient.Start(new PiRpcClientOptions
         {
-            ExecutablePath = executablePath,
-            Arguments = arguments,
-            WorkingDirectory = options.Cwd,
-            EnvironmentOverrides = options.Env,
+            ExecutablePath = context.Executable,
+            Arguments = context.Arguments,
+            WorkingDirectory = context.WorkingDirectory,
+            EnvironmentMode = context.EnvironmentMode,
+            EnvironmentOverrides = context.Environment,
         });
 
         PiHelloInfo? hello;

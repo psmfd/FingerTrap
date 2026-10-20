@@ -53,7 +53,9 @@ FingerTrap.Sidecar.Executables.LoginEnvironment.ApplyToProcess(TimeSpan.FromSeco
 
 // Single platform-agnostic PtyService backed by Porta.Pty (ADR-0008);
 // platform branching now lives inside the vendored library.
-await using var pty = new PtyService(settings.Pi);
+// ADR-0036: production supplies no managed selection; qualification remains gated.
+var piLaunchResolver = new FingerTrap.Sidecar.Runtime.PiLaunchContextResolver();
+await using var pty = new PtyService(settings.Pi, piLaunchResolver);
 // Reap pi RPC children orphaned by a prior sidecar crash before spawning any
 // new panes (#124): an unclean sidecar death reparents its children, which
 // keep holding worktree locks and making billed LLM calls untracked. The same
@@ -67,7 +69,7 @@ if (reaped > 0)
 
 // Native RPC panes (FT-2 slice 2, ADR-0025): one pi --mode rpc child per
 // attached session, relayed thin through the surface's IRpcPaneSink.
-await using var rpcPanes = new FingerTrap.Sidecar.PiRpc.RpcPaneService(settings.Pi, rpcChildRegistry);
+await using var rpcPanes = new FingerTrap.Sidecar.PiRpc.RpcPaneService(settings.Pi, rpcChildRegistry, piLaunchResolver);
 // Provider tokens live only here, delivered by the shell over stdin
 // (credentials/set, ADR-0022); status providers read them per-request.
 var credentials = new CredentialCache();

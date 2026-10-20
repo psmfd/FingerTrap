@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-20 16:09 UTC.
+Updated: 2026-10-20 17:12 UTC.
 
 ## Authorization and scope
 
@@ -12,23 +12,23 @@ The initial request said #210; the plan disclosed its failed lookup and
 proposed #201. The subsequent plan approval is the working authorization
 for that disclosed scope. No requirements are invented for #210.
 
-The overall six-step approval persists. The maintainer subsequently requested
-a focused S3 implementation plan for approval; prepare that review document
-and await the requested S3 decision before implementing this slice.
+The maintainer also approved the focused S3-A through S3-F implementation
+plan on 2026-10-20. Proceed within that scope without repeating approval.
 Executable/RPC and Pi `v0.85.1-psmfd.1` remain the migration baseline.
 Production SDK adoption, managed distribution/activation, new trusted
 approval capabilities and repository retirement retain their separate gates.
 
 ## Resume here
 
-**Current activity: S3 plan presented for approval. No S3 code changed.**
+**Current activity: S3 foundation locally verified; checkpoint and hosted CI.**
 
-1. Review the [focused S3 plan](s3-launch-isolation-plan.html). Document checks
-   and desktop/mobile rendering passed; await the requested S3 decision.
-2. Record that decision here and in the activity log before implementation.
-3. After S3 approval, begin S3-A: launch contract, ADR and discovery audit.
-   Then follow S3-B through S3-F, with explicit environment semantics in RPC
-   and both PTY layers and evidence for each checkpoint.
+1. Follow the [approved S3 plan](s3-launch-isolation-plan.html).
+2. Read [S3 discovery audit](s3-discovery-audit.md): project migrations precede
+   trust in the pin, blocking arbitrary-project activation. ADR-0036 records
+   the controlled-fixture restriction and launch contract.
+3. Read the [S3 implementation report](s3-launch-foundation.md). Audited
+   restore/build, 401 tests, four mutations, published sidecar smoke and native
+   companion probes passed. Commit/back up the source and collect hosted CI.
 4. Preserve Darwin spawn coordination and managed activation gates; collect
    hosted results for each new source checkpoint before claiming CI green.
 
@@ -44,7 +44,7 @@ record with `git status`, `git log` and any active process/test output.
 | M1a | Token/cache-meter source package | Verified, backed up, inactive | [Report](m1a-import.md); runtime package CI passed on all three platforms at `6a999c9` |
 | S1 | Profile schema, compatibility and baseline | Verified locally and in CI; backed up | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed |
 | S2 | Reviewed import slices and test registration | Verified locally and in CI; backed up | `92137c4`; [manifest report](import-manifests.md); all platform checks and Apple Silicon package/smoke passed |
-| S3 | PTY/RPC launch isolation | Plan ready; awaiting focused approval | [S3 plan](s3-launch-isolation-plan.html); no S3 implementation |
+| S3 | PTY/RPC launch isolation | Foundation locally verified; CI pending; discovery blocked | [Report](s3-launch-foundation.md); exact-pin project migrations prevent full S3 qualification |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
 | S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |
 | S5-B | Guards and typed tools | Pending | Enforcement tests, identity, tool ownership, vendor notices |
@@ -85,6 +85,8 @@ validation after resuming an incomplete edit and update this record.
 - S2 import/test manifests: `92137c4`, pushed to the same remote branch.
 - S1/S2 handoff: `a10f2c3`, committed and pushed. Its documentation-only
   checks are distinct from the verified S2 source checkpoint.
+- S3 approval plan: `dac31ce`, committed and pushed; approved by the
+  maintainer in the subsequent turn.
 - Draft review: [PR #207](https://github.com/psmfd/FingerTrap/pull/207),
   targeting `dev`; no merge or activation.
 - Existing M1a local results: [recorded report](m1a-import.md).
@@ -118,6 +120,10 @@ validation after resuming an incomplete edit and update this record.
   syntax, 390-pixel mobile layout, desktop layout and current-section
   navigation passed. Markdown, structural and whitespace checks passed.
   These are document checks, not S3 implementation acceptance.
+- S3 local: [report](s3-launch-foundation.md), 401 passing sidecar tests,
+  12 existing skips, zero failures; four representative regressions detected
+  and reverted. Published ARM64 sidecar/native companion smoke passed.
+  Exact-release migration blocker reproduced and tracked in the audit.
 
 ## Commands for the next session
 
