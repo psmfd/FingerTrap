@@ -203,7 +203,7 @@ internal static class GoldenScenarios
             Name = "malformed-line-parse-error",
             RunAsync = static async (host, ct) =>
             {
-                await host.SpawnAsync(new ScenarioSpawn());
+                await host.SpawnAsync(new ScenarioSpawn { HelloGrace = ScenarioHost.EventBudget });
 
                 await host.Client.SendRawLineForConformanceAsync("this is not json", ct);
 
@@ -212,6 +212,11 @@ internal static class GoldenScenarios
                 var parseError = await host.NextEventAsync("response", ct);
                 Assert.Contains("\"command\":\"parse\"", parseError.Json, StringComparison.Ordinal);
                 Assert.DoesNotContain("\"id\"", parseError.Json, StringComparison.Ordinal);
+
+                // The parse response may precede startup hello. Await that
+                // readiness frame before EOF so shutdown cannot overtake its
+                // wire record; the longer harness grace also covers slow CI.
+                Assert.NotNull(await host.Client.WaitForHelloAsync(ct));
 
                 Assert.Equal(0, await host.ShutdownChildAsync(ct));
             },

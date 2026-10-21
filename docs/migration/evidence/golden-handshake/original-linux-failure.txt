@@ -1,0 +1,94 @@
+[31mfailed[m FingerTrap.Sidecar.Tests.Goldens.GoldenReplayTests.Replay_Golden_ReproducesTranscript(name: "malformed-line-parse-error")[90m [90m(51ms)[m
+[31m  Assert.Equal() Failure: Strings differ
+                                                 ↓ (pos 326)
+  Expected: ···"fier \\\\\\"this\\\\\\"\\"}"}\n{"dir":"in","line":"{\\"type"···
+  Actual:   ···"fier \\\\\\"this\\\\\\"\\"}"}\n{"ctl":"stdin_eof"}\n{"dir":"···
+                                                 ↑ (pos 326)
+[m[90m    at FingerTrap.Sidecar.Tests.Goldens.GoldenReplayTests.Replay_Golden_ReproducesTranscript(String name) in /home/runner/work/FingerTrap/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Tests/Goldens/GoldenReplayTests.cs:39[90m
+    at FingerTrap.Sidecar.Tests.Goldens.GoldenReplayTests.Replay_Golden_ReproducesTranscript(String name) in /home/runner/work/FingerTrap/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Tests/Goldens/GoldenReplayTests.cs:39[90m
+    --- End of stack trace from previous location ---
+[m[[32m+80[m/[31mx1[m/[33m?0[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64)(0s)
+
+[33mskipped[m FingerTrap.Sidecar.Tests.Goldens.GoldenRecordTests.Record_Scenario_WritesDeterministicGolden(name: "steer-interrupt")[90m [90m(0ms)[m
+  recording is opt-in: set FT_RECORD_GOLDENS=1 with a real pi on PATH
+[[32m+135[m/[31mx1[m/[33m?1[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64)(1s)
+
+[33mskipped[m FingerTrap.Sidecar.Tests.Goldens.GoldenRecordTests.Record_Scenario_WritesDeterministicGolden(name: "follow-up-queue")[90m [90m(0ms)[m
+  recording is opt-in: set FT_RECORD_GOLDENS=1 with a real pi on PATH
+[[32m+135[m/[31mx1[m/[33m?2[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64)(1s)
+
+[33mskipped[m FingerTrap.Sidecar.Tests.Goldens.GoldenRecordTests.Record_Scenario_WritesDeterministicGolden(name: "prompt-settled")[90m [90m(0ms)[m
+  recording is opt-in: set FT_RECORD_GOLDENS=1 with a real pi on PATH
+[[32m+135[m/[31mx1[m/[33m?3[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64)(1s)
+
+[33mskipped[m FingerTrap.Sidecar.Tests.Goldens.GoldenRecordTests.Record_Scenario_WritesDeterministicGolden(name: "session-start-dialog-roundtrip")[90m [90m(0ms)[m
+  recording is opt-in: set FT_RECORD_GOLDENS=1 with a real pi on PATH
+[[32m+135[m/[31mx1[m/[33m?4[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64)(1s)
+
+[33mskipped[m FingerTrap.Sidecar.Tests.Goldens.GoldenRecordTests.Record_Scenario_WritesDeterministicGolden(name: "eof-mid-turn")[90m [90m(0ms)[m
+  recording is opt-in: set FT_RECORD_GOLDENS=1 with a real pi on PATH
+[[32m+135[m/[31mx1[m/[33m?5[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64)(1s)
+
+[33mskipped[m FingerTrap.Sidecar.Tests.Goldens.GoldenRecordTests.Record_Scenario_WritesDeterministicGolden(name: "eof-clean-shutdown")[90m [90m(0ms)[m
+  recording is opt-in: set FT_RECORD_GOLDENS=1 with a real pi on PATH
+[[32m+135[m/[31mx1[m/[33m?6[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64)(1s)
+
+[33mskipped[m FingerTrap.Sidecar.Tests.Goldens.GoldenRecordTests.Record_Scenario_WritesDeterministicGolden(name: "malformed-line-parse-error")[90m [90m(0ms)[m
+  recording is opt-in: set FT_RECORD_GOLDENS=1 with a real pi on PATH
+[[32m+135[m/[31mx1[m/[33m?7[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64)(1s)
+
+[33mskipped[m FingerTrap.Sidecar.Tests.Goldens.GoldenRecordTests.Record_Scenario_WritesDeterministicGolden(name: "unknown-id-fallthrough")[90m [90m(0ms)[m
+  recording is opt-in: set FT_RECORD_GOLDENS=1 with a real pi on PATH
+[[32m+135[m/[31mx1[m/[33m?8[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64)(1s)
+
+[33mskipped[m FingerTrap.Sidecar.Tests.Goldens.GoldenRecordTests.Record_Scenario_WritesDeterministicGolden(name: "dialog-roundtrip")[90m [90m(0ms)[m
+  recording is opt-in: set FT_RECORD_GOLDENS=1 with a real pi on PATH
+[[32m+135[m/[31mx1[m/[33m?9[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64)(1s)
+
+[33mskipped[m FingerTrap.Sidecar.Tests.Goldens.GoldenRecordTests.Record_Scenario_WritesDeterministicGolden(name: "list-sessions")[90m [90m(0ms)[m
+  recording is opt-in: set FT_RECORD_GOLDENS=1 with a real pi on PATH
+[[32m+135[m/[31mx1[m/[33m?10[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64)(1s)
+
+[33mskipped[m FingerTrap.Sidecar.Tests.Goldens.GoldenRecordTests.Record_Scenario_WritesDeterministicGolden(name: "resume-live-cwd")[90m [90m(0ms)[m
+  recording is opt-in: set FT_RECORD_GOLDENS=1 with a real pi on PATH
+[[32m+135[m/[31mx1[m/[33m?11[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64)(1s)
+
+[33mskipped[m FingerTrap.Sidecar.Tests.Goldens.GoldenRecordTests.Record_Scenario_WritesDeterministicGolden(name: "resume-missing-cwd")[90m [90m(0ms)[m
+  recording is opt-in: set FT_RECORD_GOLDENS=1 with a real pi on PATH
+[[32m+135[m/[31mx1[m/[33m?12[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64)(1s)
+
+[[32m+145[m/[31mx1[m/[33m?12[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64) - FingerTrap.Sidecar.Tests.LaunchProcessTests.Replacement_RealChild_EmptyOrExplicitEnvironment(pty: False, populated: True) (3s)
+
+[[32m+153[m/[31mx1[m/[33m?12[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64) - FingerTrap.Sidecar.Tests.LaunchProcessTests.SharedServices_ConcurrentProfilesAndGrandchildren_StayIndependent (6s)
+
+[[32m+197[m/[31mx1[m/[33m?12[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64) - FingerTrap.Sidecar.Tests.McmVmProviderTests.GetStatus_SerializesSameNameButAllowsDifferentNamesToOverlap (9s)
+
+fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data
+fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data
+fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data
+fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data
+fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data
+fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data
+fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data
+fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data
+fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data
+fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data
+fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data
+fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data
+fingertrap-sidecar: orphan recovery skipped invalid or unreadable registry data
+[[32m+259[m/[31mx1[m/[33m?12[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64) - FingerTrap.Sidecar.Tests.NativeCompanionTests.Replacement_StaleCompanion_FailsClosed (12s)
+
+[[32m+366[m/[31mx1[m/[33m?12[m] FingerTrap.Sidecar.Tests.dll (net10.0|x64) - FingerTrap.Sidecar.Tests.PtyServiceTests.DisposeAsync_LiveSession_KillsEntireProcessTree (15s)
+
+
+[31mTest run summary: Failed![90m - [m/home/runner/work/FingerTrap/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Tests/bin/Release/net10.0/FingerTrap.Sidecar.Tests.dll (net10.0|x64)
+[m  total: 421
+[31m  failed: 1
+[m  succeeded: 408
+  skipped: 12
+  duration: 17s 363ms
+
+=== COMMAND LINE ===
+/home/runner/work/FingerTrap/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Tests/bin/Release/net10.0/FingerTrap.Sidecar.Tests --internal-msbuild-node /tmp/ed458cfe2c4b4ba3ad33c053389b74f8 
+
+
