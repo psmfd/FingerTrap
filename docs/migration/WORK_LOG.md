@@ -982,3 +982,9 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   sources, dependency disposition and follow-on acceptance. Next: scoped
   commit, secret scan, remote backup and description readback; then record
   those observed results. The documentation checkpoint skips source CI.
+
+- Evidence/report checkpoint `0cf4c98188204489a9e45c21e4895f9cc1f1090b`
+  committed; scoped secret scan from `090cefa` through this checkpoint passes.
+  Final tracking inspection found three command logs excluded by the global
+  `*.log` rule. Renamed them to `.txt` for durable retention before backup;
+  all 102 evidence files will be tracked. No test outcomes changed.
