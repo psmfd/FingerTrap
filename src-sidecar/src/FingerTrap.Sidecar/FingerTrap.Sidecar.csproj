@@ -21,5 +21,6 @@
 
   <ItemGroup>
     <InternalsVisibleTo Include="FingerTrap.Sidecar.Tests" />
+    <InternalsVisibleTo Include="FingerTrap.Sidecar.Qualification" />
   </ItemGroup>
 </Project>

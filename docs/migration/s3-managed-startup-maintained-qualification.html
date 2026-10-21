@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S3 maintained Pi — qualification and next campaign</title>
+<style>
+:root{color-scheme:light;--ink:#182c36;--muted:#50626c;--line:#d6e0e4;--accent:#136660;--paper:#fff;--back:#edf2f3}
+*{box-sizing:border-box}body{margin:0;background:var(--back);color:var(--ink);font:17px/1.65 system-ui,sans-serif}
+main{max-width:1000px;margin:36px auto;padding:48px 64px;background:var(--paper);border:1px solid var(--line);border-radius:16px}
+h1{font-size:2.5rem;line-height:1.16;letter-spacing:-.03em}h2{font-size:1.55rem;line-height:1.3;margin-top:2.8rem}h3{font-size:1.1rem}
+p,li{max-width:80ch}a{color:var(--accent);text-underline-offset:3px}code{font: .88em ui-monospace,monospace;overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f0f5f5;padding:18px;border-radius:8px;font-size:13px;line-height:1.6}
+.eyebrow{color:var(--accent);font-size:.8rem;letter-spacing:.12em;font-weight:750;text-transform:uppercase}.lead{font-size:1.25rem}.muted{color:var(--muted)}
+.callout{padding:20px 24px;border-left:5px solid var(--accent);background:#eaf5f2;border-radius:5px}.pending{border-color:#a96e13;background:#fff5df}
+nav{display:flex;flex-wrap:wrap;gap:8px 20px;border-block:1px solid var(--line);padding:16px 0;margin:30px 0;font-size:.9rem}table{border-collapse:collapse;width:100%;font-size:.93rem}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:12px 10px}th{background:#f2f6f7}td:first-child{font-weight:650}section{scroll-margin-top:20px}.table-wrap{overflow-x:auto}footer{margin-top:45px;padding-top:16px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted)}
+@media(max-width:650px){main{margin:0;border:0;border-radius:0;padding:28px 21px}h1{font-size:2rem}table{font-size:.85rem}th,td{padding:9px 6px}}
+@media print{body{background:white}main{border:0;margin:0;padding:0;max-width:none}nav{display:none}section{break-inside:avoid}a{color:inherit}}
+</style>
+</head>
+<body><main>
+<div class="eyebrow">FingerTrap · S3-G6 · 21 October 2026</div>
+<h1>Managed startup qualifies on the maintained Pi base.</h1>
+<p class="lead">The forward-port preserves the newer fork fixes and passes exact-artifact isolation and protocol checks. The capability exception is bounded and recorded. Production promotion remains a separate decision.</p>
+<div class="callout pending" id="summary-status"><strong>Current scope:</strong> maintained candidate qualified on macOS ARM64; all 23 FingerTrap source CI reports pass. Dependency audit findings require disposition before production promotion. The latest-release upgrade is queued in <a href="https://github.com/psmfd/FingerTrap/issues/210">#210</a>.</div>
+<nav aria-label="Report sections"><a href="#result">Results</a><a href="#identity">Exact identity</a><a href="#protocol">RPC comparison</a><a href="#fork">Fork limits</a><a href="#limits">Remaining limits</a><a href="#next">Next steps</a><a href="#reproduce">Recovery</a></nav>
+
+<section id="result"><h2>What changed and what passed</h2>
+<p>The managed-v1 implementation is now based on maintained fork main <code>42429b9</code>, retaining the security, correctness, release and provenance changes from Pi #74/#75/#76/#79. The original old-base experiment remains historical in <a href="https://github.com/psmfd/pi/pull/81">Pi #81</a>; the replacement is <a href="https://github.com/psmfd/pi/pull/82">Pi #82</a>, paired with <a href="https://github.com/psmfd/FingerTrap/pull/209">FingerTrap #209</a>.</p>
+<p>Source review found two new 0.87.1 paths: persisted crash discovery/recording and default cache warming. Managed mode now disables both and rejects <code>/bug</code>. The unfixed executable changed a seeded crash file during PTY startup; the service regression observed <code>streaming</code> instead of <code>off</code>. Both checks pass after correction.</p>
+<div class="table-wrap"><table><thead><tr><th>Check</th><th>Evidence</th></tr></thead><tbody>
+<tr><td>Exact direct executable</td><td>RPC, PTY and CLI rejection matrix passes with legacy/current layouts, poisoned config, linked project state, literal prompts and helper/network canaries.</td></tr>
+<tr><td>Published FingerTrap host</td><td>Two profiles, each with RPC and native PTY children, pass root/environment isolation, reload/new session, cancellation, sibling survival and complete child reaping.</td></tr>
+<tr><td>Disposable Tart</td><td>Same runtime/host bytes pass on macOS 15.7.7 ARM64; no host shares or GitHub registration, outbound IPv4 blocked. Clone removed; stopped base and unrelated VMs preserved.</td></tr>
+<tr><td>Regression mutations</td><td>All four Pi mutations are caught: migrations, default loader, crash discovery and bug-report fallback. Removing the host policy check fails the expected rejection case. All source restored; restored host tests pass.</td></tr>
+<tr><td>Pi source validation</td><td>Static checks, release-major Node 22 offline build and full hermetic suite pass. Coding-agent: 2,469 passed / 50 skipped; Chord: 312 passed; remaining workspaces pass. All 39 affected tests and two release-preflight tests pass.</td></tr>
+<tr><td>FingerTrap source validation</td><td>408 sidecar tests pass, 12 opt-in recording skips. Final Release build has zero warnings/errors; repository checks have zero errors/warnings. Recording passes separately for both artifacts.</td></tr>
+<tr><td>Pi CI</td><td>All seven reports pass on <code>1f37eea</code>, including overlay allowlist, secret scan and CodeQL.</td></tr>
+<tr><td>FingerTrap CI</td><td id="ci-result">All 23 reports pass on <code>faa4242</code>. Five macOS jobs ran locally on distinct Tart VMs; Windows/Linux remained hosted. Independent listings show zero runner registrations/clones and a stopped base.</td></tr>
+</tbody></table></div>
+<p><a href="https://github.com/psmfd/FingerTrap/actions/runs/39618649368">Platform CI</a> · <a href="https://github.com/psmfd/FingerTrap/actions/runs/39618649346">Apple Silicon package</a> · <a href="evidence/s3-managed-startup-maintained/ci.json">Exact checks/runner cleanup</a> · <a href="evidence/s3-managed-startup-maintained/package.json">Verified package identity</a></p>
+<p><a href="evidence/s3-managed-startup-maintained/direct-local.json">Direct checks</a> · <a href="evidence/s3-managed-startup-maintained/sidecar-local.json">Host checks and complete asset inventory</a> · <a href="evidence/s3-managed-startup-maintained/tart-state.json">Tart lifecycle</a> · <a href="evidence/s3-managed-startup-maintained/runtime-mutations.json">Runtime mutations</a> · <a href="evidence/s3-managed-startup-maintained/host-mutation.json">Host mutation</a> · <a href="evidence/s3-managed-startup-maintained/source-tests.txt">Source test summary</a></p>
+</section>
+
+<section id="identity"><h2>Exact qualified identity</h2>
+<pre>Pi source:       1f37eea4bf71f95ed9a4e62674949de3a9feb8b0
+Maintained base: 42429b94e4aca33fdbb8d094de29758b36411ba1
+Host source:     bb5f02fd64b41310a7f35aec92a60b67bdd8bad8
+Fixture source:  faa4242f1add364191078d9bc12f4aaf154983e6
+
+SHA-256
+Pi executable:   9a9f53131cec748801b8c176190ef4dc77e7b6e833859ff734fcfa3d297c7614
+Pi archive:      fde413d00ceece7a4817c602560f30c1c1903bb9e95739da3512896f9b547f67
+Host executable: 80beb8542052fe1246528d2a9a0617e2b3760c81c39163f228b0c128d97af3da
+Native PTY:      4644ce3598bf59a4f1999e4e42b1312586ce9a00a7fa33059217308707f1b4a0</pre>
+<p>Built with Node 22.23.0 and Bun 1.3.10, unchanged dependency locks, lifecycle scripts disabled, and integrity-verified model data from <code>@earendil-works/pi-ai@0.87.1</code>. The runtime includes the matching native macOS platform helper. The host source and published bytes are unchanged from the earlier qualified checkpoint; this turn changes fixtures and recorder code.</p>
+<p>Separate product package artifact <code>12354825465</code> has SHA-256 <code>333ccbdd3c79035e750b4708c9105eef2d6816ec788f731c196f2e44d256e46a</code>. Its app/DMG checksums verify; build <code>7b8a83b</code> is the PR test merge with tree <code>3243d2e</code>, identical to <code>faa4242</code>. Packaged sidecar/native-shell smoke passes. Product Pi smoke skips because the bundle has no Pi; this is distinct from the managed-runtime qualification above.</p>
+<p>The comparison artifact is the published <code>v0.87.1-psmfd.1</code> release. Its archive digest and GitHub attestation were verified. The candidate is an unpublished local build and does not inherit that release attestation.</p>
+<p><a href="evidence/s3-managed-startup-maintained/artifacts.json">Build inputs and hashes</a> · <a href="evidence/s3-managed-startup-maintained/baseline-artifact.json">Released comparison identity</a> · <a href="evidence/s3-managed-startup-maintained/baseline-attestation.json">Baseline attestation verification</a></p>
+</section>
+
+<section id="protocol"><h2>Twelve scenarios match the maintained release</h2>
+<p>Every scenario records twice from a fresh keyless environment with a local canned provider. Both repetitions pass for each binary, and all twelve final normalized transcripts match between the released maintained baseline and candidate. Managed-policy changes introduce no drift in these ordinary CLI scenarios. The separate isolation matrices exercise managed mode.</p>
+<p>The first run exposed a recorder defect on the unmodified release: assigning identities to numeric clock readings made coincident milliseconds alter token numbering. Numeric timestamp fields now use one volatile token; command IDs, UUID relationships, event order, token counts and content remain checked. New tests fail before the fix and pass afterward. Installation paths use <code>@PI_HOME@</code>. Both raw recordings are retained for independent review.</p>
+<p>Compared with the current 0.85.1 production-pin goldens, 0.87.1 changes the hello version and emits system-message events carrying prompt sections and tool schemas. The existing frontend role checks ignore system messages. The full version drift is retained for promotion review; committed production goldens are unchanged.</p>
+<p><a href="evidence/s3-managed-startup-maintained/rpc-comparison.json">Exact twelve-scenario comparison</a> · <a href="evidence/s3-managed-startup-maintained/rpc-baseline/report.json">Baseline results</a> · <a href="evidence/s3-managed-startup-maintained/rpc-candidate/report.json">Candidate results</a> · <a href="evidence/s3-managed-startup-maintained/rpc-candidate/drift.patch">Production-pin drift</a> · <a href="evidence/s3-managed-startup-maintained/README.md">Raw-evidence guide</a></p>
+</section>
+
+<section id="fork"><h2>A bounded exception for patch 020</h2>
+<p><a href="../../adrs/0039-qualify-managed-pi-on-maintained-base.md">ADR-0039</a> admits only managed-startup patch 020 to an aggregate maximum of <strong>7 capability patches / 2,200 changed lines / 25 distinct upstream files</strong>. Existing patches retain their eligibility and 2,000-line budget. This does not add another available slot, relabel capability work as security work, or change guard logic.</p>
+<div class="table-wrap"><table><thead><tr><th>Measure</th><th>Observed</th><th>Limit</th></tr></thead><tbody>
+<tr><td>Capability patches</td><td>7, including pending 020</td><td>7</td></tr>
+<tr><td>Distinct upstream paths</td><td>25</td><td>25</td></tr>
+<tr><td>Per-patch additions + deletions</td><td>2,090 (existing 1,417 + patch 020: 673)</td><td>2,200</td></tr>
+</tbody></table></div>
+<p>Counts use upstream v0.87.1 content, include tests, and count shared paths under every owning patch. Manifest, text allowlist and both guard sets agree. Recount at every sync; any breach requires a new decision. The exception expires when 020 is dropped or upstream adopts equivalent behavior.</p>
+<p><a href="evidence/s3-managed-startup-maintained/patch-accounting.json">Per-file accounting</a> · <a href="https://github.com/psmfd/pi/blob/fix/managed-startup-maintained/.psmfd/security-baseline.md">Fork admission record</a></p>
+</section>
+
+<section id="limits"><h2>What remains outside this qualification</h2>
+<ul><li>Only macOS ARM64 managed runtime artifacts were exercised. Hosted Windows/Linux source checks do not qualify their Pi executables.</li>
+<li id="audit-result">The unchanged Pi dependency baseline reports 15 npm audit findings: 3 moderate, 11 high and 1 critical. <code>brace-expansion 5.0.9</code> is present in the published runtime shrinkwrap and has high-severity findings. The critical <code>shell-quote 1.10.0</code> entry is absent from that core shrinkwrap; example/development reachability still needs disposition. <a href="evidence/s3-managed-startup-maintained/dependency-audit.json">Full audit evidence</a> is retained. Resolve these findings before production promotion; work is tracked in the latest-release campaign.</li>
+<li>Linux-only release-build tests require bwrap and were not rerun on macOS. Release build/workflow logic is unchanged; the local offline artifact build and preflight tests pass.</li>
+<li>No provider credentials or paid-provider soak, signing/notarization, release publication, operator installation or managed product activation is claimed.</li>
+<li>Managed startup controls implicit configuration and resource discovery; trusted extensions and tools retain their own authority. Stores, resume, meters and remaining imports belong to later slices.</li></ul>
+</section>
+
+<section id="next"><h2>Settle this campaign, then upgrade to latest</h2>
+<ol><li>Review the maintained companion PRs and the exact qualified artifacts. Keep the old-base Pi draft as historical evidence. Production pin/release and merge decisions remain separate from this qualification.</li>
+<li>Resolve production promotion prerequisites, including the dependency audit and recorded 0.85.1-to-0.87.1 protocol drift. Managed product activation remains disabled under the migration ADR.</li>
+<li>Proceed with <a href="https://github.com/psmfd/FingerTrap/issues/210">#210: latest-Pi upgrade and validation</a> once this campaign is settled. Discover the latest stable release then, preserve or retire each fork patch with evidence, and repeat source/protocol/artifact/platform validation before selecting the new pin. Continue macOS jobs locally.</li></ol>
+<p>FingerTrap owns this work. The queued upgrade does not resume development in pi_config or imply an SDK switch. S3 as a whole and the broader migration issues remain open.</p>
+</section>
+
+<section id="reproduce"><h2>Durable state and recovery</h2>
+<p><a href="STATUS.md">STATUS.md</a> identifies the current checkpoint and one next action; <a href="WORK_LOG.md">WORK_LOG.md</a> records failures, repairs, tests and backup status. Essential evidence is retained in this repository and both implementation branches are remotely backed up.</p>
+<pre>Pi worktree: /private/tmp/ft-pi-maintained
+Pi branch:   fix/managed-startup-maintained
+Runtime:     /private/tmp/ft-s3-candidate-1f37eea/darwin-arm64
+Host:        /private/tmp/ft-s3-published-bb5f02f
+
+Retained commands:
+scripts/qualify-pi-startup.py
+scripts/qualify-managed-sidecar.py
+scripts/qualify-pi-startup-tart.py
+scripts/qualify-pi-rpc-goldens.py
+
+For each, use --help and the exact source/digests above.
+Build the Release test assembly before recording RPC scenarios.
+Run baseline and candidate recordings sequentially; they restore source goldens.
+Do not run Tart qualification concurrently with the CI runner controller.</pre>
+<p>The earlier <a href="s3-managed-startup-qualification.html">G5 report</a> remains a historical account of the consumer-pin experiment.</p>
+</section>
+<footer>Qualification report, not release approval. Last updated 21 October 2026. All evidence names the source or artifact actually checked.</footer>
+</main></body></html>

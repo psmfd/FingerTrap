@@ -1,0 +1,182 @@
+[
+  {
+    "id": 119451302690,
+    "name": "repo-check",
+    "conclusion": "success",
+    "runner": "GitHub Actions 1000023646",
+    "runnerId": 1000023646,
+    "labels": [
+      "ubuntu-24.04"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451303000,
+    "name": "ui (windows-2025)",
+    "conclusion": "success",
+    "runner": "GitHub Actions 1000023650",
+    "runnerId": 1000023650,
+    "labels": [
+      "windows-2025"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451303034,
+    "name": "tauri (macos-15) / validate",
+    "conclusion": "success",
+    "runner": "ft-actions-job-20261021t200132z-9263fb52",
+    "runnerId": 53,
+    "labels": [
+      "self-hosted",
+      "macOS",
+      "ARM64",
+      "fingertrap-tart"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451303096,
+    "name": "tauri (windows-2025)",
+    "conclusion": "success",
+    "runner": "GitHub Actions 1000023652",
+    "runnerId": 1000023652,
+    "labels": [
+      "windows-2025"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451303135,
+    "name": "ui (macos-15) / validate",
+    "conclusion": "success",
+    "runner": "ft-actions-job-20261021t200253z-efb54e6d",
+    "runnerId": 54,
+    "labels": [
+      "self-hosted",
+      "macOS",
+      "ARM64",
+      "fingertrap-tart"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451303144,
+    "name": "sidecar (macos-15) / validate",
+    "conclusion": "success",
+    "runner": "ft-actions-job-20261021t200023z-facdd857",
+    "runnerId": 52,
+    "labels": [
+      "self-hosted",
+      "macOS",
+      "ARM64",
+      "fingertrap-tart"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451303172,
+    "name": "agent-runtime (ubuntu-24.04)",
+    "conclusion": "success",
+    "runner": "GitHub Actions 1000023648",
+    "runnerId": 1000023648,
+    "labels": [
+      "ubuntu-24.04"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451303297,
+    "name": "ui (ubuntu-24.04)",
+    "conclusion": "success",
+    "runner": "GitHub Actions 1000023647",
+    "runnerId": 1000023647,
+    "labels": [
+      "ubuntu-24.04"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451303395,
+    "name": "lint-actions",
+    "conclusion": "success",
+    "runner": "GitHub Actions 1000023649",
+    "runnerId": 1000023649,
+    "labels": [
+      "ubuntu-24.04"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451303408,
+    "name": "sidecar (windows-2025)",
+    "conclusion": "success",
+    "runner": "GitHub Actions 1000023651",
+    "runnerId": 1000023651,
+    "labels": [
+      "windows-2025"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451303419,
+    "name": "agent-runtime (windows-2025)",
+    "conclusion": "success",
+    "runner": "GitHub Actions 1000023654",
+    "runnerId": 1000023654,
+    "labels": [
+      "windows-2025"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451303479,
+    "name": "tauri (ubuntu-24.04)",
+    "conclusion": "success",
+    "runner": "GitHub Actions 1000023653",
+    "runnerId": 1000023653,
+    "labels": [
+      "ubuntu-24.04"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451303560,
+    "name": "agent-runtime (macos-15) / validate",
+    "conclusion": "success",
+    "runner": "ft-actions-job-20261021t200346z-d01c09dc",
+    "runnerId": 55,
+    "labels": [
+      "self-hosted",
+      "macOS",
+      "ARM64",
+      "fingertrap-tart"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451306396,
+    "name": "sidecar (ubuntu-24.04)",
+    "conclusion": "success",
+    "runner": "GitHub Actions 1000023655",
+    "runnerId": 1000023655,
+    "labels": [
+      "ubuntu-24.04"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  },
+  {
+    "id": 119451302392,
+    "name": "package and smoke (Apple Silicon) / validate",
+    "conclusion": "success",
+    "runner": "ft-actions-job-20261021t195714z-5a9ff3a3",
+    "runnerId": 51,
+    "labels": [
+      "self-hosted",
+      "macOS",
+      "ARM64",
+      "fingertrap-tart"
+    ],
+    "source": "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+  }
+]

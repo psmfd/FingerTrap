@@ -1,0 +1,69 @@
+{
+  "baselineSource": "42429b94e4aca33fdbb8d094de29758b36411ba1",
+  "candidateSource": "1f37eea4bf71f95ed9a4e62674949de3a9feb8b0",
+  "eachScenarioRecordedTwice": true,
+  "normalization": "Volatile paths/UUIDs/session timestamps, numeric epoch timestamps; no events removed",
+  "scenarios": [
+    {
+      "scenario": "dialog-roundtrip.golden.jsonl",
+      "equal": true,
+      "sha256": "5bb22dd0ae344610e5ef8cbd663e9fbebd3a1ced335efb4116049fcb6a5629fb"
+    },
+    {
+      "scenario": "eof-clean-shutdown.golden.jsonl",
+      "equal": true,
+      "sha256": "7f2552ee8a2c396884773a019ccb2c2c9ba530d4be5219a32d9e694c76a8a3e8"
+    },
+    {
+      "scenario": "eof-mid-turn.golden.jsonl",
+      "equal": true,
+      "sha256": "18d6987f24862ac9e915cade7b2ab0359361217e41913dc65d637c5638fa0807"
+    },
+    {
+      "scenario": "follow-up-queue.golden.jsonl",
+      "equal": true,
+      "sha256": "ee57ea45196476968d81e71f90fdcf6c5e96b491c787c5f71d9f63b745da98b2"
+    },
+    {
+      "scenario": "list-sessions.golden.jsonl",
+      "equal": true,
+      "sha256": "ce33104f194e78aa4bf79559f33caf305d8cfecebdc9a6344e29d62cd9bb25d5"
+    },
+    {
+      "scenario": "malformed-line-parse-error.golden.jsonl",
+      "equal": true,
+      "sha256": "8e49fc51c5371a8052bfdb22f0292564aa224081206e97c4398c2c196ecddc68"
+    },
+    {
+      "scenario": "prompt-settled.golden.jsonl",
+      "equal": true,
+      "sha256": "22983adfafcf4dcdd4f710bcc55552bd42640b87d963302a1de23f47a40b1c4d"
+    },
+    {
+      "scenario": "resume-live-cwd.golden.jsonl",
+      "equal": true,
+      "sha256": "2d427d9c01168a4fe5b78be8551ddb8eb36e9a7a9f38b2aceee4180219342b8d"
+    },
+    {
+      "scenario": "resume-missing-cwd.golden.jsonl",
+      "equal": true,
+      "sha256": "2da6f30e277d1baebb38f00635f69e263ce2881cfb42f355bc1ad8d90c0af972"
+    },
+    {
+      "scenario": "session-start-dialog-roundtrip.golden.jsonl",
+      "equal": true,
+      "sha256": "0ec032887611cf5b95ba85509e21473290e27bc53d87b95cec10c64ebfe4c1b6"
+    },
+    {
+      "scenario": "steer-interrupt.golden.jsonl",
+      "equal": true,
+      "sha256": "8e19ad11a08ca14ef952ee512d4532ec06aae86cd9fa5b1866a495afb101822e"
+    },
+    {
+      "scenario": "unknown-id-fallthrough.golden.jsonl",
+      "equal": true,
+      "sha256": "a28fc17ac459c65dc8aa0fae9d5fcfdf74937e67c70b4eb676dcf2f3ba5cce23"
+    }
+  ],
+  "passed": true
+}

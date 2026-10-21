@@ -1,0 +1,16 @@
+==> Skipping npm ci (--skip-install)
+==> Skipping package build (--skip-build)
+==> Building binaries...
+Building for darwin-arm64...
+  [91ms]  bundle  2204 modules
+  [58ms] compile  /private/tmp/ft-pi-next-fixed-artifact/darwin-arm64/pi
+==> Creating release archives...
+Creating pi-darwin-arm64.tar.gz...
+==> Extracting archives for testing...
+
+==> Build complete!
+Archives available in /private/tmp/ft-pi-next-fixed-artifact/
+-rw-r--r--@ 1 pdavis  wheel    30M Oct 21 15:41 pi-darwin-arm64.tar.gz
+
+Extracted directories for testing:
+  /private/tmp/ft-pi-next-fixed-artifact/darwin-arm64/pi

@@ -1,0 +1,138 @@
+[
+  {
+    "rule": "js/polynomial-redos",
+    "location": {
+      "artifactLocation": {
+        "index": 11,
+        "uri": "scripts/model-catalog-protocol.ts"
+      },
+      "region": {
+        "endColumn": 66,
+        "endLine": 114,
+        "startColumn": 28,
+        "startLine": 114
+      }
+    },
+    "message": "This [regular expression](1) that depends on [a user-provided value](2) may run slow on strings starting with 'pi/! (';' and with many repetitions of ' '.\nThis [regular expression](3) that depends on [a user-provided value](2) may run slow on strings starting with 'pi/! (';';' and with many repetitions of ' '.",
+    "alert": 88
+  },
+  {
+    "rule": "js/reflected-xss",
+    "location": {
+      "artifactLocation": {
+        "index": 13,
+        "uri": "packages/ai/src/auth/oauth/callback-server.ts"
+      },
+      "region": {
+        "endColumn": 19,
+        "endLine": 47,
+        "startColumn": 15,
+        "startLine": 47
+      }
+    },
+    "message": "Cross-site scripting vulnerability due to a [user-provided value](1).",
+    "alert": 89
+  },
+  {
+    "rule": "js/reflected-xss",
+    "location": {
+      "artifactLocation": {
+        "index": 15,
+        "uri": "packages/ai/src/auth/oauth/openai-chatgpt.ts"
+      },
+      "region": {
+        "endColumn": 19,
+        "endLine": 82,
+        "startColumn": 15,
+        "startLine": 82
+      }
+    },
+    "message": "Cross-site scripting vulnerability due to a [user-provided value](1).",
+    "alert": 90
+  },
+  {
+    "rule": "js/bad-tag-filter",
+    "location": {
+      "artifactLocation": {
+        "index": 16,
+        "uri": "packages/coding-agent/test/read-line-range-display.test.ts"
+      },
+      "region": {
+        "endColumn": 64,
+        "endLine": 30,
+        "startColumn": 36,
+        "startLine": 30
+      }
+    },
+    "message": "This regular expression does not match upper case <SCRIPT> tags.",
+    "alert": 91
+  },
+  {
+    "rule": "js/stack-trace-exposure",
+    "location": {
+      "artifactLocation": {
+        "index": 21,
+        "uri": "scripts/issues/main.ts"
+      },
+      "region": {
+        "endColumn": 14,
+        "endLine": 108,
+        "startColumn": 10,
+        "startLine": 108
+      }
+    },
+    "message": "This information exposed to the user depends on [stack trace information](1).\nThis information exposed to the user depends on [stack trace information](2).",
+    "alert": 92
+  },
+  {
+    "rule": "js/clear-text-logging",
+    "location": {
+      "artifactLocation": {
+        "index": 25,
+        "uri": "packages/coding-agent/src/extensions/mcp/cli.ts"
+      },
+      "region": {
+        "endColumn": 70,
+        "endLine": 187,
+        "startColumn": 66,
+        "startLine": 187
+      }
+    },
+    "message": "This logs sensitive data returned by [an access to oauth](1) as clear text.",
+    "alert": 93
+  },
+  {
+    "rule": "js/insufficient-password-hash",
+    "location": {
+      "artifactLocation": {
+        "index": 28,
+        "uri": "packages/coding-agent/test/mcp-oauth-refresh.test.ts"
+      },
+      "region": {
+        "endColumn": 52,
+        "endLine": 216,
+        "startColumn": 42,
+        "startLine": 216
+      }
+    },
+    "message": "Password from [a call to startOAuthMcpServer](1) is hashed insecurely.",
+    "alert": 94
+  },
+  {
+    "rule": "js/prototype-pollution-utility",
+    "location": {
+      "artifactLocation": {
+        "index": 33,
+        "uri": "packages/durable/src/harness/json.ts"
+      },
+      "region": {
+        "endColumn": 30,
+        "endLine": 26,
+        "startColumn": 25,
+        "startLine": 26
+      }
+    },
+    "message": "Properties are copied from [value](1) to [slots](2) without guarding against prototype pollution.",
+    "alert": 95
+  }
+]

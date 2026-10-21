@@ -1,0 +1,12 @@
+{
+  "upstream": {
+    "tag": "v1.3.0",
+    "published": "2026-10-15T19:17:33Z"
+  },
+  "fork": {
+    "tag": "v0.87.1-psmfd.1",
+    "published": "2026-09-29T19:36:06Z"
+  },
+  "readbackDate": "2026-10-21",
+  "releaseOrPinChanged": false
+}

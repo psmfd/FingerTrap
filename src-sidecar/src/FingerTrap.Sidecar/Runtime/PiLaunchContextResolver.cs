@@ -13,7 +13,7 @@ internal sealed record PiLaunchContext(
 /// <summary>Internal host inputs, never deserialized from settings or RPC requests.</summary>
 internal sealed record ManagedLaunchSelection(
     RuntimeProfile Profile, string ApplicationRoot, string ArtifactRoot,
-    string DescriptorPath, string DescriptorSha256, IReadOnlyList<string> ToolDirectories);
+    string DescriptorPath, string DescriptorSha256, string CandidateRevision, IReadOnlyList<string> ToolDirectories);
 
 internal sealed class PiLaunchContextResolver
 {
@@ -72,14 +72,8 @@ internal sealed class PiLaunchContextResolver
 
         var workingDirectory = LaunchPaths.ExistingDirectory(cwd
             ?? throw new ArgumentException("managed launch requires an explicit working directory", nameof(cwd)));
-        if (Path.Exists(Path.Combine(workingDirectory, ".pi"))
-            || new DirectoryInfo(Path.Combine(workingDirectory, ".pi")).LinkTarget is not null)
-        {
-            throw new InvalidOperationException("pinned Pi project migrations are not isolated; project .pi state is unsupported");
-        }
-
         var artifact = RuntimeArtifact.Verify(managed.ArtifactRoot, managed.DescriptorPath,
-            managed.DescriptorSha256, profile.RuntimeId, cancellationToken);
+            managed.DescriptorSha256, profile.RuntimeId, managed.CandidateRevision, cancellationToken);
         var artifactRoot = LaunchPaths.ExistingDirectory(managed.ArtifactRoot);
         var root = LaunchPaths.CreateProfileDirectory(appRoot, $"profiles/{profile.Id}");
         if (IsWithin(root, artifactRoot) || IsWithin(artifactRoot, root))
@@ -133,7 +127,7 @@ internal sealed class PiLaunchContextResolver
             values["WINDIR"] = windows;
         }
 
-        var arguments = new List<string>();
+        var arguments = new List<string> { "--startup-policy", RuntimeArtifact.StartupPolicy };
         if (rpc) arguments.AddRange(["--mode", "rpc"]);
         arguments.AddRange(["--no-extensions", "--no-skills", "--no-prompt-templates", "--no-themes",
             "--no-context-files", "--no-approve", "--offline", "--session-dir", values["PI_CODING_AGENT_SESSION_DIR"],

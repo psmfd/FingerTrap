@@ -1,0 +1,206 @@
+TAP version 13
+# Subtest: catalog user-agent parsing remains bounded for ambiguous whitespace
+not ok 1 - catalog user-agent parsing remains bounded for ambiguous whitespace
+  ---
+  duration_ms: 1003.714875
+  type: 'test'
+  location: '/private/tmp/ft-pi-latest/.psmfd/test/security-1.3.test.mjs:9:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Error: spawnSync /Users/pdavis/.local/share/mise/installs/node/22.23.0/bin/node ETIMEDOUT
+    + actual - expected
+
+    + Error: spawnSync /Users/pdavis/.local/share/mise/installs/node/22.23.0/bin/node ETIMEDOUT
+    +     at Object.spawnSync (node:internal/child_process:1120:20)
+    +     at spawnSync (node:child_process:902:24)
+    +     at TestContext.<anonymous> (file:///private/tmp/ft-pi-latest/.psmfd/test/security-1.3.test.mjs:10:15)
+    +     at Test.runInAsyncScope (node:async_hooks:214:14)
+    +     at Test.run (node:internal/test_runner/test:1047:25)
+    +     at Test.start (node:internal/test_runner/test:944:17)
+    +     at startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17) {
+    +   code: 'ETIMEDOUT',
+    +   errno: -60,
+    +   path: '/Users/pdavis/.local/share/mise/installs/node/22.23.0/bin/node',
+    +   spawnargs: [
+    +     '--experimental-strip-types',
+    +     '--input-type=module',
+    +     '-e',
+    +     '\n' +
+    +       '    import assert from "node:assert/strict";\n' +
+    +       '    import { parseModelCatalogRequest } from "./scripts/model-catalog-protocol.ts";\n' +
+    +       '    for (const ua of ["pi/! (x;" + " ".repeat(100_000), "pi/! (x;;" + " ".repeat(100_000)])\n' +
+    +       '      assert.equal(parseModelCatalogRequest("https://example.invalid/models", ua).kind, "catalog");\n' +
+    +       '    for (const ua of ["pi/1.3.0", "pi/1.3.0 (linux)", "pi/1.3.0 (linux; node/22; arm64)"])\n' +
+    +       '      assert.equal(parseModelCatalogRequest("https://example.invalid/models", ua).kind, "redirect");\n' +
+    +       '  '
+    +   ],
+    +   syscall: 'spawnSync /Users/pdavis/.local/share/mise/installs/node/22.23.0/bin/node'
+    + }
+    - undefined
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual:
+  error: 'spawnSync /Users/pdavis/.local/share/mise/installs/node/22.23.0/bin/node ETIMEDOUT'
+  stack: |-
+    Object.spawnSync (node:internal/child_process:1120:20)
+    spawnSync (node:child_process:902:24)
+    TestContext.<anonymous> (file:///private/tmp/ft-pi-latest/.psmfd/test/security-1.3.test.mjs:10:15)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///private/tmp/ft-pi-latest/.psmfd/test/security-1.3.test.mjs:18:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.start (node:internal/test_runner/test:944:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)
+  ...
+# Subtest: triage HTTP failures return a generic response
+not ok 2 - triage HTTP failures return a generic response
+  ---
+  duration_ms: 11.326167
+  type: 'test'
+  location: '/private/tmp/ft-pi-latest/.psmfd/test/security-1.3.test.mjs:23:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+
+      {
+    +   error: 'Error: synthetic-internal-path /private/operator'
+    -   error: 'Internal server error'
+      }
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    error: 'Internal server error'
+  actual:
+    error: 'Error: synthetic-internal-path /private/operator'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///private/tmp/ft-pi-latest/.psmfd/test/security-1.3.test.mjs:40:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: JSON streaming preserves reserved keys in plain containers
+not ok 3 - JSON streaming preserves reserved keys in plain containers
+  ---
+  duration_ms: 57.661208
+  type: 'test'
+  location: '/private/tmp/ft-pi-latest/.psmfd/test/security-1.3.test.mjs:46:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    node:internal/modules/run_main:123
+        triggerUncaughtException(
+        ^
+
+    AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+    true !== false
+
+        at file:///private/tmp/ft-pi-latest/[eval1]:10:12
+        at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+        at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:282:26)
+        at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:278:20)
+        at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+      generatedMessage: true,
+      code: 'ERR_ASSERTION',
+      actual: true,
+      expected: false,
+      operator: 'strictEqual',
+      diff: 'simple'
+    }
+
+    Node.js v22.23.0
+
+
+    1 !== 0
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    file:///private/tmp/ft-pi-latest/[eval1]:10:12
+    ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:282:26)
+    async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:278:20)
+    async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+    TestContext.<anonymous> (file:///private/tmp/ft-pi-latest/.psmfd/test/security-1.3.test.mjs:72:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: JSON streaming preserves reserved keys in chord containers
+not ok 4 - JSON streaming preserves reserved keys in chord containers
+  ---
+  duration_ms: 54.248666
+  type: 'test'
+  location: '/private/tmp/ft-pi-latest/.psmfd/test/security-1.3.test.mjs:46:40'
+  failureType: 'testCodeFailure'
+  error: |-
+    node:internal/modules/run_main:123
+        triggerUncaughtException(
+        ^
+
+    AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+    true !== false
+
+        at file:///private/tmp/ft-pi-latest/[eval1]:17:12
+        at ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+        at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:282:26)
+        at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:278:20)
+        at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+      generatedMessage: true,
+      code: 'ERR_ASSERTION',
+      actual: true,
+      expected: false,
+      operator: 'strictEqual',
+      diff: 'simple'
+    }
+
+    Node.js v22.23.0
+
+
+    1 !== 0
+
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    file:///private/tmp/ft-pi-latest/[eval1]:17:12
+    ModuleJob.run (node:internal/modules/esm/module_job:343:25)
+    async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:282:26)
+    async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:278:20)
+    async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5) {
+    TestContext.<anonymous> (file:///private/tmp/ft-pi-latest/.psmfd/test/security-1.3.test.mjs:72:10)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 0
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1163.908542

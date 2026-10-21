@@ -1,0 +1,15 @@
+{
+  "scope": "ordinary CLI canary control, not a managed source mutation",
+  "command": [
+    "node",
+    "dist/bundle/cli.js",
+    "mcp",
+    "list",
+    "--json"
+  ],
+  "exitCode": 1,
+  "helperExecuted": true,
+  "guardDetected": true,
+  "stdout": "{\n  \"servers\": [\n    {\n      \"name\": \"ambient\",\n      \"scope\": \"global\",\n      \"source\": \"/private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-mcp-control-6cr6d8kv/agent/mcp.json\",\n      \"enabled\": true,\n      \"exposure\": \"codemode\",\n      \"transport\": \"/private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-mcp-control-6cr6d8kv/tools/ft-mcp-canary\",\n      \"state\": \"failed\",\n      \"tools\": [],\n      \"error\": \"MCP connection closed\"\n    }\n  ],\n  \"errors\": [],\n  \"note\": \"/private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-mcp-control-6cr6d8kv/project/.pi/mcp.json is ignored because the project is not trusted. Start pi in the project to trust it.\"\n}\n",
+  "stderr": ""
+}

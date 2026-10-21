@@ -15,6 +15,8 @@ internal sealed class ManagedLaunchFixture : IDisposable
     public string Cwd => Path.Combine(Root, "project");
     public string Digest { get; private set; } = "";
     public JsonObject Descriptor { get; }
+    // Synthetic FakePi source identity; never a production Pi pin.
+    public const string CandidateRevision = "1111111111111111111111111111111111111111";
     public const string RuntimeId = "pi-0.85.1-psmfd.1";
     public string Executable => Path.Combine(ArtifactRoot, OperatingSystem.IsWindows() ? "FakePi.exe" : "FakePi");
 
@@ -46,7 +48,8 @@ internal sealed class ManagedLaunchFixture : IDisposable
 
         Descriptor = new JsonObject
         {
-            ["version"] = 1, ["runtimeId"] = RuntimeId, ["forkRevision"] = RuntimeArtifact.PinnedRevision,
+            ["version"] = 2, ["runtimeId"] = RuntimeId, ["forkRevision"] = CandidateRevision,
+            ["startupPolicy"] = RuntimeArtifact.StartupPolicy,
             ["platform"] = RuntimeArtifact.Platform, ["architecture"] = RuntimeArtifact.Architecture,
             ["executable"] = Path.GetFileName(Executable), ["files"] = files, ["extensions"] = new JsonArray(),
         };
@@ -110,7 +113,7 @@ internal sealed class ManagedLaunchFixture : IDisposable
     }
 
     public ManagedLaunchSelection Selection(string id) =>
-        new(Profile(id), AppRoot, ArtifactRoot, DescriptorPath, Digest, []);
+        new(Profile(id), AppRoot, ArtifactRoot, DescriptorPath, Digest, CandidateRevision, []);
 
     public static PiSettings Settings(string id) => new() { Mode = "managed", ProfileId = id, RuntimeId = RuntimeId };
 

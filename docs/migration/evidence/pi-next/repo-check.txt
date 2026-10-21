@@ -1,0 +1,71 @@
+OK    [files] .editorconfig
+OK    [files] .gitattributes
+OK    [files] .gitignore
+OK    [files] README.md
+OK    [files] docs/milestones.md
+OK    [files] src-sidecar/Directory.Build.props
+OK    [files] src-sidecar/Directory.Packages.props
+OK    [files] src-sidecar/FingerTrap.slnx
+OK    [files] src-sidecar/src/FingerTrap.Sidecar/Program.cs
+OK    [files] src-sidecar/src/FingerTrap.Sidecar/Ipc/RpcSurface.cs
+OK    [files] src-ui/package.json
+OK    [files] src-ui/tsconfig.json
+OK    [files] src-ui/src/api.ts
+OK    [files] src-ui/src/transport.ts
+OK    [files] src-ui/src/main.ts
+OK    [files] src-tauri/Cargo.toml
+OK    [files] src-tauri/tauri.conf.json
+OK    [files] src-tauri/src/main.rs
+OK    [files] src-tauri/src/lib.rs
+OK    [files] src-tauri/src/sidecar.rs
+OK    [files] .github/workflows/ci.yml
+OK    [files] .github/workflows/lint-pr-title.yml
+OK    [files] .github/workflows/enforce-gitflow.yml
+OK    [files] .github/PULL_REQUEST_TEMPLATE.md
+OK    [files] scripts/dev-setup.sh
+OK    [files] scripts/check.sh
+OK    [adr-numbering] 39 ADR(s), sequential, no duplicates
+OK    [adr-template] 0001-three-process-architecture.md
+OK    [adr-template] 0002-jsonrpc-stdio-content-length.md
+OK    [adr-template] 0003-rpcsurface-apits-pairing.md
+OK    [adr-template] 0004-repo-conventions.md
+OK    [adr-template] 0005-sidecar-publish-strategy.md
+OK    [adr-template] 0006-pty-service-shape.md
+OK    [adr-template] 0007-macos-pty-implementation.md
+OK    [adr-template] 0008-vendor-porta-pty.md
+OK    [adr-template] 0009-lock-file-shape-guard.md
+OK    [adr-template] 0010-tauri-bundle-companion-libs.md
+OK    [adr-template] 0011-smolvm-verification-substrate.md
+OK    [adr-template] 0012-home-phase-resequencing.md
+OK    [adr-template] 0013-pane-kinds-and-pi-resolution.md
+OK    [adr-template] 0014-settings-file-and-precedence.md
+OK    [adr-template] 0015-adopt-terminal-theme-manager-feature.md
+OK    [adr-template] 0016-remote-execution-transport.md
+OK    [adr-template] 0017-ssh-host-key-policy.md
+OK    [adr-template] 0018-shell-framework-theme-model.md
+OK    [adr-template] 0019-shell-framework-detection-install.md
+OK    [adr-template] 0020-theme-manager-security-guardrails.md
+OK    [adr-template] 0021-ft1-chrome-pane-registry-and-slices.md
+OK    [adr-template] 0022-status-providers-credentials-sanitization.md
+OK    [adr-template] 0023-status-row-links-url-open-policy.md
+OK    [adr-template] 0024-ft1-splits-layout-tree.md
+OK    [adr-template] 0025-ft2-rpc-supervisor-native-pane.md
+OK    [adr-template] 0026-session-resume-failure-policy.md
+OK    [adr-template] 0027-deepseek-harness-assessment.md
+OK    [adr-template] 0028-retain-session-scan-defer-headless-listing.md
+OK    [adr-template] 0029-vm-provider-and-subprocess-trust-contract.md
+OK    [adr-template] 0030-process-wide-darwin-child-spawn-coordination.md
+OK    [adr-template] 0031-bounded-shell-sidecar-shutdown.md
+OK    [adr-template] 0032-single-instance-apple-silicon-release.md
+OK    [adr-template] 0033-apple-silicon-candidate-and-tart-validation.md
+OK    [adr-template] 0034-own-agent-runtime-and-retire-pi-config.md
+OK    [adr-template] 0035-version-managed-runtime-profiles.md
+OK    [adr-template] 0036-resolve-managed-launches-before-process-creation.md
+OK    [adr-template] 0037-use-disposable-tart-github-runners.md
+OK    [adr-template] 0038-require-explicit-managed-pi-startup-policy.md
+OK    [adr-template] 0039-qualify-managed-pi-on-maintained-base.md
+OK    [lock-shape] all packages.lock.json files are RID-agnostic
+OK    [rpc-pairing] RpcSurface=23 req + 5 notif, api.ts=23 req + 5 notif
+OK    [rpc-reqtype0] no parameterless method declared as RequestType1<null> in api.ts
+==================================
+PASS — 0 errors, 0 warnings

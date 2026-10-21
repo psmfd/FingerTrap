@@ -1,0 +1,911 @@
+Running tests without API keys in isolated home: /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/home
+
+> pi-monorepo@0.0.3 test
+> npm run test:scripts && npm run test --workspaces --if-present
+
+
+> pi-monorepo@0.0.3 test:scripts
+> node --test scripts/*.test.mjs scripts/*.test.ts
+
+TAP version 13
+# Subtest: rejects internal and external registry dependency ranges in every direct dependency section
+ok 1 - rejects internal and external registry dependency ranges in every direct dependency section
+  ---
+  duration_ms: 29.026542
+  type: 'test'
+  ...
+# Subtest: accepts exact internal and external versions, exact registry aliases, and non-registry specifiers
+ok 2 - accepts exact internal and external versions, exact registry aliases, and non-registry specifiers
+  ---
+  duration_ms: 25.84325
+  type: 'test'
+  ...
+# Subtest: rejects registry alias ranges
+ok 3 - rejects registry alias ranges
+  ---
+  duration_ms: 27.620125
+  type: 'test'
+  ...
+# Subtest: rejects undeclared imports even when the workspace package exists
+ok 4 - rejects undeclared imports even when the workspace package exists
+  ---
+  duration_ms: 80.898
+  type: 'test'
+  ...
+# Subtest: accepts runtime declarations, builtins, self imports, relative imports, and erased types
+ok 5 - accepts runtime declarations, builtins, self imports, relative imports, and erased types
+  ---
+  duration_ms: 70.524375
+  type: 'test'
+  ...
+# Subtest: rejects dev-only dependencies, side-effect imports, mixed exports, and literal runtime loads
+ok 6 - rejects dev-only dependencies, side-effect imports, mixed exports, and literal runtime loads
+  ---
+  duration_ms: 67.576333
+  type: 'test'
+  ...
+# Subtest: allows imported JSON assets outside the TypeScript include pattern
+ok 7 - allows imported JSON assets outside the TypeScript include pattern
+  ---
+  duration_ms: 66.685542
+  type: 'test'
+  ...
+# Subtest: permits dev-only dependencies in sources excluded from the published build
+ok 8 - permits dev-only dependencies in sources excluded from the published build
+  ---
+  duration_ms: 68.20875
+  type: 'test'
+  ...
+# Subtest: rejects excluded code reachable through export * from "./experimental/server";
+ok 9 - rejects excluded code reachable through export * from "./experimental/server";
+  ---
+  duration_ms: 67.0515
+  type: 'test'
+  ...
+# Subtest: rejects excluded code reachable through import type { Options } from "./experimental/server";
+ok 10 - rejects excluded code reachable through import type { Options } from "./experimental/server";
+  ---
+  duration_ms: 68.731959
+  type: 'test'
+  ...
+# Subtest: ignores tests, declarations, and private packages
+ok 11 - ignores tests, declarations, and private packages
+  ---
+  duration_ms: 66.586583
+  type: 'test'
+  ...
+#   @earendil-works/pi-coding-agent@1.0.0: 5 files, 447 bytes packed, 507 bytes unpacked
+# added 1 package in 121ms
+# Coding-agent policy smoke tests passed (/Users/pdavis/.local/share/mise/installs/node/22.23.0/bin/node).
+#   @earendil-works/pi-coding-agent@1.0.0: 5 files, 463 bytes packed, 543 bytes unpacked
+# added 1 package in 125ms
+# Subtest: accepts a valid coding-agent package
+ok 12 - accepts a valid coding-agent package
+  ---
+  duration_ms: 583.035041
+  type: 'test'
+  ...
+# Subtest: fails when the SDK imports an undeclared package despite a working CLI
+ok 13 - fails when the SDK imports an undeclared package despite a working CLI
+  ---
+  duration_ms: 376.828833
+  type: 'test'
+  ...
+#   @pi-package-test/second@1.0.0: 3 files, 277 bytes packed, 226 bytes unpacked
+#   @pi-package-test/shared@1.0.0: 3 files, 316 bytes packed, 345 bytes unpacked
+#   @pi-package-test/target@1.0.0: 6 files, 473 bytes packed, 654 bytes unpacked
+#   @pi-package-test/second@1.0.0: 3 files, 277 bytes packed, 226 bytes unpacked
+#   @pi-package-test/shared@1.0.0: 3 files, 316 bytes packed, 345 bytes unpacked
+#   @pi-package-test/target@1.0.0: 6 files, 473 bytes packed, 654 bytes unpacked
+# added 2 packages in 100ms
+#   @pi-package-test/second@1.0.0: 3 files, 277 bytes packed, 226 bytes unpacked
+#   @pi-package-test/shared@1.0.0: 3 files, 316 bytes packed, 345 bytes unpacked
+#   @pi-package-test/target@1.0.0: 6 files, 473 bytes packed, 654 bytes unpacked
+# Subtest: wires multiple direct packages without registry fallbacks
+ok 14 - wires multiple direct packages without registry fallbacks
+  ---
+  duration_ms: 902.407041
+  type: 'test'
+  ...
+# Subtest: installs a package as the only direct dependency
+ok 15 - installs a package as the only direct dependency
+  ---
+  duration_ms: 631.181458
+  type: 'test'
+  ...
+# Subtest: wires and installs a pnpm consumer without registry fallbacks
+ok 16 - wires and installs a pnpm consumer without registry fallbacks
+  ---
+  duration_ms: 787.632958
+  type: 'test'
+  ...
+# Subtest: builds revision scoped storage keys
+ok 17 - builds revision scoped storage keys
+  ---
+  duration_ms: 0.408334
+  type: 'test'
+  ...
+# Subtest: orders Pi versions with semver precedence
+ok 18 - orders Pi versions with semver precedence
+  ---
+  duration_ms: 0.361959
+  type: 'test'
+  ...
+# Subtest: selects the newest catalog a Pi version supports
+ok 19 - selects the newest catalog a Pi version supports
+  ---
+  duration_ms: 0.158375
+  type: 'test'
+  ...
+# Subtest: redirects Pi user agents to an explicit catalog version
+ok 20 - redirects Pi user agents to an explicit catalog version
+  ---
+  duration_ms: 0.551292
+  type: 'test'
+  ...
+# Subtest: serves explicit and unversioned catalog requests without redirecting
+ok 21 - serves explicit and unversioned catalog requests without redirecting
+  ---
+  duration_ms: 0.112666
+  type: 'test'
+  ...
+# Subtest: rejects invalid catalog request parameters
+ok 22 - rejects invalid catalog request parameters
+  ---
+  duration_ms: 0.11775
+  type: 'test'
+  ...
+# Subtest: validates stored indexes and drops publication metadata
+ok 23 - validates stored indexes and drops publication metadata
+  ---
+  duration_ms: 0.208583
+  type: 'test'
+  ...
+# Subtest: rejects missing option values before doing work
+ok 24 - rejects missing option values before doing work
+  ---
+  duration_ms: 113.440375
+  type: 'test'
+  ...
+# Subtest: rejects an unsupported package manager before doing work
+ok 25 - rejects an unsupported package manager before doing work
+  ---
+  duration_ms: 37.861125
+  type: 'test'
+  ...
+#   @pi-package-test/shared@1.0.0: 2 files, 228 bytes packed, 119 bytes unpacked
+#   @pi-package-test/target@1.0.0: 2 files, 221 bytes packed, 113 bytes unpacked
+#   @pi-package-test/shared@1.0.0: 2 files, 230 bytes packed, 118 bytes unpacked
+#   @pi-package-test/target@1.0.0: 2 files, 221 bytes packed, 113 bytes unpacked
+# Subtest: produces a verified, content-addressed artifact set
+ok 26 - produces a verified, content-addressed artifact set
+  ---
+  duration_ms: 893.836125
+  type: 'test'
+  ...
+# Subtest: publishes explicit per-type and total model counts
+ok 27 - publishes explicit per-type and total model counts
+  ---
+  duration_ms: 57.997125
+  type: 'test'
+  ...
+# Subtest: compares stable release versions numerically
+ok 28 - compares stable release versions numerically
+  ---
+  duration_ms: 0.399333
+  type: 'test'
+  ...
+# Subtest: does not regress an existing newer release marker
+ok 29 - does not regress an existing newer release marker
+  ---
+  duration_ms: 0.281417
+  type: 'test'
+  ...
+# Subtest: retries a lost conditional update and preserves a racing newer marker
+ok 30 - retries a lost conditional update and preserves a racing newer marker
+  ---
+  duration_ms: 0.098667
+  type: 'test'
+  ...
+# Subtest: creates a missing marker with an if-none-match condition
+ok 31 - creates a missing marker with an if-none-match condition
+  ---
+  duration_ms: 0.051167
+  type: 'test'
+  ...
+# Subtest: pins published and private dependencies without touching registry aliases, generated manifests, or published lockstep
+ok 32 - pins published and private dependencies without touching registry aliases, generated manifests, or published lockstep
+  ---
+  duration_ms: 98.924416
+  type: 'test'
+  ...
+# Subtest: pins the newest typed catalog after verifying its immutable URL
+ok 33 - pins the newest typed catalog after verifying its immutable URL
+  ---
+  duration_ms: 13.870958
+  type: 'test'
+  ...
+# Subtest: keeps a pin that still hydrates the checkout and has the live model groups
+ok 34 - keeps a pin that still hydrates the checkout and has the live model groups
+  ---
+  duration_ms: 3.55075
+  type: 'test'
+  ...
+# Subtest: replaces a pin that lacks a model type of the live catalog
+ok 35 - replaces a pin that lacks a model type of the live catalog
+  ---
+  duration_ms: 4.930334
+  type: 'test'
+  ...
+# Subtest: replaces a pin whose provider uses a different API than the live catalog
+ok 36 - replaces a pin whose provider uses a different API than the live catalog
+  ---
+  duration_ms: 6.0265
+  type: 'test'
+  ...
+# Subtest: replaces a pin that no longer hydrates the checkout
+ok 37 - replaces a pin that no longer hydrates the checkout
+  ---
+  duration_ms: 5.89525
+  type: 'test'
+  ...
+# Subtest: refuses to pin a live catalog that cannot hydrate the checkout
+ok 38 - refuses to pin a live catalog that cannot hydrate the checkout
+  ---
+  duration_ms: 2.945208
+  type: 'test'
+  ...
+# Subtest: keeps the old pin on discovery-http failure
+ok 39 - keeps the old pin on discovery-http failure
+  ---
+  duration_ms: 2.103416
+  type: 'test'
+  ...
+# Subtest: keeps the old pin on discovery-revision failure
+ok 40 - keeps the old pin on discovery-revision failure
+  ---
+  duration_ms: 1.957875
+  type: 'test'
+  ...
+# Subtest: keeps the old pin on discovery-hash failure
+ok 41 - keeps the old pin on discovery-hash failure
+  ---
+  duration_ms: 1.907458
+  type: 'test'
+  ...
+# Subtest: keeps the old pin on revision-http failure
+ok 42 - keeps the old pin on revision-http failure
+  ---
+  duration_ms: 1.777209
+  type: 'test'
+  ...
+# Subtest: keeps the old pin on revision-hash failure
+ok 43 - keeps the old pin on revision-hash failure
+  ---
+  duration_ms: 2.594667
+  type: 'test'
+  ...
+# Subtest: does not treat an unreachable pinned revision as stale
+ok 44 - does not treat an unreachable pinned revision as stale
+  ---
+  duration_ms: 2.102334
+  type: 'test'
+  ...
+1..44
+# tests 44
+# suites 0
+# pass 44
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2374.615875
+
+> @earendil-works/pi-agent-core@1.3.0 test
+> vitest --run
+
+
+ RUN  v4.1.11 /private/tmp/ft-pi-latest/packages/agent
+
+···························································································
+
+ Test Files  4 passed (4)
+      Tests  91 passed (91)
+   Start at  17:46:23
+   Duration  585ms (transform 717ms, setup 0ms, import 1.20s, tests 517ms, environment 0ms)
+
+
+> @earendil-works/pi-ai@1.3.0 test
+> vitest --run
+
+
+ RUN  v4.1.11 /private/tmp/ft-pi-latest/packages/ai
+
+·········································································································································································································································-······················································································································································································································································································································································································································································································································································································································································································································································································-·······--···········--···················································································································································································································································································································································-------------------····----------·····-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ Test Files  148 passed | 27 skipped (175)
+      Tests  1357 passed | 864 skipped (2221)
+   Start at  17:46:24
+   Duration  3.24s (transform 7.58s, setup 0ms, import 35.10s, tests 5.43s, environment 7ms)
+
+
+> @earendil-works/chord@1.3.0 test
+> vitest --run
+
+
+ RUN  v4.1.11 /private/tmp/ft-pi-latest/packages/chord
+
+ ✓ test/output.test.ts (20 tests) 135ms
+ ✓ test/flow.test.ts (7 tests) 99ms
+ ✓ test/link.test.ts (20 tests) 109ms
+ ✓ test/generations.test.ts (4 tests) 118ms
+ ✓ test/bindings.test.ts (11 tests) 114ms
+ ✓ test/reload.test.ts (18 tests) 122ms
+ ✓ test/flow-units.test.ts (6 tests) 152ms
+ ✓ test/loader.test.ts (2 tests) 188ms
+ ✓ test/output-skip.test.ts (4 tests) 405ms
+     ✓ matches the full stream for every legal skip pattern  303ms
+ ✓ test/links-review.test.ts (15 tests) 232ms
+ ✓ test/cluster.test.ts (14 tests) 234ms
+ ✓ test/hydration.test.ts (4 tests) 100ms
+ ✓ test/state-diff.test.ts (28 tests) 75ms
+ ✓ test/websocket.test.ts (2 tests) 299ms
+ ✓ test/delta-diff.test.ts (29 tests) 97ms
+ ✓ test/delta.test.ts (41 tests) 99ms
+ ✓ test/state-draft.test.ts (9 tests) 99ms
+ ✓ test/delta-tracker/tracker.test.ts (70 tests) 456ms
+ ✓ test/delta-apply-immutable.test.ts (8 tests) 27ms
+ ✓ test/boundary.test.ts (1 test) 14ms
+ ✓ test/requests.test.ts (11 tests) 64ms
+ ✓ test/replicated-state-delivery.test.ts (24 tests) 421ms
+ ✓ test/host.test.ts (25 tests) 92ms
+ ✓ test/awaiting.test.ts (4 tests) 53ms
+ ✓ test/host-objects-reload.test.ts (6 tests) 31ms
+ ✓ test/tutorial.test.ts (11 tests) 46ms
+ ✓ test/review.test.ts (18 tests) 77ms
+ ✓ test/delta-clone.test.ts (4 tests) 3ms
+ ✓ test/provider-cost.test.ts (1 test) 24ms
+ ✓ test/variants.test.ts (2 tests) 21ms
+ ✓ test/state-value.test.ts (3 tests) 3ms
+ ✓ test/placement.test.ts (6 tests) 22ms
+ ✓ test/state-init.test.ts (7 tests) 14ms
+ ✓ test/readiness.test.ts (13 tests) 17ms
+ ✓ test/context.test.ts (5 tests) 3ms
+ ✓ test/state.test.ts (7 tests) 14ms
+ ✓ test/replicated-state.test.ts (16 tests) 6ms
+ ✓ test/contract.test.ts (7 tests) 6ms
+ ✓ test/principals.test.ts (4 tests) 11ms
+ ✓ test/json.test.ts (5 tests) 3ms
+ ✓ test/types.test.ts (1 test) 1ms
+ ✓ test/state-fuzz.test.ts (1 test) 821ms
+   ✓ converges across randomized prepared revisions  820ms
+ ✓ test/delta-tracker/retention.test.ts (14 tests) 1684ms
+ ✓ test/manager.test.ts (9 tests) 2067ms
+     ✓ a child-owned kernel lock admits one live process; replace waits for the exit before the next start  569ms
+     ✓ kills the process tree when a child ignores shutdown past the grace period  428ms
+
+ Test Files  44 passed (44)
+      Tests  517 passed (517)
+   Start at  17:46:27
+   Duration  2.46s (transform 2.49s, setup 0ms, import 6.80s, tests 8.68s, environment 2ms)
+
+
+> @earendil-works/pi-codemode@1.3.0 test
+> vitest --run
+
+
+ RUN  v4.1.11 /private/tmp/ft-pi-latest/packages/codemode
+
+·······················································································---········································································································································
+
+ Test Files  6 passed (6)
+      Tests  223 passed | 3 skipped (226)
+   Start at  17:46:30
+   Duration  6.95s (transform 307ms, setup 0ms, import 400ms, tests 9.06s, environment 0ms)
+
+
+> @earendil-works/pi-coding-agent@1.3.0 test
+> vitest --run
+
+
+ RUN  v4.1.11 /private/tmp/ft-pi-latest/packages/coding-agent
+
+·································From /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/git-update-test-1792604797746-1qj9cfx8bpo/remote
+   6a7ef2b..651e6b5  main       -> origin/main
+··HEAD is now at 651e6b5 Second commit
+········From /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/git-update-test-1792604797988-ozxc4lpqq6d/remote
+   c588c99..aec90a4  main       -> origin/main
+HEAD is now at aec90a4 Fourth commit
+····························································From /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/git-update-test-1792604798622-a79nmwpao0t/remote
+   c588c99..698bf4f  main       -> origin/main
+···························HEAD is now at 698bf4f Commit to keep
+············From /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/git-update-test-1792604798622-a79nmwpao0t/remote
+ + 698bf4f...4d33c44 main       -> origin/main  (forced update)
+·················HEAD is now at 4d33c44 Rewritten commit
+····Installing ./packages/local-package...
+Installing /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/pi-package-commands-1792604799025-207y1ows9u3/local-package/...
+Removing /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/pi-package-commands-1792604799025-207y1ows9u3/local-package/...
+···············Updating npm:fake-package...
+Installing /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/pi-package-commands-1792604799104-r5of9fkzbln/local-package...
+········································································································From /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/git-update-test-1792604799012-5922a1rewe3/remote
+   af725f6..3f6eedf  main       -> origin/main
+············································HEAD is now at 3f6eedf Commit B
+······························································From /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/git-update-test-1792604799012-5922a1rewe3/remote
+ + 3f6eedf...79c46d0 main       -> origin/main  (forced update)
+····················HEAD is now at 79c46d0 New commit replacing A and B
+··············································································································From /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/git-update-test-1792604799581-4hd65p2wm7/remote
+   af725f6..758ad86  main       -> origin/main
+············································HEAD is now at 758ad86 v3
+································································································From /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/git-update-test-1792604799581-4hd65p2wm7/remote
+ + 758ad86...74a3858 main       -> origin/main  (forced update)
+······················HEAD is now at 74a3858 Rewrite B
+··································From /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/git-update-test-1792604800204-d4exz4rpvip/remote
+ * branch            43d754f5e5f8e3709bcf97305172382af9c24a58 -> FETCH_HEAD
+···············································From /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/git-update-test-1792604800436-mml7gdnmrma/remote
+ * tag               v2         -> FETCH_HEAD
+·HEAD is now at b2e3f28 Second commit
+·········From /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/git-update-test-1792604800436-mml7gdnmrma/remote
+ * tag               v2         -> FETCH_HEAD
+···HEAD is now at b2e3f28 Second commit
+································································································································From /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/git-update-test-1792604801052-yux9zkg97n8/remote
+   9c7c23b..cc81620  main       -> origin/main
+·····HEAD is now at cc81620 Second commit
+·················································································································································································································································································································Launching external editor: /Users/pdavis/.local/share/mise/installs/node/22.23.0/bin/node /private/tmp/ft-pi-latest/packages/coding-agent/test/fixtures/fake-external-editor.mjs /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/pi-external-editor-test-msRBOG/capture.json
+Pi will resume when the editor exits.
+Launching external editor: /Users/pdavis/.local/share/mise/installs/node/22.23.0/bin/node /private/tmp/ft-pi-latest/packages/coding-agent/test/fixtures/fake-external-editor.mjs /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/pi-external-editor-test-RWACII/capture.json --fail
+Pi will resume when the editor exits.
+·········Launching external editor: /Users/pdavis/.local/share/mise/installs/node/22.23.0/bin/node /private/tmp/ft-pi-latest/packages/coding-agent/test/fixtures/fake-external-editor.mjs /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/pi-test.Q2JoDu/tmp/pi-external-editor-test-gQhZ2e/capture.json --empty
+Pi will resume when the editor exits.
+····································································································································································································································································································································································································································································································································--····································································································································································································································································································································································-········································································································································································································································································································································································································································done
+················································································································································································································-------------------···--·········--------------------------
+
+ Test Files  298 passed | 6 skipped (304)
+      Tests  2737 passed | 50 skipped (2787)
+   Start at  17:46:37
+   Duration  11.59s (transform 14.26s, setup 0ms, import 119.89s, tests 50.60s, environment 13ms)
+
+
+> @earendil-works/pi-durable@1.3.0 test
+> vitest --run && PI_DURABLE_DOCUMENT_RETENTION_MS=0 vitest --run
+
+
+ RUN  v4.1.11 /private/tmp/ft-pi-latest/packages/durable
+
+(node:51089) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51090) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51092) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51083) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51086) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51088) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51081) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/env-node.test.ts (49 tests | 1 skipped) 695ms
+     ✓ reports the spill of a command that times out  302ms
+ ✓ test/tools-read-differential.test.ts (2 tests) 708ms
+     ✓ returns exactly what reading the whole file returned  697ms
+ ✓ test/codemode-models.test.ts (7 tests) 600ms
+(node:51130) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/harness-structured.test.ts (58 tests) 731ms
+     ✓ keeps run control with a faulted generation until its owned work drains, and fails the Harness on a failed final commit  305ms
+ ✓ test/harness-tools.test.ts (38 tests) 751ms
+ ✓ test/harness-compaction.test.ts (105 tests) 751ms
+     ✓ keeps a background summary queued through a retry backoff while a blocking compaction wins  304ms
+ ✓ test/harness-nested-tools.test.ts (33 tests) 787ms
+(node:51133) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/harness-tools-recovery.test.ts (9 tests) 972ms
+     ✓ reruns a tool only when both the stored and the current replay policy are safe  440ms
+(node:51135) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51136) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/env-node-spill.test.ts (1 test) 1214ms
+     ✓ keeps inherited stdio open past the exit grace period while a spill write is pending  1213ms
+ ✓ test/env-line-scan.test.ts (4 tests) 210ms
+ ✓ test/harness-inbox.test.ts (32 tests) 413ms
+ ✓ test/tools.test.ts (36 tests | 1 skipped) 354ms
+ ✓ test/jsonl-storage.test.ts (89 tests) 634ms
+ ✓ test/harness-generation-recovery.test.ts (7 tests) 324ms
+ ✓ test/sqlite-storage.test.ts (61 tests) 599ms
+ ✓ test/harness-context.test.ts (22 tests) 175ms
+ ✓ test/session-document-retention.test.ts (21 tests) 174ms
+ ✓ test/harness-nested-tools-restart.test.ts (11 tests) 430ms
+(node:51147) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/harness-structured-output.test.ts (10 tests) 125ms
+(node:51153) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51154) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/harness-ownership.test.ts (41 tests) 1603ms
+     ✓ tracks ownership chains deeper than the call stack  1197ms
+ ✓ test/harness-input-entries.test.ts (11 tests) 71ms
+ ✓ test/harness-tasks-recovery.test.ts (24 tests) 128ms
+ ✓ test/env-truncate.test.ts (8 tests) 54ms
+ ✓ test/harness-lifecycle.test.ts (14 tests) 65ms
+ ✓ test/harness-storage-failure.test.ts (24 tests) 92ms
+ ✓ test/harness-tasks.test.ts (38 tests) 114ms
+ ✓ test/tool-search.test.ts (6 tests) 53ms
+ ✓ test/harness-generation.test.ts (24 tests) 1712ms
+     ✓ commits partials no more often than progress.partialIntervalMs  604ms
+     ✓ commits no partial for a response that turns deferred after an empty start event  305ms
+     ✓ faults a run task, settling its inputs and converting the committed partial  303ms
+ ✓ test/harness-view.test.ts (14 tests) 54ms
+(node:51160) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51161) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/harness-scheduler-indexes.test.ts (5 tests) 67ms
+ ✓ test/sqlite-cloudflare.test.ts (36 tests) 52ms
+(node:51167) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51165) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51168) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/session-checkpoints-migrations.test.ts (20 tests) 45ms
+ ✓ test/session-watches.test.ts (21 tests) 42ms
+ ✓ test/harness-callers.test.ts (5 tests) 43ms
+ ✓ test/harness-submissions.test.ts (10 tests) 42ms
+ ✓ test/session-states.test.ts (10 tests) 37ms
+ ✓ test/session-forks.test.ts (14 tests) 37ms
+ ✓ test/session-documents.test.ts (27 tests) 40ms
+ ✓ test/harness-task-graph.test.ts (5 tests) 42ms
+ ✓ test/harness-conversations.test.ts (12 tests) 34ms
+(node:51318) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/sqlite-migrations.test.ts (4 tests) 23ms
+ ✓ test/memory-storage.test.ts (25 tests) 21ms
+ ✓ test/harness-events.test.ts (14 tests) 2123ms
+     ✓ rebuilds every committed partial of thinking, text, and tool-call arguments from message changes  820ms
+     ✓ rebuilds a sliding tail window from output trims and appends  729ms
+(node:51371) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/storage-runtime-boundary.test.ts (4 tests) 17ms
+ ✓ test/sqlite-facade.test.ts (11 tests) 19ms
+ ✓ test/images-wasm-module.test.ts (1 test) 9ms
+ ✓ test/session-tables.test.ts (12 tests) 28ms
+ ✓ test/harness-cancellation-barrier.test.ts (4 tests) 25ms
+ ✓ test/harness-prompt.test.ts (9 tests) 17ms
+ ✓ test/harness-inspect.test.ts (2 tests) 17ms
+ ✓ test/harness-registry.test.ts (10 tests) 5ms
+ ✓ test/codemode-describe.test.ts (5 tests) 17ms
+ ✓ test/types.test.ts (3 tests) 1ms
+ ✓ test/session-definitions.test.ts (3 tests) 2ms
+ ✓ test/spec-usage.test.ts (1 test) 1ms
+ ↓ test/system-order-cache-e2e.test.ts (1 test | 1 skipped)
+ ↓ test/provider-session-cache-e2e.test.ts (1 test | 1 skipped)
+ ✓ test/harness-scheduler-retention.test.ts (14 tests) 3204ms
+     ✓ forgets a 20,000-deep chain of ended tasks without recursion  2914ms
+ ✓ test/harness-live-deltas.test.ts (11 tests) 3321ms
+     ✓ appends head output and then only updates the dropped counts once the window is full  314ms
+     ✓ writes the whole window when Chord's overlap search cannot find the shared part  1099ms
+     ✓ diffs details leaf by leaf and appends diagnostics  409ms
+     ✓ streams partial text as appends  842ms
+     ✓ stores a complete base exactly in the commits where nothing runs  305ms
+ ✓ test/codemode.test.ts (40 tests) 4215ms
+     ✓ times a script out across a restart, without admitting new calls  450ms
+ ✓ test/env-node-conformance.test.ts (51 tests) 4913ms
+     ✓ watch reports a missing file's creation, changes, replacement and removal  463ms
+     ✓ watch follows a directory replaced at the same path  324ms
+     ✓ watch stops reporting once closed  306ms
+     ✓ watch reports a missing file's creation, changes, replacement and removal  525ms
+     ✓ watch follows directories created together with their contents  310ms
+     ✓ watch keeps watching a path whose parent is renamed and recreated  315ms
+     ✓ watch follows a directory replaced at the same path  316ms
+     ✓ watch stops reporting once closed  301ms
+ ✓ test/tools-images.test.ts (34 tests) 9661ms
+     ✓ scales an image down to the maximum size, and says how to map coordinates back  373ms
+     ✓ re-encodes a PNG too large for the byte limit as JPEG at its size, and shrinks it when that is not enough  2480ms
+     ✓ prepares in a worker thread, leaving the event loop free  1017ms
+     ✓ gives the same result as the calling thread, and keeps the caller's bytes  5161ms
+     ✓ prepares concurrent images, and starts a new worker after the idle one exited  379ms
+
+ Test Files  60 passed | 2 skipped (62)
+      Tests  1220 passed | 4 skipped (1224)
+   Start at  17:46:48
+   Duration  10.29s (transform 8.03s, setup 10.81s, import 9.06s, tests 42.71s, environment 2ms)
+
+
+ RUN  v4.1.11 /private/tmp/ft-pi-latest/packages/durable
+
+(node:51705) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51713) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51708) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51711) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51714) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51710) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51703) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/jsonl-storage.test.ts (89 tests) 561ms
+ ✓ test/env-node.test.ts (49 tests | 1 skipped) 696ms
+     ✓ reports the spill of a command that times out  307ms
+(node:51752) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/tools-read-differential.test.ts (2 tests) 846ms
+     ✓ returns exactly what reading the whole file returned  836ms
+ ✓ test/harness-tools.test.ts (38 tests) 759ms
+ ✓ test/harness-structured.test.ts (58 tests) 788ms
+     ✓ keeps run control with a faulted generation until its owned work drains, and fails the Harness on a failed final commit  305ms
+ ✓ test/harness-compaction.test.ts (105 tests) 873ms
+     ✓ keeps a background summary queued through a retry backoff while a blocking compaction wins  306ms
+ ✓ test/harness-nested-tools.test.ts (33 tests) 885ms
+(node:51755) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51756) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/env-node-spill.test.ts (1 test) 1212ms
+     ✓ keeps inherited stdio open past the exit grace period while a spill write is pending  1211ms
+ ✓ test/harness-tools-recovery.test.ts (9 tests) 1017ms
+     ✓ reruns a tool only when both the stored and the current replay policy are safe  482ms
+ ✓ test/sqlite-storage.test.ts (61 tests) 406ms
+(node:51760) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/harness-nested-tools-restart.test.ts (11 tests) 294ms
+ ✓ test/codemode-models.test.ts (7 tests) 614ms
+ ✓ test/env-line-scan.test.ts (4 tests) 215ms
+(node:51764) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/tools.test.ts (36 tests | 1 skipped) 316ms
+ ✓ test/harness-generation-recovery.test.ts (7 tests) 250ms
+ ✓ test/harness-inbox.test.ts (32 tests) 403ms
+ ✓ test/harness-context.test.ts (22 tests) 171ms
+ ✓ test/harness-tasks-recovery.test.ts (24 tests) 115ms
+ ✓ test/session-document-retention.test.ts (21 tests) 175ms
+ ✓ test/harness-ownership.test.ts (41 tests) 1529ms
+     ✓ tracks ownership chains deeper than the call stack  1186ms
+(node:51775) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51776) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/harness-structured-output.test.ts (10 tests) 136ms
+ ✓ test/harness-storage-failure.test.ts (24 tests) 93ms
+ ✓ test/harness-tasks.test.ts (38 tests) 116ms
+(node:51777) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/env-truncate.test.ts (8 tests) 55ms
+ ✓ test/harness-input-entries.test.ts (11 tests) 81ms
+ ✓ test/harness-scheduler-indexes.test.ts (5 tests) 56ms
+ ✓ test/harness-generation.test.ts (24 tests) 1710ms
+     ✓ commits partials no more often than progress.partialIntervalMs  604ms
+     ✓ commits no partial for a response that turns deferred after an empty start event  305ms
+     ✓ faults a run task, settling its inputs and converting the committed partial  303ms
+(node:51781) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/harness-lifecycle.test.ts (14 tests) 65ms
+ ✓ test/harness-view.test.ts (14 tests) 56ms
+ ✓ test/tool-search.test.ts (6 tests) 56ms
+ ✓ test/sqlite-cloudflare.test.ts (36 tests) 51ms
+ ✓ test/session-checkpoints-migrations.test.ts (20 tests) 43ms
+(node:51787) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51789) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/harness-task-graph.test.ts (5 tests) 40ms
+ ✓ test/harness-callers.test.ts (5 tests) 47ms
+ ✓ test/session-documents.test.ts (27 tests) 39ms
+ ✓ test/session-watches.test.ts (21 tests) 42ms
+(node:51793) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/harness-submissions.test.ts (10 tests) 47ms
+ ✓ test/session-forks.test.ts (14 tests) 35ms
+ ✓ test/session-tables.test.ts (12 tests) 23ms
+ ✓ test/session-states.test.ts (10 tests) 34ms
+ ✓ test/harness-conversations.test.ts (12 tests) 35ms
+ ✓ test/harness-cancellation-barrier.test.ts (4 tests) 25ms
+(node:51966) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/sqlite-migrations.test.ts (4 tests) 26ms
+ ✓ test/harness-events.test.ts (14 tests) 2120ms
+     ✓ rebuilds every committed partial of thinking, text, and tool-call arguments from message changes  818ms
+     ✓ rebuilds a sliding tail window from output trims and appends  730ms
+(node:51992) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ ✓ test/sqlite-facade.test.ts (11 tests) 19ms
+ ✓ test/storage-runtime-boundary.test.ts (4 tests) 27ms
+ ✓ test/memory-storage.test.ts (25 tests) 21ms
+ ✓ test/harness-inspect.test.ts (2 tests) 18ms
+ ✓ test/images-wasm-module.test.ts (1 test) 7ms
+ ✓ test/session-definitions.test.ts (3 tests) 3ms
+ ✓ test/harness-registry.test.ts (10 tests) 5ms
+ ✓ test/harness-prompt.test.ts (9 tests) 18ms
+ ✓ test/codemode-describe.test.ts (5 tests) 17ms
+ ✓ test/types.test.ts (3 tests) 2ms
+ ✓ test/spec-usage.test.ts (1 test) 1ms
+ ↓ test/provider-session-cache-e2e.test.ts (1 test | 1 skipped)
+ ↓ test/system-order-cache-e2e.test.ts (1 test | 1 skipped)
+ ✓ test/harness-scheduler-retention.test.ts (14 tests) 3236ms
+     ✓ forgets a 20,000-deep chain of ended tasks without recursion  2808ms
+ ✓ test/harness-live-deltas.test.ts (11 tests) 3331ms
+     ✓ appends head output and then only updates the dropped counts once the window is full  313ms
+     ✓ writes the whole window when Chord's overlap search cannot find the shared part  1098ms
+     ✓ diffs details leaf by leaf and appends diagnostics  411ms
+     ✓ streams partial text as appends  847ms
+     ✓ stores a complete base exactly in the commits where nothing runs  307ms
+ ✓ test/codemode.test.ts (40 tests) 4219ms
+     ✓ times a script out across a restart, without admitting new calls  448ms
+ ✓ test/env-node-conformance.test.ts (51 tests) 4847ms
+     ✓ watch reports a missing file's creation, changes, replacement and removal  509ms
+     ✓ watch stops reporting once closed  306ms
+     ✓ watch reports a missing file's creation, changes, replacement and removal  527ms
+     ✓ watch follows directories created together with their contents  313ms
+     ✓ watch keeps watching a path whose parent is renamed and recreated  315ms
+     ✓ watch follows a directory replaced at the same path  311ms
+     ✓ watch stops reporting once closed  302ms
+ ✓ test/tools-images.test.ts (34 tests) 9607ms
+     ✓ scales an image down to the maximum size, and says how to map coordinates back  358ms
+     ✓ re-encodes a PNG too large for the byte limit as JPEG at its size, and shrinks it when that is not enough  2466ms
+     ✓ prepares in a worker thread, leaving the event loop free  1011ms
+     ✓ gives the same result as the calling thread, and keeps the caller's bytes  5142ms
+     ✓ prepares concurrent images, and starts a new worker after the idle one exited  381ms
+
+ Test Files  60 passed | 2 skipped (62)
+      Tests  1220 passed | 4 skipped (1224)
+   Start at  17:46:59
+   Duration  10.25s (transform 7.79s, setup 10.56s, import 8.78s, tests 42.53s, environment 3ms)
+
+
+> @earendil-works/pi-env@1.3.0 test
+> vitest --run
+
+
+ RUN  v4.1.11 /private/tmp/ft-pi-latest/packages/env
+
+ ↓ test/ssh-external.test.ts (1 test | 1 skipped)
+ ✓ test/terminal.test.ts (7 tests) 99ms
+ ✓ test/differential.test.ts (4 tests | 1 skipped) 794ms
+     ✓ gives the same results for random file operation sequences  665ms
+ ✓ test/remote.test.ts (9 tests) 1981ms
+     ✓ transfers only about a window of output a caller keeps, with exact counts  317ms
+     ✓ cancels a listing in the daemon  514ms
+     ✓ times out a command that produces no output  311ms
+     ✓ fails requests on handles of a lost connection instead of reaching the new daemon  313ms
+ ✓ test/ssh.test.ts (8 tests) 2529ms
+     ✓ refuses an untrusted host, then deploys and runs the daemon once its key is accepted  453ms
+     ✓ reuses a verified daemon and replaces a tampered one  490ms
+     ✓ verifies the daemon again before starting it after a lost connection  795ms
+     ✓ starts the daemon through the login shell only when asked  303ms
+ ✓ test/conformance.test.ts (58 tests) 4421ms
+     ✓ watch reports a missing file's creation, changes, replacement and removal  346ms
+     ✓ watch keeps watching a path whose parent is renamed and recreated  343ms
+     ✓ watch stops reporting once closed  313ms
+     ✓ watch reports a missing file's creation, changes, replacement and removal  425ms
+     ✓ watch stops reporting once closed  308ms
+
+ Test Files  5 passed | 1 skipped (6)
+      Tests  85 passed | 2 skipped (87)
+   Start at  17:47:09
+   Duration  4.59s (transform 439ms, setup 0ms, import 625ms, tests 9.82s, environment 0ms)
+
+
+> @earendil-works/pi-evals@1.3.0 test
+> vitest run --config vitest.test.config.ts
+
+
+ RUN  v4.1.11 /private/tmp/ft-pi-latest/packages/evals
+
+ ✓ test/plan.test.ts (4 tests) 2ms
+ ✓ test/comparison.test.ts (4 tests) 6ms
+ ✓ test/report.test.ts (14 tests) 26ms
+ ✓ test/acme-server.test.ts (10 tests) 36ms
+ ✓ test/harness.test.ts (15 tests) 4ms
+ ✓ test/configured-runtime.test.ts (8 tests) 172ms
+
+ Test Files  6 passed (6)
+      Tests  55 passed (55)
+   Start at  17:47:14
+   Duration  1.48s (transform 1.89s, setup 0ms, import 2.67s, tests 246ms, environment 0ms)
+
+
+> @earendil-works/pi-mcp@1.3.0 test
+> vitest --run
+
+
+ RUN  v4.1.11 /private/tmp/ft-pi-latest/packages/mcp
+
+·············································
+
+ Test Files  5 passed (5)
+      Tests  45 passed (45)
+   Start at  17:47:16
+   Duration  442ms (transform 260ms, setup 0ms, import 343ms, tests 801ms, environment 0ms)
+
+
+> @earendil-works/pi-telemetry@1.3.0 test
+> vitest --run
+
+
+ RUN  v4.1.11 /private/tmp/ft-pi-latest/packages/telemetry
+
+ ✓ test/telemetry.test.ts (5 tests) 3ms
+ ✓ test/conformance.test.ts (10 tests) 3ms
+
+ Test Files  2 passed (2)
+      Tests  15 passed (15)
+   Start at  17:47:16
+   Duration  87ms (transform 42ms, setup 0ms, import 55ms, tests 6ms, environment 0ms)
+
+
+> @earendil-works/pi-tui@1.3.0 test
+> node --test --test-reporter=dot --test-reporter-destination=stdout test/*.test.ts
+
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+............
+npm notice
+npm notice New major version of npm available! 10.9.8 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice

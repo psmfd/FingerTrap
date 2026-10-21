@@ -1,0 +1,49 @@
+{
+  "upstream": "71023aec1546d6d677a65669c5665c0927ce0dd0",
+  "retirementsProposed": [
+    "psmfd-patch-016",
+    "psmfd-patch-017",
+    "psmfd-patch-019"
+  ],
+  "retirementIntegration": "candidate only; no merge or production pin",
+  "securityPaths": [
+    "package-lock.json",
+    "package.json",
+    "packages/ai/src/utils/overflow.ts",
+    "packages/ai/test/overflow-performance.test.ts",
+    "packages/coding-agent/examples/extensions/sandbox/package-lock.json",
+    "packages/coding-agent/src/core/package-manager.ts",
+    "packages/coding-agent/src/utils/git.ts",
+    "packages/coding-agent/test/git-ssh-url.test.ts",
+    "packages/coding-agent/test/git-update.test.ts",
+    "packages/coding-agent/test/package-manager.test.ts",
+    "packages/tui/src/latex.ts",
+    "packages/tui/test/latex-performance.test.ts"
+  ],
+  "capabilityPaths": [
+    "packages/coding-agent/docs/cli-integration.md",
+    "packages/coding-agent/src/cli/args.ts",
+    "packages/coding-agent/src/core/agent-session-runtime.ts",
+    "packages/coding-agent/src/core/agent-session-services.ts",
+    "packages/coding-agent/src/core/auth-storage.ts",
+    "packages/coding-agent/src/core/cache-warmer.ts",
+    "packages/coding-agent/src/core/managed-resource-loader.ts",
+    "packages/coding-agent/src/core/startup-policy.ts",
+    "packages/coding-agent/src/main.ts",
+    "packages/coding-agent/src/modes/interactive/interactive-mode.ts",
+    "packages/coding-agent/src/modes/interactive/theme/theme-controller.ts",
+    "packages/coding-agent/src/modes/rpc/rpc-client.ts",
+    "packages/coding-agent/src/modes/rpc/rpc-mode.ts",
+    "packages/coding-agent/src/modes/rpc/rpc-types.ts",
+    "packages/coding-agent/test/auth-storage.test.ts",
+    "packages/coding-agent/test/cache-warmer.test.ts",
+    "packages/coding-agent/test/interactive-mode-clone-command.test.ts",
+    "packages/coding-agent/test/interactive-mode-import-command.test.ts",
+    "packages/coding-agent/test/managed-startup-policy.test.ts",
+    "packages/coding-agent/test/rpc-hello.test.ts",
+    "packages/coding-agent/test/rpc-list-sessions.test.ts",
+    "packages/coding-agent/test/rpc-session-start-dialog.test.ts",
+    "packages/coding-agent/test/theme-controller.test.ts"
+  ],
+  "removedHarnessCommit": "7fd478a2e888ebc28869566f33a186303d372838"
+}

@@ -1,0 +1,7 @@
+{
+  "mutation": "remove-required-startup-policy-comparison",
+  "caught": true,
+  "testExitCode": 1,
+  "expectedCase": "startupPolicy",
+  "restoredExitCode": 0
+}

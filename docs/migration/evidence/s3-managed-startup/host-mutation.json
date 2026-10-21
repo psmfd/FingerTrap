@@ -1,0 +1,14 @@
+{
+  "mutation": "Remove only startupPolicy comparison from RuntimeArtifact.Verify",
+  "expectedFailingTest": "Resolve_InvalidDescriptor_Rejects(startupPolicy, managed-v2)",
+  "observed": "Expected InvalidDataException was not thrown",
+  "failed": 1,
+  "passed": 7,
+  "sourceRestored": true,
+  "restoredFullSuite": {
+    "passed": 406,
+    "skipped": 12,
+    "failed": 0
+  },
+  "harnessNote": "Initial helper assertion inspected summary instead of UTF-16 detailed log and exited 1. Detailed output confirmed the intended red test. Source restoration executed in finally."
+}

@@ -16,6 +16,7 @@ accounted for separately. A disposition does not assert a bug is fixed.
 | [IMPORT / #200](https://github.com/psmfd/FingerTrap/issues/200) | Curated runtime source and regression tests | [M1a imported locally, inactive](m1a-import.md); remaining groups need reviewed dependency/test closures |
 | [PROFILE / #201](https://github.com/psmfd/FingerTrap/issues/201) | Isolated managed runtime profile | Before managed activation; design can proceed alongside M1 |
 | [BACKEND / #202](https://github.com/psmfd/FingerTrap/issues/202) | Pi qualification and SDK evaluation | Qualify one fork revision, then run the ADR-0034 comparison after profile isolation |
+| [LATEST-PI / #210](https://github.com/psmfd/FingerTrap/issues/210) | Latest stable Pi upgrade and validation, requested 2026-10-21 | Queued; session paused for patching, see [handoff](STATUS.md#patching-handoff--2026-10-21). After managed-startup campaign settlement, discover latest, reconcile patches and dependency findings, repeat exact qualification before promotion |
 | [AUTHORITY / #203](https://github.com/psmfd/FingerTrap/issues/203) | Native authorization and guarded tool ownership | Design first; native approval and FT-3 remain blocked |
 | [EXPERTISE / #204](https://github.com/psmfd/FingerTrap/issues/204) | Expertise provider and mutation qualification | Preserve evidence now; qualify remote/macOS provider before activation |
 | [WORKFLOW / #205](https://github.com/psmfd/FingerTrap/issues/205) | pi-workflow integration | External runtime and publication gates first |

@@ -1,0 +1,958 @@
+[
+  {
+    "file": "dialog-roundtrip.golden.jsonl",
+    "outboundCommandsIdentical": true,
+    "processControlsIdentical": true,
+    "baselineEventCounts": {
+      "response": 2,
+      "hello": 1,
+      "extension_ui_request": 3,
+      "agent_start": 1,
+      "turn_start": 1,
+      "message_start": 3,
+      "message_end": 3,
+      "message_update": 3,
+      "turn_end": 1,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "candidateEventCounts": {
+      "response": 2,
+      "hello": 1,
+      "extension_ui_request": 3,
+      "agent_start": 1,
+      "turn_start": 1,
+      "message_start": 3,
+      "message_end": 3,
+      "message_update": 3,
+      "turn_end": 1,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "changes": [
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/0/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"agent_settled\", null, null, 1]/aborted",
+        "added": "false"
+      },
+      {
+        "path": "/[\"hello\", null, null, 1]/piVersion",
+        "before": "\"0.87.1\"",
+        "after": "\"1.3.0\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"message_start\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"response\", \"req_1\", null, 1]/data",
+        "added": "{\"disposition\": \"started\"}"
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      }
+    ]
+  },
+  {
+    "file": "eof-clean-shutdown.golden.jsonl",
+    "outboundCommandsIdentical": true,
+    "processControlsIdentical": true,
+    "baselineEventCounts": {
+      "response": 1,
+      "hello": 1
+    },
+    "candidateEventCounts": {
+      "response": 1,
+      "hello": 1
+    },
+    "changes": [
+      {
+        "path": "/[\"hello\", null, null, 1]/piVersion",
+        "before": "\"0.87.1\"",
+        "after": "\"1.3.0\""
+      }
+    ]
+  },
+  {
+    "file": "eof-mid-turn.golden.jsonl",
+    "outboundCommandsIdentical": true,
+    "processControlsIdentical": true,
+    "baselineEventCounts": {
+      "response": 1,
+      "hello": 1,
+      "agent_start": 1,
+      "turn_start": 1,
+      "message_start": 3,
+      "message_end": 2,
+      "message_update": 2
+    },
+    "candidateEventCounts": {
+      "response": 1,
+      "hello": 1,
+      "agent_start": 1,
+      "turn_start": 1,
+      "message_start": 3,
+      "message_end": 2,
+      "message_update": 2
+    },
+    "changes": [
+      {
+        "path": "/[\"hello\", null, null, 1]/piVersion",
+        "before": "\"0.87.1\"",
+        "after": "\"1.3.0\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"message_start\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"response\", \"req_1\", null, 1]/data",
+        "added": "{\"disposition\": \"started\"}"
+      }
+    ]
+  },
+  {
+    "file": "follow-up-queue.golden.jsonl",
+    "outboundCommandsIdentical": true,
+    "processControlsIdentical": true,
+    "baselineEventCounts": {
+      "response": 2,
+      "hello": 1,
+      "agent_start": 1,
+      "turn_start": 2,
+      "message_start": 5,
+      "message_end": 5,
+      "message_update": 7,
+      "queue_update": 2,
+      "turn_end": 2,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "candidateEventCounts": {
+      "response": 2,
+      "hello": 1,
+      "agent_start": 1,
+      "turn_start": 2,
+      "message_start": 5,
+      "message_end": 5,
+      "message_update": 7,
+      "queue_update": 2,
+      "turn_end": 2,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "changes": [
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/0/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/4/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/4/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"agent_settled\", null, null, 1]/aborted",
+        "added": "false"
+      },
+      {
+        "path": "/[\"hello\", null, null, 1]/piVersion",
+        "before": "\"0.87.1\"",
+        "after": "\"1.3.0\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 2]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 2]/message/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"message_start\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"response\", \"req_1\", null, 1]/data",
+        "added": "{\"disposition\": \"started\"}"
+      },
+      {
+        "path": "/[\"response\", \"req_2\", null, 1]/data",
+        "added": "{\"disposition\": \"queued\"}"
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 2]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 2]/message/thinkingLevel",
+        "added": "\"off\""
+      }
+    ]
+  },
+  {
+    "file": "list-sessions.golden.jsonl",
+    "outboundCommandsIdentical": true,
+    "processControlsIdentical": true,
+    "baselineEventCounts": {
+      "response": 2,
+      "hello": 1,
+      "agent_start": 1,
+      "turn_start": 1,
+      "message_start": 3,
+      "message_end": 3,
+      "message_update": 3,
+      "turn_end": 1,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "candidateEventCounts": {
+      "response": 2,
+      "hello": 1,
+      "agent_start": 1,
+      "turn_start": 1,
+      "message_start": 3,
+      "message_end": 3,
+      "message_update": 3,
+      "turn_end": 1,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "changes": [
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/0/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"agent_settled\", null, null, 1]/aborted",
+        "added": "false"
+      },
+      {
+        "path": "/[\"hello\", null, null, 1]/piVersion",
+        "before": "\"0.87.1\"",
+        "after": "\"1.3.0\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"message_start\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"response\", \"req_1\", null, 1]/data",
+        "added": "{\"disposition\": \"started\"}"
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      }
+    ]
+  },
+  {
+    "file": "malformed-line-parse-error.golden.jsonl",
+    "outboundCommandsIdentical": true,
+    "processControlsIdentical": true,
+    "baselineEventCounts": {
+      "response": 1,
+      "hello": 1
+    },
+    "candidateEventCounts": {
+      "response": 1,
+      "hello": 1
+    },
+    "changes": [
+      {
+        "path": "/[\"hello\", null, null, 1]/piVersion",
+        "before": "\"0.87.1\"",
+        "after": "\"1.3.0\""
+      }
+    ]
+  },
+  {
+    "file": "prompt-settled.golden.jsonl",
+    "outboundCommandsIdentical": true,
+    "processControlsIdentical": true,
+    "baselineEventCounts": {
+      "response": 1,
+      "hello": 1,
+      "agent_start": 1,
+      "turn_start": 1,
+      "message_start": 3,
+      "message_end": 3,
+      "message_update": 3,
+      "turn_end": 1,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "candidateEventCounts": {
+      "response": 1,
+      "hello": 1,
+      "agent_start": 1,
+      "turn_start": 1,
+      "message_start": 3,
+      "message_end": 3,
+      "message_update": 3,
+      "turn_end": 1,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "changes": [
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/0/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"agent_settled\", null, null, 1]/aborted",
+        "added": "false"
+      },
+      {
+        "path": "/[\"hello\", null, null, 1]/piVersion",
+        "before": "\"0.87.1\"",
+        "after": "\"1.3.0\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"message_start\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"response\", \"req_1\", null, 1]/data",
+        "added": "{\"disposition\": \"started\"}"
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      }
+    ]
+  },
+  {
+    "file": "resume-live-cwd.golden.jsonl",
+    "outboundCommandsIdentical": true,
+    "processControlsIdentical": true,
+    "baselineEventCounts": {
+      "response": 3,
+      "hello": 2,
+      "agent_start": 1,
+      "turn_start": 1,
+      "message_start": 3,
+      "message_end": 3,
+      "message_update": 3,
+      "turn_end": 1,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "candidateEventCounts": {
+      "response": 3,
+      "hello": 2,
+      "agent_start": 1,
+      "turn_start": 1,
+      "message_start": 3,
+      "message_end": 3,
+      "message_update": 3,
+      "turn_end": 1,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "changes": [
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/0/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"agent_settled\", null, null, 1]/aborted",
+        "added": "false"
+      },
+      {
+        "path": "/[\"hello\", null, null, 1]/piVersion",
+        "before": "\"0.87.1\"",
+        "after": "\"1.3.0\""
+      },
+      {
+        "path": "/[\"hello\", null, null, 2]/piVersion",
+        "before": "\"0.87.1\"",
+        "after": "\"1.3.0\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"message_start\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"response\", \"req_1\", null, 1]/data",
+        "added": "{\"disposition\": \"started\"}"
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      }
+    ]
+  },
+  {
+    "file": "resume-missing-cwd.golden.jsonl",
+    "outboundCommandsIdentical": true,
+    "processControlsIdentical": true,
+    "baselineEventCounts": {
+      "response": 2,
+      "hello": 1,
+      "agent_start": 1,
+      "turn_start": 1,
+      "message_start": 3,
+      "message_end": 3,
+      "message_update": 3,
+      "turn_end": 1,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "candidateEventCounts": {
+      "response": 2,
+      "hello": 1,
+      "agent_start": 1,
+      "turn_start": 1,
+      "message_start": 3,
+      "message_end": 3,
+      "message_update": 3,
+      "turn_end": 1,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "changes": [
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/0/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"agent_settled\", null, null, 1]/aborted",
+        "added": "false"
+      },
+      {
+        "path": "/[\"hello\", null, null, 1]/piVersion",
+        "before": "\"0.87.1\"",
+        "after": "\"1.3.0\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"message_start\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"response\", \"req_1\", null, 1]/data",
+        "added": "{\"disposition\": \"started\"}"
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      }
+    ]
+  },
+  {
+    "file": "session-start-dialog-roundtrip.golden.jsonl",
+    "outboundCommandsIdentical": true,
+    "processControlsIdentical": true,
+    "baselineEventCounts": {
+      "hello": 1,
+      "extension_ui_request": 2
+    },
+    "candidateEventCounts": {
+      "hello": 1,
+      "extension_ui_request": 2
+    },
+    "changes": [
+      {
+        "path": "/[\"hello\", null, null, 1]/piVersion",
+        "before": "\"0.87.1\"",
+        "after": "\"1.3.0\""
+      }
+    ]
+  },
+  {
+    "file": "steer-interrupt.golden.jsonl",
+    "outboundCommandsIdentical": true,
+    "processControlsIdentical": true,
+    "baselineEventCounts": {
+      "response": 3,
+      "hello": 1,
+      "agent_start": 1,
+      "turn_start": 2,
+      "message_start": 5,
+      "message_end": 5,
+      "message_update": 7,
+      "queue_update": 2,
+      "turn_end": 2,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "candidateEventCounts": {
+      "response": 3,
+      "hello": 1,
+      "agent_start": 1,
+      "turn_start": 2,
+      "message_start": 5,
+      "message_end": 5,
+      "message_update": 7,
+      "queue_update": 2,
+      "turn_end": 2,
+      "agent_end": 1,
+      "agent_settled": 1
+    },
+    "changes": [
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/0/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/2/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/4/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"agent_end\", null, null, 1]/messages/4/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"agent_settled\", null, null, 1]/aborted",
+        "added": "false"
+      },
+      {
+        "path": "/[\"hello\", null, null, 1]/piVersion",
+        "before": "\"0.87.1\"",
+        "after": "\"1.3.0\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 2]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"assistant\", 2]/message/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"message_end\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"message_start\", null, \"system\", 1]/message/sections/docs",
+        "before": {
+          "type": "str",
+          "length": 1060,
+          "sha256": "6c5a298b2acb8ec6a30543b5422cab79514d9170ea0ffe6b654f6da7a6823cb5"
+        },
+        "after": {
+          "type": "str",
+          "length": 1180,
+          "sha256": "01b31d29c7abfb730b6221cf898a88182a123cfee163b1db545c9bf348ba78c4"
+        }
+      },
+      {
+        "path": "/[\"response\", \"req_1\", null, 1]/data",
+        "added": "{\"disposition\": \"started\"}"
+      },
+      {
+        "path": "/[\"response\", \"req_2\", null, 1]/data",
+        "added": "{\"disposition\": \"queued\"}"
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 1]/message/thinkingLevel",
+        "added": "\"off\""
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 2]/message/durationMs",
+        "added": "\"@TIME:duration@\""
+      },
+      {
+        "path": "/[\"turn_end\", null, \"assistant\", 2]/message/thinkingLevel",
+        "added": "\"off\""
+      }
+    ]
+  },
+  {
+    "file": "unknown-id-fallthrough.golden.jsonl",
+    "outboundCommandsIdentical": true,
+    "processControlsIdentical": true,
+    "baselineEventCounts": {
+      "response": 1,
+      "hello": 1
+    },
+    "candidateEventCounts": {
+      "response": 1,
+      "hello": 1
+    },
+    "changes": [
+      {
+        "path": "/[\"hello\", null, null, 1]/piVersion",
+        "before": "\"0.87.1\"",
+        "after": "\"1.3.0\""
+      }
+    ]
+  }
+]

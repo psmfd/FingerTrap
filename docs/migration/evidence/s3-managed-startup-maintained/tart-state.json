@@ -1,0 +1,19 @@
+{
+  "vm": "ft-s3-qualification-e64d1d9adf74",
+  "base": "ft-actions-base-20261020",
+  "sourceRevision": "1f37eea4bf71f95ed9a4e62674949de3a9feb8b0",
+  "hostRevision": "bb5f02fd64b41310a7f35aec92a60b67bdd8bad8",
+  "binarySha256": "9a9f53131cec748801b8c176190ef4dc77e7b6e833859ff734fcfa3d297c7614",
+  "hostSha256": "80beb8542052fe1246528d2a9a0617e2b3760c81c39163f228b0c128d97af3da",
+  "hostShares": [],
+  "githubRegistration": false,
+  "outboundIpv4Blocked": "0.0.0.0/0",
+  "passed": true,
+  "cleanupVerified": true,
+  "inputArchiveSha256": "e4f15b8979a1c5725152ca20768e95d25e9fa8cb0dc59b4f9d6d81f5820411b5",
+  "phase": "complete",
+  "guestIdentity": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.7\nBuildVersion:\t\t24G720\narm64\nPython 3.9.6\n",
+  "tartVersion": "2.32.1",
+  "guestExitCodes": "0 0",
+  "basePreserved": true
+}

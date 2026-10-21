@@ -1,0 +1,126 @@
+{
+  "kind": "candidate",
+  "executableSha256": "fee2b962694785ee059f535dd81e08c9dfa0055a6dc8a2cee0795ce2944072ce",
+  "sourceRevision": "e7d09c9+intentional-discovery-mutation",
+  "scope": "rpc-only",
+  "cases": [
+    {
+      "case": "migration",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": false,
+        "cleanExit": true
+      },
+      "passed": false,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "poisoned",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": false,
+        "cleanExit": true
+      },
+      "passed": false,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "linked-project",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": false,
+        "linkedTargetUnchanged": true,
+        "cleanExit": true
+      },
+      "passed": false,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "current-layout-resources",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": false,
+        "cleanExit": true
+      },
+      "passed": false,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "controlled-network-endpoint",
+      "checks": {
+        "noAttempts": true
+      },
+      "passed": true,
+      "attempts": []
+    }
+  ],
+  "passed": false
+}

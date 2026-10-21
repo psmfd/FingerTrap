@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>FingerTrap · S3 discovery resolution approval plan</title>
+<style>
+    :root { --ink:#1c2932; --muted:#53636c; --paper:#fffefa; --canvas:#f2f2ec; --line:#d9dfd8; --green:#205b49; --pale:#eaf2ec; --amber:#78510e; --amber-bg:#fff4d9; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-padding-top:30px; }
+    body { margin:0; color:var(--ink); background:var(--canvas); font:17px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    a { color:var(--green); text-underline-offset:3px; }
+    a:hover { text-decoration-thickness:2px; }
+    a:focus-visible,button:focus-visible { outline:3px solid #92722b; outline-offset:4px; }
+    .skip { position:fixed; left:16px; top:-90px; padding:8px 16px; background:white; z-index:5; }
+    .skip:focus { top:12px; }
+    .layout { max-width:1440px; margin:auto; display:grid; grid-template-columns:250px minmax(0,1fr); gap:44px; padding:36px 44px 90px; }
+    aside { position:sticky; top:32px; align-self:start; max-height:calc(100vh - 64px); overflow:auto; padding:8px 0; }
+    .brand { font-size:14px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--green); }
+    .sidebar-title { font-size:21px; line-height:1.3; font-weight:650; margin:14px 0 24px; }
+    nav ol { list-style:none; padding:0; margin:0; counter-reset:toc; }
+    nav li { counter-increment:toc; margin:4px 0; }
+    nav a { display:flex; gap:12px; padding:9px 10px; border-radius:6px; text-decoration:none; color:var(--muted); font-size:14px; line-height:1.4; }
+    nav a::before { content:counter(toc,decimal-leading-zero); font-variant-numeric:tabular-nums; color:var(--green); }
+    nav a:hover,nav a[aria-current="location"] { background:#e2e9e1; color:var(--ink); }
+    .sidebar-note { margin-top:26px; border-top:1px solid var(--line); padding-top:18px; font-size:13px; color:var(--muted); }
+    button { font:inherit; cursor:pointer; border:1px solid #a6b9ac; border-radius:6px; padding:8px 13px; background:transparent; color:var(--green); }
+    .print-button { margin-top:14px; font-size:13px; }
+    main { min-width:0; background:var(--paper); border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:0 10px 35px #263c2e05; }
+    header { padding:54px 54px 36px; background:linear-gradient(125deg,#edf4eb,#fffefa 85%); border-bottom:1px solid var(--line); }
+    .eyebrow { color:var(--green); font-size:12px; letter-spacing:.13em; font-weight:750; text-transform:uppercase; }
+    h1 { font-family:Georgia,"Times New Roman",serif; font-weight:500; font-size:clamp(36px,4vw,52px); letter-spacing:-.035em; line-height:1.12; margin:18px 0 22px; }
+    .lead { font-size:20px; line-height:1.55; max-width:680px; }
+    .meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:26px; }
+    .tag { padding:5px 10px; border:1px solid #c9d5c7; border-radius:30px; font-size:12px; font-weight:650; color:var(--green); background:#ffffff90; }
+    section { padding:40px 54px; border-bottom:1px solid var(--line); scroll-margin-top:20px; }
+    section:last-child { border-bottom:0; }
+    .section-number { color:var(--green); font-size:12px; font-weight:750; letter-spacing:.13em; }
+    h2 { font-size:29px; font-weight:650; letter-spacing:-.025em; line-height:1.25; margin:8px 0 22px; }
+    h3 { font-size:20px; line-height:1.4; margin:29px 0 10px; }
+    p { margin:0 0 16px; }
+    p:last-child { margin-bottom:0; }
+    ul,ol { padding-left:24px; margin:12px 0 20px; }
+    li { margin:7px 0; padding-left:3px; }
+    strong { font-weight:700; }
+    .callout { border-left:4px solid var(--green); border-radius:0 7px 7px 0; padding:18px 21px; background:var(--pale); margin:22px 0; }
+    .caution { border-color:#b27b21; background:var(--amber-bg); color:#59431e; }
+    .callout p { margin-bottom:9px; }
+    .callout p:last-child { margin-bottom:0; }
+    .cards { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:22px 0; }
+    .card { border:1px solid var(--line); padding:21px; border-radius:8px; }
+    .card h3 { margin:4px 0 10px; font-size:19px; }
+    .card p { font-size:15px; line-height:1.6; }
+    .status { font-size:11px; font-weight:750; text-transform:uppercase; letter-spacing:.08em; color:var(--green); }
+    .muted { color:var(--muted); }
+    .small { font-size:14px; line-height:1.6; }
+    code { font: .88em/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; background:#eef0eb; border-radius:3px; padding:2px 4px; overflow-wrap:anywhere; }
+    .table-wrap { overflow-x:auto; margin:18px 0 24px; border:1px solid var(--line); border-radius:7px; }
+    table { width:100%; border-collapse:collapse; text-align:left; font-size:14px; line-height:1.6; }
+    caption { text-align:left; padding:12px 16px; font-weight:650; background:#f4f6f0; }
+    th,td { padding:13px 16px; vertical-align:top; border-top:1px solid var(--line); }
+    thead th { border-top:0; background:#eef2ea; color:#35493e; font-size:12px; letter-spacing:.02em; }
+    tbody th { font-weight:650; width:25%; }
+    .phase { border:1px solid var(--line); border-radius:8px; padding:23px; margin:20px 0; }
+    .phase h3 { margin:0 0 12px; }
+    .phase .exit { margin:18px -23px -23px; padding:13px 23px; border-top:1px solid var(--line); background:#f4f7f1; font-size:14px; border-radius:0 0 8px 8px; }
+    .phase-label { display:block; color:var(--green); font-size:11px; font-weight:750; letter-spacing:.1em; text-transform:uppercase; margin-bottom:7px; }
+    .flow { list-style:none; padding:0; display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:26px 0; }
+    .flow li { margin:0; padding:17px 13px; border-top:3px solid var(--green); background:#eef3eb; font-size:13px; line-height:1.5; }
+    .flow b { display:block; margin-bottom:7px; font-size:14px; }
+    .approval { background:#f1f6ed; }
+    blockquote { margin:20px 0; padding:18px 23px; background:white; border:1px solid #c4d3bd; border-radius:7px; font-size:18px; }
+    .sources li { font-size:14px; margin:12px 0; }
+    footer { font-size:12px; color:var(--muted); padding:22px 54px; background:#f5f6f0; }
+    @media (max-width:1050px) {
+      .layout { grid-template-columns:205px minmax(0,1fr); gap:24px; padding:24px; }
+      header,section { padding:34px; }
+      .flow { grid-template-columns:1fr 1fr; }
+    }
+    @media (max-width:760px) {
+      .layout { display:block; padding:18px 12px 45px; }
+      aside { position:static; max-height:none; padding:8px 10px 24px; }
+      .sidebar-title { margin:8px 0 15px; }
+      nav ol { display:grid; grid-template-columns:1fr 1fr; }
+      nav a { padding:7px 5px; font-size:13px; }
+      .sidebar-note { display:none; }
+      header,section { padding:28px 22px; }
+      h1 { font-size:38px; }
+      h2 { font-size:26px; }
+      body { font-size:16px; }
+      .lead { font-size:18px; }
+      .cards { grid-template-columns:1fr; }
+      th,td { padding:11px; }
+      footer { padding:20px 22px; }
+    }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+    @media print {
+      @page { margin:16mm; }
+      body { background:white; font-size:10.5pt; line-height:1.5; }
+      .layout { display:block; max-width:none; padding:0; }
+      aside,.skip,.print-button { display:none; }
+      main { border:0; border-radius:0; box-shadow:none; overflow:visible; }
+      header,section { padding:18px 0; background:white; }
+      h1 { font-size:30pt; } h2 { font-size:19pt; } h3 { font-size:13pt; }
+      .lead { font-size:13pt; }
+      h2,h3 { break-after:avoid; }
+      .card,.phase,.callout,blockquote,.flow li { break-inside:avoid; }
+      .table-wrap { overflow:visible; }
+      tr { break-inside:avoid; }
+      table { font-size:9pt; }
+      a { text-decoration:underline; color:#205b49; }
+      footer { padding:15px 0; }
+    }
+  </style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to plan</a>
+<div class="layout">
+  <aside aria-label="Document navigation">
+    <div class="brand">FingerTrap</div>
+    <div class="sidebar-title">S3 · Discovery blocker<br>Implementation proposal</div>
+    <nav aria-label="Contents"><ol>
+      <li><a href="#decision">Recommendation</a></li>
+      <li><a href="#evidence">What is actually blocked</a></li>
+      <li><a href="#options">Executable versus SDK</a></li>
+      <li><a href="#contract">Managed startup contract</a></li>
+      <li><a href="#sequence">Implementation checkpoints</a></li>
+      <li><a href="#files">Where changes belong</a></li>
+      <li><a href="#verification">Acceptance and evidence</a></li>
+      <li><a href="#pin">Candidate and pin decision</a></li>
+      <li><a href="#operations">CI and durable tracking</a></li>
+      <li><a href="#approval">Approval scope and finish line</a></li>
+      <li><a href="#references">Source references</a></li>
+    </ol></nav>
+    <div class="sidebar-note">Prepared 21 October 2026 UTC<br>Status: approved 21 October 2026<br>Standalone, offline document</div>
+    <button class="print-button" type="button" id="print">Print / save as PDF</button>
+  </aside>
+  <main id="main">
+    <header>
+      <div class="eyebrow">Runtime migration · S3-G · #201 / #202</div>
+      <h1>Give managed Pi launches an explicit discovery policy.</h1>
+      <p class="lead">Keep the executable and RPC architecture. Add a small, versioned startup policy to the Pi fork, then prove that FingerTrap can launch it in an existing project without consuming or migrating ambient configuration.</p>
+      <div class="meta"><span class="tag">Approved · 21 October 2026</span><span class="tag">Five implementation checkpoints</span><span class="tag">Production activation stays gated</span></div>
+    </header>
+
+    <section id="decision">
+      <div class="section-number">01 · Decision</div><h2>Resolve discovery in the runtime that performs it.</h2>
+      <p><strong>Recommendation:</strong> implement an opt-in <code>managed-v1</code> startup policy in <code>psmfd/pi</code>, selected by FingerTrap only for a verified candidate artifact. Apply that policy before configuration, command dispatch, migrations or resource discovery can have side effects. Carry it through reload and runtime recreation.</p>
+      <p>FingerTrap already owns launch selection, profile paths, executable verification and process environment replacement. The remaining gap is inside Pi. Fixing it there preserves the existing PTY and RPC paths and avoids expanding this slice into a second backend.</p>
+      <div class="callout"><p><strong>Expected result:</strong> a keyless managed fixture can start in a real repository containing existing <code>.pi</code> configuration, preserve that configuration, and load only its explicitly selected local resources.</p><p>FingerTrap remains the owner of migration work, imported extensions, qualification and future distribution. The Pi repository remains an upstream runtime dependency. No new implementation belongs in <code>pi_config</code>.</p></div>
+      <p>Approved on 21 October 2026 for S3-G1 through S3-G4 and preparation of the S3-G5 report. The behavior below is the implementation contract; approval does not claim that the patch or qualification already exists.</p>
+    </section>
+
+    <section id="evidence">
+      <div class="section-number">02 · Starting point</div><h2>The process boundary works; the startup boundary is incomplete.</h2>
+      <div class="cards">
+        <div class="card"><div class="status">Merged and verified</div><h3>S3 launch foundation</h3><p>Shared PTY/RPC resolver, independently trusted artifact descriptor, complete file hashes, profile-derived paths, explicit cwd and native environment replacement. PR #207 merged as <code>9bfc092</code>; protected dev CI and local Apple Silicon packaging passed.</p></div>
+        <div class="card"><div class="status">Still blocked</div><h3>Arbitrary project discovery</h3><p>The exact pinned binary renames <code>.pi/commands</code> to <code>.pi/prompts</code> before the trust decision, despite discovery-disable flags, denied trust and offline mode. Current managed fixtures therefore reject project <code>.pi</code> state.</p></div>
+      </div>
+      <p>The baseline is <code>v0.85.1-psmfd.1</code> at <code>e7d09c9dc5fca409f46a5476669e3c0404054d69</code>. The retained <a href="s3-discovery-audit.md">audit and executable probe</a> demonstrate the rename. A successful probe exit currently means <em>the known defect was reproduced</em>.</p>
+      <ol class="flow" aria-label="Observed pinned CLI startup order">
+        <li><b>Early commands / setup</b>Auth handling, install cleanup, bootstrap settings and proxy setup precede normal argument parsing.</li>
+        <li><b>CLI parsing</b>The existing discovery and trust flags become ordinary parsed options.</li>
+        <li><b>Migrations / state</b>Legacy migrations, startup settings and session selection run before runtime trust resolution.</li>
+        <li><b>Trust / resources</b>Resource loading and package resolution have their own paths; reload can recreate those services.</li>
+      </ol>
+      <p>Source inspection of the latest published fork, <code>v0.87.1-psmfd.1</code> at <code>42429b94e4aca33fdbb8d094de29758b36411ba1</code>, shows the same bootstrap/migration ordering. That candidate has not passed FingerTrap executable qualification; a version upgrade alone is not an established fix.</p>
+      <p class="small muted">This plan covers startup and resource discovery. It does not establish an OS filesystem sandbox or restrict arbitrary filesystem access by trusted extensions and agent tools; those have separate ownership and enforcement work.</p>
+    </section>
+
+    <section id="options">
+      <div class="section-number">03 · Architecture choice</div><h2>Retain executable/RPC for this slice.</h2>
+      <div class="table-wrap"><table><caption>Options considered</caption><thead><tr><th scope="col">Option</th><th scope="col">Assessment</th></tr></thead><tbody>
+        <tr><th scope="row">Add only <code>--no-migrations</code></th><td>Addresses the reproduced rename, but leaves early settings, package resolution, prompt discovery and recreation paths to qualify. Too narrow as the S3 completion criterion.</td></tr>
+        <tr><th scope="row">Change cwd or hide project files</th><td>Changes project semantics or mutates the user's repository. Does not provide a durable runtime policy. Reject.</td></tr>
+        <tr><th scope="row">Upgrade to the latest fork</th><td>Increases the comparison surface and still requires a discovery fix and exact artifact qualification. Keep it a separately reviewed pin decision.</td></tr>
+        <tr><th scope="row">Move to the Pi SDK now</th><td>Offers explicit application control, but also introduces a JavaScript worker, packaging, protocol and lifecycle responsibilities. Default SDK resource services still need an explicit discovery policy. CLI-based PTY and child sessions remain relevant.</td></tr>
+        <tr><th scope="row">Explicit managed CLI policy</th><td><strong>Recommended.</strong> Reuses the current process architecture and addresses the runtime behavior at its source. The same policy can inform a later SDK comparison.</td></tr>
+      </tbody></table></div>
+      <p>Continue the SDK evaluation under <a href="https://github.com/psmfd/FingerTrap/issues/202">#202</a> after a qualified executable comparator exists. <a href="../../adrs/0034-own-agent-runtime-and-retire-pi-config.md">ADR-0034</a> requires evidence for a production SDK switch; this blocker does not by itself establish that case.</p>
+    </section>
+
+    <section id="contract">
+      <div class="section-number">04 · Proposed behavior</div><h2>One explicit policy, selected before side effects.</h2>
+      <p>Proposed CLI syntax: <code>--startup-policy managed-v1</code>. This is a new API to implement, not an existing Pi flag. Use the existing host-resolved cwd, agent/session paths, literal system prompt and verified extension arguments; avoid introducing another configuration manifest solely for this mode.</p>
+      <div class="table-wrap"><table><caption>Initial managed-v1 contract</caption><thead><tr><th scope="col">Boundary</th><th scope="col">Required behavior</th></tr></thead><tbody>
+        <tr><th scope="row">Entry and parsing</th><td>Recognize and validate the policy at the earliest entry point, before command handlers, cleanup, settings or migrations. Audit module initialization too. Reject unknown policy versions, duplicate selectors and conflicting options before startup work. Standalone CLI launches without the selector retain their established behavior.</td></tr>
+        <tr><th scope="row">Settings and migration</th><td>Skip all implicit project and profile migrations, first-run setup and install cleanup. Use explicit in-memory defaults/host inputs. Do not read implicit project or global settings, auth, models or keybinding files. Command-valued config must never execute. S3 uses synthetic, keyless inputs; credentials remain a later gate.</td></tr>
+        <tr><th scope="row">Resources and packages</th><td>Bypass automatic package resolution and installation, extension/skill/template/theme discovery, ancestor/home instruction collection, and SYSTEM/APPEND_SYSTEM discovery. Accept only selected local extension paths inside the verified artifact and the explicit literal prompt. No registry/git package references, automatic helper downloads or discovered resource expansion.</td></tr>
+        <tr><th scope="row">Project semantics</th><td>Preserve the real repository cwd. Existing project configuration is ignored and left intact, including symlinked <code>.pi</code> state. Never silently trust the project, rename/hide its configuration or substitute an empty cwd.</td></tr>
+        <tr><th scope="row">Lifecycle</th><td>Carry an immutable typed policy into settings/services/resource loaders and runtime factories. Reload and same-profile new sessions retain it. Resource-extension APIs cannot re-enable discovery. Unsupported install/config/auth commands, resume/switch requests and cwd changes are rejected until explicitly supported; no fallback to default discovery.</td></tr>
+        <tr><th scope="row">State and process</th><td>Allow only deliberate Pi session/runtime state beneath the selected profile roots. Retain FingerTrap's environment replacement and explicit PATH in both transports. A policy is not a process-wide mutable flag and must not change another pane's behavior.</td></tr>
+      </tbody></table></div>
+      <h3>Bind policy support to verified artifact identity</h3>
+      <p>Extend FingerTrap's strict artifact descriptor to <strong>v2</strong> with a required startup-policy capability. Preserve the independent descriptor digest, complete inventory, platform checks and bounded parsing. Tie the capability to an exact reviewed candidate revision and file hashes supplied by the host. A version string or a runtime's self-reported capability is insufficient.</p>
+      <p>The host must reject an old descriptor, unsupported policy or unselected revision before creating a managed process. Keep the original baseline as a negative comparator. Only the qualified candidate fixture gains permission to launch with project <code>.pi</code> present; profile configuration, raw overrides, credentials and resume restrictions stay in place until their own contracts are implemented.</p>
+      <div class="callout caution"><p><strong>Do not weaken the existing guard first.</strong> Removing the project-directory rejection depends on verified policy support and passing real-process tests. Production composition continues to provide no managed selection.</p></div>
+    </section>
+
+    <section id="sequence">
+      <div class="section-number">05 · Delivery order</div><h2>Five independently reviewable checkpoints.</h2>
+      <div class="phase"><span class="phase-label">S3-G1 · Contract and failing evidence</span><h3>Specify the boundary and preserve the failure.</h3>
+        <ul><li>Add the next sequential ADR extending ADR-0036 for managed startup policy and artifact capability. Record the exact policy surface and explicit exclusions.</li><li>Create a linked Pi regression issue under FingerTrap #201/#202. Prepare an isolated worktree from the pinned revision; preserve existing sibling checkouts and unrelated work.</li><li>Keep the current blocker-reproduction script. Add a separately named qualification suite whose success means isolation passed, with a known-bad baseline comparison.</li><li>Turn the audit into executable fixtures for early settings, migrations, package resolution, prompt/context files and lifecycle recreation. Use synthetic files and local canaries.</li></ul>
+        <div class="exit"><strong>Exit:</strong> the baseline fails the isolation assertions for the expected reasons; every discovery path has a named owner/test or a documented blocker. No claim based only on an unrecognized new flag.</div>
+      </div>
+      <div class="phase"><span class="phase-label">S3-G2 · Pi dependency patch</span><h3>Enforce the policy throughout startup and reload.</h3>
+        <ul><li>Add early policy parsing, immutable policy plumbing and explicit settings/auth/resource construction. Gate command dispatch and import-time side effects where the audit finds them.</li><li>Skip implicit migration and discovery at the source; do not merely catch errors after a read or mutation. Ensure both initial and trust/reload resource paths bypass package resolution.</li><li>Add focused regression tests for managed behavior and compatibility tests for ordinary CLI behavior. Exercise conflicting flags and unsupported lifecycle commands.</li><li>Run the fork's required checks and hermetic tests. Record its patch provenance, lockfile/toolchain identity and minimal diff from the consumer baseline.</li></ul>
+        <div class="exit"><strong>Exit:</strong> managed tests pass, deliberate regressions make them fail, and normal CLI behavior remains covered. Produce an unpublished candidate from an exact commit.</div>
+      </div>
+      <div class="phase"><span class="phase-label">S3-G3 · FingerTrap integration</span><h3>Select the candidate through the shared launch resolver.</h3>
+        <ul><li>Implement descriptor v2 and exact candidate identity selection in the internal fixture path. Keep production composition disabled.</li><li>Add the policy argument through the shared resolver so RPC and PTY cannot diverge. Reject missing/unknown capability, wrong hashes, old descriptors and caller-supplied overrides before spawn.</li><li>Permit project <code>.pi</code> only for the policy-capable fixture. Retain other S3 guards and the separate application/profile/artifact roots.</li><li>Exercise cross-profile concurrency and confirm unchanged user-managed executable resolution and shell-pane inheritance.</li></ul>
+        <div class="exit"><strong>Exit:</strong> host tests prove both transports select the same policy; tampering or unsupported artifacts cannot start a managed child.</div>
+      </div>
+      <div class="phase"><span class="phase-label">S3-G4 · Actual artifact qualification</span><h3>Prove behavior through the real process paths.</h3>
+        <ul><li>Build a complete candidate inventory with source, dependency and executable digests. Run the acceptance matrix below against the actual binary, directly and through the published sidecar/native PTY companion.</li><li>Use a clean local Tart VM for macOS qualification. Exercise startup, reload, supported session recreation, cancellation, shutdown and failed startup without real provider credentials.</li><li>Replay RPC goldens and re-record changed-contract scenarios keylessly twice, comparing normalized results. Audit protocol/extension drift instead of accepting it automatically.</li><li>Run affected repository checks and the required platform matrix. Record unsupported or untested platforms explicitly; a macOS pass does not qualify Linux/Windows managed binaries.</li></ul>
+        <div class="exit"><strong>Exit:</strong> retained evidence identifies the exact candidate, observable filesystem/process outcomes, mutation results, transport coverage and remaining platform limits.</div>
+      </div>
+      <div class="phase"><span class="phase-label">S3-G5 · Qualification decision and handoff</span><h3>Review the precise pin before promotion.</h3>
+        <ul><li>Publish a durable qualification report and companion PR references, with exact source/artifact identity, fork patch accounting, compatibility results and rollback instructions.</li><li>Present the reviewed candidate for the separate baseline/pin decision. Apply the approved pin and corresponding contract/provenance changes only after that decision, then verify the promoted identity.</li><li>Mark S3 discovery qualification complete only when the selected artifact satisfies the acceptance criteria. Keep open items attached to #201/#202; neither issue closes solely because this blocker is removed.</li><li>Resume S4 profile-aware stores/resume/meters, then the remaining imports and S6 integration qualification.</li></ul>
+        <div class="exit"><strong>Exit:</strong> a specific qualified artifact is selected and durably recorded. Until pin approval, status is “candidate qualified; promotion pending,” not “S3 complete.”</div>
+      </div>
+    </section>
+
+    <section id="files">
+      <div class="section-number">06 · Change map</div><h2>Keep dependency changes and application ownership clear.</h2>
+      <div class="table-wrap"><table><thead><tr><th scope="col">Location</th><th scope="col">Intended change</th></tr></thead><tbody>
+        <tr><th scope="row">Pi fork</th><td><code>packages/coding-agent/src/main.ts</code>, CLI argument parser and a typed startup-policy module; settings/auth/resource/package service construction and recreation paths as required. Audit entry imports and helper/bootstrap code. Add focused regression tests and fork patch documentation.</td></tr>
+        <tr><th scope="row">FingerTrap sidecar</th><td><a href="../../src-sidecar/src/FingerTrap.Sidecar/Runtime/RuntimeArtifact.cs">RuntimeArtifact.cs</a> and <a href="../../src-sidecar/src/FingerTrap.Sidecar/Runtime/PiLaunchContextResolver.cs">PiLaunchContextResolver.cs</a>; descriptor fixtures, launch/process tests and recorded RPC contracts. Reuse the existing native replacement API.</td></tr>
+        <tr><th scope="row">Qualification tooling</th><td>Retain <a href="../../scripts/probe-pi-launch-isolation.py">the baseline probe</a>; add a distinct kept candidate qualification harness with bounded processes, synthetic homes, filesystem/network canaries and machine-readable results.</td></tr>
+        <tr><th scope="row">Durable records</th><td>Next sequential ADR, discovery audit and qualification report, STATUS/WORK_LOG, artifact provenance and #201/#202 links. Keep source/release claims tied to their exact hashes.</td></tr>
+        <tr><th scope="row">Out of this slice</th><td>Product profile UI/activation, trusted credentials, S4 storage/resume behavior, imported S5 tools/children, SDK worker, signing/notarization and pi_config retirement.</td></tr>
+      </tbody></table></div>
+      <p>Pi remains a maintained dependency; a narrow companion patch does not move extension development back into <code>pi_config</code>. The source migration and its qualification remain tracked here.</p>
+    </section>
+
+    <section id="verification">
+      <div class="section-number">07 · Acceptance</div><h2>Verify observable behavior, including the paths after launch.</h2>
+      <div class="table-wrap"><table><caption>Required evidence before declaring discovery resolved</caption><thead><tr><th scope="col">Case</th><th scope="col">Required observation</th></tr></thead><tbody>
+        <tr><th scope="row">Legacy migrations</th><td>Project <code>.pi/commands</code> remains in place; no prompts directory appears. Synthetic profile auth/session/keybinding/helper migration inputs are unchanged in direct Pi policy tests.</td></tr>
+        <tr><th scope="row">Implicit reads and commands</th><td>Malformed settings/models/auth and harmless command canaries in project, ancestor and synthetic home locations are not consumed. Instrumented service tests prove no implicit read path; external canary files/process observations prove commands did not execute. Unchanged file hashes alone do not prove files were never read.</td></tr>
+        <tr><th scope="row">Resource discovery</th><td>Ambient extensions, skills, prompts, themes and instruction/system files have no observable effect. A harmless selected extension loads once per runtime generation, with no duplicate registration; its explicit prompt and real cwd are verified.</td></tr>
+        <tr><th scope="row">Packages and helpers</th><td>Package resolution is not invoked in managed service tests. Synthetic package/helper inputs trigger no install, download or spawned helper; controlled network endpoints and process/file canaries record attempted activity.</td></tr>
+        <tr><th scope="row">Reload / new session</th><td>Reload and supported same-profile recreation repeat the same explicit resource set without discovering ambient state. Unsupported resume/switch/cwd transitions return a bounded error and leave policy/state intact. These rejections are temporary S3 limits, not completed S4 behavior.</td></tr>
+        <tr><th scope="row">Host selection</th><td>Old/mismatched capability, wrong revision, altered file digest or raw override results in no child process. Project <code>.pi</code> allowance is reachable only with the selected candidate.</td></tr>
+        <tr><th scope="row">Two profiles / both transports</th><td>Actual PTY and RPC children retain the intended cwd and distinct environment/state roots during concurrent launches, failure and shutdown. No synthetic operator-home secrets appear in children; no parent environment mutation occurs.</td></tr>
+        <tr><th scope="row">Compatibility / regression proof</th><td>Ordinary CLI and user-managed app behavior remain covered. Restore migration/discovery calls and remove capability enforcement one at a time: the relevant retained test must fail, then pass after restoration.</td></tr>
+        <tr><th scope="row">Artifact / protocol</th><td>Published-sidecar and clean-VM runs use the recorded candidate and native companion hashes. RPC replay and normalized recording evidence account for drift. Test reports state exactly which OS/architecture combinations ran.</td></tr>
+      </tbody></table></div>
+      <p>All S3 qualification uses disposable synthetic data and keyless/local provider responses. No operator home or real repository configuration is supplied to destructive negative tests. The retained baseline reproducer and the new candidate qualifier must have clearly different success semantics.</p>
+      <p>If any reachable discovery path remains uncontrolled, retain the blocker and record it. A successful hello, a clean exit, a matching version string or a green launch-plumbing suite does not substitute for this matrix.</p>
+    </section>
+
+    <section id="pin">
+      <div class="section-number">08 · Dependency decision</div><h2>Build a candidate first; promote an exact artifact later.</h2>
+      <p><strong>Comparison base:</strong> start the focused patch from <code>e7d09c9</code> in an isolated worktree. This keeps the first experiment attributable to the discovery fix. Review the proper maintenance-branch and forward-port arrangement in the Pi repository; do not reset its current branch or merge an old snapshot over newer fork work.</p>
+      <p>If implementing or building the fix requires a newer base or dependency changes, record the expanded diff and obtain a revised pin/base decision before treating that candidate as equivalent. Track relevant fork security/correctness fixes and the #1170/#1172 overlap identified in ADR-0034; the experiment must not silently discard required fixes.</p>
+      <div class="table-wrap"><table><thead><tr><th scope="col">Stage</th><th scope="col">Permission / result</th></tr></thead><tbody>
+        <tr><th scope="row">Plan approval</th><td>Author the focused fork patch and FingerTrap fixture integration; create scoped commits, linked issues/draft PRs and unpublished qualification artifacts. Select exact candidate identities in tests without changing production selection.</td></tr>
+        <tr><th scope="row">Candidate report</th><td>Present source commit, archive/executable/descriptor hashes, dependency inventory, required fork fixes, protocol results and platform evidence. No release version or digest is invented in advance.</td></tr>
+        <tr><th scope="row">Pin promotion</th><td>Separate review selects the exact qualified baseline and its distribution/provenance changes. Approval of this plan alone does not promote a runtime release.</td></tr>
+        <tr><th scope="row">Product activation</th><td>Remains gated by managed distribution, credentials/approvals, stores/imports and S6. S3 completion does not enable the managed backend for users.</td></tr>
+      </tbody></table></div>
+      <p><strong>Recovery:</strong> leave managed selection disabled and preserve existing user-managed launches. A failed managed candidate is rejected; it never silently falls back to the old executable or ambient discovery. Keep the old artifact and probe only as explicit comparison evidence.</p>
+    </section>
+
+    <section id="operations">
+      <div class="section-number">09 · Execution discipline</div><h2>Use local macOS capacity and preserve resumable checkpoints.</h2>
+      <p>Run focused fork checks locally first. FingerTrap's macOS CI and Apple Silicon packaging use the approved Tart runner; Windows/Linux retain hosted lanes. The current runner policy is restricted to FingerTrap and does not automatically authorize Pi-repository jobs.</p>
+      <p>Before an implementation source push, check the controller and explicitly enroll the new trusted PR according to the <a href="../local-github-runner.md">runner runbook</a>. Establish its PR number using a documentation-only, CI-skipped draft checkpoint. Drain four local jobs for CI, or five with packaging. Preserve the immutable worker pin and later main-promotion mapping tracked in #208.</p>
+      <ul><li>For each S3-G checkpoint, update <a href="STATUS.md">STATUS</a> before changes and append outcomes to <a href="WORK_LOG.md">WORK_LOG</a>. Record exact next action, blockers, commands and candidate identities.</li><li>Distinguish proposed, implemented, locally verified, committed, pushed, CI verified, qualified and activated. A newer documentation commit does not inherit source verification without attribution.</li><li>Keep fixtures and essential reports in the repository. Record raw evidence paths and checksums; temporary files alone are insufficient for a cross-session handoff.</li><li>Checkpoint scoped changes in both repositories and link their issues/PRs. Carry this handoff branch's documents into the next FingerTrap implementation PR targeting <code>dev</code>.</li></ul>
+      <p>For this proposal alone, validate the document and checkpoint it with CI skipped. Runtime builds are unnecessary for an HTML/status-only change.</p>
+    </section>
+
+    <section id="approval" class="approval">
+      <div class="section-number">10 · Approval recorded</div><h2>Approved dependency fix and qualification scope.</h2>
+      <blockquote>Approve S3-G1 through S3-G4 and preparation of the S3-G5 qualification report: a versioned managed startup policy in the Pi executable, FingerTrap artifact-capability integration, focused companion commits/draft PRs, and unpublished real-process qualification. Retain the separate exact-pin promotion and production activation decisions.</blockquote>
+      <p>The separate pin/backend decision comes from <a href="../../adrs/0036-resolve-managed-launches-before-process-creation.md">ADR-0036</a>: “No SDK or pin change is authorized by this ADR.” The existing S3 approval covered the launch foundation; this proposal makes the additional fork work concrete for review.</p>
+      <p><strong>Immediate next action after approval:</strong> record authorization in STATUS, create the linked Pi regression tracker, add the policy ADR and candidate qualification fixtures, and demonstrate the original pin failing those isolation assertions before applying the runtime patch.</p>
+      <p><strong>S3 finish line:</strong> the selected, qualified executable can launch through both managed fixture transports in a repository with existing <code>.pi</code> state, with no implicit startup discovery or migrations and with the same policy on reload. After the exact-pin decision, resume S4. Broader #200/#201/#202 acceptance and managed activation remain open.</p>
+    </section>
+
+    <section id="references">
+      <div class="section-number">11 · Evidence</div><h2>Sources and current records.</h2>
+      <ul class="sources">
+        <li><a href="s3-launch-isolation-plan.html">Approved S3 foundation plan</a>; <a href="s3-discovery-audit.md">exact-pin discovery audit</a>; <a href="s3-launch-foundation.md">foundation implementation report</a>; <a href="implementation-plan-200-profile.html">overall migration plan</a>.</li>
+        <li><a href="../../adrs/0034-own-agent-runtime-and-retire-pi-config.md">ADR-0034: ownership and executable/SDK decision</a>; <a href="../../adrs/0035-version-managed-runtime-profiles.md">ADR-0035: runtime profiles</a>; <a href="../../adrs/0036-resolve-managed-launches-before-process-creation.md">ADR-0036: managed launch contract and discovery gate</a>.</li>
+        <li>Pinned Pi <a href="https://github.com/psmfd/pi/blob/e7d09c9dc5fca409f46a5476669e3c0404054d69/packages/coding-agent/src/main.ts">startup implementation</a>, <a href="https://github.com/psmfd/pi/blob/e7d09c9dc5fca409f46a5476669e3c0404054d69/packages/coding-agent/src/migrations.ts">migrations</a> and <a href="https://github.com/psmfd/pi/blob/e7d09c9dc5fca409f46a5476669e3c0404054d69/packages/coding-agent/src/core/resource-loader.ts">resource loader</a>; newer release <a href="https://github.com/psmfd/pi/blob/42429b94e4aca33fdbb8d094de29758b36411ba1/packages/coding-agent/src/main.ts">startup source</a>.</li>
+        <li><a href="https://github.com/psmfd/FingerTrap/issues/201">#201: profile/child isolation</a>; <a href="https://github.com/psmfd/FingerTrap/issues/202">#202: fork qualification and SDK evaluation</a>; <a href="https://github.com/psmfd/FingerTrap/pull/207">merged foundation PR #207</a>; <a href="https://github.com/psmfd/FingerTrap/issues/208">local runner follow-up #208</a>.</li>
+        <li><a href="../../CONTRIBUTING.md">Testing and contribution requirements</a>; <a href="../rpc-contract.md">RPC pin-change recording ritual</a>; <a href="STATUS.md">authoritative current status</a>; <a href="WORK_LOG.md">activity log</a>.</li>
+      </ul>
+      <p class="small">Prepared from repository records and authenticated exact-source/issue reads on 21 October 2026 UTC (20 October locally). Newer-fork observations are source inspection, not executable results. All implementation acceptance criteria in this proposal are future work.</p>
+    </section>
+    <footer>FingerTrap · S3 discovery resolution · Prepared 21 October 2026 UTC · Approved 21 October 2026</footer>
+  </main>
+</div>
+
+<script>
+  document.getElementById("print").addEventListener("click", () => window.print());
+  const links = [...document.querySelectorAll('nav a[href^="#"]')];
+  const sections = links.map(link => document.querySelector(link.getAttribute("href")));
+  let scheduled = false;
+  function updateSection() {
+    let active = sections[0];
+    for (const section of sections) {
+      if (section.getBoundingClientRect().top <= 150) active = section;
+    }
+    for (const link of links) {
+      if (link.hash === "#" + active.id) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    }
+    scheduled = false;
+  }
+  window.addEventListener("scroll", () => {
+    if (!scheduled) { scheduled = true; requestAnimationFrame(updateSection); }
+  }, { passive:true });
+  updateSection();
+</script>
+</body>
+</html>

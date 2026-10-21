@@ -1,0 +1,129 @@
+{
+  "normalization": "ANSI stripped where noted; trailing whitespace and terminal blank lines removed for Git storage. Raw JSONL transcripts retain exact bytes.",
+  "inputs": [
+    {
+      "path": "security-green.txt",
+      "originalSha256": "fe07b339f202de2af83571df723c793df68438d17e0694b0cb13c69fc7399376"
+    },
+    {
+      "path": "release-build-security.txt",
+      "originalSha256": "a1888aa5937dd17b72a5f7c615368837b63e7bef90fe8c59e4d8ef5def8706cd"
+    },
+    {
+      "path": "sidecar-audited-restore.txt",
+      "originalSha256": "cb49f2d276a76ff6e76d4a4478e3d8675c56fdba37936403f7071cf68803ece8"
+    },
+    {
+      "path": "static-initial.txt",
+      "originalSha256": "ea4ea66d32ddccf8adfc8aab453cd860afdb19cd2a7d839d0ad4eacd56bd3ed5"
+    },
+    {
+      "path": "security-port-apply.txt",
+      "originalSha256": "d6af58410cdf6b6c8eb2f67af113b28a5036204059ba55d0bbd6b7dffb833e24"
+    },
+    {
+      "path": "tests-security.txt",
+      "originalSha256": "ef51b980786eed41e6790ee7cb4dfda2d6969f750e3aa75a9b3aca206aa002c2"
+    },
+    {
+      "path": "sidecar-tests.txt",
+      "originalSha256": "679ad37bfdb307b2127d0d5b44578d155ab6c8fc26e5c33bfbc637fcda961dc2"
+    },
+    {
+      "path": "linux-release-build.txt",
+      "originalSha256": "dd6acdfa3e241f1e15d043f7cea1173e3b8605d58e5e41375691bd2f734c0319"
+    },
+    {
+      "path": "catalog-tests.txt",
+      "originalSha256": "b154696a367558b2e3a671bfdf6a2eebd58386993acdfc4c0aaf71ff81e48916"
+    },
+    {
+      "path": "sidecar-build.txt",
+      "originalSha256": "21e28efdf95a2238606b5100741c93302935b4852da6364685a698964b260a04"
+    },
+    {
+      "path": "security-red.txt",
+      "originalSha256": "b4fdc5be481f745500c7c4f0a290540722106374adabc2c649f9bb6f103dd35b"
+    },
+    {
+      "path": "static-security.txt",
+      "originalSha256": "e10cd3d80a30b12b419e5ce54c621ce95757d4106c933f483d17f1b276171eef"
+    },
+    {
+      "path": "merge-preview.txt",
+      "originalSha256": "58fcc88cef86f7857dc3f49e2bf32f39a25c6c3703e18177c4d10e47f5276e03"
+    },
+    {
+      "path": "credential-green.txt",
+      "originalSha256": "1294012bb5d0b78f61c7f1badb120b7b2b94a5ac0e97faa8aba7b2da6713d540"
+    },
+    {
+      "path": "capability-port-apply.txt",
+      "originalSha256": "1f51d64934c9300d8192440d2b5c6f7ae55c68217119246f32e3982e6f5ee5b9"
+    },
+    {
+      "path": "oauth-escaping-proof.txt",
+      "originalSha256": "f3003de44a6320c12b6d9f4bcda023b9618ddd35e9168439f092784d49552d7a"
+    },
+    {
+      "path": "tests-initial.txt",
+      "originalSha256": "6467a059ceafb797d4e5de7a99092d7b45a8ff6589c23c18b5f7c036730f3f89"
+    },
+    {
+      "path": "duration-green.txt",
+      "originalSha256": "473773dbb45c296d19feed2e2dad64b752a342509648c0cd83d2b08d47b94e04"
+    },
+    {
+      "path": "credential-red.txt",
+      "originalSha256": "122392286cf51a1b25d965b9ee965007dc738f6d61665026df982989b9226cec"
+    },
+    {
+      "path": "duration-red.txt",
+      "originalSha256": "955b57b1d94529852765831c8adcf25749f50acb458ef0d4951a69fc514dcd4b"
+    },
+    {
+      "path": "binary-build.txt",
+      "originalSha256": "bac3c5796130467df1f8c2974eb9b3a932445ae5fcddb97d9cc87a6ba3863c3e"
+    },
+    {
+      "path": "repo-check.txt",
+      "originalSha256": "c5da3c416fc524bbde236c3d414f9bb89c10b5501764e0afd134c95ec4e466d8"
+    },
+    {
+      "path": "goldens-baseline/record.txt",
+      "originalSha256": "71fccbbd1be458a866694403f89537efc74552b3031b51839be8482dc35deedd"
+    },
+    {
+      "path": "initial-tart/direct.txt",
+      "originalSha256": "ec384fc12349262de3b60d2dc22a59fbb426b0120bc4c381106e9ba9bdd11744"
+    },
+    {
+      "path": "initial-tart/sidecar.txt",
+      "originalSha256": "c4f269a248ad0887a7470fe4fdb3b3ba44a510ad68d52d48a992c02484d29745"
+    },
+    {
+      "path": "rpc-baseline/record.txt",
+      "originalSha256": "cdb875022a4e7c37ea88fc0eab2c05367c49293af82d2418e368d74b87246ee4"
+    },
+    {
+      "path": "rpc-candidate-initial/record.txt",
+      "originalSha256": "c0c2b47204793a0186d3b74cf96428225ea23b54d49fb9e428ea29ecb4373788"
+    },
+    {
+      "path": "tart/vm.txt",
+      "originalSha256": "608364f77893b5e00c5454006d467f655bc5827746b8430897a14e6b82b192f0"
+    },
+    {
+      "path": "tart/direct.txt",
+      "originalSha256": "8ae9eb93ebfc1e9049f1cc4990841a786bbfc2eabe0643ef59afefd1d88dfef7"
+    },
+    {
+      "path": "tart/sidecar.txt",
+      "originalSha256": "165df2c80ea8c66a67f920c23bde2325ae2e309496daa620908837f00fa3adfa"
+    },
+    {
+      "path": "rpc-candidate/record.txt",
+      "originalSha256": "030d348cc794ebabe5dce3007023053e73ebf22c61f1be73774108a0d8411811"
+    }
+  ]
+}

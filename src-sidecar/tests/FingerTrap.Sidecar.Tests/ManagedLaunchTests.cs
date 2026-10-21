@@ -9,6 +9,7 @@ namespace FingerTrap.Sidecar.Tests;
 
 public sealed class ManagedLaunchTests
 {
+    private static readonly string[] PolicyArguments = ["--startup-policy", "managed-v1"];
     [Fact]
     public void Resolve_IndependentProfiles_SnapshotsStateAndKeepsParentUnchanged()
     {
@@ -23,6 +24,11 @@ public sealed class ManagedLaunchTests
         Assert.Equal(fixture.Executable, a.Executable);
         Assert.Contains("--no-approve", a.Arguments);
         Assert.Contains("--offline", a.Arguments);
+        Assert.Equal(PolicyArguments, a.Arguments.Take(2));
+        Assert.Equal(PolicyArguments, b.Arguments.Take(2));
+        Assert.Equal(a.Arguments.Skip(4), b.Arguments.Skip(2).Select(value =>
+            value == b.Environment["PI_CODING_AGENT_SESSION_DIR"]
+                ? a.Environment["PI_CODING_AGENT_SESSION_DIR"] : value));
         Assert.Contains("--mode", a.Arguments);
         Assert.DoesNotContain("--mode", b.Arguments);
         Assert.Equal("xterm-256color", b.Environment["TERM"]);
@@ -35,6 +41,8 @@ public sealed class ManagedLaunchTests
     [Theory]
     [InlineData("runtimeId", "other")]
     [InlineData("forkRevision", "wrong")]
+    [InlineData("forkRevision", "e7d09c9dc5fca409f46a5476669e3c0404054d69")]
+    [InlineData("startupPolicy", "managed-v2")]
     [InlineData("platform", "other")]
     [InlineData("architecture", "other")]
     [InlineData("executable", "absent")]
@@ -85,15 +93,36 @@ public sealed class ManagedLaunchTests
     }
 
     [Fact]
-    public void Resolve_ProjectMigrationAndProfileStartupInputs_Reject()
+    public void Resolve_CapableCandidateAllowsProjectState_ButRetainsProfileGuard()
     {
         using var fixture = new ManagedLaunchFixture();
         var projectPi = Directory.CreateDirectory(Path.Combine(fixture.Cwd, ".pi"));
-        Assert.Throws<InvalidOperationException>(() => fixture.Resolve());
-        projectPi.Delete();
+        var legacy = Path.Combine(projectPi.FullName, "commands");
+        Directory.CreateDirectory(legacy);
+        File.WriteAllText(Path.Combine(legacy, "keep.md"), "unchanged");
         var context = fixture.Resolve();
+        Assert.True(Directory.Exists(legacy));
+        Assert.Equal("unchanged", File.ReadAllText(Path.Combine(legacy, "keep.md")));
         File.WriteAllText(Path.Combine(context.Environment["PI_CODING_AGENT_DIR"], "auth.json"), "{}");
         Assert.Throws<InvalidOperationException>(() => fixture.Resolve());
+    }
+
+    [Theory]
+    [InlineData("old-version")]
+    [InlineData("missing-policy")]
+    [InlineData("unselected-revision")]
+    public void Resolve_UnsupportedCandidate_RejectsBeforeProfileCreation(string change)
+    {
+        using var fixture = new ManagedLaunchFixture();
+        Directory.CreateDirectory(Path.Combine(fixture.Cwd, ".pi"));
+        if (change == "old-version") fixture.Descriptor["version"] = 1;
+        if (change == "missing-policy") fixture.Descriptor.Remove("startupPolicy");
+        fixture.SaveDescriptor();
+        var selection = fixture.Selection("alpha");
+        if (change == "unselected-revision") selection = selection with { CandidateRevision = new string('2', 40) };
+        Assert.Throws<InvalidDataException>(() => new PiLaunchContextResolver(selection).Resolve(
+            ManagedLaunchFixture.Settings("alpha"), true, null, fixture.Cwd, null, null, CancellationToken.None));
+        Assert.Empty(Directory.EnumerateFileSystemEntries(fixture.AppRoot));
     }
 
     [Fact]
@@ -162,7 +191,7 @@ public sealed class ManagedLaunchTests
     {
         using var fixture = new ManagedLaunchFixture();
         var text = oversized ? new string(' ', RuntimeArtifact.MaxDescriptorBytes + 1)
-            : fixture.Descriptor.ToJsonString().Replace("\"version\":1", "\"version\":1,\"version\":1", StringComparison.Ordinal);
+            : fixture.Descriptor.ToJsonString().Replace("\"version\":2", "\"version\":2,\"version\":2", StringComparison.Ordinal);
         File.WriteAllText(fixture.DescriptorPath, text);
         var digest = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(fixture.DescriptorPath)));
         var selection = fixture.Selection("alpha") with { DescriptorSha256 = digest };

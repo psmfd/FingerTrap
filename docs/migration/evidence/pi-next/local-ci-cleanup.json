@@ -1,0 +1,72 @@
+{
+  "states": [
+    {
+      "vm": "ft-actions-job-20261021t195714z-5a9ff3a3",
+      "base": "ft-actions-base-20261020",
+      "group_id": 5,
+      "runner_id": 51,
+      "phase": "cleaned",
+      "network": {
+        "host_canary_blocked": true,
+        "github_https": true
+      },
+      "runner_exit_code": 0,
+      "cleanup_errors": []
+    },
+    {
+      "vm": "ft-actions-job-20261021t200023z-facdd857",
+      "base": "ft-actions-base-20261020",
+      "group_id": 5,
+      "runner_id": 52,
+      "phase": "cleaned",
+      "network": {
+        "host_canary_blocked": true,
+        "github_https": true
+      },
+      "runner_exit_code": 0,
+      "cleanup_errors": []
+    },
+    {
+      "vm": "ft-actions-job-20261021t200132z-9263fb52",
+      "base": "ft-actions-base-20261020",
+      "group_id": 5,
+      "runner_id": 53,
+      "phase": "cleaned",
+      "network": {
+        "host_canary_blocked": true,
+        "github_https": true
+      },
+      "runner_exit_code": 0,
+      "cleanup_errors": []
+    },
+    {
+      "vm": "ft-actions-job-20261021t200253z-efb54e6d",
+      "base": "ft-actions-base-20261020",
+      "group_id": 5,
+      "runner_id": 54,
+      "phase": "cleaned",
+      "network": {
+        "host_canary_blocked": true,
+        "github_https": true
+      },
+      "runner_exit_code": 0,
+      "cleanup_errors": []
+    },
+    {
+      "vm": "ft-actions-job-20261021t200346z-d01c09dc",
+      "base": "ft-actions-base-20261020",
+      "group_id": 5,
+      "runner_id": 55,
+      "phase": "cleaned",
+      "network": {
+        "host_canary_blocked": true,
+        "github_https": true
+      },
+      "runner_exit_code": 0,
+      "cleanup_errors": []
+    }
+  ],
+  "independentGithubRunnerCount": 0,
+  "independentTartState": "all remaining VMs stopped; no qualification or CI clone remains",
+  "basePreserved": true
+}

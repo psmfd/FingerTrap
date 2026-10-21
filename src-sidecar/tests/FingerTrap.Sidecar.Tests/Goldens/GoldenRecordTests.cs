@@ -32,8 +32,8 @@ public sealed class GoldenRecordTests
         Assert.SkipWhen(piExecutable is null, "no pi executable on PATH");
 
         var scenario = GoldenScenarios.ByName(name);
-        var first = await RecordOnceAsync(scenario, piExecutable!);
-        var second = await RecordOnceAsync(scenario, piExecutable!);
+        var first = await RecordOnceAsync(scenario, piExecutable!, 1);
+        var second = await RecordOnceAsync(scenario, piExecutable!, 2);
         Assert.Equal(
             string.Join("\n", first.Select(GoldenStore.Serialize)),
             string.Join("\n", second.Select(GoldenStore.Serialize)));
@@ -44,10 +44,15 @@ public sealed class GoldenRecordTests
     }
 
     private static async Task<IReadOnlyList<GoldenRecord>> RecordOnceAsync(
-        GoldenScenario scenario, string piExecutable)
+        GoldenScenario scenario, string piExecutable, int pass)
     {
         await using var host = new RecordScenarioHost(piExecutable);
         await scenario.RunAsync(host, TestContext.Current.CancellationToken);
+        var rawDirectory = Environment.GetEnvironmentVariable("FT_RECORD_RAW_DIR");
+        if (!string.IsNullOrEmpty(rawDirectory))
+        {
+            GoldenStore.Write(Path.Combine(rawDirectory, $"{scenario.Name}-{pass}.jsonl"), host.Records);
+        }
         return new GoldenNormalizer(host.KnownValues()).Normalize(host.Records);
     }
 }

@@ -1,0 +1,203 @@
+{
+  "upstream": "f07218c4d4bbc12bef056a7058c3dd49dfe41abe",
+  "maintainedBase": "42429b94e4aca33fdbb8d094de29758b36411ba1",
+  "method": "git diff --numstat UPSTREAM -- PATCH_PATHS; sum additions plus deletions per capability patch, including shared paths per owner",
+  "patches": [
+    {
+      "id": "psmfd-patch-010",
+      "changedLines": 392,
+      "files": [
+        {
+          "path": "packages/coding-agent/src/modes/rpc/rpc-client.ts",
+          "additions": 72,
+          "deletions": 3
+        },
+        {
+          "path": "packages/coding-agent/src/modes/rpc/rpc-mode.ts",
+          "additions": 142,
+          "deletions": 24
+        },
+        {
+          "path": "packages/coding-agent/src/modes/rpc/rpc-types.ts",
+          "additions": 46,
+          "deletions": 1
+        },
+        {
+          "path": "packages/coding-agent/test/rpc-hello.test.ts",
+          "additions": 104,
+          "deletions": 0
+        }
+      ]
+    },
+    {
+      "id": "psmfd-patch-011",
+      "changedLines": 439,
+      "files": [
+        {
+          "path": "packages/coding-agent/src/modes/rpc/rpc-client.ts",
+          "additions": 72,
+          "deletions": 3
+        },
+        {
+          "path": "packages/coding-agent/src/modes/rpc/rpc-mode.ts",
+          "additions": 142,
+          "deletions": 24
+        },
+        {
+          "path": "packages/coding-agent/src/modes/rpc/rpc-types.ts",
+          "additions": 46,
+          "deletions": 1
+        },
+        {
+          "path": "packages/coding-agent/test/rpc-list-sessions.test.ts",
+          "additions": 151,
+          "deletions": 0
+        }
+      ]
+    },
+    {
+      "id": "psmfd-patch-012",
+      "changedLines": 277,
+      "files": [
+        {
+          "path": "packages/coding-agent/src/modes/rpc/rpc-mode.ts",
+          "additions": 142,
+          "deletions": 24
+        },
+        {
+          "path": "packages/coding-agent/test/rpc-session-start-dialog.test.ts",
+          "additions": 111,
+          "deletions": 0
+        }
+      ]
+    },
+    {
+      "id": "psmfd-patch-013",
+      "changedLines": 80,
+      "files": [
+        {
+          "path": "packages/coding-agent/src/core/cache-warmer.ts",
+          "additions": 15,
+          "deletions": 10
+        },
+        {
+          "path": "packages/coding-agent/test/cache-warmer.test.ts",
+          "additions": 55,
+          "deletions": 0
+        }
+      ]
+    },
+    {
+      "id": "psmfd-patch-018",
+      "changedLines": 151,
+      "files": [
+        {
+          "path": "packages/coding-agent/src/core/auth-storage.ts",
+          "additions": 30,
+          "deletions": 18
+        },
+        {
+          "path": "packages/coding-agent/test/auth-storage.test.ts",
+          "additions": 103,
+          "deletions": 0
+        }
+      ]
+    },
+    {
+      "id": "psmfd-patch-019",
+      "changedLines": 78,
+      "files": [
+        {
+          "path": "packages/chord/src/delta/index.ts",
+          "additions": 11,
+          "deletions": 3
+        },
+        {
+          "path": "packages/chord/test/delta.test.ts",
+          "additions": 62,
+          "deletions": 2
+        }
+      ]
+    },
+    {
+      "id": "psmfd-patch-020",
+      "changedLines": 673,
+      "files": [
+        {
+          "path": "packages/coding-agent/docs/cli-integration.md",
+          "additions": 56,
+          "deletions": 0
+        },
+        {
+          "path": "packages/coding-agent/src/cli/args.ts",
+          "additions": 7,
+          "deletions": 0
+        },
+        {
+          "path": "packages/coding-agent/src/core/agent-session-runtime.ts",
+          "additions": 5,
+          "deletions": 0
+        },
+        {
+          "path": "packages/coding-agent/src/core/agent-session-services.ts",
+          "additions": 25,
+          "deletions": 9
+        },
+        {
+          "path": "packages/coding-agent/src/core/managed-resource-loader.ts",
+          "additions": 63,
+          "deletions": 0
+        },
+        {
+          "path": "packages/coding-agent/src/core/startup-policy.ts",
+          "additions": 72,
+          "deletions": 0
+        },
+        {
+          "path": "packages/coding-agent/src/main.ts",
+          "additions": 48,
+          "deletions": 20
+        },
+        {
+          "path": "packages/coding-agent/src/modes/interactive/interactive-mode.ts",
+          "additions": 78,
+          "deletions": 39
+        },
+        {
+          "path": "packages/coding-agent/src/modes/interactive/theme/theme-controller.ts",
+          "additions": 17,
+          "deletions": 5
+        },
+        {
+          "path": "packages/coding-agent/test/interactive-mode-clone-command.test.ts",
+          "additions": 3,
+          "deletions": 0
+        },
+        {
+          "path": "packages/coding-agent/test/interactive-mode-import-command.test.ts",
+          "additions": 4,
+          "deletions": 0
+        },
+        {
+          "path": "packages/coding-agent/test/managed-startup-policy.test.ts",
+          "additions": 195,
+          "deletions": 0
+        },
+        {
+          "path": "packages/coding-agent/test/theme-controller.test.ts",
+          "additions": 27,
+          "deletions": 0
+        }
+      ]
+    }
+  ],
+  "totalChangedLines": 2090,
+  "distinctPaths": 25,
+  "patchCount": 7,
+  "limits": {
+    "patches": 7,
+    "changedLines": 2200,
+    "distinctPaths": 25
+  },
+  "candidateSource": "1f37eea4bf71f95ed9a4e62674949de3a9feb8b0"
+}

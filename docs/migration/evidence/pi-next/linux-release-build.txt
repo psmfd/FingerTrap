@@ -1,0 +1,1191 @@
+﻿2026-10-21T17:54:27.0400137Z Current runner version: '2.338.0'
+2026-10-21T17:54:27.0427826Z ##[group]Runner Image Provisioner
+2026-10-21T17:54:27.0428904Z Hosted Compute Agent
+2026-10-21T17:54:27.0429541Z Version: 20261015.610
+2026-10-21T17:54:27.0430253Z Commit: 267fdb4e8bbec4ab5ea31367f3a00d5c480c7656
+2026-10-21T17:54:27.0431093Z Build Date: 2026-10-14T17:06:54Z
+2026-10-21T17:54:27.0431824Z Worker ID: {62214646-2f4e-4387-bdfb-0d4235fb5337}
+2026-10-21T17:54:27.0432626Z Region: westus
+2026-10-21T17:54:27.0433218Z Cloud: Azure
+2026-10-21T17:54:27.0433776Z ##[endgroup]
+2026-10-21T17:54:27.0435849Z ##[group]Operating System
+2026-10-21T17:54:27.0436540Z Ubuntu
+2026-10-21T17:54:27.0437255Z 24.04.5
+2026-10-21T17:54:27.0437815Z LTS
+2026-10-21T17:54:27.0438391Z ##[endgroup]
+2026-10-21T17:54:27.0439125Z ##[group]Runner Image
+2026-10-21T17:54:27.0439790Z Image: ubuntu-24.04
+2026-10-21T17:54:27.0440430Z Version: 20261018.339.1
+2026-10-21T17:54:27.0441846Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261018.339/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-21T17:54:27.0443571Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261018.339
+2026-10-21T17:54:27.0444976Z ##[endgroup]
+2026-10-21T17:54:27.0446292Z ##[group]GITHUB_TOKEN Permissions
+2026-10-21T17:54:27.0448717Z Contents: read
+2026-10-21T17:54:27.0449466Z Metadata: read
+2026-10-21T17:54:27.0450090Z ##[endgroup]
+2026-10-21T17:54:27.0452450Z Secret source: Actions
+2026-10-21T17:54:27.0453560Z Cache mode: write
+2026-10-21T17:54:27.0454975Z Prepare workflow directory
+2026-10-21T17:54:27.0811007Z Prepare all required actions
+2026-10-21T17:54:27.0880299Z Getting action download info
+2026-10-21T17:54:27.4549053Z Download action repository 'actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10' (SHA:df4cb1c069e1874edd31b4311f1884172cec0e10)
+2026-10-21T17:54:27.5829992Z Download action repository 'actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e' (SHA:48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e)
+2026-10-21T17:54:27.8384255Z Complete job name: qualify offline release workspace build
+2026-10-21T17:54:27.9182054Z ##[group]Run actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+2026-10-21T17:54:27.9183097Z with:
+2026-10-21T17:54:27.9183592Z   ref: c7d2a827d7956fcdd8e2a300b5096f6b263dc579
+2026-10-21T17:54:27.9184203Z   persist-credentials: false
+2026-10-21T17:54:27.9184918Z   repository: psmfd/pi
+2026-10-21T17:54:27.9188686Z   token: ***
+2026-10-21T17:54:27.9189127Z   ssh-strict: true
+2026-10-21T17:54:27.9189573Z   ssh-user: git
+2026-10-21T17:54:27.9190007Z   clean: true
+2026-10-21T17:54:27.9190452Z   sparse-checkout-cone-mode: true
+2026-10-21T17:54:27.9191025Z   fetch-depth: 1
+2026-10-21T17:54:27.9191464Z   fetch-tags: false
+2026-10-21T17:54:27.9191916Z   show-progress: true
+2026-10-21T17:54:27.9192367Z   lfs: false
+2026-10-21T17:54:27.9192786Z   submodules: false
+2026-10-21T17:54:27.9193236Z   set-safe-directory: true
+2026-10-21T17:54:27.9193932Z ##[endgroup]
+2026-10-21T17:54:28.0277030Z Syncing repository: psmfd/pi
+2026-10-21T17:54:28.0279426Z ##[group]Getting Git version info
+2026-10-21T17:54:28.0280401Z Working directory is '/home/runner/work/pi/pi'
+2026-10-21T17:54:28.0281628Z [command]/usr/bin/git version
+2026-10-21T17:54:28.0325186Z git version 2.55.0
+2026-10-21T17:54:28.0349448Z ##[endgroup]
+2026-10-21T17:54:28.0367450Z Temporarily overriding HOME='/home/runner/work/_temp/c29805bf-36db-4609-831d-0a877f5e7751' before making global git config changes
+2026-10-21T17:54:28.0369727Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T17:54:28.0374187Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/pi/pi
+2026-10-21T17:54:28.0429104Z Deleting the contents of '/home/runner/work/pi/pi'
+2026-10-21T17:54:28.0435786Z ##[group]Determining repository object format
+2026-10-21T17:54:28.0438080Z ##[endgroup]
+2026-10-21T17:54:28.0438938Z ##[group]Initializing the repository
+2026-10-21T17:54:28.0443986Z [command]/usr/bin/git init /home/runner/work/pi/pi
+2026-10-21T17:54:28.0535877Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-21T17:54:28.0538702Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-21T17:54:28.0541242Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-21T17:54:28.0542692Z hint: call:
+2026-10-21T17:54:28.0543573Z hint:
+2026-10-21T17:54:28.0544838Z hint: 	git config --global init.defaultBranch <name>
+2026-10-21T17:54:28.0545992Z hint:
+2026-10-21T17:54:28.0547084Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-21T17:54:28.0548714Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-21T17:54:28.0550179Z hint:
+2026-10-21T17:54:28.0551124Z hint: 	git branch -m <name>
+2026-10-21T17:54:28.0552071Z hint:
+2026-10-21T17:54:28.0553232Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-21T17:54:28.0555309Z Initialized empty Git repository in /home/runner/work/pi/pi/.git/
+2026-10-21T17:54:28.0558405Z [command]/usr/bin/git remote add origin https://github.com/psmfd/pi
+2026-10-21T17:54:28.0608226Z ##[endgroup]
+2026-10-21T17:54:28.0609073Z ##[group]Disabling automatic garbage collection
+2026-10-21T17:54:28.0612849Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-21T17:54:28.0653965Z ##[endgroup]
+2026-10-21T17:54:28.0655512Z ##[group]Setting up auth
+2026-10-21T17:54:28.0656382Z Removing SSH command configuration
+2026-10-21T17:54:28.0661977Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T17:54:28.0703534Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-21T17:54:28.1047107Z Removing HTTP extra header
+2026-10-21T17:54:28.1056667Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T17:54:28.1104257Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-21T17:54:28.1390526Z Removing includeIf entries pointing to credentials config files
+2026-10-21T17:54:28.1400634Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-21T17:54:28.1449587Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-21T17:54:28.1738701Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-21T17:54:28.1783268Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/pi/pi/.git.path /home/runner/work/_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config
+2026-10-21T17:54:28.1824937Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/pi/pi/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config
+2026-10-21T17:54:28.1868052Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config
+2026-10-21T17:54:28.1907464Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config
+2026-10-21T17:54:28.1942687Z ##[endgroup]
+2026-10-21T17:54:28.1943832Z ##[group]Fetching the repository
+2026-10-21T17:54:28.1953142Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin c7d2a827d7956fcdd8e2a300b5096f6b263dc579
+2026-10-21T17:54:29.6970705Z From https://github.com/psmfd/pi
+2026-10-21T17:54:29.6972055Z  * branch            c7d2a827d7956fcdd8e2a300b5096f6b263dc579 -> FETCH_HEAD
+2026-10-21T17:54:29.6983951Z [command]/usr/bin/git rev-parse --verify --quiet c7d2a827d7956fcdd8e2a300b5096f6b263dc579^{object}
+2026-10-21T17:54:29.7016666Z c7d2a827d7956fcdd8e2a300b5096f6b263dc579
+2026-10-21T17:54:29.7027493Z ##[endgroup]
+2026-10-21T17:54:29.7028757Z ##[group]Determining the checkout info
+2026-10-21T17:54:29.7030165Z ##[endgroup]
+2026-10-21T17:54:29.7031079Z [command]/usr/bin/git sparse-checkout disable
+2026-10-21T17:54:29.7092708Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-21T17:54:29.7135778Z ##[group]Checking out the ref
+2026-10-21T17:54:29.7138588Z [command]/usr/bin/git checkout --progress --force c7d2a827d7956fcdd8e2a300b5096f6b263dc579
+2026-10-21T17:54:29.8850352Z Note: switching to 'c7d2a827d7956fcdd8e2a300b5096f6b263dc579'.
+2026-10-21T17:54:29.8851337Z
+2026-10-21T17:54:29.8851934Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-21T17:54:29.8853263Z changes and commit them, and you can discard any commits you make in this
+2026-10-21T17:54:29.8855044Z state without impacting any branches by switching back to a branch.
+2026-10-21T17:54:29.8855796Z
+2026-10-21T17:54:29.8856325Z If you want to create a new branch to retain commits you create, you may
+2026-10-21T17:54:29.8857537Z do so (now or later) by using -c with the switch command. Example:
+2026-10-21T17:54:29.8858332Z
+2026-10-21T17:54:29.8858693Z   git switch -c <new-branch-name>
+2026-10-21T17:54:29.8859333Z
+2026-10-21T17:54:29.8859707Z Or undo this operation with:
+2026-10-21T17:54:29.8860232Z
+2026-10-21T17:54:29.8860547Z   git switch -
+2026-10-21T17:54:29.8861147Z
+2026-10-21T17:54:29.8862126Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-21T17:54:29.8863393Z
+2026-10-21T17:54:29.8864135Z HEAD is now at c7d2a82 fix(coding-agent): preserve managed startup on pi 1.3.0
+2026-10-21T17:54:29.8868085Z ##[endgroup]
+2026-10-21T17:54:29.8914120Z [command]/usr/bin/git log -1 --format=%H
+2026-10-21T17:54:29.8945287Z c7d2a827d7956fcdd8e2a300b5096f6b263dc579
+2026-10-21T17:54:29.8956732Z ##[group]Removing auth
+2026-10-21T17:54:29.8957881Z Removing SSH command configuration
+2026-10-21T17:54:29.8961000Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T17:54:29.8998650Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-21T17:54:29.9265369Z Removing HTTP extra header
+2026-10-21T17:54:29.9268720Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T17:54:29.9310933Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-21T17:54:29.9569479Z Removing includeIf entries pointing to credentials config files
+2026-10-21T17:54:29.9572483Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-21T17:54:29.9602379Z includeif.gitdir:/home/runner/work/pi/pi/.git.path
+2026-10-21T17:54:29.9605522Z includeif.gitdir:/home/runner/work/pi/pi/.git/worktrees/*.path
+2026-10-21T17:54:29.9608108Z includeif.gitdir:/github/workspace/.git.path
+2026-10-21T17:54:29.9610646Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-21T17:54:29.9617307Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/pi/pi/.git.path
+2026-10-21T17:54:29.9647866Z /home/runner/work/_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config
+2026-10-21T17:54:29.9661497Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/pi/pi/.git.path /home/runner/work/_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config
+2026-10-21T17:54:29.9702471Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/pi/pi/.git/worktrees/*.path
+2026-10-21T17:54:29.9729425Z /home/runner/work/_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config
+2026-10-21T17:54:29.9740935Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/pi/pi/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config
+2026-10-21T17:54:29.9779667Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-21T17:54:29.9808706Z /github/runner_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config
+2026-10-21T17:54:29.9855802Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config
+2026-10-21T17:54:29.9901265Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-21T17:54:29.9929306Z /github/runner_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config
+2026-10-21T17:54:29.9940385Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config
+2026-10-21T17:54:29.9980353Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-21T17:54:30.0236246Z Removing credentials config '/home/runner/work/_temp/git-credentials-cc1d3c15-eb09-42de-bf1f-33791b549aeb.config'
+2026-10-21T17:54:30.0244636Z ##[endgroup]
+2026-10-21T17:54:30.0734480Z ##[group]Run actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+2026-10-21T17:54:30.0736156Z with:
+2026-10-21T17:54:30.0737044Z   node-version: 22
+2026-10-21T17:54:30.0738053Z   package-manager-cache: false
+2026-10-21T17:54:30.0739168Z   check-latest: false
+2026-10-21T17:54:30.0747759Z   token: ***
+2026-10-21T17:54:30.0748686Z ##[endgroup]
+2026-10-21T17:54:30.2524156Z Found in cache @ /opt/hostedtoolcache/node/22.23.3/x64
+2026-10-21T17:54:30.2530412Z ##[group]Environment details
+2026-10-21T17:54:30.6326230Z node: v22.23.3
+2026-10-21T17:54:30.6326898Z npm: 10.9.9
+2026-10-21T17:54:30.6327309Z yarn: 1.22.22
+2026-10-21T17:54:30.6328295Z ##[endgroup]
+2026-10-21T17:54:30.6570160Z ##[group]Run sudo apt-get update -qq && sudo apt-get install -y bubblewrap
+2026-10-21T17:54:30.6570895Z [36;1msudo apt-get update -qq && sudo apt-get install -y bubblewrap[0m
+2026-10-21T17:54:30.6739172Z shell: /usr/bin/bash -e {0}
+2026-10-21T17:54:30.6739595Z ##[endgroup]
+2026-10-21T17:54:36.1853869Z Reading package lists...
+2026-10-21T17:54:36.4972491Z Building dependency tree...
+2026-10-21T17:54:36.4981093Z Reading state information...
+2026-10-21T17:54:37.1023833Z The following NEW packages will be installed:
+2026-10-21T17:54:37.1066519Z   bubblewrap
+2026-10-21T17:54:37.1470328Z 0 upgraded, 1 newly installed, 0 to remove and 52 not upgraded.
+2026-10-21T17:54:37.1471202Z Need to get 50.4 kB of archives.
+2026-10-21T17:54:37.1471967Z After this operation, 133 kB of additional disk space will be used.
+2026-10-21T17:54:37.1472914Z Get:1 file:/etc/apt/apt-mirrors.txt Mirrorlist [144 B]
+2026-10-21T17:54:37.2438023Z Get:2 http://azure.archive.ubuntu.com/ubuntu noble-updates/main amd64 bubblewrap amd64 0.9.0-1ubuntu0.3 [50.4 kB]
+2026-10-21T17:54:38.0813034Z Fetched 50.4 kB in 0s (399 kB/s)
+2026-10-21T17:54:38.1118644Z Selecting previously unselected package bubblewrap.
+2026-10-21T17:54:38.1328841Z (Reading database ...
+2026-10-21T17:54:38.1329296Z (Reading database ... 5%
+2026-10-21T17:54:38.1329691Z (Reading database ... 10%
+2026-10-21T17:54:38.1330353Z (Reading database ... 15%
+2026-10-21T17:54:38.1330850Z (Reading database ... 20%
+2026-10-21T17:54:38.1331335Z (Reading database ... 25%
+2026-10-21T17:54:38.1332290Z (Reading database ... 30%
+2026-10-21T17:54:38.1332676Z (Reading database ... 35%
+2026-10-21T17:54:38.1333228Z (Reading database ... 40%
+2026-10-21T17:54:38.1333757Z (Reading database ... 45%
+2026-10-21T17:54:38.1334240Z (Reading database ... 50%
+2026-10-21T17:54:38.1362179Z (Reading database ... 55%
+2026-10-21T17:54:38.2713681Z (Reading database ... 60%
+2026-10-21T17:54:38.4574213Z (Reading database ... 65%
+2026-10-21T17:54:38.5711377Z (Reading database ... 70%
+2026-10-21T17:54:38.7076572Z (Reading database ... 75%
+2026-10-21T17:54:38.9109485Z (Reading database ... 80%
+2026-10-21T17:54:39.0919339Z (Reading database ... 85%
+2026-10-21T17:54:39.2596601Z (Reading database ... 90%
+2026-10-21T17:54:39.4607664Z (Reading database ... 95%
+2026-10-21T17:54:39.4608049Z (Reading database ... 100%
+2026-10-21T17:54:39.4608513Z (Reading database ... 214410 files and directories currently installed.)
+2026-10-21T17:54:39.4663984Z Preparing to unpack .../bubblewrap_0.9.0-1ubuntu0.3_amd64.deb ...
+2026-10-21T17:54:39.4688603Z Unpacking bubblewrap (0.9.0-1ubuntu0.3) ...
+2026-10-21T17:54:39.5220108Z Setting up bubblewrap (0.9.0-1ubuntu0.3) ...
+2026-10-21T17:54:39.5285790Z Processing triggers for man-db (2.12.0-4build2) ...
+2026-10-21T17:54:39.5327391Z Not building database; man-db/auto-update is not 'true'.
+2026-10-21T17:54:40.2165239Z
+2026-10-21T17:54:40.2166520Z Running kernel seems to be up-to-date.
+2026-10-21T17:54:40.2167183Z
+2026-10-21T17:54:40.2167653Z No services need to be restarted.
+2026-10-21T17:54:40.2168223Z
+2026-10-21T17:54:40.2168460Z No containers need to be restarted.
+2026-10-21T17:54:40.2168741Z
+2026-10-21T17:54:40.2169031Z No user sessions are running outdated binaries.
+2026-10-21T17:54:40.2169351Z
+2026-10-21T17:54:40.2169803Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-10-21T17:54:41.7795799Z ##[group]Run npm ci --ignore-scripts
+2026-10-21T17:54:41.7796172Z [36;1mnpm ci --ignore-scripts[0m
+2026-10-21T17:54:41.7856249Z shell: /usr/bin/bash -e {0}
+2026-10-21T17:54:41.7856526Z ##[endgroup]
+2026-10-21T17:54:42.4166027Z npm warn EBADENGINE Unsupported engine {
+2026-10-21T17:54:42.4166882Z npm warn EBADENGINE   package: '@earendil-works/gondolin@0.12.0',
+2026-10-21T17:54:42.4167631Z npm warn EBADENGINE   required: { node: '>=23.6.0' },
+2026-10-21T17:54:42.4168369Z npm warn EBADENGINE   current: { node: 'v22.23.3', npm: '10.9.9' }
+2026-10-21T17:54:42.4168962Z npm warn EBADENGINE }
+2026-10-21T17:54:42.4175248Z npm warn EBADENGINE Unsupported engine {
+2026-10-21T17:54:42.4175859Z npm warn EBADENGINE   package: 'autoevals@0.3.0',
+2026-10-21T17:54:42.4176317Z npm warn EBADENGINE   required: {
+2026-10-21T17:54:42.4176677Z npm warn EBADENGINE     npm: 'please-use-pnpm',
+2026-10-21T17:54:42.4177062Z npm warn EBADENGINE     pnpm: '>=10.27.0',
+2026-10-21T17:54:42.4177501Z npm warn EBADENGINE     yarn: 'please-use-pnpm'
+2026-10-21T17:54:42.4177816Z npm warn EBADENGINE   },
+2026-10-21T17:54:42.4178266Z npm warn EBADENGINE   current: { node: 'v22.23.3', npm: '10.9.9' }
+2026-10-21T17:54:42.4178642Z npm warn EBADENGINE }
+2026-10-21T17:54:43.5468952Z npm warn deprecated prebuild-install@7.1.3: No longer maintained. Please contact the author of the relevant native addon; alternatives are available.
+2026-10-21T17:54:43.7926119Z npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+2026-10-21T17:54:43.9134605Z npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-10-21T17:54:45.0290179Z npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+2026-10-21T17:54:51.3657378Z
+2026-10-21T17:54:51.3658518Z added 301 packages, and audited 322 packages in 10s
+2026-10-21T17:54:51.3659169Z
+2026-10-21T17:54:51.3659430Z 49 packages are looking for funding
+2026-10-21T17:54:51.3659907Z   run `npm fund` for details
+2026-10-21T17:54:51.3680455Z
+2026-10-21T17:54:51.3680961Z 2 high severity vulnerabilities
+2026-10-21T17:54:51.3681276Z
+2026-10-21T17:54:51.3681604Z Some issues need review, and may require choosing
+2026-10-21T17:54:51.3682702Z a different dependency.
+2026-10-21T17:54:51.3682945Z
+2026-10-21T17:54:51.3683136Z Run `npm audit` for details.
+2026-10-21T17:54:51.4405086Z ##[group]Run set -euo pipefail
+2026-10-21T17:54:51.4405454Z [36;1mset -euo pipefail[0m
+2026-10-21T17:54:51.4405900Z [36;1mnpm pack @earendil-works/pi-ai@1.3.0 --ignore-scripts --pack-destination "$RUNNER_TEMP"[0m
+2026-10-21T17:54:51.4406751Z [36;1mprintf '5343e1639bf343bdc3344df3ad6c31c05a50b68bad07ac6bce10890d4b6b8a61  %s\n' "$RUNNER_TEMP/earendil-works-pi-ai-1.3.0.tgz" | sha256sum -c -[0m
+2026-10-21T17:54:51.4407653Z [36;1mtar -xzf "$RUNNER_TEMP/earendil-works-pi-ai-1.3.0.tgz" -C "$RUNNER_TEMP" package/dist/providers/data[0m
+2026-10-21T17:54:51.4408202Z [36;1mmkdir -p packages/ai/src/providers/data[0m
+2026-10-21T17:54:51.4408864Z [36;1mcp "$RUNNER_TEMP"/package/dist/providers/data/*.json "$RUNNER_TEMP"/package/dist/providers/data/.manifest.json packages/ai/src/providers/data/[0m
+2026-10-21T17:54:51.4467530Z shell: /usr/bin/bash -e {0}
+2026-10-21T17:54:51.4467815Z ##[endgroup]
+2026-10-21T17:54:51.9877264Z npm notice
+2026-10-21T17:54:51.9878322Z npm notice 📦  @earendil-works/pi-ai@1.3.0
+2026-10-21T17:54:51.9879108Z npm notice Tarball Contents
+2026-10-21T17:54:51.9889160Z npm notice 99.5kB README.md
+2026-10-21T17:54:51.9889773Z npm notice 3.4kB dist/api/anthropic-messages.d.ts
+2026-10-21T17:54:51.9890448Z npm notice 949B dist/api/anthropic-messages.d.ts.map
+2026-10-21T17:54:51.9891118Z npm notice 61.1kB dist/api/anthropic-messages.js
+2026-10-21T17:54:51.9891785Z npm notice 111.5kB dist/api/anthropic-messages.js.map
+2026-10-21T17:54:51.9892649Z npm notice 171B dist/api/anthropic-messages.lazy.d.ts
+2026-10-21T17:54:51.9893363Z npm notice 230B dist/api/anthropic-messages.lazy.d.ts.map
+2026-10-21T17:54:51.9894059Z npm notice 180B dist/api/anthropic-messages.lazy.js
+2026-10-21T17:54:51.9894990Z npm notice 521B dist/api/anthropic-messages.lazy.js.map
+2026-10-21T17:54:51.9895671Z npm notice 788B dist/api/azure-openai-config.d.ts
+2026-10-21T17:54:51.9896372Z npm notice 804B dist/api/azure-openai-config.d.ts.map
+2026-10-21T17:54:51.9897018Z npm notice 3.1kB dist/api/azure-openai-config.js
+2026-10-21T17:54:51.9897642Z npm notice 6.5kB dist/api/azure-openai-config.js.map
+2026-10-21T17:54:51.9898304Z npm notice 829B dist/api/azure-openai-responses.d.ts
+2026-10-21T17:54:51.9898999Z npm notice 680B dist/api/azure-openai-responses.d.ts.map
+2026-10-21T17:54:51.9899671Z npm notice 9.2kB dist/api/azure-openai-responses.js
+2026-10-21T17:54:51.9900347Z npm notice 18.1kB dist/api/azure-openai-responses.js.map
+2026-10-21T17:54:51.9901067Z npm notice 178B dist/api/azure-openai-responses.lazy.d.ts
+2026-10-21T17:54:51.9901835Z npm notice 238B dist/api/azure-openai-responses.lazy.d.ts.map
+2026-10-21T17:54:51.9902548Z npm notice 191B dist/api/azure-openai-responses.lazy.js
+2026-10-21T17:54:51.9903286Z npm notice 536B dist/api/azure-openai-responses.lazy.js.map
+2026-10-21T17:54:51.9904006Z npm notice 2.2kB dist/api/bedrock-converse-stream.d.ts
+2026-10-21T17:54:51.9904991Z npm notice 890B dist/api/bedrock-converse-stream.d.ts.map
+2026-10-21T17:54:51.9905668Z npm notice 52.7kB dist/api/bedrock-converse-stream.js
+2026-10-21T17:54:51.9906351Z npm notice 95.0kB dist/api/bedrock-converse-stream.js.map
+2026-10-21T17:54:51.9907072Z npm notice 480B dist/api/bedrock-converse-stream.lazy.d.ts
+2026-10-21T17:54:51.9907847Z npm notice 309B dist/api/bedrock-converse-stream.lazy.d.ts.map
+2026-10-21T17:54:51.9908598Z npm notice 1.5kB dist/api/bedrock-converse-stream.lazy.js
+2026-10-21T17:54:51.9909317Z npm notice 1.9kB dist/api/bedrock-converse-stream.lazy.js.map
+2026-10-21T17:54:51.9909891Z npm notice 1.4kB dist/api/classifier-shared.d.ts
+2026-10-21T17:54:51.9910460Z npm notice 886B dist/api/classifier-shared.d.ts.map
+2026-10-21T17:54:51.9911036Z npm notice 4.1kB dist/api/classifier-shared.js
+2026-10-21T17:54:51.9911604Z npm notice 8.9kB dist/api/classifier-shared.js.map
+2026-10-21T17:54:51.9912220Z npm notice 4.2kB dist/api/cloudflare-ai-binding.d.ts
+2026-10-21T17:54:51.9913174Z npm notice 554B dist/api/cloudflare-ai-binding.d.ts.map
+2026-10-21T17:54:51.9913803Z npm notice 3.9kB dist/api/cloudflare-ai-binding.js
+2026-10-21T17:54:51.9915222Z npm notice 5.4kB dist/api/cloudflare-ai-binding.js.map
+2026-10-21T17:54:51.9915859Z npm notice 316B dist/api/cloudflare-workers-ai-system-one.d.ts
+2026-10-21T17:54:51.9916578Z npm notice 292B dist/api/cloudflare-workers-ai-system-one.d.ts.map
+2026-10-21T17:54:51.9917264Z npm notice 2.4kB dist/api/cloudflare-workers-ai-system-one.js
+2026-10-21T17:54:51.9917991Z npm notice 4.4kB dist/api/cloudflare-workers-ai-system-one.js.map
+2026-10-21T17:54:51.9918741Z npm notice 202B dist/api/cloudflare-workers-ai-system-one.lazy.d.ts
+2026-10-21T17:54:51.9919697Z npm notice 261B dist/api/cloudflare-workers-ai-system-one.lazy.d.ts.map
+2026-10-21T17:54:51.9920298Z npm notice 265B dist/api/cloudflare-workers-ai-system-one.lazy.js
+2026-10-21T17:54:51.9920810Z npm notice 700B dist/api/cloudflare-workers-ai-system-one.lazy.js.map
+2026-10-21T17:54:51.9921257Z npm notice 1.1kB dist/api/cloudflare.d.ts
+2026-10-21T17:54:51.9921602Z npm notice 359B dist/api/cloudflare.d.ts.map
+2026-10-21T17:54:51.9921956Z npm notice 1.1kB dist/api/cloudflare.js
+2026-10-21T17:54:51.9922287Z npm notice 1.5kB dist/api/cloudflare.js.map
+2026-10-21T17:54:51.9922665Z npm notice 1.9kB dist/api/constrained-sampling.d.ts
+2026-10-21T17:54:51.9923090Z npm notice 1.3kB dist/api/constrained-sampling.d.ts.map
+2026-10-21T17:54:51.9923491Z npm notice 9.9kB dist/api/constrained-sampling.js
+2026-10-21T17:54:51.9923892Z npm notice 20.0kB dist/api/constrained-sampling.js.map
+2026-10-21T17:54:51.9924306Z npm notice 397B dist/api/github-copilot-headers.d.ts
+2026-10-21T17:54:51.9925199Z npm notice 458B dist/api/github-copilot-headers.d.ts.map
+2026-10-21T17:54:51.9925913Z npm notice 1.1kB dist/api/github-copilot-headers.js
+2026-10-21T17:54:51.9926609Z npm notice 2.5kB dist/api/github-copilot-headers.js.map
+2026-10-21T17:54:51.9927112Z npm notice 603B dist/api/google-generative-ai.d.ts
+2026-10-21T17:54:51.9927527Z npm notice 598B dist/api/google-generative-ai.d.ts.map
+2026-10-21T17:54:51.9927928Z npm notice 17.5kB dist/api/google-generative-ai.js
+2026-10-21T17:54:51.9928335Z npm notice 30.6kB dist/api/google-generative-ai.js.map
+2026-10-21T17:54:51.9928740Z npm notice 174B dist/api/google-generative-ai.lazy.d.ts
+2026-10-21T17:54:51.9929195Z npm notice 234B dist/api/google-generative-ai.lazy.d.ts.map
+2026-10-21T17:54:51.9929722Z npm notice 185B dist/api/google-generative-ai.lazy.js
+2026-10-21T17:54:51.9930138Z npm notice 528B dist/api/google-generative-ai.lazy.js.map
+2026-10-21T17:54:51.9930526Z npm notice 5.5kB dist/api/google-shared.d.ts
+2026-10-21T17:54:51.9930893Z npm notice 2.2kB dist/api/google-shared.d.ts.map
+2026-10-21T17:54:51.9931249Z npm notice 19.3kB dist/api/google-shared.js
+2026-10-21T17:54:51.9931602Z npm notice 32.3kB dist/api/google-shared.js.map
+2026-10-21T17:54:51.9931965Z npm notice 639B dist/api/google-vertex.d.ts
+2026-10-21T17:54:51.9932308Z npm notice 646B dist/api/google-vertex.d.ts.map
+2026-10-21T17:54:51.9932661Z npm notice 19.8kB dist/api/google-vertex.js
+2026-10-21T17:54:51.9933003Z npm notice 35.1kB dist/api/google-vertex.js.map
+2026-10-21T17:54:51.9933379Z npm notice 161B dist/api/google-vertex.lazy.d.ts
+2026-10-21T17:54:51.9933760Z npm notice 218B dist/api/google-vertex.lazy.d.ts.map
+2026-10-21T17:54:51.9934151Z npm notice 165B dist/api/google-vertex.lazy.js
+2026-10-21T17:54:51.9934782Z npm notice 499B dist/api/google-vertex.lazy.js.map
+2026-10-21T17:54:51.9935205Z npm notice 984B dist/api/lazy.d.ts
+2026-10-21T17:54:51.9935529Z npm notice 580B dist/api/lazy.d.ts.map
+2026-10-21T17:54:51.9935844Z npm notice 2.7kB dist/api/lazy.js
+2026-10-21T17:54:51.9936212Z npm notice 6.3kB dist/api/lazy.js.map
+2026-10-21T17:54:51.9936619Z npm notice 2.2kB dist/api/llama-cpp-classify.d.ts
+2026-10-21T17:54:51.9937079Z npm notice 951B dist/api/llama-cpp-classify.d.ts.map
+2026-10-21T17:54:51.9937494Z npm notice 17.3kB dist/api/llama-cpp-classify.js
+2026-10-21T17:54:51.9938042Z npm notice 34.8kB dist/api/llama-cpp-classify.js.map
+2026-10-21T17:54:51.9938647Z npm notice 176B dist/api/llama-cpp-classify.lazy.d.ts
+2026-10-21T17:54:51.9939209Z npm notice 233B dist/api/llama-cpp-classify.lazy.d.ts.map
+2026-10-21T17:54:51.9939636Z npm notice 225B dist/api/llama-cpp-classify.lazy.js
+2026-10-21T17:54:51.9940044Z npm notice 646B dist/api/llama-cpp-classify.lazy.js.map
+2026-10-21T17:54:51.9940443Z npm notice 901B dist/api/mistral-conversations.d.ts
+2026-10-21T17:54:51.9940851Z npm notice 695B dist/api/mistral-conversations.d.ts.map
+2026-10-21T17:54:51.9941249Z npm notice 31.6kB dist/api/mistral-conversations.js
+2026-10-21T17:54:51.9941649Z npm notice 63.7kB dist/api/mistral-conversations.js.map
+2026-10-21T17:54:51.9942071Z npm notice 177B dist/api/mistral-conversations.lazy.d.ts
+2026-10-21T17:54:51.9942524Z npm notice 236B dist/api/mistral-conversations.lazy.d.ts.map
+2026-10-21T17:54:51.9942969Z npm notice 189B dist/api/mistral-conversations.lazy.js
+2026-10-21T17:54:51.9943397Z npm notice 533B dist/api/mistral-conversations.lazy.js.map
+2026-10-21T17:54:51.9943825Z npm notice 1.6kB dist/api/openai-codex-responses.d.ts
+2026-10-21T17:54:51.9944261Z npm notice 1.4kB dist/api/openai-codex-responses.d.ts.map
+2026-10-21T17:54:51.9944881Z npm notice 55.6kB dist/api/openai-codex-responses.js
+2026-10-21T17:54:51.9945292Z npm notice 109.6kB dist/api/openai-codex-responses.js.map
+2026-10-21T17:54:51.9945713Z npm notice 178B dist/api/openai-codex-responses.lazy.d.ts
+2026-10-21T17:54:51.9946162Z npm notice 238B dist/api/openai-codex-responses.lazy.d.ts.map
+2026-10-21T17:54:51.9946611Z npm notice 191B dist/api/openai-codex-responses.lazy.js
+2026-10-21T17:54:51.9947046Z npm notice 536B dist/api/openai-codex-responses.lazy.js.map
+2026-10-21T17:54:51.9947461Z npm notice 2.1kB dist/api/openai-completions.d.ts
+2026-10-21T17:54:51.9947860Z npm notice 1.4kB dist/api/openai-completions.d.ts.map
+2026-10-21T17:54:51.9948396Z npm notice 64.9kB dist/api/openai-completions.js
+2026-10-21T17:54:51.9948797Z npm notice 119.6kB dist/api/openai-completions.js.map
+2026-10-21T17:54:51.9949206Z npm notice 171B dist/api/openai-completions.lazy.d.ts
+2026-10-21T17:54:51.9949633Z npm notice 230B dist/api/openai-completions.lazy.d.ts.map
+2026-10-21T17:54:51.9950039Z npm notice 180B dist/api/openai-completions.lazy.js
+2026-10-21T17:54:51.9950436Z npm notice 521B dist/api/openai-completions.lazy.js.map
+2026-10-21T17:54:51.9950820Z npm notice 244B dist/api/openai-decisions.d.ts
+2026-10-21T17:54:51.9951201Z npm notice 264B dist/api/openai-decisions.d.ts.map
+2026-10-21T17:54:51.9951594Z npm notice 7.0kB dist/api/openai-decisions.js
+2026-10-21T17:54:51.9951967Z npm notice 13.9kB dist/api/openai-decisions.js.map
+2026-10-21T17:54:51.9952354Z npm notice 173B dist/api/openai-decisions.lazy.d.ts
+2026-10-21T17:54:51.9952752Z npm notice 229B dist/api/openai-decisions.lazy.d.ts.map
+2026-10-21T17:54:51.9953141Z npm notice 220B dist/api/openai-decisions.lazy.js
+2026-10-21T17:54:51.9953532Z npm notice 639B dist/api/openai-decisions.lazy.js.map
+2026-10-21T17:54:51.9953923Z npm notice 207B dist/api/openai-prompt-cache.d.ts
+2026-10-21T17:54:51.9954316Z npm notice 246B dist/api/openai-prompt-cache.d.ts.map
+2026-10-21T17:54:51.9954982Z npm notice 392B dist/api/openai-prompt-cache.js
+2026-10-21T17:54:51.9955370Z npm notice 860B dist/api/openai-prompt-cache.js.map
+2026-10-21T17:54:51.9955773Z npm notice 2.9kB dist/api/openai-responses-shared.d.ts
+2026-10-21T17:54:51.9956283Z npm notice 1.8kB dist/api/openai-responses-shared.d.ts.map
+2026-10-21T17:54:51.9956711Z npm notice 32.8kB dist/api/openai-responses-shared.js
+2026-10-21T17:54:51.9957127Z npm notice 63.4kB dist/api/openai-responses-shared.js.map
+2026-10-21T17:54:51.9957522Z npm notice 798B dist/api/openai-responses.d.ts
+2026-10-21T17:54:51.9957896Z npm notice 673B dist/api/openai-responses.d.ts.map
+2026-10-21T17:54:51.9958263Z npm notice 15.7kB dist/api/openai-responses.js
+2026-10-21T17:54:51.9958642Z npm notice 30.9kB dist/api/openai-responses.js.map
+2026-10-21T17:54:51.9959034Z npm notice 167B dist/api/openai-responses.lazy.d.ts
+2026-10-21T17:54:51.9959608Z npm notice 226B dist/api/openai-responses.lazy.d.ts.map
+2026-10-21T17:54:51.9959997Z npm notice 174B dist/api/openai-responses.lazy.js
+2026-10-21T17:54:51.9960568Z npm notice 513B dist/api/openai-responses.lazy.js.map
+2026-10-21T17:54:51.9960956Z npm notice 250B dist/api/openrouter-images.d.ts
+2026-10-21T17:54:51.9986749Z npm notice 256B dist/api/openrouter-images.d.ts.map
+2026-10-21T17:54:51.9987481Z npm notice 5.3kB dist/api/openrouter-images.js
+2026-10-21T17:54:51.9988093Z npm notice 11.9kB dist/api/openrouter-images.js.map
+2026-10-21T17:54:51.9988549Z npm notice 167B dist/api/openrouter-images.lazy.d.ts
+2026-10-21T17:54:51.9989002Z npm notice 228B dist/api/openrouter-images.lazy.d.ts.map
+2026-10-21T17:54:51.9989431Z npm notice 235B dist/api/openrouter-images.lazy.js
+2026-10-21T17:54:51.9989875Z npm notice 647B dist/api/openrouter-images.lazy.js.map
+2026-10-21T17:54:51.9990264Z npm notice 3.2kB dist/api/pi-messages.d.ts
+2026-10-21T17:54:51.9990632Z npm notice 2.5kB dist/api/pi-messages.d.ts.map
+2026-10-21T17:54:51.9991004Z npm notice 12.4kB dist/api/pi-messages.js
+2026-10-21T17:54:51.9991354Z npm notice 26.4kB dist/api/pi-messages.js.map
+2026-10-21T17:54:51.9991727Z npm notice 157B dist/api/pi-messages.lazy.d.ts
+2026-10-21T17:54:51.9992125Z npm notice 214B dist/api/pi-messages.lazy.d.ts.map
+2026-10-21T17:54:51.9992497Z npm notice 159B dist/api/pi-messages.lazy.js
+2026-10-21T17:54:51.9992859Z npm notice 491B dist/api/pi-messages.lazy.js.map
+2026-10-21T17:54:51.9993231Z npm notice 1.5kB dist/api/simple-options.d.ts
+2026-10-21T17:54:51.9993601Z npm notice 1.2kB dist/api/simple-options.d.ts.map
+2026-10-21T17:54:51.9994008Z npm notice 3.5kB dist/api/simple-options.js
+2026-10-21T17:54:51.9994782Z npm notice 7.1kB dist/api/simple-options.js.map
+2026-10-21T17:54:51.9995177Z npm notice 1.3kB dist/api/system-one-shared.d.ts
+2026-10-21T17:54:51.9995564Z npm notice 919B dist/api/system-one-shared.d.ts.map
+2026-10-21T17:54:51.9995948Z npm notice 4.2kB dist/api/system-one-shared.js
+2026-10-21T17:54:51.9996332Z npm notice 9.1kB dist/api/system-one-shared.js.map
+2026-10-21T17:54:51.9996718Z npm notice 1.4kB dist/api/transform-messages.d.ts
+2026-10-21T17:54:51.9997119Z npm notice 733B dist/api/transform-messages.d.ts.map
+2026-10-21T17:54:51.9997503Z npm notice 9.6kB dist/api/transform-messages.js
+2026-10-21T17:54:51.9997882Z npm notice 16.2kB dist/api/transform-messages.js.map
+2026-10-21T17:54:51.9998255Z npm notice 290B dist/api/typesafe-system-one.d.ts
+2026-10-21T17:54:51.9998646Z npm notice 266B dist/api/typesafe-system-one.d.ts.map
+2026-10-21T17:54:51.9999030Z npm notice 906B dist/api/typesafe-system-one.js
+2026-10-21T17:54:51.9999404Z npm notice 1.9kB dist/api/typesafe-system-one.js.map
+2026-10-21T17:54:51.9999796Z npm notice 178B dist/api/typesafe-system-one.lazy.d.ts
+2026-10-21T17:54:52.0000231Z npm notice 235B dist/api/typesafe-system-one.lazy.d.ts.map
+2026-10-21T17:54:52.0000651Z npm notice 228B dist/api/typesafe-system-one.lazy.js
+2026-10-21T17:54:52.0001061Z npm notice 650B dist/api/typesafe-system-one.lazy.js.map
+2026-10-21T17:54:52.0001450Z npm notice 295B dist/auth/context.d.ts
+2026-10-21T17:54:52.0001781Z npm notice 210B dist/auth/context.d.ts.map
+2026-10-21T17:54:52.0002112Z npm notice 1.7kB dist/auth/context.js
+2026-10-21T17:54:52.0002432Z npm notice 2.6kB dist/auth/context.js.map
+2026-10-21T17:54:52.0002780Z npm notice 1.0kB dist/auth/credential-store.d.ts
+2026-10-21T17:54:52.0003157Z npm notice 791B dist/auth/credential-store.d.ts.map
+2026-10-21T17:54:52.0003533Z npm notice 2.0kB dist/auth/credential-store.js
+2026-10-21T17:54:52.0003895Z npm notice 4.6kB dist/auth/credential-store.js.map
+2026-10-21T17:54:52.0004241Z npm notice 972B dist/auth/helpers.d.ts
+2026-10-21T17:54:52.0004809Z npm notice 470B dist/auth/helpers.d.ts.map
+2026-10-21T17:54:52.0005203Z npm notice 2.1kB dist/auth/helpers.js
+2026-10-21T17:54:52.0005538Z npm notice 3.9kB dist/auth/helpers.js.map
+2026-10-21T17:54:52.0005910Z npm notice 330B dist/auth/oauth/anthropic.d.ts
+2026-10-21T17:54:52.0006297Z npm notice 227B dist/auth/oauth/anthropic.d.ts.map
+2026-10-21T17:54:52.0006986Z npm notice 9.9kB dist/auth/oauth/anthropic.js
+2026-10-21T17:54:52.0007485Z npm notice 18.8kB dist/auth/oauth/anthropic.js.map
+2026-10-21T17:54:52.0007892Z npm notice 2.2kB dist/auth/oauth/callback-server.d.ts
+2026-10-21T17:54:52.0008368Z npm notice 1.2kB dist/auth/oauth/callback-server.d.ts.map
+2026-10-21T17:54:52.0008780Z npm notice 5.8kB dist/auth/oauth/callback-server.js
+2026-10-21T17:54:52.0009194Z npm notice 12.8kB dist/auth/oauth/callback-server.js.map
+2026-10-21T17:54:52.0009605Z npm notice 797B dist/auth/oauth/device-code.d.ts
+2026-10-21T17:54:52.0010002Z npm notice 869B dist/auth/oauth/device-code.d.ts.map
+2026-10-21T17:54:52.0010386Z npm notice 3.3kB dist/auth/oauth/device-code.js
+2026-10-21T17:54:52.0010765Z npm notice 6.5kB dist/auth/oauth/device-code.js.map
+2026-10-21T17:54:52.0011147Z npm notice 179B dist/auth/oauth/github-copilot.d.ts
+2026-10-21T17:54:52.0011548Z npm notice 235B dist/auth/oauth/github-copilot.d.ts.map
+2026-10-21T17:54:52.0011955Z npm notice 15.7kB dist/auth/oauth/github-copilot.js
+2026-10-21T17:54:52.0012349Z npm notice 30.3kB dist/auth/oauth/github-copilot.js.map
+2026-10-21T17:54:52.0012729Z npm notice 391B dist/auth/oauth/kimi-coding.d.ts
+2026-10-21T17:54:52.0013105Z npm notice 231B dist/auth/oauth/kimi-coding.d.ts.map
+2026-10-21T17:54:52.0013468Z npm notice 10.3kB dist/auth/oauth/kimi-coding.js
+2026-10-21T17:54:52.0013834Z npm notice 19.3kB dist/auth/oauth/kimi-coding.js.map
+2026-10-21T17:54:52.0014201Z npm notice 1.5kB dist/auth/oauth/load.d.ts
+2026-10-21T17:54:52.0014931Z npm notice 1.4kB dist/auth/oauth/load.d.ts.map
+2026-10-21T17:54:52.0015282Z npm notice 2.9kB dist/auth/oauth/load.js
+2026-10-21T17:54:52.0015622Z npm notice 5.8kB dist/auth/oauth/load.js.map
+2026-10-21T17:54:52.0015957Z npm notice 868B dist/auth/oauth/meta.d.ts
+2026-10-21T17:54:52.0016296Z npm notice 224B dist/auth/oauth/meta.d.ts.map
+2026-10-21T17:54:52.0016636Z npm notice 8.0kB dist/auth/oauth/meta.js
+2026-10-21T17:54:52.0017007Z npm notice 14.4kB dist/auth/oauth/meta.js.map
+2026-10-21T17:54:52.0017406Z npm notice 343B dist/auth/oauth/openai-chatgpt.d.ts
+2026-10-21T17:54:52.0017820Z npm notice 239B dist/auth/oauth/openai-chatgpt.d.ts.map
+2026-10-21T17:54:52.0018216Z npm notice 11.7kB dist/auth/oauth/openai-chatgpt.js
+2026-10-21T17:54:52.0018613Z npm notice 21.7kB dist/auth/oauth/openai-chatgpt.js.map
+2026-10-21T17:54:52.0019008Z npm notice 347B dist/auth/oauth/openai-codex.d.ts
+2026-10-21T17:54:52.0019405Z npm notice 236B dist/auth/oauth/openai-codex.d.ts.map
+2026-10-21T17:54:52.0019801Z npm notice 13.5kB dist/auth/oauth/openai-codex.js
+2026-10-21T17:54:52.0020193Z npm notice 26.4kB dist/auth/oauth/openai-codex.js.map
+2026-10-21T17:54:52.0020581Z npm notice 696B dist/auth/oauth/openrouter.d.ts
+2026-10-21T17:54:52.0020975Z npm notice 234B dist/auth/oauth/openrouter.d.ts.map
+2026-10-21T17:54:52.0021349Z npm notice 6.2kB dist/auth/oauth/openrouter.js
+2026-10-21T17:54:52.0021724Z npm notice 11.3kB dist/auth/oauth/openrouter.js.map
+2026-10-21T17:54:52.0022089Z npm notice 335B dist/auth/oauth/pkce.d.ts
+2026-10-21T17:54:52.0022455Z npm notice 240B dist/auth/oauth/pkce.d.ts.map
+2026-10-21T17:54:52.0022805Z npm notice 1.0kB dist/auth/oauth/pkce.js
+2026-10-21T17:54:52.0023185Z npm notice 2.0kB dist/auth/oauth/pkce.js.map
+2026-10-21T17:54:52.0023526Z npm notice 656B dist/auth/oauth/radius.d.ts
+2026-10-21T17:54:52.0023884Z npm notice 325B dist/auth/oauth/radius.d.ts.map
+2026-10-21T17:54:52.0024233Z npm notice 9.7kB dist/auth/oauth/radius.js
+2026-10-21T17:54:52.0024769Z npm notice 18.4kB dist/auth/oauth/radius.js.map
+2026-10-21T17:54:52.0025108Z npm notice 160B dist/auth/oauth/xai.d.ts
+2026-10-21T17:54:52.0025450Z npm notice 211B dist/auth/oauth/xai.d.ts.map
+2026-10-21T17:54:52.0025786Z npm notice 7.5kB dist/auth/oauth/xai.js
+2026-10-21T17:54:52.0026152Z npm notice 14.8kB dist/auth/oauth/xai.js.map
+2026-10-21T17:54:52.0026478Z npm notice 2.0kB dist/auth/resolve.d.ts
+2026-10-21T17:54:52.0026823Z npm notice 913B dist/auth/resolve.d.ts.map
+2026-10-21T17:54:52.0027158Z npm notice 6.7kB dist/auth/resolve.js
+2026-10-21T17:54:52.0027694Z npm notice 13.3kB dist/auth/resolve.js.map
+2026-10-21T17:54:52.0028276Z npm notice 9.3kB dist/auth/types.d.ts
+2026-10-21T17:54:52.0028614Z npm notice 4.4kB dist/auth/types.d.ts.map
+2026-10-21T17:54:52.0028947Z npm notice 44B dist/auth/types.js
+2026-10-21T17:54:52.0029261Z npm notice 9.4kB dist/auth/types.js.map
+2026-10-21T17:54:52.0029598Z npm notice 354B dist/bedrock-provider.d.ts
+2026-10-21T17:54:52.0029973Z npm notice 160B dist/bedrock-provider.d.ts.map
+2026-10-21T17:54:52.0030329Z npm notice 189B dist/bedrock-provider.js
+2026-10-21T17:54:52.0030681Z npm notice 411B dist/bedrock-provider.js.map
+2026-10-21T17:54:52.0031020Z npm notice 172B dist/bun-oauth.d.ts
+2026-10-21T17:54:52.0031332Z npm notice 159B dist/bun-oauth.d.ts.map
+2026-10-21T17:54:52.0031640Z npm notice 1.2kB dist/bun-oauth.js
+2026-10-21T17:54:52.0031958Z npm notice 2.1kB dist/bun-oauth.js.map
+2026-10-21T17:54:52.0032244Z npm notice 64B dist/cli.d.ts
+2026-10-21T17:54:52.0032534Z npm notice 100B dist/cli.d.ts.map
+2026-10-21T17:54:52.0032917Z npm notice 4.8kB dist/cli.js
+2026-10-21T17:54:52.0033347Z npm notice 9.9kB dist/cli.js.map
+2026-10-21T17:54:52.0033813Z npm notice 4.4kB dist/compat.d.ts
+2026-10-21T17:54:52.0034293Z npm notice 2.6kB dist/compat.d.ts.map
+2026-10-21T17:54:52.0034891Z npm notice 8.9kB dist/compat.js
+2026-10-21T17:54:52.0035372Z npm notice 18.6kB dist/compat.js.map
+2026-10-21T17:54:52.0035957Z npm notice 1.2kB dist/compat/extension-oauth-types.d.ts
+2026-10-21T17:54:52.0036670Z npm notice 1.2kB dist/compat/extension-oauth-types.d.ts.map
+2026-10-21T17:54:52.0037248Z npm notice 60B dist/compat/extension-oauth-types.js
+2026-10-21T17:54:52.0037706Z npm notice 1.4kB dist/compat/extension-oauth-types.js.map
+2026-10-21T17:54:52.0038097Z npm notice 1.6kB dist/env-api-keys.d.ts
+2026-10-21T17:54:52.0038447Z npm notice 844B dist/env-api-keys.d.ts.map
+2026-10-21T17:54:52.0038789Z npm notice 7.8kB dist/env-api-keys.js
+2026-10-21T17:54:52.0039120Z npm notice 13.8kB dist/env-api-keys.js.map
+2026-10-21T17:54:52.0039459Z npm notice 1.7kB dist/image-models.d.ts
+2026-10-21T17:54:52.0039798Z npm notice 1.1kB dist/image-models.d.ts.map
+2026-10-21T17:54:52.0040141Z npm notice 1.2kB dist/image-models.js
+2026-10-21T17:54:52.0040461Z npm notice 3.6kB dist/image-models.js.map
+2026-10-21T17:54:52.0040813Z npm notice 875B dist/images-api-registry.d.ts
+2026-10-21T17:54:52.0041195Z npm notice 815B dist/images-api-registry.d.ts.map
+2026-10-21T17:54:52.0041566Z npm notice 764B dist/images-api-registry.js
+2026-10-21T17:54:52.0041936Z npm notice 2.5kB dist/images-api-registry.js.map
+2026-10-21T17:54:52.0042287Z npm notice 566B dist/images.d.ts
+2026-10-21T17:54:52.0042596Z npm notice 363B dist/images.d.ts.map
+2026-10-21T17:54:52.0042902Z npm notice 761B dist/images.js
+2026-10-21T17:54:52.0043196Z npm notice 1.6kB dist/images.js.map
+2026-10-21T17:54:52.0043492Z npm notice 2.0kB dist/index.d.ts
+2026-10-21T17:54:52.0043791Z npm notice 1.4kB dist/index.d.ts.map
+2026-10-21T17:54:52.0044076Z npm notice 863B dist/index.js
+2026-10-21T17:54:52.0044577Z npm notice 3.2kB dist/index.js.map
+2026-10-21T17:54:52.0044982Z npm notice 4.4kB dist/legacy-api-aliases.d.ts
+2026-10-21T17:54:52.0045369Z npm notice 1.9kB dist/legacy-api-aliases.d.ts.map
+2026-10-21T17:54:52.0045727Z npm notice 4.3kB dist/legacy-api-aliases.js
+2026-10-21T17:54:52.0046094Z npm notice 8.1kB dist/legacy-api-aliases.js.map
+2026-10-21T17:54:52.0046463Z npm notice 2.2kB dist/model-catalog.d.ts
+2026-10-21T17:54:52.0046807Z npm notice 2.2kB dist/model-catalog.d.ts.map
+2026-10-21T17:54:52.0047134Z npm notice 632B dist/model-catalog.js
+2026-10-21T17:54:52.0047454Z npm notice 3.7kB dist/model-catalog.js.map
+2026-10-21T17:54:52.0047800Z npm notice 1.4kB dist/models-store.d.ts
+2026-10-21T17:54:52.0048123Z npm notice 1.1kB dist/models-store.d.ts.map
+2026-10-21T17:54:52.0048443Z npm notice 587B dist/models-store.js
+2026-10-21T17:54:52.0048756Z npm notice 2.5kB dist/models-store.js.map
+2026-10-21T17:54:52.0049064Z npm notice 16.8kB dist/models.d.ts
+2026-10-21T17:54:52.0049553Z npm notice 8.8kB dist/models.d.ts.map
+2026-10-21T17:54:52.0049887Z npm notice 13.2kB dist/models.generated.d.ts
+2026-10-21T17:54:52.0050364Z npm notice 8.5kB dist/models.generated.d.ts.map
+2026-10-21T17:54:52.0050719Z npm notice 11.3kB dist/models.generated.js
+2026-10-21T17:54:52.0051069Z npm notice 25.3kB dist/models.generated.js.map
+2026-10-21T17:54:52.0051394Z npm notice 32.0kB dist/models.js
+2026-10-21T17:54:52.0051685Z npm notice 80.8kB dist/models.js.map
+2026-10-21T17:54:52.0051982Z npm notice 309B dist/oauth.d.ts
+2026-10-21T17:54:52.0052277Z npm notice 233B dist/oauth.d.ts.map
+2026-10-21T17:54:52.0052557Z npm notice 44B dist/oauth.js
+2026-10-21T17:54:52.0052841Z npm notice 424B dist/oauth.js.map
+2026-10-21T17:54:52.0053166Z npm notice 3.2kB dist/providers/all.d.ts
+2026-10-21T17:54:52.0053518Z npm notice 2.4kB dist/providers/all.d.ts.map
+2026-10-21T17:54:52.0053868Z npm notice 5.6kB dist/providers/all.js
+2026-10-21T17:54:52.0054198Z npm notice 13.2kB dist/providers/all.js.map
+2026-10-21T17:54:52.0054800Z npm notice 176B dist/providers/amazon-bedrock.d.ts
+2026-10-21T17:54:52.0055212Z npm notice 234B dist/providers/amazon-bedrock.d.ts.map
+2026-10-21T17:54:52.0055617Z npm notice 3.9kB dist/providers/amazon-bedrock.js
+2026-10-21T17:54:52.0056017Z npm notice 6.8kB dist/providers/amazon-bedrock.js.map
+2026-10-21T17:54:52.0056448Z npm notice 523B dist/providers/amazon-bedrock.models.d.ts
+2026-10-21T17:54:52.0056901Z npm notice 485B dist/providers/amazon-bedrock.models.d.ts.map
+2026-10-21T17:54:52.0057343Z npm notice 655B dist/providers/amazon-bedrock.models.js
+2026-10-21T17:54:52.0057780Z npm notice 1.4kB dist/providers/amazon-bedrock.models.js.map
+2026-10-21T17:54:52.0058173Z npm notice 159B dist/providers/ant-ling.d.ts
+2026-10-21T17:54:52.0058534Z npm notice 219B dist/providers/ant-ling.d.ts.map
+2026-10-21T17:54:52.0058900Z npm notice 605B dist/providers/ant-ling.js
+2026-10-21T17:54:52.0059254Z npm notice 1.2kB dist/providers/ant-ling.js.map
+2026-10-21T17:54:52.0059642Z npm notice 475B dist/providers/ant-ling.models.d.ts
+2026-10-21T17:54:52.0060051Z npm notice 465B dist/providers/ant-ling.models.d.ts.map
+2026-10-21T17:54:52.0060444Z npm notice 607B dist/providers/ant-ling.models.js
+2026-10-21T17:54:52.0060848Z npm notice 1.3kB dist/providers/ant-ling.models.js.map
+2026-10-21T17:54:52.0061267Z npm notice 162B dist/providers/anthropic.d.ts
+2026-10-21T17:54:52.0061641Z npm notice 225B dist/providers/anthropic.d.ts.map
+2026-10-21T17:54:52.0061997Z npm notice 3.5kB dist/providers/anthropic.js
+2026-10-21T17:54:52.0062345Z npm notice 6.1kB dist/providers/anthropic.js.map
+2026-10-21T17:54:52.0062729Z npm notice 483B dist/providers/anthropic.models.d.ts
+2026-10-21T17:54:52.0063405Z npm notice 469B dist/providers/anthropic.models.d.ts.map
+2026-10-21T17:54:52.0063936Z npm notice 615B dist/providers/anthropic.models.js
+2026-10-21T17:54:52.0064710Z npm notice 1.4kB dist/providers/anthropic.models.js.map
+2026-10-21T17:54:52.0065246Z npm notice 181B dist/providers/azure.d.ts
+2026-10-21T17:54:52.0065591Z npm notice 226B dist/providers/azure.d.ts.map
+2026-10-21T17:54:52.0065943Z npm notice 2.1kB dist/providers/azure.js
+2026-10-21T17:54:52.0066304Z npm notice 4.3kB dist/providers/azure.js.map
+2026-10-21T17:54:52.0066658Z npm notice 451B dist/providers/azure.models.d.ts
+2026-10-21T17:54:52.0067035Z npm notice 459B dist/providers/azure.models.d.ts.map
+2026-10-21T17:54:52.0067407Z npm notice 583B dist/providers/azure.models.js
+2026-10-21T17:54:52.0067782Z npm notice 1.3kB dist/providers/azure.models.js.map
+2026-10-21T17:54:52.0068145Z npm notice 158B dist/providers/baseten.d.ts
+2026-10-21T17:54:52.0068513Z npm notice 217B dist/providers/baseten.d.ts.map
+2026-10-21T17:54:52.0068863Z npm notice 601B dist/providers/baseten.js
+2026-10-21T17:54:52.0069211Z npm notice 1.2kB dist/providers/baseten.js.map
+2026-10-21T17:54:52.0069589Z npm notice 467B dist/providers/baseten.models.d.ts
+2026-10-21T17:54:52.0069985Z npm notice 463B dist/providers/baseten.models.d.ts.map
+2026-10-21T17:54:52.0070374Z npm notice 599B dist/providers/baseten.models.js
+2026-10-21T17:54:52.0071057Z npm notice 1.3kB dist/providers/baseten.models.js.map
+2026-10-21T17:54:52.0071429Z npm notice 160B dist/providers/cerebras.d.ts
+2026-10-21T17:54:52.0071913Z npm notice 221B dist/providers/cerebras.d.ts.map
+2026-10-21T17:54:52.0072265Z npm notice 605B dist/providers/cerebras.js
+2026-10-21T17:54:52.0072617Z npm notice 1.2kB dist/providers/cerebras.js.map
+2026-10-21T17:54:52.0072997Z npm notice 475B dist/providers/cerebras.models.d.ts
+2026-10-21T17:54:52.0073411Z npm notice 465B dist/providers/cerebras.models.d.ts.map
+2026-10-21T17:54:52.0073807Z npm notice 607B dist/providers/cerebras.models.js
+2026-10-21T17:54:52.0074206Z npm notice 1.3kB dist/providers/cerebras.models.js.map
+2026-10-21T17:54:52.0074884Z npm notice 293B dist/providers/cloudflare-ai-gateway.d.ts
+2026-10-21T17:54:52.0075343Z npm notice 307B dist/providers/cloudflare-ai-gateway.d.ts.map
+2026-10-21T17:54:52.0075831Z npm notice 1.4kB dist/providers/cloudflare-ai-gateway.js
+2026-10-21T17:54:52.0076274Z npm notice 2.4kB dist/providers/cloudflare-ai-gateway.js.map
+2026-10-21T17:54:52.0076755Z npm notice 579B dist/providers/cloudflare-ai-gateway.models.d.ts
+2026-10-21T17:54:52.0077279Z npm notice 499B dist/providers/cloudflare-ai-gateway.models.d.ts.map
+2026-10-21T17:54:52.0077772Z npm notice 711B dist/providers/cloudflare-ai-gateway.models.js
+2026-10-21T17:54:52.0078262Z npm notice 1.5kB dist/providers/cloudflare-ai-gateway.models.js.map
+2026-10-21T17:54:52.0078711Z npm notice 223B dist/providers/cloudflare-auth.d.ts
+2026-10-21T17:54:52.0079109Z npm notice 258B dist/providers/cloudflare-auth.d.ts.map
+2026-10-21T17:54:52.0079519Z npm notice 3.7kB dist/providers/cloudflare-auth.js
+2026-10-21T17:54:52.0079935Z npm notice 7.0kB dist/providers/cloudflare-auth.js.map
+2026-10-21T17:54:52.0080348Z npm notice 671B dist/providers/cloudflare-stream.d.ts
+2026-10-21T17:54:52.0080778Z npm notice 478B dist/providers/cloudflare-stream.d.ts.map
+2026-10-21T17:54:52.0081191Z npm notice 1.3kB dist/providers/cloudflare-stream.js
+2026-10-21T17:54:52.0081607Z npm notice 2.8kB dist/providers/cloudflare-stream.js.map
+2026-10-21T17:54:52.0082036Z npm notice 184B dist/providers/cloudflare-workers-ai.d.ts
+2026-10-21T17:54:52.0082493Z npm notice 247B dist/providers/cloudflare-workers-ai.d.ts.map
+2026-10-21T17:54:52.0082935Z npm notice 1.1kB dist/providers/cloudflare-workers-ai.js
+2026-10-21T17:54:52.0083376Z npm notice 2.0kB dist/providers/cloudflare-workers-ai.js.map
+2026-10-21T17:54:52.0083846Z npm notice 579B dist/providers/cloudflare-workers-ai.models.d.ts
+2026-10-21T17:54:52.0084533Z npm notice 499B dist/providers/cloudflare-workers-ai.models.d.ts.map
+2026-10-21T17:54:52.0085138Z npm notice 711B dist/providers/cloudflare-workers-ai.models.js
+2026-10-21T17:54:52.0085629Z npm notice 1.5kB dist/providers/cloudflare-workers-ai.models.js.map
+2026-10-21T17:54:52.0086072Z npm notice 20.1kB dist/providers/compat-schema.d.ts
+2026-10-21T17:54:52.0086495Z npm notice 2.0kB dist/providers/compat-schema.d.ts.map
+2026-10-21T17:54:52.0086890Z npm notice 25.3kB dist/providers/compat-schema.js
+2026-10-21T17:54:52.0087296Z npm notice 43.3kB dist/providers/compat-schema.js.map
+2026-10-21T17:54:52.0087693Z npm notice 3.8kB dist/providers/data/.manifest.json
+2026-10-21T17:54:52.0088101Z npm notice 103.2kB dist/providers/data/amazon-bedrock.json
+2026-10-21T17:54:52.0088517Z npm notice 1.7kB dist/providers/data/ant-ling.json
+2026-10-21T17:54:52.0088913Z npm notice 11.8kB dist/providers/data/anthropic.json
+2026-10-21T17:54:52.0089298Z npm notice 20.3kB dist/providers/data/azure.json
+2026-10-21T17:54:52.0089676Z npm notice 18.0kB dist/providers/data/baseten.json
+2026-10-21T17:54:52.0090047Z npm notice 1.1kB dist/providers/data/cerebras.json
+2026-10-21T17:54:52.0090470Z npm notice 38.4kB dist/providers/data/cloudflare-ai-gateway.json
+2026-10-21T17:54:52.0090950Z npm notice 13.5kB dist/providers/data/cloudflare-workers-ai.json
+2026-10-21T17:54:52.0091356Z npm notice 1.4kB dist/providers/data/deepseek.json
+2026-10-21T17:54:52.0091736Z npm notice 16.2kB dist/providers/data/fireworks.json
+2026-10-21T17:54:52.0092348Z npm notice 29.1kB dist/providers/data/github-copilot.json
+2026-10-21T17:54:52.0092888Z npm notice 7.8kB dist/providers/data/google-vertex.json
+2026-10-21T17:54:52.0093281Z npm notice 14.5kB dist/providers/data/google.json
+2026-10-21T17:54:52.0093662Z npm notice 3.4kB dist/providers/data/groq.json
+2026-10-21T17:54:52.0094048Z npm notice 37.4kB dist/providers/data/huggingface.json
+2026-10-21T17:54:52.0094647Z npm notice 3.2kB dist/providers/data/kimi-coding.json
+2026-10-21T17:54:52.0095025Z npm notice 3.4kB dist/providers/data/meta.json
+2026-10-21T17:54:52.0095397Z npm notice 1.2kB dist/providers/data/minimax-cn.json
+2026-10-21T17:54:52.0095804Z npm notice 1.2kB dist/providers/data/minimax.json
+2026-10-21T17:54:52.0096181Z npm notice 16.5kB dist/providers/data/mistral.json
+2026-10-21T17:54:52.0096567Z npm notice 2.9kB dist/providers/data/moonshotai-cn.json
+2026-10-21T17:54:52.0096960Z npm notice 2.9kB dist/providers/data/moonshotai.json
+2026-10-21T17:54:52.0097332Z npm notice 13.1kB dist/providers/data/nvidia.json
+2026-10-21T17:54:52.0097727Z npm notice 6.5kB dist/providers/data/openai-codex.json
+2026-10-21T17:54:52.0098117Z npm notice 29.4kB dist/providers/data/openai.json
+2026-10-21T17:54:52.0098510Z npm notice 17.4kB dist/providers/data/opencode-go.json
+2026-10-21T17:54:52.0098897Z npm notice 51.7kB dist/providers/data/opencode.json
+2026-10-21T17:54:52.0099286Z npm notice 282.2kB dist/providers/data/openrouter.json
+2026-10-21T17:54:52.0099709Z npm notice 12.2kB dist/providers/data/qwen-token-plan-cn.json
+2026-10-21T17:54:52.0100195Z npm notice 5.8kB dist/providers/data/qwen-token-plan-individual.json
+2026-10-21T17:54:52.0100672Z npm notice 12.2kB dist/providers/data/qwen-token-plan.json
+2026-10-21T17:54:52.0101060Z npm notice 20.3kB dist/providers/data/radius.json
+2026-10-21T17:54:52.0101429Z npm notice 10.9kB dist/providers/data/together.json
+2026-10-21T17:54:52.0101792Z npm notice 291B dist/providers/data/typesafe.json
+2026-10-21T17:54:52.0102274Z npm notice 154.3kB dist/providers/data/vercel-ai-gateway.json
+2026-10-21T17:54:52.0102897Z npm notice 2.6kB dist/providers/data/xai.json
+2026-10-21T17:54:52.0103600Z npm notice 2.7kB dist/providers/data/xiaomi-token-plan-ams.json
+2026-10-21T17:54:52.0104258Z npm notice 2.7kB dist/providers/data/xiaomi-token-plan-cn.json
+2026-10-21T17:54:52.0104915Z npm notice 2.7kB dist/providers/data/xiaomi-token-plan-sgp.json
+2026-10-21T17:54:52.0105330Z npm notice 4.0kB dist/providers/data/xiaomi.json
+2026-10-21T17:54:52.0105724Z npm notice 2.7kB dist/providers/data/zai-coding-cn.json
+2026-10-21T17:54:52.0106235Z npm notice 4.2kB dist/providers/data/zai.json
+2026-10-21T17:54:52.0106628Z npm notice 160B dist/providers/deepseek.d.ts
+2026-10-21T17:54:52.0106994Z npm notice 221B dist/providers/deepseek.d.ts.map
+2026-10-21T17:54:52.0107358Z npm notice 603B dist/providers/deepseek.js
+2026-10-21T17:54:52.0107715Z npm notice 1.2kB dist/providers/deepseek.js.map
+2026-10-21T17:54:52.0108096Z npm notice 475B dist/providers/deepseek.models.d.ts
+2026-10-21T17:54:52.0108513Z npm notice 465B dist/providers/deepseek.models.d.ts.map
+2026-10-21T17:54:52.0108898Z npm notice 607B dist/providers/deepseek.models.js
+2026-10-21T17:54:52.0109296Z npm notice 1.3kB dist/providers/deepseek.models.js.map
+2026-10-21T17:54:52.0109661Z npm notice 4.2kB dist/providers/faux.d.ts
+2026-10-21T17:54:52.0110006Z npm notice 3.3kB dist/providers/faux.d.ts.map
+2026-10-21T17:54:52.0110334Z npm notice 20.7kB dist/providers/faux.js
+2026-10-21T17:54:52.0110682Z npm notice 45.5kB dist/providers/faux.js.map
+2026-10-21T17:54:52.0111026Z npm notice 185B dist/providers/fireworks.d.ts
+2026-10-21T17:54:52.0111381Z npm notice 235B dist/providers/fireworks.d.ts.map
+2026-10-21T17:54:52.0111796Z npm notice 801B dist/providers/fireworks.js
+2026-10-21T17:54:52.0112154Z npm notice 1.5kB dist/providers/fireworks.js.map
+2026-10-21T17:54:52.0112532Z npm notice 483B dist/providers/fireworks.models.d.ts
+2026-10-21T17:54:52.0112942Z npm notice 469B dist/providers/fireworks.models.d.ts.map
+2026-10-21T17:54:52.0113337Z npm notice 615B dist/providers/fireworks.models.js
+2026-10-21T17:54:52.0113931Z npm notice 1.4kB dist/providers/fireworks.models.js.map
+2026-10-21T17:54:52.0114678Z npm notice 215B dist/providers/github-copilot.d.ts
+2026-10-21T17:54:52.0115130Z npm notice 258B dist/providers/github-copilot.d.ts.map
+2026-10-21T17:54:52.0115529Z npm notice 1.7kB dist/providers/github-copilot.js
+2026-10-21T17:54:52.0115914Z npm notice 3.1kB dist/providers/github-copilot.js.map
+2026-10-21T17:54:52.0116331Z npm notice 523B dist/providers/github-copilot.models.d.ts
+2026-10-21T17:54:52.0116790Z npm notice 485B dist/providers/github-copilot.models.d.ts.map
+2026-10-21T17:54:52.0117221Z npm notice 655B dist/providers/github-copilot.models.js
+2026-10-21T17:54:52.0117649Z npm notice 1.4kB dist/providers/github-copilot.models.js.map
+2026-10-21T17:54:52.0118055Z npm notice 164B dist/providers/google-vertex.d.ts
+2026-10-21T17:54:52.0118432Z npm notice 230B dist/providers/google-vertex.d.ts.map
+2026-10-21T17:54:52.0118804Z npm notice 4.3kB dist/providers/google-vertex.js
+2026-10-21T17:54:52.0119200Z npm notice 7.5kB dist/providers/google-vertex.js.map
+2026-10-21T17:54:52.0119616Z npm notice 515B dist/providers/google-vertex.models.d.ts
+2026-10-21T17:54:52.0120044Z npm notice 477B dist/providers/google-vertex.models.d.ts.map
+2026-10-21T17:54:52.0120460Z npm notice 647B dist/providers/google-vertex.models.js
+2026-10-21T17:54:52.0120885Z npm notice 1.4kB dist/providers/google-vertex.models.js.map
+2026-10-21T17:54:52.0121277Z npm notice 158B dist/providers/google.d.ts
+2026-10-21T17:54:52.0121647Z npm notice 215B dist/providers/google.d.ts.map
+2026-10-21T17:54:52.0121996Z npm notice 613B dist/providers/google.js
+2026-10-21T17:54:52.0122338Z npm notice 1.2kB dist/providers/google.js.map
+2026-10-21T17:54:52.0122703Z npm notice 459B dist/providers/google.models.d.ts
+2026-10-21T17:54:52.0123192Z npm notice 461B dist/providers/google.models.d.ts.map
+2026-10-21T17:54:52.0123585Z npm notice 591B dist/providers/google.models.js
+2026-10-21T17:54:52.0123970Z npm notice 1.3kB dist/providers/google.models.js.map
+2026-10-21T17:54:52.0124506Z npm notice 152B dist/providers/groq.d.ts
+2026-10-21T17:54:52.0124929Z npm notice 211B dist/providers/groq.d.ts.map
+2026-10-21T17:54:52.0125265Z npm notice 573B dist/providers/groq.js
+2026-10-21T17:54:52.0125591Z npm notice 1.2kB dist/providers/groq.js.map
+2026-10-21T17:54:52.0125946Z npm notice 443B dist/providers/groq.models.d.ts
+2026-10-21T17:54:52.0126337Z npm notice 457B dist/providers/groq.models.d.ts.map
+2026-10-21T17:54:52.0126705Z npm notice 575B dist/providers/groq.models.js
+2026-10-21T17:54:52.0127066Z npm notice 1.3kB dist/providers/groq.models.js.map
+2026-10-21T17:54:52.0127430Z npm notice 166B dist/providers/huggingface.d.ts
+2026-10-21T17:54:52.0127796Z npm notice 227B dist/providers/huggingface.d.ts.map
+2026-10-21T17:54:52.0128165Z npm notice 627B dist/providers/huggingface.js
+2026-10-21T17:54:52.0128525Z npm notice 1.3kB dist/providers/huggingface.js.map
+2026-10-21T17:54:52.0128921Z npm notice 499B dist/providers/huggingface.models.d.ts
+2026-10-21T17:54:52.0129350Z npm notice 473B dist/providers/huggingface.models.d.ts.map
+2026-10-21T17:54:52.0129776Z npm notice 631B dist/providers/huggingface.models.js
+2026-10-21T17:54:52.0130181Z npm notice 1.4kB dist/providers/huggingface.models.js.map
+2026-10-21T17:54:52.0130645Z npm notice 261B dist/providers/images/register-builtins.d.ts
+2026-10-21T17:54:52.0131124Z npm notice 297B dist/providers/images/register-builtins.d.ts.map
+2026-10-21T17:54:52.0131582Z npm notice 1.2kB dist/providers/images/register-builtins.js
+2026-10-21T17:54:52.0132035Z npm notice 3.0kB dist/providers/images/register-builtins.js.map
+2026-10-21T17:54:52.0132459Z npm notice 165B dist/providers/kimi-coding.d.ts
+2026-10-21T17:54:52.0132829Z npm notice 228B dist/providers/kimi-coding.d.ts.map
+2026-10-21T17:54:52.0133205Z npm notice 950B dist/providers/kimi-coding.js
+2026-10-21T17:54:52.0133567Z npm notice 1.7kB dist/providers/kimi-coding.js.map
+2026-10-21T17:54:52.0133955Z npm notice 499B dist/providers/kimi-coding.models.d.ts
+2026-10-21T17:54:52.0134765Z npm notice 473B dist/providers/kimi-coding.models.d.ts.map
+2026-10-21T17:54:52.0135314Z npm notice 631B dist/providers/kimi-coding.models.js
+2026-10-21T17:54:52.0135735Z npm notice 1.4kB dist/providers/kimi-coding.models.js.map
+2026-10-21T17:54:52.0136108Z npm notice 150B dist/providers/meta.d.ts
+2026-10-21T17:54:52.0136449Z npm notice 212B dist/providers/meta.d.ts.map
+2026-10-21T17:54:52.0136778Z npm notice 873B dist/providers/meta.js
+2026-10-21T17:54:52.0137102Z npm notice 1.6kB dist/providers/meta.js.map
+2026-10-21T17:54:52.0137448Z npm notice 443B dist/providers/meta.models.d.ts
+2026-10-21T17:54:52.0137817Z npm notice 457B dist/providers/meta.models.d.ts.map
+2026-10-21T17:54:52.0138178Z npm notice 575B dist/providers/meta.models.js
+2026-10-21T17:54:52.0138539Z npm notice 1.3kB dist/providers/meta.models.js.map
+2026-10-21T17:54:52.0138908Z npm notice 163B dist/providers/minimax-cn.d.ts
+2026-10-21T17:54:52.0139276Z npm notice 225B dist/providers/minimax-cn.d.ts.map
+2026-10-21T17:54:52.0139639Z npm notice 630B dist/providers/minimax-cn.js
+2026-10-21T17:54:52.0140004Z npm notice 1.3kB dist/providers/minimax-cn.js.map
+2026-10-21T17:54:52.0140397Z npm notice 491B dist/providers/minimax-cn.models.d.ts
+2026-10-21T17:54:52.0140808Z npm notice 471B dist/providers/minimax-cn.models.d.ts.map
+2026-10-21T17:54:52.0141208Z npm notice 623B dist/providers/minimax-cn.models.js
+2026-10-21T17:54:52.0141610Z npm notice 1.4kB dist/providers/minimax-cn.models.js.map
+2026-10-21T17:54:52.0141980Z npm notice 158B dist/providers/minimax.d.ts
+2026-10-21T17:54:52.0142330Z npm notice 217B dist/providers/minimax.d.ts.map
+2026-10-21T17:54:52.0142674Z npm notice 602B dist/providers/minimax.js
+2026-10-21T17:54:52.0143026Z npm notice 1.2kB dist/providers/minimax.js.map
+2026-10-21T17:54:52.0143396Z npm notice 467B dist/providers/minimax.models.d.ts
+2026-10-21T17:54:52.0143788Z npm notice 463B dist/providers/minimax.models.d.ts.map
+2026-10-21T17:54:52.0144172Z npm notice 599B dist/providers/minimax.models.js
+2026-10-21T17:54:52.0144768Z npm notice 1.3kB dist/providers/minimax.models.js.map
+2026-10-21T17:54:52.0145134Z npm notice 161B dist/providers/mistral.d.ts
+2026-10-21T17:54:52.0145489Z npm notice 217B dist/providers/mistral.d.ts.map
+2026-10-21T17:54:52.0145831Z npm notice 601B dist/providers/mistral.js
+2026-10-21T17:54:52.0146173Z npm notice 1.2kB dist/providers/mistral.js.map
+2026-10-21T17:54:52.0146542Z npm notice 467B dist/providers/mistral.models.d.ts
+2026-10-21T17:54:52.0146936Z npm notice 463B dist/providers/mistral.models.d.ts.map
+2026-10-21T17:54:52.0147316Z npm notice 599B dist/providers/mistral.models.js
+2026-10-21T17:54:52.0147704Z npm notice 1.3kB dist/providers/mistral.models.js.map
+2026-10-21T17:54:52.0148084Z npm notice 4.4kB dist/providers/model-schema.d.ts
+2026-10-21T17:54:52.0148473Z npm notice 1.6kB dist/providers/model-schema.d.ts.map
+2026-10-21T17:54:52.0148849Z npm notice 3.4kB dist/providers/model-schema.js
+2026-10-21T17:54:52.0149221Z npm notice 7.6kB dist/providers/model-schema.js.map
+2026-10-21T17:54:52.0149611Z npm notice 169B dist/providers/moonshotai-cn.d.ts
+2026-10-21T17:54:52.0149996Z npm notice 231B dist/providers/moonshotai-cn.d.ts.map
+2026-10-21T17:54:52.0150375Z npm notice 643B dist/providers/moonshotai-cn.js
+2026-10-21T17:54:52.0150752Z npm notice 1.3kB dist/providers/moonshotai-cn.js.map
+2026-10-21T17:54:52.0151167Z npm notice 515B dist/providers/moonshotai-cn.models.d.ts
+2026-10-21T17:54:52.0151603Z npm notice 477B dist/providers/moonshotai-cn.models.d.ts.map
+2026-10-21T17:54:52.0152035Z npm notice 647B dist/providers/moonshotai-cn.models.js
+2026-10-21T17:54:52.0152457Z npm notice 1.4kB dist/providers/moonshotai-cn.models.js.map
+2026-10-21T17:54:52.0152851Z npm notice 164B dist/providers/moonshotai.d.ts
+2026-10-21T17:54:52.0153222Z npm notice 225B dist/providers/moonshotai.d.ts.map
+2026-10-21T17:54:52.0153593Z npm notice 623B dist/providers/moonshotai.js
+2026-10-21T17:54:52.0153957Z npm notice 1.3kB dist/providers/moonshotai.js.map
+2026-10-21T17:54:52.0154559Z npm notice 491B dist/providers/moonshotai.models.d.ts
+2026-10-21T17:54:52.0155222Z npm notice 471B dist/providers/moonshotai.models.d.ts.map
+2026-10-21T17:54:52.0155760Z npm notice 623B dist/providers/moonshotai.models.js
+2026-10-21T17:54:52.0156185Z npm notice 1.4kB dist/providers/moonshotai.models.js.map
+2026-10-21T17:54:52.0156570Z npm notice 156B dist/providers/nvidia.d.ts
+2026-10-21T17:54:52.0156917Z npm notice 215B dist/providers/nvidia.d.ts.map
+2026-10-21T17:54:52.0157269Z npm notice 596B dist/providers/nvidia.js
+2026-10-21T17:54:52.0157607Z npm notice 1.2kB dist/providers/nvidia.js.map
+2026-10-21T17:54:52.0157965Z npm notice 459B dist/providers/nvidia.models.d.ts
+2026-10-21T17:54:52.0158357Z npm notice 461B dist/providers/nvidia.models.d.ts.map
+2026-10-21T17:54:52.0158735Z npm notice 591B dist/providers/nvidia.models.js
+2026-10-21T17:54:52.0159113Z npm notice 1.3kB dist/providers/nvidia.models.js.map
+2026-10-21T17:54:52.0159490Z npm notice 171B dist/providers/openai-codex.d.ts
+2026-10-21T17:54:52.0159865Z npm notice 229B dist/providers/openai-codex.d.ts.map
+2026-10-21T17:54:52.0160238Z npm notice 838B dist/providers/openai-codex.js
+2026-10-21T17:54:52.0160626Z npm notice 1.5kB dist/providers/openai-codex.js.map
+2026-10-21T17:54:52.0161069Z npm notice 507B dist/providers/openai-codex.models.d.ts
+2026-10-21T17:54:52.0161502Z npm notice 475B dist/providers/openai-codex.models.d.ts.map
+2026-10-21T17:54:52.0161917Z npm notice 639B dist/providers/openai-codex.models.js
+2026-10-21T17:54:52.0162332Z npm notice 1.4kB dist/providers/openai-codex.models.js.map
+2026-10-21T17:54:52.0162715Z npm notice 154B dist/providers/openai.d.ts
+2026-10-21T17:54:52.0163069Z npm notice 216B dist/providers/openai.d.ts.map
+2026-10-21T17:54:52.0163409Z npm notice 1.4kB dist/providers/openai.js
+2026-10-21T17:54:52.0163753Z npm notice 2.7kB dist/providers/openai.js.map
+2026-10-21T17:54:52.0164114Z npm notice 459B dist/providers/openai.models.d.ts
+2026-10-21T17:54:52.0164731Z npm notice 461B dist/providers/openai.models.d.ts.map
+2026-10-21T17:54:52.0165128Z npm notice 591B dist/providers/openai.models.js
+2026-10-21T17:54:52.0165514Z npm notice 1.3kB dist/providers/openai.models.js.map
+2026-10-21T17:54:52.0165895Z npm notice 281B dist/providers/opencode-go.d.ts
+2026-10-21T17:54:52.0166268Z npm notice 294B dist/providers/opencode-go.d.ts.map
+2026-10-21T17:54:52.0166635Z npm notice 1.2kB dist/providers/opencode-go.js
+2026-10-21T17:54:52.0167002Z npm notice 2.3kB dist/providers/opencode-go.js.map
+2026-10-21T17:54:52.0167401Z npm notice 499B dist/providers/opencode-go.models.d.ts
+2026-10-21T17:54:52.0167819Z npm notice 473B dist/providers/opencode-go.models.d.ts.map
+2026-10-21T17:54:52.0168223Z npm notice 631B dist/providers/opencode-go.models.js
+2026-10-21T17:54:52.0168635Z npm notice 1.4kB dist/providers/opencode-go.models.js.map
+2026-10-21T17:54:52.0169036Z npm notice 277B dist/providers/opencode-headers.d.ts
+2026-10-21T17:54:52.0169441Z npm notice 255B dist/providers/opencode-headers.d.ts.map
+2026-10-21T17:54:52.0169840Z npm notice 939B dist/providers/opencode-headers.js
+2026-10-21T17:54:52.0170239Z npm notice 2.2kB dist/providers/opencode-headers.js.map
+2026-10-21T17:54:52.0170617Z npm notice 272B dist/providers/opencode.d.ts
+2026-10-21T17:54:52.0170984Z npm notice 288B dist/providers/opencode.d.ts.map
+2026-10-21T17:54:52.0171343Z npm notice 1.5kB dist/providers/opencode.js
+2026-10-21T17:54:52.0171698Z npm notice 2.7kB dist/providers/opencode.js.map
+2026-10-21T17:54:52.0172083Z npm notice 475B dist/providers/opencode.models.d.ts
+2026-10-21T17:54:52.0172484Z npm notice 465B dist/providers/opencode.models.d.ts.map
+2026-10-21T17:54:52.0172869Z npm notice 607B dist/providers/opencode.models.js
+2026-10-21T17:54:52.0173256Z npm notice 1.3kB dist/providers/opencode.models.js.map
+2026-10-21T17:54:52.0173643Z npm notice 1.5kB dist/providers/openrouter-api.d.ts
+2026-10-21T17:54:52.0174038Z npm notice 1.0kB dist/providers/openrouter-api.d.ts.map
+2026-10-21T17:54:52.0174610Z npm notice 1.8kB dist/providers/openrouter-api.js
+2026-10-21T17:54:52.0175050Z npm notice 4.3kB dist/providers/openrouter-api.js.map
+2026-10-21T17:54:52.0175604Z npm notice 953B dist/providers/openrouter.d.ts
+2026-10-21T17:54:52.0176085Z npm notice 433B dist/providers/openrouter.d.ts.map
+2026-10-21T17:54:52.0176454Z npm notice 4.3kB dist/providers/openrouter.js
+2026-10-21T17:54:52.0176812Z npm notice 7.7kB dist/providers/openrouter.js.map
+2026-10-21T17:54:52.0177210Z npm notice 491B dist/providers/openrouter.models.d.ts
+2026-10-21T17:54:52.0177621Z npm notice 471B dist/providers/openrouter.models.d.ts.map
+2026-10-21T17:54:52.0178022Z npm notice 623B dist/providers/openrouter.models.js
+2026-10-21T17:54:52.0178419Z npm notice 1.4kB dist/providers/openrouter.models.js.map
+2026-10-21T17:54:52.0178826Z npm notice 177B dist/providers/qwen-token-plan-cn.d.ts
+2026-10-21T17:54:52.0179251Z npm notice 241B dist/providers/qwen-token-plan-cn.d.ts.map
+2026-10-21T17:54:52.0179660Z npm notice 732B dist/providers/qwen-token-plan-cn.js
+2026-10-21T17:54:52.0180071Z npm notice 1.4kB dist/providers/qwen-token-plan-cn.js.map
+2026-10-21T17:54:52.0180523Z npm notice 555B dist/providers/qwen-token-plan-cn.models.d.ts
+2026-10-21T17:54:52.0181015Z npm notice 493B dist/providers/qwen-token-plan-cn.models.d.ts.map
+2026-10-21T17:54:52.0181485Z npm notice 687B dist/providers/qwen-token-plan-cn.models.js
+2026-10-21T17:54:52.0181957Z npm notice 1.5kB dist/providers/qwen-token-plan-cn.models.js.map
+2026-10-21T17:54:52.0182430Z npm notice 193B dist/providers/qwen-token-plan-individual.d.ts
+2026-10-21T17:54:52.0182919Z npm notice 257B dist/providers/qwen-token-plan-individual.d.ts.map
+2026-10-21T17:54:52.0183389Z npm notice 797B dist/providers/qwen-token-plan-individual.js
+2026-10-21T17:54:52.0183852Z npm notice 1.4kB dist/providers/qwen-token-plan-individual.js.map
+2026-10-21T17:54:52.0184538Z npm notice 619B dist/providers/qwen-token-plan-individual.models.d.ts
+2026-10-21T17:54:52.0185112Z npm notice 509B dist/providers/qwen-token-plan-individual.models.d.ts.map
+2026-10-21T17:54:52.0185656Z npm notice 751B dist/providers/qwen-token-plan-individual.models.js
+2026-10-21T17:54:52.0186196Z npm notice 1.6kB dist/providers/qwen-token-plan-individual.models.js.map
+2026-10-21T17:54:52.0186664Z npm notice 172B dist/providers/qwen-token-plan.d.ts
+2026-10-21T17:54:52.0187065Z npm notice 235B dist/providers/qwen-token-plan.d.ts.map
+2026-10-21T17:54:52.0187464Z npm notice 710B dist/providers/qwen-token-plan.js
+2026-10-21T17:54:52.0187859Z npm notice 1.3kB dist/providers/qwen-token-plan.js.map
+2026-10-21T17:54:52.0188282Z npm notice 531B dist/providers/qwen-token-plan.models.d.ts
+2026-10-21T17:54:52.0188724Z npm notice 487B dist/providers/qwen-token-plan.models.d.ts.map
+2026-10-21T17:54:52.0189166Z npm notice 663B dist/providers/qwen-token-plan.models.js
+2026-10-21T17:54:52.0189611Z npm notice 1.4kB dist/providers/qwen-token-plan.models.js.map
+2026-10-21T17:54:52.0190018Z npm notice 1.3kB dist/providers/radius-config.d.ts
+2026-10-21T17:54:52.0190415Z npm notice 1.2kB dist/providers/radius-config.d.ts.map
+2026-10-21T17:54:52.0190796Z npm notice 2.5kB dist/providers/radius-config.js
+2026-10-21T17:54:52.0191186Z npm notice 6.3kB dist/providers/radius-config.js.map
+2026-10-21T17:54:52.0191548Z npm notice 361B dist/providers/radius.d.ts
+2026-10-21T17:54:52.0191904Z npm notice 367B dist/providers/radius.d.ts.map
+2026-10-21T17:54:52.0192247Z npm notice 3.4kB dist/providers/radius.js
+2026-10-21T17:54:52.0192586Z npm notice 6.4kB dist/providers/radius.js.map
+2026-10-21T17:54:52.0192950Z npm notice 459B dist/providers/radius.models.d.ts
+2026-10-21T17:54:52.0193335Z npm notice 461B dist/providers/radius.models.d.ts.map
+2026-10-21T17:54:52.0193710Z npm notice 591B dist/providers/radius.models.js
+2026-10-21T17:54:52.0194091Z npm notice 1.3kB dist/providers/radius.models.js.map
+2026-10-21T17:54:52.0194556Z npm notice 160B dist/providers/together.d.ts
+2026-10-21T17:54:52.0194915Z npm notice 221B dist/providers/together.d.ts.map
+2026-10-21T17:54:52.0195264Z npm notice 605B dist/providers/together.js
+2026-10-21T17:54:52.0195610Z npm notice 1.2kB dist/providers/together.js.map
+2026-10-21T17:54:52.0196135Z npm notice 475B dist/providers/together.models.d.ts
+2026-10-21T17:54:52.0196541Z npm notice 465B dist/providers/together.models.d.ts.map
+2026-10-21T17:54:52.0197049Z npm notice 607B dist/providers/together.models.js
+2026-10-21T17:54:52.0197442Z npm notice 1.3kB dist/providers/together.models.js.map
+2026-10-21T17:54:52.0197805Z npm notice 138B dist/providers/typesafe.d.ts
+2026-10-21T17:54:52.0198159Z npm notice 204B dist/providers/typesafe.d.ts.map
+2026-10-21T17:54:52.0198504Z npm notice 658B dist/providers/typesafe.js
+2026-10-21T17:54:52.0198854Z npm notice 1.2kB dist/providers/typesafe.js.map
+2026-10-21T17:54:52.0199220Z npm notice 475B dist/providers/typesafe.models.d.ts
+2026-10-21T17:54:52.0199620Z npm notice 465B dist/providers/typesafe.models.d.ts.map
+2026-10-21T17:54:52.0199996Z npm notice 607B dist/providers/typesafe.models.js
+2026-10-21T17:54:52.0200376Z npm notice 1.3kB dist/providers/typesafe.models.js.map
+2026-10-21T17:54:52.0200780Z npm notice 176B dist/providers/vercel-ai-gateway.d.ts
+2026-10-21T17:54:52.0201195Z npm notice 239B dist/providers/vercel-ai-gateway.d.ts.map
+2026-10-21T17:54:52.0201606Z npm notice 1.0kB dist/providers/vercel-ai-gateway.js
+2026-10-21T17:54:52.0202007Z npm notice 1.9kB dist/providers/vercel-ai-gateway.js.map
+2026-10-21T17:54:52.0202440Z npm notice 547B dist/providers/vercel-ai-gateway.models.d.ts
+2026-10-21T17:54:52.0202905Z npm notice 491B dist/providers/vercel-ai-gateway.models.d.ts.map
+2026-10-21T17:54:52.0203369Z npm notice 679B dist/providers/vercel-ai-gateway.models.js
+2026-10-21T17:54:52.0203822Z npm notice 1.5kB dist/providers/vercel-ai-gateway.models.js.map
+2026-10-21T17:54:52.0204216Z npm notice 148B dist/providers/xai.d.ts
+2026-10-21T17:54:52.0204873Z npm notice 210B dist/providers/xai.d.ts.map
+2026-10-21T17:54:52.0205222Z npm notice 872B dist/providers/xai.js
+2026-10-21T17:54:52.0205556Z npm notice 1.6kB dist/providers/xai.js.map
+2026-10-21T17:54:52.0205912Z npm notice 435B dist/providers/xai.models.d.ts
+2026-10-21T17:54:52.0206278Z npm notice 455B dist/providers/xai.models.d.ts.map
+2026-10-21T17:54:52.0206645Z npm notice 567B dist/providers/xai.models.js
+2026-10-21T17:54:52.0207002Z npm notice 1.3kB dist/providers/xai.models.js.map
+2026-10-21T17:54:52.0207405Z npm notice 183B dist/providers/xiaomi-token-plan-ams.d.ts
+2026-10-21T17:54:52.0207850Z npm notice 247B dist/providers/xiaomi-token-plan-ams.d.ts.map
+2026-10-21T17:54:52.0208287Z npm notice 733B dist/providers/xiaomi-token-plan-ams.js
+2026-10-21T17:54:52.0208713Z npm notice 1.4kB dist/providers/xiaomi-token-plan-ams.js.map
+2026-10-21T17:54:52.0209178Z npm notice 579B dist/providers/xiaomi-token-plan-ams.models.d.ts
+2026-10-21T17:54:52.0209674Z npm notice 499B dist/providers/xiaomi-token-plan-ams.models.d.ts.map
+2026-10-21T17:54:52.0210163Z npm notice 711B dist/providers/xiaomi-token-plan-ams.models.js
+2026-10-21T17:54:52.0210656Z npm notice 1.5kB dist/providers/xiaomi-token-plan-ams.models.js.map
+2026-10-21T17:54:52.0211113Z npm notice 181B dist/providers/xiaomi-token-plan-cn.d.ts
+2026-10-21T17:54:52.0211563Z npm notice 245B dist/providers/xiaomi-token-plan-cn.d.ts.map
+2026-10-21T17:54:52.0211992Z npm notice 723B dist/providers/xiaomi-token-plan-cn.js
+2026-10-21T17:54:52.0212425Z npm notice 1.4kB dist/providers/xiaomi-token-plan-cn.js.map
+2026-10-21T17:54:52.0212886Z npm notice 571B dist/providers/xiaomi-token-plan-cn.models.d.ts
+2026-10-21T17:54:52.0213384Z npm notice 497B dist/providers/xiaomi-token-plan-cn.models.d.ts.map
+2026-10-21T17:54:52.0213862Z npm notice 703B dist/providers/xiaomi-token-plan-cn.models.js
+2026-10-21T17:54:52.0214510Z npm notice 1.5kB dist/providers/xiaomi-token-plan-cn.models.js.map
+2026-10-21T17:54:52.0215048Z npm notice 183B dist/providers/xiaomi-token-plan-sgp.d.ts
+2026-10-21T17:54:52.0215500Z npm notice 247B dist/providers/xiaomi-token-plan-sgp.d.ts.map
+2026-10-21T17:54:52.0215940Z npm notice 733B dist/providers/xiaomi-token-plan-sgp.js
+2026-10-21T17:54:52.0216376Z npm notice 1.4kB dist/providers/xiaomi-token-plan-sgp.js.map
+2026-10-21T17:54:52.0216845Z npm notice 579B dist/providers/xiaomi-token-plan-sgp.models.d.ts
+2026-10-21T17:54:52.0217519Z npm notice 499B dist/providers/xiaomi-token-plan-sgp.models.d.ts.map
+2026-10-21T17:54:52.0218128Z npm notice 711B dist/providers/xiaomi-token-plan-sgp.models.js
+2026-10-21T17:54:52.0218625Z npm notice 1.5kB dist/providers/xiaomi-token-plan-sgp.models.js.map
+2026-10-21T17:54:52.0219053Z npm notice 156B dist/providers/xiaomi.d.ts
+2026-10-21T17:54:52.0219406Z npm notice 215B dist/providers/xiaomi.d.ts.map
+2026-10-21T17:54:52.0219750Z npm notice 590B dist/providers/xiaomi.js
+2026-10-21T17:54:52.0220095Z npm notice 1.2kB dist/providers/xiaomi.js.map
+2026-10-21T17:54:52.0220465Z npm notice 459B dist/providers/xiaomi.models.d.ts
+2026-10-21T17:54:52.0220862Z npm notice 461B dist/providers/xiaomi.models.d.ts.map
+2026-10-21T17:54:52.0221242Z npm notice 591B dist/providers/xiaomi.models.js
+2026-10-21T17:54:52.0221625Z npm notice 1.3kB dist/providers/xiaomi.models.js.map
+2026-10-21T17:54:52.0222010Z npm notice 168B dist/providers/zai-coding-cn.d.ts
+2026-10-21T17:54:52.0222394Z npm notice 231B dist/providers/zai-coding-cn.d.ts.map
+2026-10-21T17:54:52.0222774Z npm notice 667B dist/providers/zai-coding-cn.js
+2026-10-21T17:54:52.0223165Z npm notice 1.3kB dist/providers/zai-coding-cn.js.map
+2026-10-21T17:54:52.0223570Z npm notice 515B dist/providers/zai-coding-cn.models.d.ts
+2026-10-21T17:54:52.0224008Z npm notice 477B dist/providers/zai-coding-cn.models.d.ts.map
+2026-10-21T17:54:52.0224589Z npm notice 647B dist/providers/zai-coding-cn.models.js
+2026-10-21T17:54:52.0225017Z npm notice 1.4kB dist/providers/zai-coding-cn.models.js.map
+2026-10-21T17:54:52.0225396Z npm notice 150B dist/providers/zai.d.ts
+2026-10-21T17:54:52.0225732Z npm notice 209B dist/providers/zai.d.ts.map
+2026-10-21T17:54:52.0226062Z npm notice 571B dist/providers/zai.js
+2026-10-21T17:54:52.0226388Z npm notice 1.2kB dist/providers/zai.js.map
+2026-10-21T17:54:52.0226735Z npm notice 435B dist/providers/zai.models.d.ts
+2026-10-21T17:54:52.0227103Z npm notice 455B dist/providers/zai.models.d.ts.map
+2026-10-21T17:54:52.0227476Z npm notice 567B dist/providers/zai.models.js
+2026-10-21T17:54:52.0227845Z npm notice 1.3kB dist/providers/zai.models.js.map
+2026-10-21T17:54:52.0228200Z npm notice 290B dist/session-resources.d.ts
+2026-10-21T17:54:52.0228555Z npm notice 317B dist/session-resources.d.ts.map
+2026-10-21T17:54:52.0228919Z npm notice 640B dist/session-resources.js
+2026-10-21T17:54:52.0229278Z npm notice 1.4kB dist/session-resources.js.map
+2026-10-21T17:54:52.0229626Z npm notice 31.5kB dist/types.d.ts
+2026-10-21T17:54:52.0229966Z npm notice 18.2kB dist/types.d.ts.map
+2026-10-21T17:54:52.0230261Z npm notice 44B dist/types.js
+2026-10-21T17:54:52.0230554Z npm notice 34.1kB dist/types.js.map
+2026-10-21T17:54:52.0230891Z npm notice 248B dist/utils/abort-signals.d.ts
+2026-10-21T17:54:52.0231264Z npm notice 306B dist/utils/abort-signals.d.ts.map
+2026-10-21T17:54:52.0231626Z npm notice 1.1kB dist/utils/abort-signals.js
+2026-10-21T17:54:52.0231986Z npm notice 2.6kB dist/utils/abort-signals.js.map
+2026-10-21T17:54:52.0232336Z npm notice 454B dist/utils/abort.d.ts
+2026-10-21T17:54:52.0232661Z npm notice 311B dist/utils/abort.d.ts.map
+2026-10-21T17:54:52.0232989Z npm notice 1.6kB dist/utils/abort.js
+2026-10-21T17:54:52.0233301Z npm notice 3.0kB dist/utils/abort.js.map
+2026-10-21T17:54:52.0233655Z npm notice 834B dist/utils/diagnostics.d.ts
+2026-10-21T17:54:52.0234016Z npm notice 819B dist/utils/diagnostics.d.ts.map
+2026-10-21T17:54:52.0234495Z npm notice 964B dist/utils/diagnostics.js
+2026-10-21T17:54:52.0234843Z npm notice 2.6kB dist/utils/diagnostics.js.map
+2026-10-21T17:54:52.0235187Z npm notice 1.3kB dist/utils/error-body.d.ts
+2026-10-21T17:54:52.0235524Z npm notice 638B dist/utils/error-body.d.ts.map
+2026-10-21T17:54:52.0235861Z npm notice 5.8kB dist/utils/error-body.js
+2026-10-21T17:54:52.0236210Z npm notice 10.1kB dist/utils/error-body.js.map
+2026-10-21T17:54:52.0236538Z npm notice 1.0kB dist/utils/estimate.d.ts
+2026-10-21T17:54:52.0236868Z npm notice 737B dist/utils/estimate.d.ts.map
+2026-10-21T17:54:52.0237411Z npm notice 3.8kB dist/utils/estimate.js
+2026-10-21T17:54:52.0237744Z npm notice 8.2kB dist/utils/estimate.js.map
+2026-10-21T17:54:52.0238208Z npm notice 1.4kB dist/utils/event-stream.d.ts
+2026-10-21T17:54:52.0238580Z npm notice 999B dist/utils/event-stream.d.ts.map
+2026-10-21T17:54:52.0238925Z npm notice 4.0kB dist/utils/event-stream.js
+2026-10-21T17:54:52.0239272Z npm notice 8.0kB dist/utils/event-stream.js.map
+2026-10-21T17:54:52.0239599Z npm notice 145B dist/utils/hash.d.ts
+2026-10-21T17:54:52.0239908Z npm notice 176B dist/utils/hash.d.ts.map
+2026-10-21T17:54:52.0240224Z npm notice 595B dist/utils/hash.js
+2026-10-21T17:54:52.0240538Z npm notice 1.6kB dist/utils/hash.js.map
+2026-10-21T17:54:52.0240862Z npm notice 308B dist/utils/headers.d.ts
+2026-10-21T17:54:52.0241653Z npm notice 362B dist/utils/headers.d.ts.map
+2026-10-21T17:54:52.0242174Z npm notice 694B dist/utils/headers.js
+2026-10-21T17:54:52.0242726Z npm notice 1.7kB dist/utils/headers.js.map
+2026-10-21T17:54:52.0243242Z npm notice 1.3kB dist/utils/json-parse.d.ts
+2026-10-21T17:54:52.0243776Z npm notice 545B dist/utils/json-parse.d.ts.map
+2026-10-21T17:54:52.0244470Z npm notice 4.3kB dist/utils/json-parse.js
+2026-10-21T17:54:52.0245022Z npm notice 7.9kB dist/utils/json-parse.js.map
+2026-10-21T17:54:52.0245575Z npm notice 1.4kB dist/utils/model-operations.d.ts
+2026-10-21T17:54:52.0246158Z npm notice 1.1kB dist/utils/model-operations.d.ts.map
+2026-10-21T17:54:52.0246661Z npm notice 2.1kB dist/utils/model-operations.js
+2026-10-21T17:54:52.0247254Z npm notice 4.7kB dist/utils/model-operations.js.map
+2026-10-21T17:54:52.0247765Z npm notice 340B dist/utils/models-error.d.ts
+2026-10-21T17:54:52.0248363Z npm notice 388B dist/utils/models-error.d.ts.map
+2026-10-21T17:54:52.0248907Z npm notice 677B dist/utils/models-error.js
+2026-10-21T17:54:52.0249379Z npm notice 1.6kB dist/utils/models-error.js.map
+2026-10-21T17:54:52.0262974Z npm notice 373B dist/utils/node-http-proxy.d.ts
+2026-10-21T17:54:52.0263508Z npm notice 315B dist/utils/node-http-proxy.d.ts.map
+2026-10-21T17:54:52.0263940Z npm notice 4.4kB dist/utils/node-http-proxy.js
+2026-10-21T17:54:52.0264486Z npm notice 9.8kB dist/utils/node-http-proxy.js.map
+2026-10-21T17:54:52.0264878Z npm notice 190B dist/utils/oauth-page.d.ts
+2026-10-21T17:54:52.0265241Z npm notice 256B dist/utils/oauth-page.d.ts.map
+2026-10-21T17:54:52.0265583Z npm notice 3.1kB dist/utils/oauth-page.js
+2026-10-21T17:54:52.0265936Z npm notice 4.5kB dist/utils/oauth-page.js.map
+2026-10-21T17:54:52.0266270Z npm notice 3.8kB dist/utils/overflow.d.ts
+2026-10-21T17:54:52.0266609Z npm notice 458B dist/utils/overflow.d.ts.map
+2026-10-21T17:54:52.0266946Z npm notice 10.4kB dist/utils/overflow.js
+2026-10-21T17:54:52.0267287Z npm notice 13.1kB dist/utils/overflow.js.map
+2026-10-21T17:54:52.0267626Z npm notice 93B dist/utils/pi-user-agent.d.ts
+2026-10-21T17:54:52.0267987Z npm notice 162B dist/utils/pi-user-agent.d.ts.map
+2026-10-21T17:54:52.0268350Z npm notice 525B dist/utils/pi-user-agent.js
+2026-10-21T17:54:52.0268715Z npm notice 1.3kB dist/utils/pi-user-agent.js.map
+2026-10-21T17:54:52.0269081Z npm notice 343B dist/utils/provider-env.d.ts
+2026-10-21T17:54:52.0269448Z npm notice 275B dist/utils/provider-env.d.ts.map
+2026-10-21T17:54:52.0269799Z npm notice 1.7kB dist/utils/provider-env.js
+2026-10-21T17:54:52.0270147Z npm notice 3.1kB dist/utils/provider-env.js.map
+2026-10-21T17:54:52.0270505Z npm notice 842B dist/utils/provider-retry.d.ts
+2026-10-21T17:54:52.0270883Z npm notice 442B dist/utils/provider-retry.d.ts.map
+2026-10-21T17:54:52.0271259Z npm notice 4.1kB dist/utils/provider-retry.js
+2026-10-21T17:54:52.0271619Z npm notice 8.3kB dist/utils/provider-retry.js.map
+2026-10-21T17:54:52.0271969Z npm notice 3.5kB dist/utils/retry.d.ts
+2026-10-21T17:54:52.0272302Z npm notice 1.2kB dist/utils/retry.d.ts.map
+2026-10-21T17:54:52.0272625Z npm notice 8.8kB dist/utils/retry.js
+2026-10-21T17:54:52.0272943Z npm notice 14.9kB dist/utils/retry.js.map
+2026-10-21T17:54:52.0273296Z npm notice 951B dist/utils/sanitize-unicode.d.ts
+2026-10-21T17:54:52.0273907Z npm notice 218B dist/utils/sanitize-unicode.d.ts.map
+2026-10-21T17:54:52.0274300Z npm notice 1.2kB dist/utils/sanitize-unicode.js
+2026-10-21T17:54:52.0274926Z npm notice 1.5kB dist/utils/sanitize-unicode.js.map
+2026-10-21T17:54:52.0275282Z npm notice 114B dist/utils/sleep.d.ts
+2026-10-21T17:54:52.0275599Z npm notice 200B dist/utils/sleep.d.ts.map
+2026-10-21T17:54:52.0275932Z npm notice 478B dist/utils/sleep.js
+2026-10-21T17:54:52.0276244Z npm notice 1.1kB dist/utils/sleep.js.map
+2026-10-21T17:54:52.0276560Z npm notice 883B dist/utils/text.d.ts
+2026-10-21T17:54:52.0276870Z npm notice 494B dist/utils/text.d.ts.map
+2026-10-21T17:54:52.0277171Z npm notice 1.4kB dist/utils/text.js
+2026-10-21T17:54:52.0277469Z npm notice 3.0kB dist/utils/text.js.map
+2026-10-21T17:54:52.0277814Z npm notice 5.2kB dist/utils/transcript.d.ts
+2026-10-21T17:54:52.0278162Z npm notice 1.9kB dist/utils/transcript.d.ts.map
+2026-10-21T17:54:52.0278498Z npm notice 8.7kB dist/utils/transcript.js
+2026-10-21T17:54:52.0278834Z npm notice 16.7kB dist/utils/transcript.js.map
+2026-10-21T17:54:52.0279203Z npm notice 631B dist/utils/typebox-helpers.d.ts
+2026-10-21T17:54:52.0279591Z npm notice 412B dist/utils/typebox-helpers.d.ts.map
+2026-10-21T17:54:52.0279972Z npm notice 724B dist/utils/typebox-helpers.js
+2026-10-21T17:54:52.0280350Z npm notice 1.4kB dist/utils/typebox-helpers.js.map
+2026-10-21T17:54:52.0280699Z npm notice 187B dist/utils/uuid.d.ts
+2026-10-21T17:54:52.0281011Z npm notice 182B dist/utils/uuid.d.ts.map
+2026-10-21T17:54:52.0281320Z npm notice 2.0kB dist/utils/uuid.js
+2026-10-21T17:54:52.0281619Z npm notice 4.6kB dist/utils/uuid.js.map
+2026-10-21T17:54:52.0281948Z npm notice 834B dist/utils/validation.d.ts
+2026-10-21T17:54:52.0282298Z npm notice 365B dist/utils/validation.d.ts.map
+2026-10-21T17:54:52.0282638Z npm notice 10.8kB dist/utils/validation.js
+2026-10-21T17:54:52.0282968Z npm notice 21.7kB dist/utils/validation.js.map
+2026-10-21T17:54:52.0283274Z npm notice 2.7kB package.json
+2026-10-21T17:54:52.0283548Z npm notice Tarball Details
+2026-10-21T17:54:52.0283882Z npm notice name: @earendil-works/pi-ai
+2026-10-21T17:54:52.0284191Z npm notice version: 1.3.0
+2026-10-21T17:54:52.0284893Z npm notice filename: earendil-works-pi-ai-1.3.0.tgz
+2026-10-21T17:54:52.0285373Z npm notice package size: 803.6 kB
+2026-10-21T17:54:52.0285687Z npm notice unpacked size: 4.2 MB
+2026-10-21T17:54:52.0286067Z npm notice shasum: fe720249f828642bcb66b5b6a0e49c1e5f2f8954
+2026-10-21T17:54:52.0286550Z npm notice integrity: sha512-KaBI8x7q7sPoF[...]KTgSLXTyj3acw==
+2026-10-21T17:54:52.0286918Z npm notice total files: 837
+2026-10-21T17:54:52.0287158Z npm notice
+2026-10-21T17:54:52.0287468Z earendil-works-pi-ai-1.3.0.tgz
+2026-10-21T17:54:52.0287881Z /home/runner/work/_temp/earendil-works-pi-ai-1.3.0.tgz: OK
+2026-10-21T17:54:52.0455442Z ##[group]Run sudo env GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=safe.directory GIT_CONFIG_VALUE_0="$GITHUB_WORKSPACE" "$(command -v node)" --test .psmfd/test/release-build.test.mjs
+2026-10-21T17:54:52.0456912Z [36;1msudo env GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=safe.directory GIT_CONFIG_VALUE_0="$GITHUB_WORKSPACE" "$(command -v node)" --test .psmfd/test/release-build.test.mjs[0m
+2026-10-21T17:54:52.0514826Z shell: /usr/bin/bash -e {0}
+2026-10-21T17:54:52.0515113Z ##[endgroup]
+2026-10-21T17:54:52.1114901Z TAP version 13
+2026-10-21T17:55:07.8704777Z # > @earendil-works/chord@1.3.0 build
+2026-10-21T17:55:07.8715299Z # > tsc -p tsconfig.build.json
+2026-10-21T17:55:07.8719616Z # > @earendil-works/pi-tui@1.3.0 build
+2026-10-21T17:55:07.8720310Z # > tsc -p tsconfig.build.json
+2026-10-21T17:55:07.8720797Z # > @earendil-works/pi-telemetry@1.3.0 build
+2026-10-21T17:55:07.8721507Z # > tsc -p tsconfig.build.json
+2026-10-21T17:55:07.8721855Z # > @earendil-works/pi-codemode@1.3.0 build
+2026-10-21T17:55:07.8722456Z # > tsc -p tsconfig.build.json
+2026-10-21T17:55:07.8722912Z # > @earendil-works/pi-mcp@1.3.0 build
+2026-10-21T17:55:07.8723503Z # > tsc -p tsconfig.build.json
+2026-10-21T17:55:07.8723962Z # Generated model data is valid.
+2026-10-21T17:55:07.8724799Z # > @earendil-works/pi-durable@1.3.0 build
+2026-10-21T17:55:07.8725658Z # > tsc -p tsconfig.build.json
+2026-10-21T17:55:07.8726137Z # > @earendil-works/pi-env@1.3.0 build
+2026-10-21T17:55:07.8726608Z # > tsc -p tsconfig.build.json
+2026-10-21T17:55:07.8727122Z # > @earendil-works/pi-agent-core@1.3.0 build
+2026-10-21T17:55:07.8727578Z # > tsc -p tsconfig.build.json
+2026-10-21T17:55:07.8727908Z # > @earendil-works/pi-coding-agent@1.3.0 build
+2026-10-21T17:55:07.8728421Z # > npm run build:unbundled && node ../../scripts/build-coding-agent-bundle.mjs
+2026-10-21T17:55:07.8728940Z # > @earendil-works/pi-coding-agent@1.3.0 build:unbundled
+2026-10-21T17:55:07.8729555Z # > tsc -p tsconfig.build.json && shx chmod +x dist/cli.js dist/rpc-entry.js && npm run copy-assets
+2026-10-21T17:55:07.8730131Z # > @earendil-works/pi-coding-agent@1.3.0 copy-assets
+2026-10-21T17:55:07.8732497Z # > shx mkdir -p dist/modes/interactive/theme && shx cp src/modes/interactive/theme/*.json dist/modes/interactive/theme/ && shx mkdir -p dist/modes/interactive/assets && shx cp src/modes/interactive/assets/*.png dist/modes/interactive/assets/ && shx mkdir -p dist/core/export-html/vendor && shx cp src/core/export-html/template.html src/core/export-html/template.css src/core/export-html/template.js dist/core/export-html/ && shx cp src/core/export-html/vendor/*.js dist/core/export-html/vendor/
+2026-10-21T17:55:07.8734489Z # Built packages/coding-agent/dist/bundle (80 files, 8.8 MiB)
+2026-10-21T17:55:08.1318967Z # Actual release workspace sequence passed offline; pinned model bytes preserved.
+2026-10-21T17:55:14.2953806Z # Omitting durable fails public dist export resolution, as expected.
+2026-10-21T17:55:22.5543237Z # Subtest: release workspace order matches the root build without AI generation (\#70)
+2026-10-21T17:55:22.5555646Z ok 1 - release workspace order matches the root build without AI generation (\#70)
+2026-10-21T17:55:22.5556390Z   ---
+2026-10-21T17:55:22.5556789Z   duration_ms: 1.52375
+2026-10-21T17:55:22.5557166Z   type: 'test'
+2026-10-21T17:55:22.5557520Z   ...
+2026-10-21T17:55:22.5565791Z # Subtest: release builds clean outputs offline and detects the durable omission (\#70)
+2026-10-21T17:55:22.5566937Z ok 2 - release builds clean outputs offline and detects the durable omission (\#70)
+2026-10-21T17:55:22.5567574Z   ---
+2026-10-21T17:55:22.5567905Z   duration_ms: 30354.277613
+2026-10-21T17:55:22.5568284Z   type: 'test'
+2026-10-21T17:55:22.5568602Z   ...
+2026-10-21T17:55:22.5688624Z 1..2
+2026-10-21T17:55:22.5688978Z # tests 2
+2026-10-21T17:55:22.5689247Z # suites 0
+2026-10-21T17:55:22.5689548Z # pass 2
+2026-10-21T17:55:22.5689754Z # fail 0
+2026-10-21T17:55:22.5690050Z # cancelled 0
+2026-10-21T17:55:22.5690350Z # skipped 0
+2026-10-21T17:55:22.5690596Z # todo 0
+2026-10-21T17:55:22.5691897Z # duration_ms 30469.028554
+2026-10-21T17:55:22.5878526Z Post job cleanup.
+2026-10-21T17:55:22.7375424Z Post job cleanup.
+2026-10-21T17:55:22.8356236Z [command]/usr/bin/git version
+2026-10-21T17:55:22.8407590Z git version 2.55.0
+2026-10-21T17:55:22.8453216Z Temporarily overriding HOME='/home/runner/work/_temp/244890cc-1795-4dd0-ac42-6499b73574f2' before making global git config changes
+2026-10-21T17:55:22.8454154Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-21T17:55:22.8459758Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/pi/pi
+2026-10-21T17:55:22.8506746Z Removing SSH command configuration
+2026-10-21T17:55:22.8515445Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-21T17:55:22.8567036Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-21T17:55:22.8848214Z Removing HTTP extra header
+2026-10-21T17:55:22.8855352Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-21T17:55:22.8904650Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-21T17:55:22.9175151Z Removing includeIf entries pointing to credentials config files
+2026-10-21T17:55:22.9182931Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-21T17:55:22.9228317Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-21T17:55:22.9693101Z Cleaning up orphan processes

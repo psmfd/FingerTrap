@@ -1,0 +1,232 @@
+{
+  "kind": "candidate",
+  "executableSha256": "0be432e0442032f1486e26d0ec423b10fc3750a28a28d472d5f1211abe8dd7c8",
+  "sourceRevision": "1f37eea+intentional-bug-report-mutation",
+  "scope": "direct-rpc-pty-cli",
+  "cases": [
+    {
+      "case": "migration",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "cleanExit": true
+      },
+      "passed": true,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "poisoned",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "cleanExit": true
+      },
+      "passed": true,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "linked-project",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "linkedTargetUnchanged": true,
+        "cleanExit": true
+      },
+      "passed": true,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "current-layout-resources",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "cleanExit": true
+      },
+      "passed": true,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "interactive",
+      "transport": "direct-pty",
+      "checks": {
+        "interactiveStartup": true,
+        "lifecycleCompleted": false,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "cleanExit": true,
+        "bugReportRejected": false,
+        "noAmbientCrashNotice": true
+      },
+      "passed": false,
+      "exitCode": 0,
+      "diagnostics": [
+        "TimeoutError: observation deadline",
+        "                                          \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K \u001b[38;5;188mThis report goes to the Pi developers (Earendil) and is not shared publicly. It includes your pi version, operating    \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K \u001b[38;5;188msystem, the current model and provider configuration (without API keys), loaded extensions, settings, and provider     \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K \u001b[38;5;188merror diagnostics from this session.                                                                                   \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K \u001b[38;5;188m                                                                                                                       \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K \u001b[38;5;188mWhat went wrong? (optional)\u001b[39m                                                                                            \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;239m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[7m \u001b[0m                                                                                                                       \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;239m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K \u001b[38;5;241menter\u001b[39m\u001b[38;5;244m submit\u001b[39m  \u001b[38;5;241mshift+enter/ctrl+j\u001b[39m\u001b[38;5;244m newline\u001b[39m  \u001b[38;5;241mescape/ctrl+c\u001b[39m\u001b[38;5;244m cancel\u001b[39m  \u001b[38;5;241mctrl+g\u001b[39m\u001b[38;5;244m external editor\u001b[39m                                 \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;69m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m/private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-pi-qualify-f5dod86d/interactive/project\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m0.0%/0 (auto)\u001b[39m\u001b[38;5;241m                                                                                                    unknown\u001b[39m\u001b[0m\u001b]8;;\u0007\u001b[?2026l\u001b[7A\u001b[1G\u001b[?25l\u001b[?2026h\u001b[9A\r\u001b[2K \u001b[38;5;109m\u001b[1mInclude the session transcript?\u001b[22m\u001b[39m                                                                                        \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K \u001b[38;5;188mThe transcript contains your messages, model output, tool calls and their results, including file contents and command \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K \u001b[38;5;188moutput read during this session.\u001b[39m                                                                                       \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K \u001b[38;5;109m\u2192 \u001b[39m\u001b[38;5;109mYes, include the transcript\u001b[39m                                                                                          \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K   \u001b[38;5;188mNo\u001b[39m                                                                                                                   \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K \u001b[38;5;241m\u2191\u2193\u001b[39m\u001b[38;5;244m navigate\u001b[39m  \u001b[38;5;241menter\u001b[39m\u001b[38;5;244m select\u001b[39m  \u001b[38;5;241mescape/ctrl+c\u001b[39m\u001b[38;5;244m cancel\u001b[39m                                                                        \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;69m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m/private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-pi-qualify-f5dod86d/interactive/project\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m0.0%/0 (auto)\u001b[39m\u001b[38;5;241m                                                                                                    unknown\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\r\r\n\u001b[2K\r\r\n\u001b[2K\r\r\n\u001b[2K\u001b[4A\u001b[?2026l\u001b[?25l\u001b]0;\u03c0 - project\u0007\u001b[<u\u001b[?2026h\u001b[14A\r\u001b[2K\u001b[38;5;239m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[7m \u001b[0m                                                                                                                       \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;239m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m/private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-pi-qualify-f5dod86d/interactive/project\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m0.0%/0 (auto)\u001b[39m\u001b[38;5;241m                                                                                                    unknown\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\r\r\n\u001b[2K\r\r\n\u001b[2K\r\r\n\u001b[2K\r\r\n\u001b[2K\r\r\n\u001b[2K\r\r\n\u001b[2K\r\r\n\u001b[2K\r\r\n\u001b[2K\r\r\n\u001b[2K\u001b[10A\u001b[?2026l\u001b[3A\u001b[1G\u001b[?25l \u001b[4B\r\r\n\u001b[?25h\u001b[?2004l"
+      ]
+    },
+    {
+      "case": "reject-install",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject-config",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject-auth",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---resume",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---session",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---startup-policy",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---extension",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---provider",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "unknown-policy",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "controlled-network-endpoint",
+      "checks": {
+        "noAttempts": true
+      },
+      "passed": true,
+      "attempts": []
+    }
+  ],
+  "passed": false
+}

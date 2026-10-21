@@ -1,0 +1,67 @@
+{
+  "kind": "known-bad-baseline",
+  "executableSha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5",
+  "sourceRevision": "e7d09c9dc5fca409f46a5476669e3c0404054d69",
+  "scope": "direct-rpc-pty-cli",
+  "cases": [
+    {
+      "case": "migration",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-new_session": true,
+        "rpc-2-prompt": true,
+        "rpc-3-abort": true,
+        "rpc-4-get_state": true,
+        "projectUnchanged": false,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": false,
+        "cleanExit": true
+      },
+      "passed": false,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "poisoned",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-new_session": true,
+        "rpc-2-prompt": true,
+        "rpc-3-abort": true,
+        "rpc-4-get_state": true,
+        "projectUnchanged": false,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": false,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": false,
+        "cleanExit": true
+      },
+      "passed": false,
+      "exitCode": 0,
+      "diagnostics": [
+        "Warning: Invalid settings file /private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-pi-qualify-sf1r39o0/poisoned/agent/settings.json: JSON Parse error: Expected '}'"
+      ]
+    },
+    {
+      "case": "controlled-network-endpoint",
+      "checks": {
+        "noAttempts": true
+      },
+      "passed": true,
+      "attempts": []
+    }
+  ],
+  "passed": false
+}

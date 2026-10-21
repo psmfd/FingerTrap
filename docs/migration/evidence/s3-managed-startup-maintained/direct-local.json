@@ -1,0 +1,229 @@
+{
+  "kind": "candidate",
+  "executableSha256": "9a9f53131cec748801b8c176190ef4dc77e7b6e833859ff734fcfa3d297c7614",
+  "sourceRevision": "1f37eea4bf71f95ed9a4e62674949de3a9feb8b0",
+  "scope": "direct-rpc-pty-cli",
+  "cases": [
+    {
+      "case": "migration",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "cleanExit": true
+      },
+      "passed": true,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "poisoned",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "cleanExit": true
+      },
+      "passed": true,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "linked-project",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "linkedTargetUnchanged": true,
+        "cleanExit": true
+      },
+      "passed": true,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "current-layout-resources",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "cleanExit": true
+      },
+      "passed": true,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "interactive",
+      "transport": "direct-pty",
+      "checks": {
+        "interactiveStartup": true,
+        "unsupportedCommandsNonfatal": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "cleanExit": true,
+        "bugReportRejected": true,
+        "noAmbientCrashNotice": true
+      },
+      "passed": true,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "reject-install",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject-config",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject-auth",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---resume",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---session",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---startup-policy",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---extension",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---provider",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "unknown-policy",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "controlled-network-endpoint",
+      "checks": {
+        "noAttempts": true
+      },
+      "passed": true,
+      "attempts": []
+    }
+  ],
+  "passed": true
+}

@@ -1,6 +1,6 @@
 # 0037 — Use disposable Tart GitHub runners
 
-- Status: Accepted; macOS cutover approved, verification in progress
+- Status: Accepted; macOS runners verified on protected dev and enrolled PRs
 - Date: 2026-10-20
 - Extends: ADR-0033; supersedes its exclusion of local runner orchestration
 

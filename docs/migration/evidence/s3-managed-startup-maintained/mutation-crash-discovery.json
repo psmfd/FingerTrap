@@ -1,0 +1,231 @@
+{
+  "kind": "candidate",
+  "executableSha256": "1b4680b4c8ef50e1f2aa2933cce0c308ebe68d2b3ccd4be34d113c44ca67183d",
+  "sourceRevision": "1f37eea+intentional-crash-discovery-mutation",
+  "scope": "direct-rpc-pty-cli",
+  "cases": [
+    {
+      "case": "migration",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "cleanExit": true
+      },
+      "passed": true,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "poisoned",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "cleanExit": true
+      },
+      "passed": true,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "linked-project",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "linkedTargetUnchanged": true,
+        "cleanExit": true
+      },
+      "passed": true,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "current-layout-resources",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "cleanExit": true
+      },
+      "passed": true,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "interactive",
+      "transport": "direct-pty",
+      "checks": {
+        "interactiveStartup": true,
+        "unsupportedCommandsNonfatal": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": false,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": true,
+        "cleanExit": true,
+        "bugReportRejected": true,
+        "noAmbientCrashNotice": false
+      },
+      "passed": false,
+      "exitCode": 0,
+      "diagnostics": [
+        ")\u001b[39m\u001b[38;5;241m                                                                                                    unknown\u001b[39m\u001b[0m\u001b]8;;\u0007\u001b[?2026l\u001b[3A\u001b[1G\u001b[?25l\u001b[1G\u001b[?25l\u001b[?2026h\u001b[1A\r\u001b[2K \u001b[38;5;167mError: managed-v1 does not support project trust\u001b[39m                                                                       \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;239m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[7m \u001b[0m                                                                                                                       \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;239m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m/private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-pi-qualify-jjgjao8b/interactive/project\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m0.0%/0 (auto)\u001b[39m\u001b[38;5;241m                                                                                                    unknown\u001b[39m\u001b[0m\u001b]8;;\u0007\u001b[?2026l\u001b[3A\u001b[1G\u001b[?25l\u001b[1G\u001b[?25l\u001b[?2026h\u001b[1A\r\u001b[2K \u001b[38;5;167mError: managed-v1 does not support session selection\u001b[39m                                                                   \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;239m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[7m \u001b[0m                                                                                                                       \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;239m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m/private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-pi-qualify-jjgjao8b/interactive/project\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m0.0%/0 (auto)\u001b[39m\u001b[38;5;241m                                                                                                    unknown\u001b[39m\u001b[0m\u001b]8;;\u0007\u001b[?2026l\u001b[3A\u001b[1G\u001b[?25l\u001b[1G\u001b[?25l\u001b[?2026h\u001b[1A\r\u001b[2K \u001b[38;5;167mError: managed-v1 does not support session import\u001b[39m                                                                      \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;239m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[7m \u001b[0m                                                                                                                       \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;239m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m/private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-pi-qualify-jjgjao8b/interactive/project\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m0.0%/0 (auto)\u001b[39m\u001b[38;5;241m                                                                                                    unknown\u001b[39m\u001b[0m\u001b]8;;\u0007\u001b[?2026l\u001b[3A\u001b[1G\u001b[?25l\u001b[1G\u001b[?25l\u001b[?2026h\u001b[1A\r\u001b[2K \u001b[38;5;167mError: managed-v1 does not support bug reports\u001b[39m                                                                         \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;239m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[7m \u001b[0m                                                                                                                       \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;239m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m/private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-pi-qualify-jjgjao8b/interactive/project\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[2K\u001b[38;5;241m0.0%/0 (auto)\u001b[39m\u001b[38;5;241m                                                                                                    unknown\u001b[39m\u001b[0m\u001b]8;;\u0007\u001b[?2026l\u001b[3A\u001b[1G\u001b[?25l\u001b[1G\u001b[?25l\u001b[<u\u001b[1G\u001b[?25l \u001b[4B\r\r\n\u001b[?25h\u001b[?2004l\u001b]0;\u03c0 - project\u0007"
+      ]
+    },
+    {
+      "case": "reject-install",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject-config",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject-auth",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---resume",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---session",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---startup-policy",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---extension",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---provider",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "unknown-policy",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "controlled-network-endpoint",
+      "checks": {
+        "noAttempts": true
+      },
+      "passed": true,
+      "attempts": []
+    }
+  ],
+  "passed": false
+}

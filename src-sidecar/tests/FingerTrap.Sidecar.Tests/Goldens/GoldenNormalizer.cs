@@ -8,8 +8,9 @@ namespace FingerTrap.Sidecar.Tests.Goldens;
 /// HOME, scenario cwds, the canned model base URL), UUIDs, and timestamps.
 /// Everything else — model name, assistant text, token counts — is already
 /// deterministic because the recorder serves the model turn from a canned
-/// local endpoint. Tokens are assigned by first appearance, so identical
-/// structure yields identical numbering; the normalizer is idempotent
+/// local endpoint. Identity tokens are assigned by first appearance. Numeric
+/// message timestamps use one volatile token: equality of wall-clock ticks is
+/// not message identity and can vary between runs. The normalizer is idempotent
 /// (tokens never re-match), which is what lets the replay lane run its own
 /// output through the same pass before comparing.
 /// </summary>
@@ -44,6 +45,10 @@ internal sealed partial class GoldenNormalizer
     [GeneratedRegex("(\"timestamp\"\\s*:\\s*)(\\d{10,13})")]
     private static partial Regex EpochTimestampPattern();
 
+    // Pi 1.3.0 records elapsed tool/message time; retain the field, tokenize its clock value.
+    [GeneratedRegex("(\"durationMs\"\\s*:\\s*)(\\d+(?:\\.\\d+)?)")]
+    private static partial Regex DurationPattern();
+
     public IReadOnlyList<GoldenRecord> Normalize(IReadOnlyList<GoldenRecord> records)
     {
         var normalized = records.Select(record => record with
@@ -71,7 +76,9 @@ internal sealed partial class GoldenNormalizer
         result = DashedTimestampPattern().Replace(result, match =>
             Token(_timestamps, match.Value, "TS"));
         result = EpochTimestampPattern().Replace(result, match =>
-            match.Groups[1].Value + "\"" + Token(_timestamps, match.Groups[2].Value, "TS") + "\"");
+            match.Groups[1].Value + "\"@TIME:epoch@\"");
+        result = DurationPattern().Replace(result, match =>
+            match.Groups[1].Value + "\"@TIME:duration@\"");
         return result;
     }
 

@@ -1,0 +1,112 @@
+{
+  "overlaySource": "95e95f0eca5dd6638f4e8c308932134a6d071798",
+  "overlayPaths": [
+    ".github/CODEOWNERS",
+    ".github/workflows-upstream-reference/README.md",
+    ".github/workflows-upstream-reference/approve-contributor.yml",
+    ".github/workflows-upstream-reference/build-binaries.yml",
+    ".github/workflows-upstream-reference/ci.yml",
+    ".github/workflows-upstream-reference/issue-analysis.yml",
+    ".github/workflows-upstream-reference/issue-gate.yml",
+    ".github/workflows-upstream-reference/issue-triage-labels.yml",
+    ".github/workflows-upstream-reference/npm-audit.yml",
+    ".github/workflows-upstream-reference/pr-gate.yml",
+    ".github/workflows-upstream-reference/publish-model-catalog.yml",
+    ".github/workflows-upstream-reference/remove-inprogress-on-close.yml",
+    ".github/workflows/psmfd-divergence-detect.yml",
+    ".github/workflows/psmfd-release.yml",
+    ".github/workflows/psmfd-reusable-preflight.yml",
+    ".github/workflows/psmfd-reusable-publish.yml",
+    ".github/workflows/psmfd-secrets-scan.yml",
+    ".github/workflows/psmfd-zero-divergence.yml",
+    ".gitleaks.toml",
+    ".psmfd/overlay-allowlist.txt",
+    ".psmfd/patches/manifest.yml",
+    ".psmfd/security-baseline.md",
+    ".psmfd/sync-upstream.sh",
+    ".psmfd/test/README.md",
+    ".psmfd/test/release-build.test.mjs",
+    ".psmfd/test/release-preflight.test.mjs",
+    ".psmfd/workflow-allowlist.yml",
+    "NOTICE.psmfd.md",
+    "PROVENANCE.md",
+    "README.md",
+    "README.psmfd.md",
+    "SECURITY.md"
+  ],
+  "quarantinedUpstreamWorkflows": [
+    {
+      "path": ".github/workflows/publish-model-catalog.yml",
+      "reference": ".github/workflows-upstream-reference/publish-model-catalog.yml",
+      "sha256": "dfb1a8f60b9d8dc8faa168bd3fc90fdde0ea0fc72ecd2c9624a0a7ca99ffb527"
+    },
+    {
+      "path": ".github/workflows/env-daemons.yml",
+      "reference": ".github/workflows-upstream-reference/env-daemons.yml",
+      "sha256": "96f28f3a76f69f8490f6dfd598fc16867465a517e3ca5e7a9e8f7c95cd3d2642"
+    },
+    {
+      "path": ".github/workflows/nix.yml",
+      "reference": ".github/workflows-upstream-reference/nix.yml",
+      "sha256": "54ff37d05bd0a828e7b7332889a68043dba24619d4c31baec0ad19750728873b"
+    },
+    {
+      "path": ".github/workflows/issue-gate.yml",
+      "reference": ".github/workflows-upstream-reference/issue-gate.yml",
+      "sha256": "00c80ec4476324e8c33934ef7d75ebaec8421fd2753cd2485cd5e67db1925f28"
+    },
+    {
+      "path": ".github/workflows/env.yml",
+      "reference": ".github/workflows-upstream-reference/env.yml",
+      "sha256": "48d21c2a90d0ba29991a2efa1b1c76caedb9efae3cf818281e8f32489698d6f9"
+    },
+    {
+      "path": ".github/workflows/pr-gate.yml",
+      "reference": ".github/workflows-upstream-reference/pr-gate.yml",
+      "sha256": "bab4731f186b0ba061f496a7059fed4eb78d801e3f771ec8e1327a5e7cdc550a"
+    },
+    {
+      "path": ".github/workflows/remove-inprogress-on-close.yml",
+      "reference": ".github/workflows-upstream-reference/remove-inprogress-on-close.yml",
+      "sha256": "d73af6b20621fc453a081b3015d6a6ad1dc0eec897abdf3c95b2186617ef3790"
+    },
+    {
+      "path": ".github/workflows/build-binaries.yml",
+      "reference": ".github/workflows-upstream-reference/build-binaries.yml",
+      "sha256": "dc797816b5afc2a8b956c48de53dc354fbdddf30dd7130ed82cd95613d042faa"
+    },
+    {
+      "path": ".github/workflows/issue-triage-labels.yml",
+      "reference": ".github/workflows-upstream-reference/issue-triage-labels.yml",
+      "sha256": "642e7896ffaa0881e03043cb49ef7f9c74be55c5e291a2d117e99fa4ef01b709"
+    },
+    {
+      "path": ".github/workflows/issue-analysis.yml",
+      "reference": ".github/workflows-upstream-reference/issue-analysis.yml",
+      "sha256": "61e9c0c2a0b86a3d81b1246b4573d291fe198a157ce2414fd1a7d23b66b6512e"
+    },
+    {
+      "path": ".github/workflows/npm-audit.yml",
+      "reference": ".github/workflows-upstream-reference/npm-audit.yml",
+      "sha256": "ebf88f8bd2707df6816dd31e8d5d42e24b92fd744b9c1521b5ce9c73eba5fe15"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "reference": ".github/workflows-upstream-reference/ci.yml",
+      "sha256": "6088a12f2d68aea9a312d5c11c6dc63aa99ae9de259231725d7cc941eb11aecb"
+    },
+    {
+      "path": ".github/workflows/approve-contributor.yml",
+      "reference": ".github/workflows-upstream-reference/approve-contributor.yml",
+      "sha256": "c326b172723f48fce44d750dc54c2a0605ef283011f6b2da8f2a6412b5ce83ea"
+    }
+  ],
+  "runnableWorkflows": [
+    "psmfd-divergence-detect.yml",
+    "psmfd-release.yml",
+    "psmfd-reusable-preflight.yml",
+    "psmfd-reusable-publish.yml",
+    "psmfd-secrets-scan.yml",
+    "psmfd-zero-divergence.yml"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "source": "95e95f0eca5dd6638f4e8c308932134a6d071798",
+  "policyTests": {
+    "passed": 23
+  },
+  "staticCheck": "passed",
+  "runtimeSourceUnchangedFrom": "1f37eea4bf71f95ed9a4e62674949de3a9feb8b0",
+  "codeqlAlert87": "fixed; observed GitHub readback on refs/pull/82/head",
+  "preservedFilesVerified": 426,
+  "inventorySha256": "8ae0a0357b0614696989a675f6b43ff761f80b6eb6bfe01412bd9fa90ff531a5"
+}

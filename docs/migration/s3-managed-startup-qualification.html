@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S3 managed startup — qualification and pin decision</title>
+<style>
+:root{color-scheme:light;--ink:#182c36;--muted:#50626c;--line:#d6e0e4;--accent:#136660;--paper:#fff;--back:#edf2f3}
+*{box-sizing:border-box}body{margin:0;background:var(--back);color:var(--ink);font:17px/1.65 system-ui,sans-serif}
+main{max-width:1000px;margin:36px auto;padding:48px 64px;background:var(--paper);border:1px solid var(--line);border-radius:16px}
+h1{font-size:2.5rem;line-height:1.16;letter-spacing:-.03em}h2{font-size:1.55rem;line-height:1.3;margin-top:2.8rem}h3{font-size:1.1rem}
+p,li{max-width:80ch}a{color:var(--accent);text-underline-offset:3px}code{font: .88em ui-monospace,monospace;overflow-wrap:anywhere}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f0f5f5;padding:18px;border-radius:8px;font-size:13px;line-height:1.6}
+.eyebrow{color:var(--accent);font-size:.8rem;letter-spacing:.12em;font-weight:750;text-transform:uppercase}.lead{font-size:1.25rem}.muted{color:var(--muted)}
+.callout{padding:20px 24px;border-left:5px solid var(--accent);background:#eaf5f2;border-radius:5px}.pending{border-color:#a96e13;background:#fff5df}
+nav{display:flex;flex-wrap:wrap;gap:8px 20px;border-block:1px solid var(--line);padding:16px 0;margin:30px 0;font-size:.9rem}table{border-collapse:collapse;width:100%;font-size:.93rem}th,td{text-align:left;vertical-align:top;border-bottom:1px solid var(--line);padding:12px 10px}th{background:#f2f6f7}td:first-child{font-weight:650}section{scroll-margin-top:20px}.table-wrap{overflow-x:auto}footer{margin-top:45px;padding-top:16px;border-top:1px solid var(--line);font-size:.85rem;color:var(--muted)}
+@media(max-width:650px){main{margin:0;border:0;border-radius:0;padding:28px 21px}h1{font-size:2rem}table{font-size:.85rem}th,td{padding:9px 6px}}
+@media print{body{background:white}main{border:0;margin:0;padding:0;max-width:none}nav{display:none}section{break-inside:avoid}a{color:inherit}}
+</style>
+</head>
+<body><main>
+<div class="callout"><strong>Historical G5 experiment.</strong> The maintained-base forward-port is now covered by the <a href="s3-managed-startup-maintained-qualification.html">G6 qualification report</a>. Use that report for the current candidate and remaining promotion decisions.</div>
+<div class="eyebrow">FingerTrap · S3-G4 / G5 · 21 October 2026</div>
+<h1>Managed startup passes the artifact checks. Production pin selection remains open.</h1>
+<p class="lead">The focused Pi fix prevents the pinned runtime’s implicit startup discovery and migrations through both managed RPC and PTY launches. The exact Apple Silicon candidate passes locally and in a clean Tart VM.</p>
+<div class="callout pending"><strong>Qualification:</strong> candidate qualified on macOS ARM64; promotion pending. All 23 FingerTrap CI check reports pass. Retain executable/RPC and review a forward-port onto the maintained fork before production pin promotion: this old-pin experiment omits newer fork security/correctness work. Managed product activation remains disabled.</div>
+<nav aria-label="Report sections"><a href="#result">Results</a><a href="#identity">Exact identity</a><a href="#protocol">RPC compatibility</a><a href="#fork">Fork accounting</a><a href="#limits">Limits</a><a href="#next">Next decision</a><a href="#reproduce">Reproduce</a></nav>
+
+<section id="result"><h2>What is implemented and verified</h2>
+<p>Pi’s opt-in <code>--startup-policy managed-v1</code> validates explicit inputs before command dispatch or migration, constructs in-memory settings/auth/model configuration, and loads only explicitly selected extension files with a literal system prompt. Reload and supported new-session operations retain that policy. Unsupported configuration, installation, authentication and session transitions fail with bounded errors.</p>
+<p>FingerTrap descriptor v2 requires that policy and independently selected source revision and digest. Both transports use the same launch resolver. A separate published qualification executable compiles the production entry point and services with a test-only selection loader; production compilation has no managed selector.</p>
+<div class="table-wrap"><table><thead><tr><th>Check</th><th>Observed outcome</th></tr></thead><tbody>
+<tr><td>Known-bad baseline</td><td>Fails actual project migration, profile mutation and literal-prompt assertions while RPC startup/reload/new-session succeed. Failure is independent of unsupported policy-flag parsing.</td></tr>
+<tr><td>Direct exact Pi artifact</td><td>Passes legacy/current layouts, poisoned profile, linked project, real PTY lifecycle and CLI rejection cases. Controlled network endpoint and helper/installer canaries observe no attempts.</td></tr>
+<tr><td>Exact published host</td><td>Two concurrent profiles, each with real RPC and native PTY children, preserve cwd, separate roots and project/profile inputs. Parent canaries stay absent. Reload, new session, cancellation, sibling survival and complete child cleanup pass.</td></tr>
+<tr><td>Clean Tart</td><td>Same executable/native digests pass both matrices on macOS 15.7.7 / 24G720 ARM64. No host shares or GitHub registration; outbound IPv4 blocked by Softnet. Clone removed; stopped base preserved.</td></tr>
+<tr><td>Regression mutations</td><td>Restoring migrations fails project/profile/linked-target checks; restoring the default loader fails literal-prompt checks; removing the host policy guard fails the wrong-policy rejection test. All guards restored.</td></tr>
+<tr><td>Pi source checks</td><td><code>npm run check</code>, offline build and credential-isolated <code>./test.sh</code> pass. Supplemental instrumented policy/theme suite passes all 30 tests and traps implicit settings/auth/default-loader/package-resolution calls.</td></tr>
+<tr><td>FingerTrap source checks</td><td>Release build has zero warnings/errors; sidecar suite passes 406 tests with 12 opt-in recording skips. The 12 recordings pass separately. Structural checks pass.</td></tr>
+<tr><td>Required CI</td><td id="ci-result">All 23 check reports pass on <code>c6f088c7cf7b2ef8294a104a091c5d5d08271e03</code>: platform matrix, repository/workflow checks, five CodeQL analyses and Apple Silicon packaging. Five macOS jobs ran on distinct local Tart VMs; all job VMs and registrations were removed. Windows/Linux remained hosted.</td></tr>
+</tbody></table></div>
+<p>The mutation run caught an initial fixture blind spot: creating the destination prompts directory prevented the legacy rename. Legacy/current layouts were separated; baseline, both Pi mutations and restored candidate were rerun successfully.</p>
+<p><a href="https://github.com/psmfd/FingerTrap/actions/runs/39598135785">Platform CI</a> · <a href="https://github.com/psmfd/FingerTrap/actions/runs/39598135709">Apple Silicon packaging</a> · <a href="evidence/s3-managed-startup/ci.json">Check/runner/cleanup evidence</a> · <a href="evidence/s3-managed-startup/host-mutation.json">Host mutation evidence</a></p>
+</section>
+
+<section id="identity"><h2>Exact candidate identity</h2>
+<p>Companion drafts: <a href="https://github.com/psmfd/FingerTrap/pull/209">FingerTrap #209</a> and <a href="https://github.com/psmfd/pi/pull/81">Pi #81</a>. Regression tracker: <a href="https://github.com/psmfd/pi/issues/80">Pi #80</a>. The tested binary still reports upstream version 0.85.1; its source/digest identify this candidate.</p>
+<pre>Pi source:       39b729b625f50d4c82bd993151865d5ded8dd78e
+Comparison base: e7d09c9dc5fca409f46a5476669e3c0404054d69
+Host source:     bb5f02fd64b41310a7f35aec92a60b67bdd8bad8
+
+SHA-256
+Pi executable:   1f1a604cb44a733441d6bb660a9f2e16b4604853a6c5e17446c5fef998f2d596
+Pi archive:      2759240a44ca9ebd0acd01258d048014767950c88b7de5f2c08f5bc7810116f9
+Host executable: 80beb8542052fe1246528d2a9a0617e2b3760c81c39163f228b0c128d97af3da
+Native PTY:      4644ce3598bf59a4f1999e4e42b1312586ce9a00a7fa33059217308707f1b4a0
+Descriptor v2:   e6a9a5590c553f5ca03bc91cf811ab5a730ff33dedb46003c72370ac08ed0b86</pre>
+<p>Built with Bun 1.3.10 and Node 26.3.1, frozen original lockfiles, install scripts disabled, and offline model data hydrated from integrity-verified <code>@earendil-works/pi-ai@0.85.1</code>. No dependency or lockfile changes. This local build does not claim release Node 22 parity, signing or GitHub attestation.</p>
+<p><a href="evidence/s3-managed-startup/artifacts.json">Artifact and build-input hashes</a> · <a href="evidence/s3-managed-startup/sidecar-local.json">Complete asset inventory and descriptor identity</a> · <a href="evidence/s3-managed-startup/tart-state.json">Tart identity and cleanup</a> · <a href="evidence/s3-managed-startup/direct-tart.json">Direct Tart assertions</a> · <a href="evidence/s3-managed-startup/sidecar-tart.json">Host Tart assertions</a></p>
+<p>The ordinary FingerTrap CI package is a separate product artifact. Downloaded artifact <code>12345815425</code> has SHA-256 <code>05d764a2a98d78cfaa35981bcda17f2186a801714fe8626b29a927cf815d9789</code>; app/DMG checksums and runner identity match. Its build commit <code>f87c1a9</code> is the PR test merge with the exact same tree as source head <code>c6f088c</code>. Packaged sidecar/native-shell smoke passes; its Pi smoke skips because Pi is not bundled. Managed-Pi evidence comes from the separate exact-artifact runs above. <a href="evidence/s3-managed-startup/package.json">Package evidence</a>.</p>
+</section>
+
+<section id="protocol"><h2>No candidate drift in the twelve recorded RPC scenarios</h2>
+<p>The baseline and candidate each record every existing scenario twice, with byte-identical normalized results between repetitions. Comparing their twelve resulting transcripts also gives exact equality.</p>
+<p>Seven recordings differ from committed goldens only in existing macOS <code>/tmp</code> versus <code>/private/tmp</code> spelling, including encoded session-directory paths. The same differences occur with the unmodified release. No protocol change is attributed to this candidate, and committed goldens remain unchanged.</p>
+<p>These recordings cover ordinary CLI compatibility with a local canned provider. Managed startup/reload/new-session/rejection coverage comes from the separate direct and host matrices; managed mode intentionally rejects ambient <code>models.json</code> and imported sessions.</p>
+<p><a href="evidence/s3-managed-startup/golden-comparison.json">Twelve-scenario comparison</a> · <a href="evidence/s3-managed-startup/goldens-baseline.json">Baseline recording</a> · <a href="evidence/s3-managed-startup/goldens-candidate.json">Candidate recording</a> · <a href="evidence/s3-managed-startup/golden-path-drift.patch">Reviewed path-only diff</a></p>
+</section>
+
+<section id="fork"><h2>The old-pin experiment is not the recommended production baseline</h2>
+<p>Current fork main is <code>42429b94e4aca33fdbb8d094de29758b36411ba1</code>. Its four commits after the comparison pin are absent from the experiment:</p>
+<div class="table-wrap"><table><thead><tr><th>Fork change</th><th>Promotion implication</th></tr></thead><tbody>
+<tr><td><a href="https://github.com/psmfd/pi/pull/74">#74 · v0.87.1 import</a></td><td>Retains earlier RPC/security patches and adds cache-warmer failure handling, three regex performance fixes, tool-slot validation and release preflight/cache hardening. Preserve and requalify this work.</td></tr>
+<tr><td><a href="https://github.com/psmfd/pi/pull/75">#75 · release build</a></td><td>Includes durable in the v0.87.1 hermetic workspace build. Required if selecting that newer base.</td></tr>
+<tr><td><a href="https://github.com/psmfd/pi/pull/76">#76 · provenance</a></td><td>Records the squash import topology, patch baselines and accurate accounting. Retain it in the maintained branch.</td></tr>
+<tr><td><a href="https://github.com/psmfd/pi/pull/79">#79 · correctness</a></td><td>Repairs same-size auth-file freshness and large Chord insertions on Node 22; registers capability patches 018/019.</td></tr>
+</tbody></table></div>
+<p><strong>Fork policy issue:</strong> maintained main already has six active capability patches, its existing cap. Adding managed startup would require a documented disposition of that cap and a fresh line/path calculation. The experiment does not authorize weakening guard logic, dropping existing fixes or merging an old snapshot over newer work.</p>
+<p>Pending <code>psmfd-patch-020</code> is registered in Pi metadata commit <code>b0a151df397d88db1cb3f52b7e8a526ee22deb1e</code>, with the exact paths synchronized across manifest/allowlist/both guards and unchanged guard logic. Tested runtime source remains <code>39b729b</code>. Conservative old-base accounting including the candidate is 4 patches / 19 paths / 1,772 additions-plus-deletions. Straight addition to maintained main projects 7 patches / 25 paths / 2,081 lines, exceeding its 6-patch and 2,000-line caps; the actual forward-port must be recalculated. No cap waiver is claimed.</p>
+<p><a href="https://github.com/psmfd/pi_config/pull/1170">pi_config #1170</a> contains useful subagent tool-restriction and malformed-declaration fixes; preserve those during S5 reconstruction in FingerTrap. Its full consumer validation remains failed. <a href="https://github.com/psmfd/pi_config/pull/1172">#1172</a> overlaps the newer runtime pin only. Neither needs to be merged into pi_config to continue this migration, and neither qualifies this managed candidate.</p>
+</section>
+
+<section id="limits"><h2>Limits that remain explicit</h2>
+<ul><li>Only macOS ARM64 managed executable artifacts have been exercised. Linux/Windows source CI does not qualify their Pi binaries.</li>
+<li>The published qualification host shares the real entry point, services and native PTY path. It is a separate test build; production managed composition remains absent.</li>
+<li>Managed startup is a resource-discovery contract, not an OS sandbox. Explicitly trusted extensions and tools retain their own filesystem/network authority.</li>
+<li>Credentials, approvals, resume/import/cwd changes, stores/meters, complete extension imports and end-to-end activation still belong to later migration slices.</li>
+<li>The binary and archive are unpublished local qualification outputs. No new release, production distribution, SDK adoption or operator installation was performed.</li></ul>
+</section>
+
+<section id="next"><h2>Recommended next decision</h2>
+<ol><li>Approve a maintained-base forward-port and explicit fork capability-cap disposition. Preserve the newer security/correctness patches, carry the managed policy registration, and rebuild/requalify exact artifacts on the chosen base and release toolchain.</li>
+<li>Review that resulting source, archive, descriptor and executable identity for production pin promotion. This old-pin experiment establishes the mechanism; I do not recommend promoting it as the final runtime.</li>
+<li>After the pin decision, resume S4 profile-aware stores/resume/meters, then S5 imports and S6 qualification. Keep <a href="https://github.com/psmfd/FingerTrap/issues/201">#201</a> and <a href="https://github.com/psmfd/FingerTrap/issues/202">#202</a> open until their broader acceptance is met.</li></ol>
+<p><strong>Recovery:</strong> keep production selection absent. A failed candidate is rejected without ambient fallback. Preserve the known baseline as explicit comparison evidence. Revert the scoped host integration if necessary; no operator settings, credentials, sessions or pi_config state need rollback.</p>
+</section>
+
+<section id="reproduce"><h2>Reproduction and durable handoff</h2>
+<p>Retained tools: <a href="../../scripts/qualify-pi-startup.py">direct qualifier</a>, <a href="../../scripts/qualify-managed-sidecar.py">published-host qualifier</a>, <a href="../../scripts/qualify-pi-startup-tart.py">offline Tart artifact runner</a>, and <a href="../../scripts/qualify-pi-rpc-goldens.py">RPC recorder</a>. Each requires explicit candidate identity; use <code>--help</code> for arguments.</p>
+<pre>Pi worktree: /private/tmp/ft-pi-managed
+Pi assets:   /private/tmp/ft-s3-candidate-39b729b/darwin-arm64
+Host assets: /private/tmp/ft-s3-published-bb5f02f
+Raw reports: .artifacts/s3-discovery/
+Kept reports: docs/migration/evidence/s3-managed-startup/
+
+# Mac CI controller (one fresh VM per job):
+python3 scripts/ci/tart-runner.py check
+python3 scripts/ci/tart-runner.py drain --max-jobs 5</pre>
+<p>Temporary artifacts may disappear; their source commits are pushed and their inventories/hashes and essential results are retained. The <a href="STATUS.md">status record</a> supplies the concrete resume action; the <a href="WORK_LOG.md">activity log</a> records failures, corrections and checkpoints. See the <a href="s3-discovery-resolution-plan.html">approved plan</a> and <a href="../../adrs/0038-require-explicit-managed-pi-startup-policy.md">ADR-0038</a> for scope and gates.</p>
+</section>
+<footer>Prepared from exact local artifacts, retained tests and authenticated fork/PR reads. Candidate qualification is distinct from production pin approval and product activation.</footer>
+</main></body></html>

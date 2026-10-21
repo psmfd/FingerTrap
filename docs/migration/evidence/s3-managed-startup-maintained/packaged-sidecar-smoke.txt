@@ -1,0 +1,16 @@
+INFO  spawning /Users/admin/fingertrap-actions-runner/_work/FingerTrap/FingerTrap/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/FingerTrap.app/Contents/MacOS/fingertrap-sidecar
+      [sidecar stderr] fingertrap-sidecar: starting
+      [sidecar stderr] fingertrap-sidecar: listening on stdio
+      [rpc] {'jsonrpc': '2.0', 'method': 'status/snapshot', 'params': [{'providers': [{'provider': 'github', 'state': 'not-configured', 'detail': 'set status.github.repo ("owner/name") in settings.json', 'issues': [], 'pullRequests': [], 'runs': []}, {'provider': 'ado', 'state': 'not-configured', 'detail': 'set status.ado.organization and status.ado.project in settings.json', 'issues': [], 'pullRequests': [], 'runs': []}, {'provider': 'git', 'state': 'not-configured', 'detail': 'set status.git.path in settings.json to watch a working tree', 'issues': [], 'pullRequests': [], 'runs': []}]}]}
+OK    [spawn] pid=3280
+      [pty/output] b'\x1b[1m\x1b[7m%\x1b[27m\x1b[1m\x1b[0m                                                                               \r \r'
+      [pty/output] b'\r\x1b[0m\x1b[27m\x1b[24m\x1b[Jadmin@Manageds-Virtual-Machine ~ % \x1b[K\x1b[?2004h'
+      [pty/output] b'p\x08pr'
+      [pty/output] b"intf '%s%s\\n' fingertrap-smoke- 9755dd0e36"
+      [pty/output] b'1 \r\x1b[Ka'
+OK    [write] response=None
+      [pty/output] b'\ra438a8cf3f0e7d626aa04\x1b[?2004l\r\r\n'
+      [pty/output] b'fingertrap-smoke-9755dd0e361a438a8cf3f0e7d626aa04\r\n\x1b[1m\x1b[7m%\x1b[27m\x1b[1m\x1b[0m                                               '
+      [pty/output] b'\r\x1b[0m\x1b[27m\x1b[24m\x1b[Jadmin@Manageds-Virtual-Machine ~ % \x1b[K\x1b[?2004h'
+OK    [echo] shell output contains marker
+SKIP  [pi-spawn] no pi executable resolvable (PATH/FINGERTRAP_PI); pi case skipped
