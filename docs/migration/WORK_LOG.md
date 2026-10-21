@@ -1352,3 +1352,8 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   Plan one reviewed reconciliation PR against merged dev, with full combined
   validation, then close incorporated originals. #199 must not merge into main.
   #188's architecture proposal is superseded; its implementation issues stay open.
+- Review checkpoint 297528a is committed. Initial formatting invocation from the
+  repository root found no package; corrected invocation from src-ui identified
+  the new review table's alignment. Prettier corrected that file before push.
+  Tart readiness check passes (group 5); the GitHub connector cannot resolve
+  review threads, so use the existing per-command TheSemicolon CLI identity.
