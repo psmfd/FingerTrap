@@ -1434,3 +1434,33 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   frozen UI dependencies synchronized. Our earlier tracking edits are verified
   in committed 5ccfd5a and preserved in .artifacts/pr-merge-20261021/root-tracking-backup.
   The three private untracked entries remain; no operator sibling checkout moved.
+- #212 passes all 22 head checks and merges at 9d8b892b1569fa5b75d360a663c54c0063a8f6ed;
+  main checkout fast-forwards. Its final dev run 39683025954 fails one Linux
+  sidecar test (408 pass / 12 skip); compilation succeeds. Retrieve exact detail
+  from digest-verified artifact 12385226610 before diagnosing or retrying. Other
+  jobs remain active. Source backlog remains closed; final verification is not
+  yet complete. Failure evidence is preserved locally under pr-merge-20261021.
+- S3-M2 diagnosis: malformed-line golden expects parse response, then hello,
+  then stdin EOF. The scenario waits only for the response; the test thread can
+  record EOF before the stdout pump records hello. Production already exposes
+  WaitForHelloAsync, but the default 500ms legacy grace is unsuitable for a
+  deliberately delayed handshake regression. Add a test-harness HelloGrace
+  override bounded by EventBudget, and await readiness in this scenario. First
+  prove failure with a FakePi delayed hello via RecordScenarioHost, then verify
+  all golden transcripts unchanged and run the full suite. No runtime change.
+- The delayed-hello regression fails before the fix at its exact ordering
+  assertion; all twelve existing replay cases pass. The child delays hello by
+  one second, exceeding the default 500ms legacy grace. Implement the scenario's
+  event-budget handshake override and explicit readiness await; next run focused
+  and full sidecar checks, preserving the original failure and red test logs.
+- S3-M2 green: all 13 focused cases pass; full sidecar suite passes 410 tests,
+  with 12 opt-in recorder skips. The golden-data diff is empty. Preserve original
+  Linux failure, local red assertion and green/full logs in evidence/golden-handshake.
+  Change scope is three test-only C# files and tracking/evidence. Production
+  runtime, normalizer and transcript bytes are unchanged; qualify the fix through
+  a dedicated PR under the same restricted local Tart/hosted Linux/Windows policy.
+- Test/evidence checkpoint 7e4e727 is committed, secret-scanned and remotely
+  backed up in draft #213. Enroll only this owned PR in the existing trusted
+  policy, preserve the immutable worker and runner-group restrictions, then
+  queue full protected CI and Apple packaging. Previous dev runner drain is
+  complete; no local Tart controller remains active before cutover.

@@ -17,6 +17,34 @@ public sealed class GoldenReplayTests
 {
     public static TheoryData<string> ScenarioNames => GoldenScenarios.Names;
 
+    [Fact]
+    public async Task MalformedLineScenario_RecordsDeferredHelloBeforeShutdown()
+    {
+        var golden = GoldenStore.Read(Path.Combine(
+            GoldenStore.OutputDataDir, GoldenStore.FileName("malformed-line-parse-error")));
+        var inbound = golden.Where(record => record.IsInbound).ToArray();
+        Assert.Equal(2, inbound.Length);
+        var executable = FakePiShim.WriteShim(
+            FakePiShim.Step("waitForLine", "this is not json"),
+            FakePiShim.Step("writeLine", inbound[0].Line!),
+            // Longer than the default legacy hello grace: readiness must be
+            // observed, rather than inferred from a quiet interval.
+            FakePiShim.Step("delayMs", 1000),
+            FakePiShim.Step("writeLine", inbound[1].Line!),
+            FakePiShim.Step("waitForEof", true),
+            FakePiShim.Step("exit", 0));
+
+        await using var host = new RecordScenarioHost(executable);
+        await GoldenScenarios.ByName("malformed-line-parse-error")
+            .RunAsync(host, TestContext.Current.CancellationToken);
+
+        var records = host.Records.ToList();
+        var helloIndex = records.FindIndex(record => record.IsInbound && record.Line == inbound[1].Line);
+        var eofIndex = records.FindIndex(record => record.Ctl == "stdin_eof");
+        Assert.True(helloIndex >= 0 && helloIndex < eofIndex,
+            "the hello wire record must precede the scenario's stdin EOF");
+    }
+
     [Theory]
     [MemberData(nameof(ScenarioNames))]
     public async Task Replay_Golden_ReproducesTranscript(string name)

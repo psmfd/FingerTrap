@@ -19,6 +19,8 @@ internal sealed record ScenarioSpawn
     public TimeSpan? EofGrace { get; init; }
 
     public TimeSpan? RequestTimeout { get; init; }
+
+    public TimeSpan? HelloGrace { get; init; }
 }
 
 /// <summary>
@@ -209,6 +211,11 @@ internal abstract class ScenarioHost : IAsyncDisposable
         if (spawn.RequestTimeout is { } requestTimeout)
         {
             options = options with { RequestTimeout = requestTimeout };
+        }
+
+        if (spawn.HelloGrace is { } helloGrace)
+        {
+            options = options with { HelloGrace = helloGrace };
         }
 
         return options;
