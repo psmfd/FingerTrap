@@ -72,9 +72,12 @@ the runtime shrinkwrap. No merge, release, installed pin or activation changed.
 - Package artifact `12354825465` and app/DMG digests verify. Its PR merge tree
   equals `faa4242`; sidecar/native-shell smoke passes. Product Pi smoke skips
   because Pi is not bundled; managed-runtime evidence is the separate matrix.
-- Final evidence/documentation checkpoint skips CI. Attribute source CI to
-  `faa4242`, not to a later documentation-only head. See WORK_LOG for the
-  actual documentation checkpoint/backup result.
+- Evidence/report `0cf4c98188204489a9e45c21e4895f9cc1f1090b` and retained
+  command logs `7d081d01603761fc1f057c46d31a61aab1476b11` are committed and
+  remotely backed up. All 102 evidence files are tracked; scoped secret scans
+  pass. Companion drafts and #210 descriptions were updated and independently
+  read back. This final recovery note follows those observed checkpoints.
+  Documentation commits skip CI; source CI belongs to `faa4242`.
 
 The [G5 report](s3-managed-startup-qualification.html), Pi #81 and its
 `39b729b` source remain historical evidence. Do not merge that old-base branch

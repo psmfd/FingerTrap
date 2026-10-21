@@ -988,3 +988,22 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   Final tracking inspection found three command logs excluded by the global
   `*.log` rule. Renamed them to `.txt` for durable retention before backup;
   all 102 evidence files will be tracked. No test outcomes changed.
+
+## 2026-10-21 — Qualification remotely backed up; recovery checkpoint
+
+- Report/evidence `0cf4c98188204489a9e45c21e4895f9cc1f1090b` and command-log
+  follow-up `7d081d01603761fc1f057c46d31a61aab1476b11` are pushed to
+  `psmfd/FingerTrap:feat/managed-pi-startup`; fetched remote matches the head.
+  Scoped scans cover both source/evidence and the log follow-up, with no leaks.
+  Independent inventory confirms all 102 retained evidence files are tracked.
+- Updated and read back FingerTrap #209, maintained Pi #82 and follow-on #210.
+  Both implementation PRs remain open drafts. Pi #81 now explicitly points to
+  the maintained replacement and remains historical; no merge or issue closure.
+- Latest-Pi #210 carries concrete runtime brace-expansion and shell-quote
+  disposition, protocol drift, cap accounting and revalidation requirements.
+  Discover latest only when that campaign begins. Exact pin/release and
+  managed activation remain separate from this completed qualification.
+- Resume: review the qualified companion drafts, settle integration/promotion
+  disposition, then execute #210. Source CI is green on FT `faa4242` and
+  Pi `1f37eea`; documentation commits intentionally skip those build lanes.
+  This status/log-only recovery note records the preceding verified backup.
