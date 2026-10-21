@@ -38,8 +38,13 @@ The reviewed base-preparation script runs inside the clean guest:
 
 ```sh
 tart exec -i ft-actions-base-20261020 /bin/bash -s < scripts/ci/prepare-tart-runner.sh
-tart stop ft-actions-base-20261020
+tart exec ft-actions-base-20261020 sudo -n /sbin/shutdown -h now
 ```
+
+Wait for the `tart run` process to exit before cloning. The guest transport may
+disconnect during shutdown. Do not use `tart stop` to save template changes:
+an abrupt stop can lose recent guest writes. Verify prerequisites in a new clone
+before registering it; the controller now checks Bash as well as runner state.
 
 Preparation deliberately refuses to overwrite an existing FingerTrap runner
 directory. On failure inspect the guest; do not delete or reuse credential
@@ -117,11 +122,46 @@ name and runner ID from `state.json`, inspect `tart list` and GitHub's runner
 list, then stop/delete that clone and remove that registration. Do not run a
 wildcard VM cleanup. An incomplete cleanup is a failed operation, not success.
 
+## Approved macOS cutover
+
+The maintainer approved moving macOS jobs first and retaining Windows/Linux on
+GitHub-hosted runners. GitHub rejected direct PR merge refs and test-merge SHAs
+in runner-group policies. A reusable worker pinned by full commit SHA provides
+the supported boundary. Required macOS check names gain `/ validate`; change
+their protection mappings only after the equivalent checks pass.
+
+`.github/tart-policy.json` explicitly enrolls migration PR #207. `cutover`
+verifies its source is this repository, then permits the exact reusable worker
+revision in group 5. The worker's immutable routing decision selects local
+capacity for enrolled PRs, dev/main CI and dev candidate dispatches.
+`workerRevision` must name the published full SHA used by workflow callers.
+The controller writes the PR list to `FINGERTRAP_TART_PRS` and records the
+applied workflow list in `FINGERTRAP_TART_WORKFLOWS`, then reads both back.
+These repository variables require administration permissions to change.
+
+```sh
+python3 scripts/ci/tart-runner.py cutover
+python3 scripts/ci/tart-runner.py check
+python3 scripts/ci/tart-runner.py drain --max-jobs 5
+```
+
+The cutover command accepts the known prior pilot policy, the desired policy,
+or the previous policy recorded in the administration-controlled variable.
+It refuses unexplained server drift. Enrollment or worker updates require a
+reviewed policy change and rerunning `cutover`.
+The launcher rechecks server policy before every registration.
+
+The five jobs are sidecar, UI, runtime package, Tauri and candidate packaging.
+Each receives a fresh VM, one at a time. `drain` is bounded by job count and each
+runner's lifetime; it is not a permanent service. Start it for the work session.
+If fewer jobs are queued, interrupt the controller to clean up the waiting VM.
+Unenrolled/fork PRs keep hosted macOS coverage; they are outside this migration's
+local allowlist. An enrolled job has no automatic hosted fallback.
+
 Acceptance requires the GitHub job to complete on the recorded local runner,
 checksums/build identity to name the expected source, and cleanup to remove
 both VM and runner. A zero runner exit code alone is not a passing build.
-Then implement the routine CI routing change while preserving required check
-names and Windows/Linux coverage. No automatic hosted fallback is configured.
+Verify all five routed jobs before claiming the cutover complete.
 
 References: [GitHub runner lifecycle](https://docs.github.com/en/actions/reference/runners/self-hosted-runners),
 [workflow restrictions](https://docs.github.com/en/rest/actions/self-hosted-runner-groups),

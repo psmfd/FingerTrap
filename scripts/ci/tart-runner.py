@@ -51,18 +51,77 @@ def api(env, method, path, payload=None):
     return json.loads(result.stdout) if result.stdout.strip() else None
 
 
-def validate_group(group, repositories):
+def validate_group(group, repositories, workflows=None):
     """Require the server-side boundary; labels/if expressions are insufficient."""
     if (group["name"] != GROUP or group.get("inherited")
             or group["visibility"] != "selected"
             or group["allows_public_repositories"] is not True
             or group["restricted_to_workflows"] is not True
-            or group["selected_workflows"] != [WORKFLOW]
+            or set(group["selected_workflows"]) != set(workflows or [WORKFLOW])
             or {r["id"] for r in repositories} != {REPO_ID}):
         raise RuntimeError("Runner group differs from the reviewed pilot policy")
 
 
-def get_group(env, create=False):
+def routing_policy(env, policy=None):
+    """Only explicitly enrolled PRs from this repository may use local workers."""
+    if policy is None:
+        policy_path = Path(__file__).resolve().parents[2] / ".github/tart-policy.json"
+        policy = json.loads(policy_path.read_text())
+    prs = policy["trustedPullRequests"]
+    if (set(policy) != {"trustedPullRequests", "workerRevision"} or not isinstance(prs, list)
+            or any(type(number) is not int or number <= 0 for number in prs)
+            or len(prs) != len(set(prs))):
+        raise RuntimeError("Invalid trusted PR policy")
+    workflows = [WORKFLOW]
+    for number in prs:
+        pr = api(env, "GET", f"repos/{ORG}/{REPO}/pulls/{number}")
+        if (pr["head"]["repo"] is None or pr["head"]["repo"]["id"] != REPO_ID
+                or pr["base"]["repo"]["id"] != REPO_ID
+                or pr["base"]["ref"] not in ("dev", "main")):
+            raise RuntimeError(f"PR {number} is not a trusted repository PR")
+    revision = policy["workerRevision"]
+    if revision is not None:
+        if not isinstance(revision, str) or not re.fullmatch("[0-9a-f]{40}", revision):
+            raise RuntimeError("workerRevision must pin a full commit SHA")
+        workflows.append(f"{ORG}/{REPO}/.github/workflows/macos-worker.yml@{revision}")
+    return workflows, prs
+
+
+def configure_routing(env, group, workflows, prs):
+    if len(workflows) != 2:
+        raise RuntimeError("Publish and pin the reusable worker before cutover")
+    # Only migrate the previously verified pilot boundary. Never edit a group
+    # whose repository access or existing workflow policy is unexpected.
+    repos = api(env, "GET",
+                f"orgs/{ORG}/actions/runner-groups/{group['id']}/repositories")
+    variables = api(env, "GET", f"repos/{ORG}/{REPO}/actions/variables?per_page=100")
+    values = {v["name"]: v["value"] for v in variables["variables"]}
+    if set(group["selected_workflows"]) == {WORKFLOW}:
+        validate_group(group, repos["repositories"])
+    elif set(group["selected_workflows"]) == set(workflows):
+        validate_group(group, repos["repositories"], workflows)
+    else:
+        # This admin-controlled variable records the last applied policy.
+        # Contents-read workflow tokens cannot modify it. Refuse unexplained
+        # server drift before advancing to a newly reviewed worker revision.
+        previous = json.loads(values.get("FINGERTRAP_TART_WORKFLOWS", "null"))
+        if not isinstance(previous, list) or not previous:
+            raise RuntimeError("No recorded prior runner policy; inspect server state")
+        validate_group(group, repos["repositories"], previous)
+    api(env, "PATCH", f"orgs/{ORG}/actions/runner-groups/{group['id']}", {
+        "name": GROUP, "visibility": "selected",
+        "allows_public_repositories": True,
+        "restricted_to_workflows": True, "selected_workflows": workflows,
+    })
+    for name, value in (("FINGERTRAP_TART_PRS", prs),
+                        ("FINGERTRAP_TART_WORKFLOWS", workflows)):
+        present = name in values
+        path = f"repos/{ORG}/{REPO}/actions/variables"
+        api(env, "PATCH" if present else "POST", path + ("/" + name if present else ""),
+            {"name": name, "value": json.dumps(value, separators=(",", ":"))})
+
+
+def get_group(env, create=False, cutover=False):
     groups = api(env, "GET", f"orgs/{ORG}/actions/runner-groups?per_page=100")
     matches = [g for g in groups["runner_groups"] if g["name"] == GROUP]
     if not matches and create:
@@ -80,7 +139,23 @@ def get_group(env, create=False):
         env, "GET",
         f"orgs/{ORG}/actions/runner-groups/{group['id']}/repositories?per_page=100",
     )
-    validate_group(group, repositories["repositories"])
+    workflows, prs = routing_policy(env)
+    if cutover:
+        configure_routing(env, group, workflows, prs)
+        return get_group(env)
+    # The pilot remains valid before the explicit routing cutover.
+    if set(group["selected_workflows"]) == {WORKFLOW}:
+        validate_group(group, repositories["repositories"])
+    else:
+        validate_group(group, repositories["repositories"], workflows)
+        variable = api(env, "GET",
+                       f"repos/{ORG}/{REPO}/actions/variables/FINGERTRAP_TART_PRS")
+        if json.loads(variable["value"]) != prs:
+            raise RuntimeError("GitHub routing variable differs from the reviewed policy")
+        recorded = api(env, "GET",
+                       f"repos/{ORG}/{REPO}/actions/variables/FINGERTRAP_TART_WORKFLOWS")
+        if set(json.loads(recorded["value"])) != set(workflows):
+            raise RuntimeError("Recorded runner policy differs from the pinned worker")
     return group
 
 
@@ -218,6 +293,7 @@ def execute_one(env, group, state_root):
                       "1.1.1.1 8.8.8.8\n")
             record("network_verified", network=verify_network(vm))
             guest(vm, """set -euo pipefail
+/opt/homebrew/bin/bash -c 'test "${BASH_VERSINFO[0]}" -ge 4'
 cd "$HOME/fingertrap-actions-runner"
 test ! -e .runner
 test ! -e .credentials
@@ -296,19 +372,26 @@ test ! -e "$HOME/actions-runner/.credentials"
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["configure", "check", "run"])
+    parser.add_argument("action", choices=["configure", "cutover", "check", "run", "drain"])
     parser.add_argument("--github-user", default="TheSemicolon")
     parser.add_argument("--state-root", type=Path,
                         default=Path(".artifacts/tart-runner"))
+    parser.add_argument("--max-jobs", type=int, default=5)
     args = parser.parse_args()
     os.umask(0o077)
     token = command(["gh", "auth", "token", "--hostname", "github.com",
                      "--user", args.github_user], capture_output=True).stdout.strip()
     env = dict(os.environ, GH_TOKEN=token)
-    group = get_group(env, create=args.action == "configure")
+    if not 1 <= args.max_jobs <= 20:
+        parser.error("--max-jobs must be between 1 and 20")
+    group = get_group(env, create=args.action == "configure",
+                      cutover=args.action == "cutover")
     print(f"Verified group {group['id']}: {GROUP}", flush=True)
     if args.action == "run":
         run_one(env, group, args.state_root.resolve())
+    elif args.action == "drain":
+        for _ in range(args.max_jobs):
+            run_one(env, get_group(env), args.state_root.resolve())
 
 
 if __name__ == "__main__":

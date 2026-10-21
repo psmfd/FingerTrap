@@ -22,3 +22,4 @@ test ! -e .runner
 test ! -e .credentials
 ./bin/Runner.Listener --version
 sw_vers
+sync

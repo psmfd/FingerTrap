@@ -392,3 +392,42 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   first boot-readiness poll timed out; retry handling corrected and install
   completed. Independent Tart listing and GitHub runner listing confirmed the
   previous job clone was absent and repository-visible runner count was zero.
+
+## 2026-10-21 — Persisted template and explicit macOS cutover scope
+
+- **Approval:** maintainer answered the scope question: move macOS jobs locally
+  first, leave Windows/Linux hosted. This authorizes the CI routing change.
+- **Second pilot:** `a403061` was committed/pushed. Its first local run
+  `39521793168` failed because `/opt/homebrew/bin/bash` was absent in the clone,
+  despite verification before stopping the template. The base itself also
+  lacked Bash on next boot. Recent guest writes had not persisted.
+- **Repair:** reinstall Bash, sync, request shutdown from inside macOS, and
+  wait for guest exit. The shutdown transport disconnected as expected.
+  Fresh clone `ft-actions-job-20261021t003855z-222e26e7` independently verified
+  modern Bash before JIT registration. Retry job `118970292546` now executes
+  the real validation/package script. Do not confuse prior setup failures with
+  app test results.
+- **Cutover preparation:** preserve exact check names required by both branch
+  protection and rulesets. Explicitly enroll same-repository PR #207, CI on
+  dev/main, and dev candidate packaging through server workflow-ref restrictions.
+  Add a bounded five-job drain command. Other PRs retain hosted coverage until
+  enrolled; Windows/Linux stay hosted. No protection changes or app activation.
+
+## 2026-10-21 — Pilot passed; GitHub restriction changes routing design
+
+- **Pilot:** job `118970292546` at `a403061` passed the complete validation and
+  packaging script, uploaded the candidate, and controller cleanup finished.
+  Collect final GitHub status after cache post-steps before the final claim.
+- **Tracker:** created #208 for approved macOS cutover and operational evidence.
+- **API evidence:** GitHub rejected `refs/pull/207/merge` as an ambiguous
+  runner-group ref. It also rejected the PR's test-merge SHA as an unresolved
+  workflow commit. Both rejected PATCH requests left the pilot policy intact.
+- **Revised implementation:** a full-SHA-pinned reusable worker is the server
+  boundary. Its immutable routing logic sends enrolled same-repository PR #207
+  and protected dev/main work to Tart, retaining hosted compatibility for other
+  PRs. Separate lane inputs preserve test/package coverage without duplicating
+  the complete build five times.
+- **Protection consequence:** reusable jobs add `/ validate` to check names.
+  Preserve enforcement by mapping the three existing required macOS checks to
+  their equivalent names after observing successful execution. Windows/Linux
+  names and all other protection settings remain as read.

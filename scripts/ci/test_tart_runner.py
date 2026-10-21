@@ -3,6 +3,7 @@ import copy
 import importlib.util
 from pathlib import Path
 import unittest
+from unittest.mock import patch
 
 spec = importlib.util.spec_from_file_location(
     "tart_runner", Path(__file__).with_name("tart-runner.py"))
@@ -42,6 +43,39 @@ class GroupPolicyTests(unittest.TestCase):
         for repos in ([], [{"id": 1}], self.repos + [{"id": 1}]):
             with self.subTest(repos=repos), self.assertRaises(RuntimeError):
                 runner.validate_group(self.group, repos)
+
+    def test_cutover_allows_only_the_exact_reviewed_workflows(self):
+        expected = [runner.WORKFLOW, "psmfd/FingerTrap/.github/workflows/ci.yml@refs/heads/dev"]
+        self.group["selected_workflows"] = expected
+        runner.validate_group(self.group, self.repos, expected)
+        self.group["selected_workflows"] = expected + [
+            "psmfd/FingerTrap/.github/workflows/attacker.yml@refs/heads/dev"]
+        with self.assertRaises(RuntimeError):
+            runner.validate_group(self.group, self.repos, expected)
+
+    def test_fork_pr_cannot_be_enrolled(self):
+        pr = {"state": "open", "head": {"repo": {"id": 1}, "ref": "branch"},
+              "base": {"repo": {"id": runner.REPO_ID}, "ref": "dev"}}
+        with patch.object(runner, "api", return_value=pr), self.assertRaises(RuntimeError):
+            runner.routing_policy({}, {"trustedPullRequests": [207], "workerRevision": "a" * 40})
+
+    def test_trusted_pr_has_only_known_workflows_and_refs(self):
+        pr = {"state": "open",
+              "head": {"repo": {"id": runner.REPO_ID}, "ref": "docs/pi-runtime-migration"},
+              "base": {"repo": {"id": runner.REPO_ID}, "ref": "dev"}}
+        with patch.object(runner, "api", return_value=pr):
+            workflows, prs = runner.routing_policy(
+                {}, {"trustedPullRequests": [207], "workerRevision": "a" * 40})
+        self.assertEqual(prs, [207])
+        self.assertIn("psmfd/FingerTrap/.github/workflows/macos-worker.yml@" + "a" * 40,
+                      workflows)
+        self.assertEqual(len(workflows), 2)
+        self.assertTrue(all(w.startswith("psmfd/FingerTrap/.github/workflows/")
+                            for w in workflows))
+
+    def test_mutable_worker_revision_is_rejected(self):
+        with self.assertRaises(RuntimeError):
+            runner.routing_policy({}, {"trustedPullRequests": [], "workerRevision": "main"})
 
 
 if __name__ == "__main__":

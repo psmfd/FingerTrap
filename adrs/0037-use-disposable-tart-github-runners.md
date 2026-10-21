@@ -1,6 +1,6 @@
 # 0037 — Use disposable Tart GitHub runners
 
-- Status: Accepted for a macOS pilot; routine CI cutover pending validation
+- Status: Accepted; macOS cutover approved, verification in progress
 - Date: 2026-10-20
 - Extends: ADR-0033; supersedes its exclusion of local runner orchestration
 
@@ -33,6 +33,21 @@ no pull-request trigger and does not consume an arbitrary ref input. It has a
 read-only repository token and no signing, provider or operator credentials.
 The host's GitHub administration token never enters the guest.
 
+After proving the pilot, move macOS sidecar, UI, runtime-package, Tauri and
+candidate packaging jobs for this migration to the same group. Preserve their
+Windows/Linux lanes. The maintainer explicitly approved this scope. GitHub
+rejected direct PR merge refs and test-merge SHAs in runner-group restrictions,
+so macOS jobs call a reusable worker pinned by full commit SHA. The group
+permits that exact worker revision. Its immutable routing decision allows
+local execution for explicitly enrolled same-repository PRs, protected
+dev/main pushes and dev candidate dispatches. The initial enrolled PR is #207.
+Enrollment and worker revision live in `.github/tart-policy.json`; the controller
+verifies the server policy and matching repository variables before registration.
+The three required macOS check names gain the reusable worker's `/ validate`
+suffix; update their protection mappings only after the equivalent checks pass.
+Unenrolled and fork PRs retain hosted coverage. They cannot select the local
+group by editing workflow labels because GitHub enforces the group's ref list.
+
 Require Softnet networking with explicit private-network blocks, disable
 clipboard and audio sharing, and mount no host directories. Verify both
 external connectivity and denial of host/private-network access before a
@@ -58,7 +73,7 @@ build tools in a runner does not prove a packaged app's runtime independence.
 
 ## Known limitations and deferred work
 
-Routine PR routing, automated scheduling, Linux/Windows local capacity and
+Automated scheduling, additional PR enrollment, Linux/Windows local capacity and
 signing remain follow-up work. Do not disable current required checks before
 the local equivalent passes. This decision does not resolve the Pi discovery
 blocker or enable managed profiles in #201.
