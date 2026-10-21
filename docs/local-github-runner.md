@@ -1,28 +1,30 @@
 # Local GitHub Actions runner
 
-The macOS pilot runs tests and Apple Silicon packaging in one disposable Tart
-VM on the workstation. GitHub schedules the job and stores its logs/artifacts.
+Each macOS build/test or Apple Silicon packaging job runs in a fresh disposable
+Tart VM on the workstation. GitHub schedules jobs and stores logs/artifacts.
 The runner is not a persistent workstation process. See [ADR-0037](../adrs/0037-use-disposable-tart-github-runners.md).
 
 ## Current status
 
-Verified on 2026-10-21 UTC. PR #207 now runs all five macOS jobs locally.
+PR #207 merged into `dev` as `9bfc0926cf387644a1cd2512e3fcb63f22287165`
+on 2026-10-21 UTC. Its candidate `8196b4f` passed all 23 distinct checks;
+merged dev passed all 22 post-merge check reports. The Git trees are identical.
+[Protected dev CI](https://github.com/psmfd/FingerTrap/actions/runs/39531687800)
+and [dev packaging](https://github.com/psmfd/FingerTrap/actions/runs/39531859652)
+succeeded. All five macOS jobs used distinct local `ft-actions-job-*` runners.
 Windows/Linux and lightweight repository/security checks remain hosted.
-The build template is stopped; the privileged Softnet helper and restricted
-GitHub group are configured. Start the controller when jobs are queued.
 
-Source `e0427460285c83805587ee5db599ace50032b400` passed all 23 reported checks.
-[CI](https://github.com/psmfd/FingerTrap/actions/runs/39526283019) and
-[packaging](https://github.com/psmfd/FingerTrap/actions/runs/39526283095) succeeded.
-All five jobs used distinct `ft-actions-job-*` runners. Independent Tart and
-GitHub listings confirmed the job VMs/registrations were removed.
+All five CodeQL language analyses passed; dev has no open CodeQL findings.
+The network canary binds only the VM gateway. Its real socket-binding test
+fails when the wildcard bind is restored; nine controller tests run in CI.
+Independent Tart and GitHub listings confirmed all job VMs/registrations were
+removed. The template is stopped; start the controller when jobs queue.
 
-The downloaded candidate's outer digest and app/DMG checksums were verified.
-Its `build.json` names PR test-merge commit
-`41cb6c6b59dcc10eed2f78a99b6b2d20e99f0bee` and the recorded local runner.
-Artifact `12313103374` has archive SHA-256
-`112d5440e3af8f92d567969a06abfadd8676438511e03db4b15a1d88c7e22b3d`.
-The files are retained locally under `.artifacts/tart-final-candidate/`.
+Downloaded artifact `12316018036` has archive SHA-256
+`ee2ec15073e50ac55173bb075fca4052be904e2ea4ef6382436840b55b7ea1d1`.
+The archive and app/DMG checksums were verified; `build.json` names merged dev
+`9bfc092` and actual local runner `ft-actions-job-20261021t022057z-1e75a4eb`.
+Files and evidence are under `.artifacts/tart-dev-candidate/`.
 
 Observed host: Tart 2.32.1, Softnet 0.19.0, 18 CPUs, 128 GiB RAM, approximately
 122 GiB available disk at setup. Dedicated base `ft-actions-base-20261020` was
@@ -171,17 +173,31 @@ If fewer jobs are queued, interrupt the controller to clean up the waiting VM.
 Unenrolled/fork PRs keep hosted macOS coverage; they are outside this migration's
 local allowlist. An enrolled job has no automatic hosted fallback.
 
+For the next trusted implementation PR, establish its number with a draft and
+an initial `[skip ci]` checkpoint before scheduling builds. Review its source
+and base, add its number to `trustedPullRequests`, then run `cutover` and `check`
+before pushing the actual candidate without the skip marker. This avoids an
+initial hosted macOS matrix. Do not enroll forks or unrelated PRs. Merge the
+reviewed policy with that work so repository policy and server variables stay
+consistent. The merged PR #207 enrollment does not automatically cover new PRs.
+
 Acceptance requires the GitHub job to complete on the recorded local runner,
 checksums/build identity to name the expected source, and cleanup to remove
 both VM and runner. A zero runner exit code alone is not a passing build.
 Verify all five routed jobs before claiming the cutover complete.
 
-## Coordinate required checks with merge
+## Required checks and later main promotion
 
-The migration PR remains a draft. Other branches still use the original
-workflow, so global protections have **not** been renamed yet. Coordinate the
-following equivalent mappings with landing the workflow change; applying them
-early would block branches still emitting the original names.
+The following mappings are applied to `dev` ruleset `protect-dev` (20894193)
+and classic branch protection. Independent readback confirms every other
+setting, including check app bindings and strictness, is preserved. PR #207
+merged without bypass after all checks passed on candidate `8196b4f`.
+
+`main` still uses its original workflow and protection names. Apply these
+mappings to `protect-main` (20894194) when the dev-to-main promotion lands,
+after the actual promotion candidate passes. No main promotion is included in
+this rollout. Classic protection on main currently has no required-check list;
+preserve that unless separately authorized.
 
 | Existing required context | Equivalent reusable-worker context |
 | --- | --- |
@@ -191,17 +207,17 @@ early would block branches still emitting the original names.
 
 Read current protection immediately before changing it. Preserve all other
 required contexts, app bindings, strictness, review requirements and bypass
-settings. Relevant observed rulesets: `protect-dev` (20894193) and
-`protect-main` (20894194); classic branch protection also requires these
-contexts. Observe the replacement checks passing on the actual merge candidate,
-then apply the matching mappings as part of the coordinated merge. Current
-source validation does not authorize merging an untested later head.
+settings. Existing PRs targeting dev must update from dev to receive the new
+workflow; classic strict checks already require an up-to-date branch. The
+promotion PR must use the dev branch under the existing Gitflow rules.
+Snapshots and exact payloads for the completed dev mapping are retained in
+`.artifacts/tart-rollout-207/`.
 
 Preserve the `ci/tart-runner-pilot` remote branch at the published worker
 checkpoint while it anchors pinned commit `cf1cd50ca296ad2b35711b028acfe2f66f7c8aa4`.
 Do not delete that source reference during routine PR branch cleanup.
 Tracker [#208](https://github.com/psmfd/FingerTrap/issues/208) remains open for
-merge-time protection alignment and broader operational rollout.
+later main-promotion mapping and operational follow-ups.
 
 References: [GitHub runner lifecycle](https://docs.github.com/en/actions/reference/runners/self-hosted-runners),
 [workflow restrictions](https://docs.github.com/en/rest/actions/self-hosted-runner-groups),

@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-21 UTC, during approved merge preparation.
+Updated: 2026-10-21 UTC, after merged dev CI, packaging and cleanup passed.
 
 ## Authorization and scope
 
@@ -20,39 +20,36 @@ approval capabilities and repository retirement retain their separate gates.
 
 ## Resume here
 
-**Current activity: approved PR #207 merge and protected-branch verification.**
+**Current activity: runner rollout complete on dev; resume the S3 discovery decision.**
 
-The maintainer approved proceeding after the runner handoff. Prepare the actual
-merge candidate, address the CodeQL network-canary finding, run its checks with
-local macOS workers, then map only `dev`'s three equivalent required contexts
-and squash-merge through GitHub without bypassing protections. Verify `dev` CI
-and a candidate dispatch afterward. Preserve the pinned worker branch. Leave
-`main`'s mapping for its later dev-to-main promotion. No managed activation,
-SDK change, runtime-pin change or retirement is included.
-
-1. Follow the [approved S3 plan](s3-launch-isolation-plan.html).
-2. Read [S3 discovery audit](s3-discovery-audit.md): project migrations precede
-   trust in the pin, blocking arbitrary-project activation. ADR-0036 records
-   the controlled-fixture restriction and launch contract.
-3. Read the [S3 implementation report](s3-launch-foundation.md). Source
-   `95424b3` is committed/pushed. Hosted sidecar/runtime/UI/Tauri passed on all
-   three platforms. Rust analysis passed. The unchanged-source Apple Silicon
-   retry passed packaging, packaged-sidecar smoke and artifact upload
-   ([job](https://github.com/psmfd/FingerTrap/actions/runs/39469041145/job/118790720905)).
-4. The maintainer approved **macOS jobs locally first; Windows/Linux stay
-   hosted**. Source `e042746` is committed/pushed on the migration branch.
-   All five macOS jobs passed in separate isolated Tart VMs, Windows/Linux
-   passed, and all 23 reported checks were successful. See the
-   [runner runbook](../local-github-runner.md) for exact runs, artifact evidence,
-   startup and recovery. No job VMs or runner registrations remain.
-5. Before the next source push, check runner configuration; after jobs queue,
-   start `python3 scripts/ci/tart-runner.py drain --max-jobs 5`.
-   The controller is session-started; it is not an unattended service.
-6. Resume migration by reviewing the missing pinned-Pi discovery control under
-   #201/#202. No SDK/pin change is authorized by the runner work. PR #207 remains
-   a draft; [#208](https://github.com/psmfd/FingerTrap/issues/208) tracks
-   coordinated merge-time check-name mapping and remaining runner rollout.
-   Global protections retain their old names until the workflow change lands.
+1. PR [#207](https://github.com/psmfd/FingerTrap/pull/207) squash-merged into
+   `dev` as `9bfc0926cf387644a1cd2512e3fcb63f22287165`. The actual candidate
+   `8196b4f` passed every check, including all five local macOS jobs and CodeQL;
+   the merged tree is identical. CodeQL #8 is fixed by a gateway-only canary.
+2. Only the three macOS context names changed in `dev`'s ruleset and classic
+   protection. App bindings, strictness and every other protection are unchanged.
+   `main` retains old names until the later dev-to-main release promotion.
+3. Protected [dev CI](https://github.com/psmfd/FingerTrap/actions/runs/39531687800)
+   and [dev packaging](https://github.com/psmfd/FingerTrap/actions/runs/39531859652)
+   passed. All 22 reported checks passed, including CodeQL and hosted lanes.
+   Five local jobs used distinct VMs; artifact source/digests/runner identity
+   were verified. No job VMs, runner registrations or open dev CodeQL findings
+   remain.
+4. This handoff branch is `docs/runtime-migration-handoff`, based on merged
+   `dev`. The final documentation is checkpointed with CI skipped; its identity
+   is recorded in [#208](https://github.com/psmfd/FingerTrap/issues/208). Carry these docs
+   into the next implementation PR; do not repush the merged migration branch.
+5. Resume migration with the [approved S3 plan](s3-launch-isolation-plan.html),
+   [discovery audit](s3-discovery-audit.md) and [foundation report](s3-launch-foundation.md).
+   The pinned Pi performs project migrations before trust, so arbitrary-project
+   managed activation remains blocked under #201/#202. The next migration action is to review the missing startup/discovery control
+   under #201/#202 before selecting an implementation. No SDK or pin change is
+   authorized by this infrastructure rollout.
+6. Before future source pushes, run `python3 scripts/ci/tart-runner.py check`.
+   Once jobs queue, run `python3 scripts/ci/tart-runner.py drain --max-jobs 5`;
+   use four when only CI is queued. The controller is session-started.
+   See the [runbook](../local-github-runner.md) for recovery and trusted PR
+   enrollment; future PRs are not enrolled automatically.
 
 No managed launch is enabled.
 Read the latest [activity entry](WORK_LOG.md) before resuming; compare this
@@ -66,8 +63,8 @@ record with `git status`, `git log` and any active process/test output.
 | M1a | Token/cache-meter source package | Verified, backed up, inactive | [Report](m1a-import.md); runtime package CI passed on all three platforms at `6a999c9` |
 | S1 | Profile schema, compatibility and baseline | Verified locally and in CI; backed up | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed |
 | S2 | Reviewed import slices and test registration | Verified locally and in CI; backed up | `92137c4`; [manifest report](import-manifests.md); all platform checks and Apple Silicon package/smoke passed |
-| S3 | PTY/RPC launch isolation | Foundation backed up and CI verified; discovery blocked | `95424b3`; [report](s3-launch-foundation.md); package retry passed; exact-pin project migrations prevent full qualification |
-| CI-local | Reduce hosted builds with a local runner | Implemented and verified for PR #207 | `e042746`; five local macOS jobs passed; worker `cf1cd50`; group 5; Windows/Linux hosted; global protection mapping staged for merge |
+| S3 | PTY/RPC launch isolation | Foundation merged and CI verified; discovery blocked | `95424b3`; [report](s3-launch-foundation.md); package retry passed; exact-pin project migrations prevent full qualification |
+| CI-local | Reduce hosted builds with a local runner | Merged and verified on protected dev | `9bfc092`; 22 post-merge checks passed, five macOS jobs local; artifact/cleanup verified; dev protection mapped; main mapping deferred to promotion; Windows/Linux hosted |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
 | S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |
 | S5-B | Guards and typed tools | Pending | Enforcement tests, identity, tool ownership, vendor notices |
@@ -99,10 +96,10 @@ validation after resuming an incomplete edit and update this record.
 
 ## Current checkpoint / validation state
 
-- Migration branch: `docs/pi-runtime-migration`; draft PR #207.
-- Active branch: `docs/pi-runtime-migration`, fast-forwarded to runner routing
-  source `e042746`. The remote `ci/tart-runner-pilot` branch preserves worker
-  checkpoint `cf1cd50` for immutable reuse.
+- Merged migration: `docs/pi-runtime-migration`, PR #207, squash `9bfc092` on dev.
+- Active handoff branch: `docs/runtime-migration-handoff`, based on `9bfc092`.
+  The remote `ci/tart-runner-pilot` branch preserves worker checkpoint
+  `cf1cd50` for immutable reuse; do not delete it.
 - Base: `8ffeae809f7b4579d6b4f006c3f6e8414df60620`.
 - Baseline checkpoint: `6a999c9`, pushed to
   `psmfd/FingerTrap:docs/pi-runtime-migration`.
@@ -115,8 +112,8 @@ validation after resuming an incomplete edit and update this record.
   maintainer in the subsequent turn.
 - S3 implementation/audit: `95424b3`, committed and pushed. PR #207 now
   describes profile/import/launch foundations and the explicit discovery gap.
-- Draft review: [PR #207](https://github.com/psmfd/FingerTrap/pull/207),
-  targeting `dev`; no merge or activation.
+- Merged review: [PR #207](https://github.com/psmfd/FingerTrap/pull/207),
+  targeting `dev`; runtime activation remains disabled.
 - Existing M1a local results: [recorded report](m1a-import.md).
 - Checkpoint revalidation: all 20 provenance entries, lint, typecheck and
   41 meter tests passed; staged-export secret scan found no leaks.
@@ -156,16 +153,16 @@ validation after resuming an incomplete edit and update this record.
   worker, `e042746` routing. All backed up. Source `e042746` passed 23 checks,
   including five macOS jobs on Tart and hosted Windows/Linux/CodeQL.
   Downloaded candidate digests/source/runner identity verified; cleanup checked
-  independently. Final handoff changes documentation only and will be saved
-  with CI skipped to avoid another build matrix; its head is distinct from the
-  verified source checkpoint.
+  independently. Prior documentation handoff `d701bdf` was saved with CI
+  skipped; its head is distinct from the verified source checkpoint. The later
+  merge and protected-dev evidence are recorded below.
 
 ## Commands for the next session
 
 ```sh
 git status --short --branch
 git log -5 --oneline
-gh pr checks 207 --repo psmfd/FingerTrap
+gh run list --repo psmfd/FingerTrap --branch dev --limit 5
 python3 scripts/ci/tart-runner.py check
 pnpm --dir packages/agent-runtime check:provenance
 pnpm --dir packages/agent-runtime test
@@ -197,3 +194,25 @@ documentation-only or changed head has CI evidence from a different commit.
 
 [import]: https://github.com/psmfd/FingerTrap/issues/200
 [profile]: https://github.com/psmfd/FingerTrap/issues/201
+
+## Approved merge evidence
+
+- Maintainer approved coordinated merge and protected-branch verification.
+- Candidate `8196b4f`: [CI](https://github.com/psmfd/FingerTrap/actions/runs/39530284288)
+  and [package](https://github.com/psmfd/FingerTrap/actions/runs/39530284279) passed;
+  all 23 distinct checks passed (25 reports including repeated title/gitflow).
+- Nine controller tests pass locally and in `repo-check`; wildcard-binding
+  mutation fails the real socket-binding assertion. Live gateway-only canaries
+  passed before all five registrations. CodeQL #8 is fixed, not dismissed.
+- Merge `9bfc092` has the exact tested tree. Independent readback confirms only
+  three `dev` contexts changed; `main` and the worker source ref are unchanged.
+- Local snapshots and phase/evidence JSON are in `.artifacts/tart-rollout-207/`.
+  Source changes are merged and backed up; protected dev validation is complete.
+- Protected dev CI `39531687800` and packaging `39531859652` passed. All 22
+  reported checks passed; five local job VMs/registrations cleaned up. Artifact
+  `12316018036` archive SHA-256
+  `ee2ec15073e50ac55173bb075fca4052be904e2ea4ef6382436840b55b7ea1d1`
+  and app/DMG digests match; embedded source and runner match the merged build.
+- Final handoff changes documentation only. It is saved with CI skipped on
+  `docs/runtime-migration-handoff`; include it in the next implementation PR.
+  #208 remains open for later main-promotion mapping and scheduling decisions.

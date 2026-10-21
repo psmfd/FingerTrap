@@ -503,3 +503,47 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   assumptions were replaced with the portable kernel `getsockname` assertion.
 - **Next:** push this candidate without CI skipping, run local macOS jobs,
   verify CodeQL finding #8 is fixed, and only then coordinate `dev` protection.
+
+## 2026-10-21 — PR #207 merged; protected dev verification active
+
+- **Candidate:** `8196b4fbd85a3cf96b1511cc3d4da726ec9ce8ef` pushed and passed
+  all 23 distinct checks (25 reports including title/gitflow repeats).
+  CI `39530284288`; packaging `39530284279`; CodeQL #8 fixed, no open PR alerts.
+- **Local candidate jobs:** UI `118994354345`, sidecar `118994354408`, Tauri
+  `118994354645`, runtime `118994354668`, candidate `118994353815` all passed.
+  Five gateway-only live canaries passed; all clones/registrations were removed,
+  confirmed independently via Tart and GitHub listings.
+- **Merge:** PR marked ready; exact-head squash merge succeeded without bypass
+  at `9bfc0926cf387644a1cd2512e3fcb63f22287165`. Git tree equals tested candidate.
+- **Protection:** only three macOS names mapped in dev ruleset 20894193 and
+  classic protection. Full independent readback preserves all other settings;
+  main ruleset/classic protection unchanged. Worker branch remains at `cf1cd50`.
+  Before/desired/observed snapshots retained in `.artifacts/tart-rollout-207/`.
+- **Next:** dev CI `39531687800` plus a manual dev candidate are queued/running;
+  drain five local jobs, verify outputs/cleanup, then save final docs on
+  `docs/runtime-migration-handoff` with CI skipped. This branch starts at the
+  merged dev commit; preserve it for the next implementation PR.
+
+## 2026-10-21 — Protected dev rollout verified; final handoff
+
+- **Merged source:** `9bfc0926cf387644a1cd2512e3fcb63f22287165`. CI
+  `39531687800` and manual candidate `39531859652` completed successfully.
+  All 22 post-merge check reports passed, including hosted Windows/Linux and
+  all five CodeQL language analyses; no open dev CodeQL findings remain.
+- **Local jobs:** sidecar `118998808299`, UI `118998808334`, Tauri `118998808481`,
+  runtime `118998808483`, candidate `118999372393`. Each had its own fresh VM,
+  verified canary/HTTPS and JIT registration. All five cleaned up; independent
+  Tart listing shows preserved stopped VMs only and GitHub runner count is zero.
+- **Artifact:** downloaded `12316018036`; archive SHA-256
+  `ee2ec15073e50ac55173bb075fca4052be904e2ea4ef6382436840b55b7ea1d1`.
+  Verified both app/DMG digests and embedded commit/runner against the successful
+  dev job. Files/evidence: `.artifacts/tart-dev-candidate/`; job and protection
+  evidence: `.artifacts/tart-rollout-207/`.
+- **Durable handoff:** final runbook, ADR status, migration status and this log
+  are saved on `docs/runtime-migration-handoff`, based on merged dev, with CI
+  skipped for documentation only. PR #207 and #208 record the exact checkpoint.
+  Carry this branch's documentation into the next implementation PR.
+- **Next:** review S3's missing startup/discovery control under #201/#202.
+  Runtime activation remains disabled. #208 retains later main-promotion check
+  mapping and any unattended-controller decision. Enroll future trusted PRs
+  before source builds as documented; keep the immutable worker branch.
