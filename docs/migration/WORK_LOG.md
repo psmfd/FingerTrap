@@ -354,3 +354,41 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   operational or switch routine CI until the pilot and cleanup pass.
 - **Branch isolation:** switched the staged pilot to `ci/tart-runner-pilot`
   from `95424b3`; the migration PR branch itself remains unchanged.
+
+## 2026-10-20 19:03 UTC — Pilot backed up and running locally
+
+- **Checkpoint:** `a6bdb88` committed/pushed to the dedicated pilot branch.
+  Default-rule scan of the review export found no leaks. Actual Actions run
+  listing showed only `local-macos` for that push, no hosted build workflow.
+- **Bootstrap correction:** first run `39478496007` failed before execution
+  because the required group did not yet exist. After branch publication,
+  created/read back restricted group 5, then retried unchanged source.
+- **Isolation:** cloned job VM
+  `ft-actions-job-20261020t185329z-6f068950`; Softnet boot succeeded. A real
+  listening host-gateway canary timed out from the guest; external GitHub HTTPS
+  succeeded. Public DNS configured only inside the disposable guest.
+- **Registration:** JIT runner 23 registered only after those checks. Retry
+  job `118825790114` is running on that exact VM/group. Checkout, identity,
+  pnpm, Node and .NET setup passed; Rust installation/checks remain in progress.
+- **Resume:** inspect run `39478496007`, controller session/logs and
+  `.artifacts/tart-runner/ft-actions-job-20261020t185329z-6f068950/state.json`.
+  Controller is bounded and should remove the clone/registration after the
+  job. A running job or zero runner exit is not passing validation.
+
+## 2026-10-20 — Local pilot exposed Bash prerequisite
+
+- **Result:** job `118825790114` ran on local runner 23. Tool setup passed,
+  then `scripts/check.sh` failed because macOS system Bash 3.2 lacks `mapfile`.
+  Application checks and packaging did not run. This is a template/workflow
+  prerequisite, not an S3 regression.
+- **Lifecycle:** controller completed cleanup; runner exit 0 was correctly
+  distinguished from the failed GitHub job. Job clone and registration are
+  removed; private VM/runner diagnostics retained under `.artifacts/`.
+- **Correction:** add Homebrew Bash to base preparation; select its absolute
+  path in the workflow and use `$BASH` for nested repository checks.
+  Rebuild the unregistered template's tooling and rerun locally.
+- **Template correction verified:** Bash 5.3.15 installed; version assertion
+  passed; base remains unregistered and is stopped. The preparation helper's
+  first boot-readiness poll timed out; retry handling corrected and install
+  completed. Independent Tart listing and GitHub runner listing confirmed the
+  previous job clone was absent and repository-visible runner count was zero.

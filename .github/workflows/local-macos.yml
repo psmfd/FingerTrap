@@ -56,7 +56,7 @@ jobs:
         with:
           workspaces: src-tauri
       - name: Validate and package
-        run: bash scripts/ci/validate-macos.sh
+        run: /opt/homebrew/bin/bash scripts/ci/validate-macos.sh
       - name: Upload candidate
         uses: actions/upload-artifact@v7
         with:

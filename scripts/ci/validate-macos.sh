@@ -1,11 +1,13 @@
 #!/bin/bash
 # Runs in a disposable Actions guest. Publishing rewrites its disposable locks.
 set -euo pipefail
+test "${BASH_VERSINFO[0]}" -ge 4
 test "$(uname -s)" = Darwin
 test "$(uname -m)" = arm64
 test -n "${RUNNER_TEMP:?Run through the local-macos Actions workflow}"
 test -n "${GITHUB_RUN_ID:?Run through the local-macos Actions workflow}"
-bash scripts/check.sh
+"$BASH" scripts/check.sh
+python3 scripts/ci/test_tart_runner.py
 pnpm --dir packages/agent-runtime install --frozen-lockfile --ignore-scripts
 pnpm --dir packages/agent-runtime check:provenance
 pnpm --dir packages/agent-runtime lint

@@ -4,6 +4,8 @@ set -euo pipefail
 test "$(uname -s)" = Darwin
 test "$(uname -m)" = arm64
 xcode-select -p >/dev/null
+HOMEBREW_NO_AUTO_UPDATE=1 /opt/homebrew/bin/brew install bash
+/opt/homebrew/bin/bash -c 'test "${BASH_VERSINFO[0]}" -ge 4'
 test ! -e "$HOME/fingertrap-actions-runner"
 mkdir "$HOME/fingertrap-actions-runner"
 cd "$HOME/fingertrap-actions-runner"

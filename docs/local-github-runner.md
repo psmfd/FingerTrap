@@ -20,6 +20,8 @@ ghcr.io/cirruslabs/macos-sequoia-base@sha256:3f4d14a5ffb9efd3bda2ae0184fd4bc2773
 ```
 
 Guest: macOS 15.7.7 / 24G720, ARM64, command-line developer tools installed.
+The template includes Homebrew Bash; `scripts/check.sh` requires `mapfile`,
+which the system Bash 3.2 lacks. The workflow selects Homebrew Bash explicitly.
 VM allocation: 8 CPUs, 16 GiB memory, 80 GB sparse disk. Existing acceptance
 VMs are preserved. The base image's older unregistered runner is unused.
 The dedicated FingerTrap runner is version 2.338.0; its official archive SHA-256

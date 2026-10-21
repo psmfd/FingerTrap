@@ -20,7 +20,7 @@ approval capabilities and repository retirement retain their separate gates.
 
 ## Resume here
 
-**Current activity: preparing the local Tart runner pilot; S3 source checks passed.**
+**Current activity: correct the local pilot's Bash prerequisite; S3 checks passed.**
 
 1. Follow the [approved S3 plan](s3-launch-isolation-plan.html).
 2. Read [S3 discovery audit](s3-discovery-audit.md): project migrations precede
@@ -35,8 +35,12 @@ approval capabilities and repository retirement retain their separate gates.
    to reduce hosted builds. Inspect and prepare an isolated macOS runner first;
    macOS-first pilot is the working scope. See the
    [runner runbook](../local-github-runner.md). No new hosted builds during
-   setup. Publish the pilot on its dedicated branch, configure the restricted
-   group, then verify isolation and run one local job before routine CI cutover.
+   setup. Pilot source `a6bdb88` is committed/pushed. Group 5 is restricted
+   and network isolation passed. Local
+   [job 118825790114](https://github.com/psmfd/FingerTrap/actions/runs/39478496007/job/118825790114)
+   failed before application tests because system Bash lacks `mapfile`.
+   Cleanup passed. Homebrew Bash 5.3.15 is now verified in the stopped template.
+   Publish the explicit-Bash workflow correction and rerun before CI cutover.
 
 No managed launch is enabled.
 Read the latest [activity entry](WORK_LOG.md) before resuming; compare this
@@ -51,7 +55,7 @@ record with `git status`, `git log` and any active process/test output.
 | S1 | Profile schema, compatibility and baseline | Verified locally and in CI; backed up | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed |
 | S2 | Reviewed import slices and test registration | Verified locally and in CI; backed up | `92137c4`; [manifest report](import-manifests.md); all platform checks and Apple Silicon package/smoke passed |
 | S3 | PTY/RPC launch isolation | Foundation backed up and CI verified; discovery blocked | `95424b3`; [report](s3-launch-foundation.md); package retry passed; exact-pin project migrations prevent full qualification |
-| CI-local | Reduce hosted builds with a local runner | Pilot prepared locally, unverified | ADR-0037; template and privileged Softnet helper prepared; publish trusted pilot branch before runner-group creation; no active runner yet |
+| CI-local | Reduce hosted builds with a local runner | Isolation/lifecycle verified; Bash prerequisite repair active | `a6bdb88`; group 5; local job 118825790114 failed before tests; clone/runner removed; routine routing unchanged |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
 | S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |
 | S5-B | Guards and typed tools | Pending | Enforcement tests, identity, tool ownership, vendor notices |
