@@ -1,0 +1,78 @@
+{
+  "passed": true,
+  "scenarios": [
+    {
+      "scenario": "dialog-roundtrip.golden.jsonl",
+      "equal": true,
+      "baselineSha256": "1a2fceaf32f0e3f309a231b9155bf835aa4b302f2bd17686810e69809228e5d6",
+      "candidateSha256": "1a2fceaf32f0e3f309a231b9155bf835aa4b302f2bd17686810e69809228e5d6"
+    },
+    {
+      "scenario": "eof-clean-shutdown.golden.jsonl",
+      "equal": true,
+      "baselineSha256": "35f58b3f8816a870c67ebf4ce6d2138906524def90b14caaea9f540680969a11",
+      "candidateSha256": "35f58b3f8816a870c67ebf4ce6d2138906524def90b14caaea9f540680969a11"
+    },
+    {
+      "scenario": "eof-mid-turn.golden.jsonl",
+      "equal": true,
+      "baselineSha256": "098661d7de285ee1d6cde21717ebef143f141a9b4690a147774de32ad1ef7fd4",
+      "candidateSha256": "098661d7de285ee1d6cde21717ebef143f141a9b4690a147774de32ad1ef7fd4"
+    },
+    {
+      "scenario": "follow-up-queue.golden.jsonl",
+      "equal": true,
+      "baselineSha256": "11420dfbfa65de2a5c0b6194f7af5559a0b1d51202371e5af5b7002d2e755221",
+      "candidateSha256": "11420dfbfa65de2a5c0b6194f7af5559a0b1d51202371e5af5b7002d2e755221"
+    },
+    {
+      "scenario": "list-sessions.golden.jsonl",
+      "equal": true,
+      "baselineSha256": "18bae052111a2071d3cee47b7977d1eecfe97664a608c47e99fdaddf4be04000",
+      "candidateSha256": "18bae052111a2071d3cee47b7977d1eecfe97664a608c47e99fdaddf4be04000"
+    },
+    {
+      "scenario": "malformed-line-parse-error.golden.jsonl",
+      "equal": true,
+      "baselineSha256": "cb1ad0b60f1bfba0e7385b1cd6d13b35279f1144278d03af2d7be91ed111c69f",
+      "candidateSha256": "cb1ad0b60f1bfba0e7385b1cd6d13b35279f1144278d03af2d7be91ed111c69f"
+    },
+    {
+      "scenario": "prompt-settled.golden.jsonl",
+      "equal": true,
+      "baselineSha256": "c48aa122b24464b1dd5f8af749ff41e1568823e29873d4eb712d5c2a63f52e2e",
+      "candidateSha256": "c48aa122b24464b1dd5f8af749ff41e1568823e29873d4eb712d5c2a63f52e2e"
+    },
+    {
+      "scenario": "resume-live-cwd.golden.jsonl",
+      "equal": true,
+      "baselineSha256": "c1f9b693f95439324e6a7006ba2a231c4cd155a1c4f8aad7d23673984b7bbd09",
+      "candidateSha256": "c1f9b693f95439324e6a7006ba2a231c4cd155a1c4f8aad7d23673984b7bbd09"
+    },
+    {
+      "scenario": "resume-missing-cwd.golden.jsonl",
+      "equal": true,
+      "baselineSha256": "80ffeb40ea0ebe0c3e5a6b77c72282898a1b04b00b2870b8515a784deaad0e5c",
+      "candidateSha256": "80ffeb40ea0ebe0c3e5a6b77c72282898a1b04b00b2870b8515a784deaad0e5c"
+    },
+    {
+      "scenario": "session-start-dialog-roundtrip.golden.jsonl",
+      "equal": true,
+      "baselineSha256": "632ac617c5ca2c39a8ec7aafbf28cff59b4c747c1d354e8fa12c5cc97da3b911",
+      "candidateSha256": "632ac617c5ca2c39a8ec7aafbf28cff59b4c747c1d354e8fa12c5cc97da3b911"
+    },
+    {
+      "scenario": "steer-interrupt.golden.jsonl",
+      "equal": true,
+      "baselineSha256": "f4255fca7455f2d79ce5e19a156f3f0df18f47687c4705152cad0ea6def6dbbf",
+      "candidateSha256": "f4255fca7455f2d79ce5e19a156f3f0df18f47687c4705152cad0ea6def6dbbf"
+    },
+    {
+      "scenario": "unknown-id-fallthrough.golden.jsonl",
+      "equal": true,
+      "baselineSha256": "e57979a7d8c484f629fac9ec8e191e6369ac201d403358ff2d6cfc62dee2f7cd",
+      "candidateSha256": "e57979a7d8c484f629fac9ec8e191e6369ac201d403358ff2d6cfc62dee2f7cd"
+    }
+  ],
+  "classification": "Identical baseline and candidate recordings. Seven committed-golden differences are existing macOS /tmp versus /private/tmp canonicalization; no candidate wire drift."
+}

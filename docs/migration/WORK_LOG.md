@@ -747,3 +747,46 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   profile mutation and literal-prompt assertions while RPC itself succeeds.
 - **Next:** source checkpoint, republish to bind host identity to that commit,
   twice-recorded RPC compatibility, clean Tart artifact run and required CI.
+
+## 2026-10-21 — Exact host passes; clean Tart and protocol comparison started
+
+- FingerTrap `bb5f02fd64b41310a7f35aec92a60b67bdd8bad8` is pushed in draft
+  #209. Its published qualification executable SHA-256 is
+  `80beb8542052fe1246528d2a9a0617e2b3760c81c39163f228b0c128d97af3da`;
+  the native companion digest is unchanged. Exact-host two-profile RPC/PTY
+  qualification passes. Restored full sidecar suite: 406 passed, 12 skipped.
+- All 12 opt-in RPC recordings pass twice-per-scenario determinism. Seven
+  fixtures differ only in apparent `/tmp` versus `/private/tmp` spelling.
+  Compare the baseline in the same environment before classifying this drift.
+  Original committed goldens are restored; no runtime pin changed.
+- First recorder attempts failed before tests because its deliberately empty
+  environment lacked the dotnet executable/root. Explicit executable and
+  DOTNET_ROOT correct the harness; the successful run is keyless with synthetic
+  local HTTP responses. Non-RID restore after publishing succeeds.
+- Next: retain a clean Tart artifact runner, clone the stopped base with no
+  host mounts or GitHub credentials and blocked outbound network, run both
+  committed artifact probes, collect reports, and verify clone cleanup.
+
+## 2026-10-21 — Clean Tart and RPC comparison pass; CI checkpoint prepared
+
+- Clean clone `ft-s3-qualification-5e7313a37e6d`, macOS 15.7.7 / 24G720
+  ARM64 / Python 3.9.6, passes exact direct and published-host matrices.
+  No host shares or GitHub registration; Softnet configured to block all
+  outbound IPv4. Clone removal and base preservation verified. Retained runner
+  serializes with the GitHub controller and records cleanup failures as failures.
+- Baseline and candidate each pass all twelve twice-recorded RPC scenarios.
+  All twelve resulting transcript hashes match across the two executables.
+  Seven committed-golden differences are identical existing macOS canonical
+  path spelling; original golden files remain unchanged. Recorder is retained.
+- Essential JSON evidence, full asset inventory, input hashes, path drift and
+  HTML G5 report now live in the repository. Candidate archive SHA-256:
+  `2759240a44ca9ebd0acd01258d048014767950c88b7de5f2c08f5bc7810116f9`.
+- Fork review: current main `42429b9` has four later commits (#74–#79),
+  including security/correctness work absent from the old-pin experiment.
+  Its six capability slots are occupied. Recommend a reviewed forward-port
+  and cap disposition before production promotion; do not silently drop fixes.
+  pi_config #1170 remains useful subagent evidence for S5; #1172 is an
+  overlapping pin proposal, not a requirement to resume pi_config development.
+- Next: commit/push this checkpoint without skipping CI, drain five enrolled
+  local macOS jobs, verify hosted lanes and package evidence. Required matrix
+  is still pending; no runtime release, pin change, SDK switch or activation.

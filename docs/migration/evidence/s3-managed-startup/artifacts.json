@@ -1,0 +1,46 @@
+{
+  "piSource": "39b729b625f50d4c82bd993151865d5ded8dd78e",
+  "hostSource": "bb5f02fd64b41310a7f35aec92a60b67bdd8bad8",
+  "comparisonBase": "e7d09c9dc5fca409f46a5476669e3c0404054d69",
+  "platform": "darwin-arm64",
+  "node": "26.3.1",
+  "bun": "1.3.10",
+  "dependencyChanges": false,
+  "releasePublished": false,
+  "productionActivated": false,
+  "files": {
+    "pi-darwin-arm64.tar.gz": {
+      "sha256": "2759240a44ca9ebd0acd01258d048014767950c88b7de5f2c08f5bc7810116f9",
+      "bytes": 29382771
+    },
+    "pi": {
+      "sha256": "1f1a604cb44a733441d6bb660a9f2e16b4604853a6c5e17446c5fef998f2d596",
+      "bytes": 72396560
+    },
+    "FingerTrap.Sidecar.Qualification": {
+      "sha256": "80beb8542052fe1246528d2a9a0617e2b3760c81c39163f228b0c128d97af3da",
+      "bytes": 88216417
+    },
+    "libporta_pty.dylib": {
+      "sha256": "4644ce3598bf59a4f1999e4e42b1312586ce9a00a7fa33059217308707f1b4a0",
+      "bytes": 34848
+    },
+    "package-lock.json": {
+      "sha256": "e3569b99e673a0051be908f2bed57651b90a966a5a0d208913c29e6830a6a6c2",
+      "bytes": 177666
+    },
+    "npm-shrinkwrap.json": {
+      "sha256": "5ff461d87e0a7ccac07e6a9eb3edcd18841d3373d375bed043606b51082f1a26",
+      "bytes": 72368
+    },
+    "bun-1.3.10.zip": {
+      "sha256": "82034e87c9d9b4398ea619aee2eed5d2a68c8157e9a6ae2d1052d84d533ccd8d",
+      "bytes": 22289708
+    },
+    "pi-ai-0.85.1.tgz": {
+      "sha256": "af7d11986179445ce6fe88b37d57de22f823c0ffd3a65cae31c555b7f5e99253",
+      "bytes": 798833
+    }
+  },
+  "modelPackageIntegrity": "sha512-+VgVIJDkDO2efYJKEEqvPTH4zmnIaXdAppGbO+vKFA9qy5PdhFiAenuFAkU+oiCSfOC4dMHDyrjdQeL4ZoC5CQ=="
+}

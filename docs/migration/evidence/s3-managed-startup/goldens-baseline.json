@@ -1,0 +1,70 @@
+{
+  "sourceRevision": "e7d09c9dc5fca409f46a5476669e3c0404054d69",
+  "binarySha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5",
+  "twicePerScenario": true,
+  "passed": true,
+  "scenarios": [
+    {
+      "file": "dialog-roundtrip.golden.jsonl",
+      "changed": true,
+      "recordingSha256": "1a2fceaf32f0e3f309a231b9155bf835aa4b302f2bd17686810e69809228e5d6"
+    },
+    {
+      "file": "eof-clean-shutdown.golden.jsonl",
+      "changed": true,
+      "recordingSha256": "35f58b3f8816a870c67ebf4ce6d2138906524def90b14caaea9f540680969a11"
+    },
+    {
+      "file": "eof-mid-turn.golden.jsonl",
+      "changed": false,
+      "recordingSha256": "098661d7de285ee1d6cde21717ebef143f141a9b4690a147774de32ad1ef7fd4"
+    },
+    {
+      "file": "follow-up-queue.golden.jsonl",
+      "changed": false,
+      "recordingSha256": "11420dfbfa65de2a5c0b6194f7af5559a0b1d51202371e5af5b7002d2e755221"
+    },
+    {
+      "file": "list-sessions.golden.jsonl",
+      "changed": true,
+      "recordingSha256": "18bae052111a2071d3cee47b7977d1eecfe97664a608c47e99fdaddf4be04000"
+    },
+    {
+      "file": "malformed-line-parse-error.golden.jsonl",
+      "changed": false,
+      "recordingSha256": "cb1ad0b60f1bfba0e7385b1cd6d13b35279f1144278d03af2d7be91ed111c69f"
+    },
+    {
+      "file": "prompt-settled.golden.jsonl",
+      "changed": false,
+      "recordingSha256": "c48aa122b24464b1dd5f8af749ff41e1568823e29873d4eb712d5c2a63f52e2e"
+    },
+    {
+      "file": "resume-live-cwd.golden.jsonl",
+      "changed": true,
+      "recordingSha256": "c1f9b693f95439324e6a7006ba2a231c4cd155a1c4f8aad7d23673984b7bbd09"
+    },
+    {
+      "file": "resume-missing-cwd.golden.jsonl",
+      "changed": true,
+      "recordingSha256": "80ffeb40ea0ebe0c3e5a6b77c72282898a1b04b00b2870b8515a784deaad0e5c"
+    },
+    {
+      "file": "session-start-dialog-roundtrip.golden.jsonl",
+      "changed": false,
+      "recordingSha256": "632ac617c5ca2c39a8ec7aafbf28cff59b4c747c1d354e8fa12c5cc97da3b911"
+    },
+    {
+      "file": "steer-interrupt.golden.jsonl",
+      "changed": true,
+      "recordingSha256": "f4255fca7455f2d79ce5e19a156f3f0df18f47687c4705152cad0ea6def6dbbf"
+    },
+    {
+      "file": "unknown-id-fallthrough.golden.jsonl",
+      "changed": true,
+      "recordingSha256": "e57979a7d8c484f629fac9ec8e191e6369ac201d403358ff2d6cfc62dee2f7cd"
+    }
+  ],
+  "exitCode": 0,
+  "originalGoldensRestored": true
+}
