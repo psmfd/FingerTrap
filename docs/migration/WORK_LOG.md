@@ -449,3 +449,34 @@ The compact [status board](STATUS.md) is the starting point for a new session.
 - **Next:** commit caller routing, fast-forward the migration branch, push PR
   #207, run five disposable macOS workers, and inspect the actual check names
   before mapping their equivalent protection entries. #208 tracks completion.
+
+## 2026-10-21 — Five local macOS lanes passed; final handoff
+
+- **Source:** `e0427460285c83805587ee5db599ace50032b400` committed and pushed
+  after fast-forwarding the migration branch. The reusable worker stays pinned
+  to `cf1cd50ca296ad2b35711b028acfe2f66f7c8aa4`.
+- **Actual CI:** run `39526283019` passed; packaging run `39526283095` passed.
+  All 23 reported checks passed, including CodeQL and hosted Windows/Linux.
+  Local jobs: Tauri `118981561180`, UI `118981561226`, sidecar `118981561244`,
+  runtime package `118981561331`, candidate `118981561420`.
+- **Local lifecycle:** each job used a distinct `ft-actions-job-*` VM and JIT
+  runner, with host-canary denial and GitHub HTTPS verified before registration.
+  All five cleanup records completed. Independent `tart list` showed only the
+  preserved stopped base/acceptance VMs; GitHub runner count was zero.
+- **Artifact proof:** downloaded artifact `12313103374`, verified outer SHA-256
+  `112d5440e3af8f92d567969a06abfadd8676438511e03db4b15a1d88c7e22b3d`
+  and both app/DMG checksums. Build identity matches test-merge
+  `41cb6c6b59dcc10eed2f78a99b6b2d20e99f0bee` and the recorded Tart runner.
+  Evidence/files retained under ignored `.artifacts/tart-final-candidate/`.
+- **Controller verification:** eight policy/lifecycle tests pass; bypassing
+  group checks detected 11 invalid boundaries; omitting the repository-membership
+  PUT failed its regression test. Mutations were in memory only. Workflow,
+  shell, Python, Markdown, structural and whitespace checks passed.
+- **Protection timing:** actual reusable check names have `/ validate` suffixes.
+  Global requirements are still unchanged because other branches use the old
+  workflow. The runbook records the exact three equivalent mappings for the
+  coordinated merge. PR #207 stays draft; #208 stays open for that rollout.
+- **Handoff:** checkpoint documentation with CI skipped to preserve the source
+  evidence without another hosted matrix. Next source session starts the local
+  controller after jobs queue. S3's exact-Pi discovery blocker remains the next
+  migration decision; no managed activation, SDK change, pin bump or retirement.

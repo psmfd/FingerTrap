@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-20, after the S3 package retry and local-runner request.
+Updated: 2026-10-21 UTC, after the verified local macOS cutover.
 
 ## Authorization and scope
 
@@ -20,7 +20,7 @@ approval capabilities and repository retirement retain their separate gates.
 
 ## Resume here
 
-**Current activity: local pilot passed; pinned worker policy verified.**
+**Current activity: S3 foundation and local macOS runner verified; handoff.**
 
 1. Follow the [approved S3 plan](s3-launch-isolation-plan.html).
 2. Read [S3 discovery audit](s3-discovery-audit.md): project migrations precede
@@ -31,27 +31,20 @@ approval capabilities and repository retirement retain their separate gates.
    three platforms. Rust analysis passed. The unchanged-source Apple Silicon
    retry passed packaging, packaged-sidecar smoke and artifact upload
    ([job](https://github.com/psmfd/FingerTrap/actions/runs/39469041145/job/118790720905)).
-4. The maintainer requested local GitHub Actions capacity, potentially Tart,
-   to reduce hosted builds. Inspect and prepare an isolated macOS runner first;
-   macOS-first pilot is the working scope. See the
-   [runner runbook](../local-github-runner.md). No new hosted builds during
-   setup. Pilot source `a6bdb88` is committed/pushed. Group 5 is restricted
-   and network isolation passed. Local
-   [job 118825790114](https://github.com/psmfd/FingerTrap/actions/runs/39478496007/job/118825790114)
-   failed before application tests because system Bash lacks `mapfile`.
-   Cleanup passed. Bash fix `a403061` is committed/pushed. A subsequent clone
-   exposed lost template writes after abrupt shutdown; the base was repaired,
-   flushed and shut down from inside macOS. A fresh clone verified Bash before
-   registration. Local retry job `118970292546` passed validation/packaging and
-   uploaded the candidate; final GitHub status and controller cleanup passed.
-5. The maintainer explicitly selected **macOS jobs locally first; Windows/Linux
-   stay hosted**. GitHub rejected PR refs and test-merge SHAs in group policies.
-   Worker `cf1cd50` is published and pinned; its restricted policy was applied
-   and read back. Commit/push caller routing to PR #207 and drain five macOS jobs.
-   Their required
-   check names gain `/ validate`; update only equivalent protection mappings
-   after the checks pass. Tracker: [#208](https://github.com/psmfd/FingerTrap/issues/208).
-   Do not claim cutover success before those steps finish.
+4. The maintainer approved **macOS jobs locally first; Windows/Linux stay
+   hosted**. Source `e042746` is committed/pushed on the migration branch.
+   All five macOS jobs passed in separate isolated Tart VMs, Windows/Linux
+   passed, and all 23 reported checks were successful. See the
+   [runner runbook](../local-github-runner.md) for exact runs, artifact evidence,
+   startup and recovery. No job VMs or runner registrations remain.
+5. Before the next source push, check runner configuration; after jobs queue,
+   start `python3 scripts/ci/tart-runner.py drain --max-jobs 5`.
+   The controller is session-started; it is not an unattended service.
+6. Resume migration by reviewing the missing pinned-Pi discovery control under
+   #201/#202. No SDK/pin change is authorized by the runner work. PR #207 remains
+   a draft; [#208](https://github.com/psmfd/FingerTrap/issues/208) tracks
+   coordinated merge-time check-name mapping and remaining runner rollout.
+   Global protections retain their old names until the workflow change lands.
 
 No managed launch is enabled.
 Read the latest [activity entry](WORK_LOG.md) before resuming; compare this
@@ -66,7 +59,7 @@ record with `git status`, `git log` and any active process/test output.
 | S1 | Profile schema, compatibility and baseline | Verified locally and in CI; backed up | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed |
 | S2 | Reviewed import slices and test registration | Verified locally and in CI; backed up | `92137c4`; [manifest report](import-manifests.md); all platform checks and Apple Silicon package/smoke passed |
 | S3 | PTY/RPC launch isolation | Foundation backed up and CI verified; discovery blocked | `95424b3`; [report](s3-launch-foundation.md); package retry passed; exact-pin project migrations prevent full qualification |
-| CI-local | Reduce hosted builds with a local runner | Isolation/lifecycle verified; Bash prerequisite repair active | `a6bdb88`; group 5; local job 118825790114 failed before tests; clone/runner removed; routine routing unchanged |
+| CI-local | Reduce hosted builds with a local runner | Implemented and verified for PR #207 | `e042746`; five local macOS jobs passed; worker `cf1cd50`; group 5; Windows/Linux hosted; global protection mapping staged for merge |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
 | S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |
 | S5-B | Guards and typed tools | Pending | Enforcement tests, identity, tool ownership, vendor notices |
@@ -99,9 +92,9 @@ validation after resuming an incomplete edit and update this record.
 ## Current checkpoint / validation state
 
 - Migration branch: `docs/pi-runtime-migration`; draft PR #207.
-- Active infrastructure pilot branch: `ci/tart-runner-pilot`, based on the
-  S3 source checkpoint. This keeps pilot pushes outside the PR's hosted matrix.
-  The pilot branch also preserves the latest S3 handoff.
+- Active branch: `docs/pi-runtime-migration`, fast-forwarded to runner routing
+  source `e042746`. The remote `ci/tart-runner-pilot` branch preserves worker
+  checkpoint `cf1cd50` for immutable reuse.
 - Base: `8ffeae809f7b4579d6b4f006c3f6e8414df60620`.
 - Baseline checkpoint: `6a999c9`, pushed to
   `psmfd/FingerTrap:docs/pi-runtime-migration`.
@@ -151,6 +144,13 @@ validation after resuming an incomplete edit and update this record.
   12 existing skips, zero failures; four representative regressions detected
   and reverted. Published ARM64 sidecar/native companion smoke passed.
   Exact-release migration blocker reproduced and tracked in the audit.
+- Local runner: `a6bdb88` pilot, `a403061` Bash correction, `cf1cd50` reusable
+  worker, `e042746` routing. All backed up. Source `e042746` passed 23 checks,
+  including five macOS jobs on Tart and hosted Windows/Linux/CodeQL.
+  Downloaded candidate digests/source/runner identity verified; cleanup checked
+  independently. Final handoff changes documentation only and will be saved
+  with CI skipped to avoid another build matrix; its head is distinct from the
+  verified source checkpoint.
 
 ## Commands for the next session
 
@@ -158,6 +158,7 @@ validation after resuming an incomplete edit and update this record.
 git status --short --branch
 git log -5 --oneline
 gh pr checks 207 --repo psmfd/FingerTrap
+python3 scripts/ci/tart-runner.py check
 pnpm --dir packages/agent-runtime check:provenance
 pnpm --dir packages/agent-runtime test
 ```
@@ -168,6 +169,9 @@ For sidecar changes, the reliable local path is audited locked restore, then
 `dotnet build src-sidecar -c Release --no-restore -m:1 -p:UseSharedCompilation=false`
 and `dotnet test src-sidecar -c Release --no-build --no-restore`.
 Native/process checks may need the tool's filesystem/process sandbox approval.
+After a new source push queues the local jobs, run
+`python3 scripts/ci/tart-runner.py drain --max-jobs 5`. Do not claim a later
+documentation-only or changed head has CI evidence from a different commit.
 
 ## Known gates and protected local state
 

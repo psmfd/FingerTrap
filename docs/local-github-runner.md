@@ -6,10 +6,23 @@ The runner is not a persistent workstation process. See [ADR-0037](../adrs/0037-
 
 ## Current status
 
-Preparation started 2026-10-20. The unregistered build template is prepared and
-shut down. The reviewed privileged Softnet helper is installed. Routine CI
-still uses hosted runners. The pilot must pass before changing that routing
-or any required checks.
+Verified on 2026-10-21 UTC. PR #207 now runs all five macOS jobs locally.
+Windows/Linux and lightweight repository/security checks remain hosted.
+The build template is stopped; the privileged Softnet helper and restricted
+GitHub group are configured. Start the controller when jobs are queued.
+
+Source `e0427460285c83805587ee5db599ace50032b400` passed all 23 reported checks.
+[CI](https://github.com/psmfd/FingerTrap/actions/runs/39526283019) and
+[packaging](https://github.com/psmfd/FingerTrap/actions/runs/39526283095) succeeded.
+All five jobs used distinct `ft-actions-job-*` runners. Independent Tart and
+GitHub listings confirmed the job VMs/registrations were removed.
+
+The downloaded candidate's outer digest and app/DMG checksums were verified.
+Its `build.json` names PR test-merge commit
+`41cb6c6b59dcc10eed2f78a99b6b2d20e99f0bee` and the recorded local runner.
+Artifact `12313103374` has archive SHA-256
+`112d5440e3af8f92d567969a06abfadd8676438511e03db4b15a1d88c7e22b3d`.
+The files are retained locally under `.artifacts/tart-final-candidate/`.
 
 Observed host: Tart 2.32.1, Softnet 0.19.0, 18 CPUs, 128 GiB RAM, approximately
 122 GiB available disk at setup. Dedicated base `ft-actions-base-20261020` was
@@ -162,6 +175,33 @@ Acceptance requires the GitHub job to complete on the recorded local runner,
 checksums/build identity to name the expected source, and cleanup to remove
 both VM and runner. A zero runner exit code alone is not a passing build.
 Verify all five routed jobs before claiming the cutover complete.
+
+## Coordinate required checks with merge
+
+The migration PR remains a draft. Other branches still use the original
+workflow, so global protections have **not** been renamed yet. Coordinate the
+following equivalent mappings with landing the workflow change; applying them
+early would block branches still emitting the original names.
+
+| Existing required context | Equivalent reusable-worker context |
+| --- | --- |
+| `sidecar (macos-15)` | `sidecar (macos-15) / validate` |
+| `ui (macos-15)` | `ui (macos-15) / validate` |
+| `tauri (macos-15)` | `tauri (macos-15) / validate` |
+
+Read current protection immediately before changing it. Preserve all other
+required contexts, app bindings, strictness, review requirements and bypass
+settings. Relevant observed rulesets: `protect-dev` (20894193) and
+`protect-main` (20894194); classic branch protection also requires these
+contexts. Observe the replacement checks passing on the actual merge candidate,
+then apply the matching mappings as part of the coordinated merge. Current
+source validation does not authorize merging an untested later head.
+
+Preserve the `ci/tart-runner-pilot` remote branch at the published worker
+checkpoint while it anchors pinned commit `cf1cd50ca296ad2b35711b028acfe2f66f7c8aa4`.
+Do not delete that source reference during routine PR branch cleanup.
+Tracker [#208](https://github.com/psmfd/FingerTrap/issues/208) remains open for
+merge-time protection alignment and broader operational rollout.
 
 References: [GitHub runner lifecycle](https://docs.github.com/en/actions/reference/runners/self-hosted-runners),
 [workflow restrictions](https://docs.github.com/en/rest/actions/self-hosted-runner-groups),
