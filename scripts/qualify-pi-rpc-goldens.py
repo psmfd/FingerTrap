@@ -37,6 +37,7 @@ def main():
     out = args.report_directory.resolve()
     out.mkdir(parents=True, exist_ok=True)
     (out / "recordings").mkdir(exist_ok=True)
+    (out / "raw").mkdir(exist_ok=True)
     report = {"sourceRevision": args.source_revision, "binarySha256": args.sha256,
               "twicePerScenario": True, "passed": False, "scenarios": []}
     try:
@@ -46,6 +47,7 @@ def main():
             env = {"PATH": str(binary.parent) + ":/usr/bin:/bin", "HOME": str(home),
                    "USERPROFILE": str(home), "XDG_CONFIG_HOME": str(home / ".config"),
                    "FT_RECORD_GOLDENS": "1", "PI_OFFLINE": "1", "PI_SKIP_VERSION_CHECK": "1",
+                   "FT_RECORD_RAW_DIR": str(out / "raw"),
                    "PI_NO_LOCAL_LLM": "1", "DOTNET_ROOT": str(Path(dotnet).resolve().parent),
                    "DOTNET_GENERATE_ASPNET_CERTIFICATE": "false", "DOTNET_NOLOGO": "1",
                    "DOTNET_CLI_TELEMETRY_OPTOUT": "1", "DOTNET_SKIP_FIRST_TIME_EXPERIENCE": "1",

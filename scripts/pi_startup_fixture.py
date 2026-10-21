@@ -1,6 +1,7 @@
 """Synthetic, keyless filesystem/process fixtures shared by S3 qualifiers."""
 
 from dataclasses import dataclass
+from datetime import datetime, timezone
 import hashlib
 import json
 import os
@@ -115,6 +116,13 @@ class Fixture:
         seed(project / ".pi/settings.json", '{"packages":["npm:synthetic-must-not-resolve"]}')
         literal = root / "literal-system-prompt.txt"
         literal.write_text(SENTINEL)
+        # Pi 0.87.1 startup reads and marks recent crashes as notified. A valid
+        # record detects that discovery; malformed JSON would silently pass.
+        seed(agent / "crashes.json", json.dumps([{
+            "timestamp": datetime.now(timezone.utc).isoformat(), "version": "0.87.1",
+            "kind": "fatal_error", "message": SENTINEL, "stack": None,
+            "sessionFile": None, "cwd": str(project), "notified": False,
+        }]))
         if poison:
             for name in ("settings.json", "auth.json", "models.json", "keybindings.json", "trust.json"):
                 seed(agent / name, "{invalid synthetic config")

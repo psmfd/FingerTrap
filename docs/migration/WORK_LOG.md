@@ -837,3 +837,97 @@ The compact [status board](STATUS.md) is the starting point for a new session.
 - Final follow-up changes only documentation/evidence and is saved with CI
   skipped. CI attribution remains explicitly `c6f088c`, distinct from the
   later documentation head. Both PRs remain drafts; no merge requested.
+
+## 2026-10-21 — Maintained-base work approved; latest-release campaign queued
+
+- Maintainer approved forward-porting onto maintained Pi, resolving capability
+  limits and requalifying the result. Main readback remains
+  `42429b94e4aca33fdbb8d094de29758b36411ba1`; current fork release remains
+  `v0.87.1-psmfd.1`. Preserve the original experiment and its evidence.
+- S3-G6 intended change: separate worktree/branch on that main revision,
+  policy port preserving #74/#75/#76/#79, bounded patch-020 exception recorded
+  by a new FingerTrap ADR and fork bookkeeping, plus actual cap accounting.
+  Validate with release-major Node 22 and Bun 1.3.10, then repeat exact direct,
+  host, clean Tart, mutation and twice-recorded protocol qualification.
+- The user also requests upgrading Pi to the latest release and validating
+  it after this campaign settles. Queue that as a separate durable tracker;
+  latest is discovered at its start rather than frozen prematurely here.
+  No pi_config implementation resumes; FingerTrap owns the migration work.
+- Exact production pin/release and managed product activation are not inferred
+  from permission to port and qualify a new candidate.
+
+## 2026-10-21 — Maintained port: new startup paths reproduced and corrected
+
+- Separate worktree `/private/tmp/ft-pi-maintained`, branch
+  `fix/managed-startup-maintained`, starts at `42429b9`. Original source patch
+  applied cleanly; existing fork fixes are preserved. Source review found
+  0.87.1 crash-state discovery and default cache warming. Added guards and
+  in-memory `cacheWarming: off` defaults; `/bug` rejects nonfatally.
+- A real unfixed standalone binary changed the valid seeded `crashes.json`
+  in PTY startup; RPC still passed. The new service assertion failed on
+  `streaming` instead of `off`. Corrected direct RPC/PTY/CLI matrix passes.
+- Node 22.23.0, Bun 1.3.10, npm ci with scripts disabled, and exact published
+  pi-ai 0.87.1 model data produced the offline build. Sandbox DNS blocked
+  the first package download; approved network retry succeeded. Initial
+  test attempt before hydration had no runnable tests, not a policy failure.
+- Static checks pass. Full hermetic suite's only failure was the new page
+  being orphaned by 0.87.1 docs navigation. Content moved into existing
+  `docs/cli-integration.md`; focused tests rerun before checkpoint. Both
+  release-preflight tests pass. Linux-only release-build harness is not run
+  on this macOS host; release workflow/build logic is unchanged.
+- Fresh upstream comparison gives 7 C-class patches / 25 distinct paths /
+  2,090 additions+deletions (020: 673). ADR-0039 and fork security baseline
+  bound the exception to 020 with a 2,200-line aggregate ceiling; all three
+  allowlist copies match, guard logic unchanged.
+- npm reports 15 baseline dependency vulnerabilities (3 moderate, 11 high,
+  1 critical); no dependency changes made. Review belongs to the follow-on
+  campaign and must be considered before production promotion.
+- Created [#210](https://github.com/psmfd/FingerTrap/issues/210) for latest-Pi
+  upgrade/validation after this campaign. This number was newly allocated;
+  it does not retroactively change the earlier #200/#201 plan authorization.
+- Next: finish corrected build/tests, scoped checkpoints, exact host/Tart,
+  regression mutations and twice-recorded RPC qualification, then remote backup.
+
+## 2026-10-21 — Exact maintained artifacts pass isolation; recorder repair in progress
+
+- Pi `1f37eea4bf71f95ed9a4e62674949de3a9feb8b0` is committed/pushed in
+  draft [Pi #82](https://github.com/psmfd/pi/pull/82). Full hermetic suite
+  passes after documentation relocation; 2,469 coding-agent tests pass with
+  50 intentional skips. All other workspaces pass, including 312 Chord tests.
+- Exact committed binary SHA-256 `9a9f53131cec748801b8c176190ef4dc77e7b6e833859ff734fcfa3d297c7614`;
+  archive `fde413d00ceece7a4817c602560f30c1c1903bb9e95739da3512896f9b547f67`.
+  Direct checks, two-profile published host matrix and clean Tart checks pass.
+  Tart lifecycle reaches complete after cleanup; independent listing pending.
+- Downloaded maintained v0.87.1-psmfd.1 baseline; release digest and GitHub
+  attestation verify. Its twice-recorded RPC check fails 6/12 determinism
+  comparisons on timestamp token numbers (`@TS:1@` versus `@TS:2@`). This is
+  on the unmodified release, before candidate comparison. Original goldens
+  restored. Do not claim protocol equality yet.
+- Next authorized repair: normalize numeric timestamp fields independently
+  of same-millisecond collisions, preserving event ordering/correlation and
+  all nonvolatile payload; add a regression and retain raw keyless recordings.
+  Then rerun all twelve scenarios twice on baseline and candidate and review
+  actual protocol differences. Host production source remains unchanged.
+
+## 2026-10-21 — Maintained candidate qualification passes; CI checkpoint next
+
+- Four reversible runtime mutations caught: migrations, default resource
+  loader, crash discovery and `/bug` fallback. Source restored and generated
+  code rebuilt. The immutable candidate artifact remains unchanged.
+- Recorder regression: both new tests fail before repair; full sidecar suite
+  passes afterward (408 passed, 12 opt-in skips). Final build: zero warnings
+  and errors. Numeric timestamps use one volatile token; installation paths
+  use `@PI_HOME@`; no event or tool/schema payload is removed.
+- Baseline and candidate each pass 12/12 twice-recorded scenarios. All twelve
+  final normalized transcripts match exactly. Both raw recordings are retained
+  for each scenario. Original production-pin goldens are restored unchanged.
+- Pi 0.87.1 emits additional system-message events with tool schemas and
+  installation documentation paths. This is present in the attested baseline
+  too, not introduced by managed startup. The frontend's existing role checks
+  ignore system messages; production UI source is unchanged.
+- Independent Tart listing shows only the stopped base and pre-existing VMs;
+  no qualification clone remains. Pi #82 has seven successful check reports,
+  including allowlist, secret scan and CodeQL. Local scoped secret scan passes.
+- Structural checks pass with zero errors/warnings. Next: checkpoint/push
+  FingerTrap source and run five macOS jobs locally; retain exact CI/package,
+  report and promotion/next-campaign handoff evidence afterward.

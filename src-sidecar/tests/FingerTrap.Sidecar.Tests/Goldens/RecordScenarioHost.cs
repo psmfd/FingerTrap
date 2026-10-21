@@ -51,6 +51,8 @@ internal sealed class RecordScenarioHost : ScenarioHost
         }
 
         AddPathVariants(pairs, _home, "@HOME@");
+        // Pi 0.87.1 emits installation paths in system-message documentation.
+        AddPathVariants(pairs, Path.GetDirectoryName(_piExecutable)!, "@PI_HOME@");
         foreach (var fixture in Directory.EnumerateFiles(_fixturesDir))
         {
             AddPathVariants(pairs, fixture, $"@FIXTURE:{Path.GetFileName(fixture)}@");

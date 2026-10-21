@@ -19,7 +19,7 @@ import tempfile
 import termios
 import threading
 
-from pi_startup_fixture import Fixture, NetworkCanary, digest, reap, records, snapshot, wait_until
+from pi_startup_fixture import SENTINEL, Fixture, NetworkCanary, digest, reap, records, snapshot, wait_until
 
 BASELINE_ARCHIVE = "e0e0331d478af7724fa24d780a8d4abc0033c6f5ee7c0d45dddae6f922e5c4cb"
 BASELINE_BINARY = "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5"
@@ -115,7 +115,7 @@ def pty_case(binary, fixture):
         wait_until(lambda: any(item.get("reason") == "reload" for item in records(fixture.observed)), child)
         # Built-in unsupported commands are nonfatal; then ask the selected
         # extension to confirm command processing remains usable.
-        for command in (b"/login\r", b"/trust\r", b"/resume\r", b"/import /synthetic/missing.jsonl\r"):
+        for command in (b"/login\r", b"/trust\r", b"/resume\r", b"/import /synthetic/missing.jsonl\r", b"/bug\r"):
             os.write(master, command)
             # TUI submissions are processed asynchronously.
             previous = count("ready")
@@ -134,6 +134,8 @@ def pty_case(binary, fixture):
         reader.join(timeout=2)
         os.close(master)
     checks.update(fixture.checks(), cleanExit=child.returncode == 0)
+    checks["bugReportRejected"] = b"managed-v1 does not support bug reports" in output
+    checks["noAmbientCrashNotice"] = SENTINEL.encode() not in output
     if not all(checks.values()):
         errors.append(output[-6000:].decode(errors="replace"))
     return {"case": fixture.root.name, "transport": "direct-pty", "checks": checks,

@@ -55,6 +55,15 @@ keyless, token-free, and deterministic; ids/timestamps/paths are tokenized
 (`malformed-line-parse-error`) commits fully pinned — no volatile values —
 to catch response-prose drift cheaply.
 
+Maintained-base qualification exposed same-millisecond collisions in numeric
+message timestamps. The recorder now uses `@TIME:epoch@` for those fields;
+their accidental equality is not message identity. ISO/session-path timestamp
+tokens, UUIDs, command IDs and event order remain separately preserved.
+The qualifier retains both raw keyless recordings for review. This repair
+does not refresh the committed production-pin goldens.
+Installation paths emitted by Pi 0.87.1 system messages use `@PI_HOME@`;
+the system message and its tool/schema payload remain in the comparison.
+
 ## Wire framing
 
 **Hello (first stdout line, since `v0.84.2-psmfd.1` / psmfd-patch-010):**
