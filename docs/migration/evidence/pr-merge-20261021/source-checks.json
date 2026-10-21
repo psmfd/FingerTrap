@@ -1,0 +1,188 @@
+[
+  {
+    "repo": "FingerTrap",
+    "sha": "d1891e7c3a8f76c0bee89ccd54f58363b78dba67",
+    "checks": [
+      {
+        "name": "CodeQL",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/runs/119473228780"
+      },
+      {
+        "name": "ui (macos-15) / validate",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473009707"
+      },
+      {
+        "name": "sidecar (macos-15) / validate",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473009645"
+      },
+      {
+        "name": "agent-runtime (macos-15) / validate",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473009527"
+      },
+      {
+        "name": "agent-runtime (windows-2025)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473009444"
+      },
+      {
+        "name": "tauri (windows-2025)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473009403"
+      },
+      {
+        "name": "lint-actions",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473009129"
+      },
+      {
+        "name": "tauri (macos-15) / validate",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473009121"
+      },
+      {
+        "name": "ui (windows-2025)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473009111"
+      },
+      {
+        "name": "ui (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473009071"
+      },
+      {
+        "name": "repo-check",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473009046"
+      },
+      {
+        "name": "sidecar (windows-2025)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473009034"
+      },
+      {
+        "name": "sidecar (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473008984"
+      },
+      {
+        "name": "package and smoke (Apple Silicon) / validate",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288766/job/119473008953"
+      },
+      {
+        "name": "tauri (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473008872"
+      },
+      {
+        "name": "agent-runtime (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288717/job/119473008609"
+      },
+      {
+        "name": "lint",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288608/job/119473007812"
+      },
+      {
+        "name": "enforce-gitflow",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672288811/job/119473007621"
+      },
+      {
+        "name": "Analyze (javascript-typescript)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672284013/job/119472999122"
+      },
+      {
+        "name": "Analyze (csharp)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672284013/job/119472998976"
+      },
+      {
+        "name": "Analyze (rust)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672284013/job/119472998955"
+      },
+      {
+        "name": "Analyze (actions)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672284013/job/119472998909"
+      },
+      {
+        "name": "Analyze (python)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/FingerTrap/actions/runs/39672284013/job/119472998594"
+      }
+    ]
+  },
+  {
+    "repo": "pi",
+    "sha": "5f1f1dfbacb508086ed9b68563c78c3aa1456d7c",
+    "checks": [
+      {
+        "name": "gitleaks",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/pi/actions/runs/39672419729/job/119473455243"
+      },
+      {
+        "name": "detect post-push divergence",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/pi/actions/runs/39672419804/job/119473454548"
+      },
+      {
+        "name": "Analyze (c-cpp)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/pi/actions/runs/39672405331/job/119473414855"
+      },
+      {
+        "name": "Analyze (javascript-typescript)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/pi/actions/runs/39672405331/job/119473414707"
+      },
+      {
+        "name": "Analyze (actions)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/pi/actions/runs/39672405331/job/119473414331"
+      },
+      {
+        "name": "Analyze (javascript-typescript)",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/psmfd/pi/actions/runs/39672405102/job/119473412625"
+      }
+    ]
+  }
+]

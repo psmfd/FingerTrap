@@ -57,4 +57,58 @@ explicit workflow dispatch; no release dispatch is part of S3-M1.
 
 ## Results
 
-Review and integration are in progress. No merge outcome is claimed yet.
+Pi #83 merged with a merge commit at
+`5f1f1dfbacb508086ed9b68563c78c3aa1456d7c`; both parents and qualified tree
+`46fd5cc4faf0a5c7a2e053cea52359a09ad5ceb2` are verified. All six post-merge
+checks pass. Pi #81/#82 are closed as superseded. GitHub removed #82's branch
+during integration; the exact `95e95f0` reference was restored and verified.
+
+FingerTrap #209 merged by protected squash at
+`cc3bf8855b0f748c04c44a92093a9a708381f264` after all 23 checks passed at
+`d1891e7c3a8f76c0bee89ccd54f58363b78dba67`. Merged tree equals checked head.
+Post-merge checks are running. #188 is closed as superseded; its implementation
+issues remain open. [Source check snapshot](source-checks.json) retains URLs.
+
+## Combined dependency review
+
+The reconciliation branch starts at merged dev cc3bf88. Cargo.lock applies
+the eight updates proposed in #198 without modifying dependency declarations.
+The UI retains the proposed versions: Tauri API 2.12.0, vscode-jsonrpc 9.0.3,
+ESLint 10.11.0, Prettier 3.9.9, typescript-eslint 8.71.0, Vitest 5.0.0 and
+jsdom 30.0.1. The combined lock also includes source-map-js 1.2.2 from #199,
+without reverting to main's old TypeScript/ESLint versions or peer graph.
+
+The first audit found nine advisories (three high) in the stale proposed graph.
+Vite is raised from proposed 8.3.1 to fixed 8.3.3, and transitive
+brace-expansion from 5.0.9 to 5.0.12. These stay within existing major versions.
+The [before](ui-audit-before.json) and [after](ui-audit-after.json) records show
+the advisory IDs, patched ranges and final zero findings. No security waiver or
+new fork patch is used.
+
+The [Vitest 5 migration guide](https://vitest.dev/guide/migration/) requires
+Node >=22.12 and Vite >=6.4; top-level mocks and existing per-test setup work
+without configuration changes. Its automatic mock clearing introduces no test
+failures. [jsdom 30](https://github.com/jsdom/jsdom/releases/tag/v30.0.0) raises
+Node to `^22.22.2 || ^24.15.0 || >=26.0.0`; package engines, contributor guidance
+and setup validation now match. The registry archive contains generated runtime
+files; installation with lifecycle scripts disabled and all UI tests pass.
+
+The semantic-release action stays immutably pinned, now to v8.1.2 commit
+`03595b5eaf44910cf239ff20904cc52d410f97d4`. Its action.yml uses Node 24; the
+[v8 breaking change](https://github.com/cycjimmy/semantic-release-action/releases/tag/v8.0.0)
+requires semantic-release >=20. This repository has no older semantic_version
+override; the action ships semantic-release ^25.0.9. Existing extra_plugins and
+release configuration remain compatible. Release still requires successful
+main CI, so merging to dev does not publish. Actionlint passes; a real release
+will be checked during the separate main-promotion transaction.
+
+Local validation: all 100 UI tests (12 files) pass on Node 22.23.0; TypeScript
+and Vite production build, ESLint, eight native tests, repository structural
+check, actionlint, shellcheck and whitespace checks pass. The first native run
+lacked the isolated checkout's required sidecar binary; staging existing local
+fixtures resolves that prerequisite. CI will stage fresh source-built binaries
+and validate all three platforms and Apple Silicon packaging. Canvas capability
+messages and the existing large-chunk warning remain informational.
+
+Dependency PR CI and merge are pending. The six original proposals remain open
+until the reviewed combined result is integrated.
