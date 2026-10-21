@@ -1404,3 +1404,25 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   Before the full source CI push, add only owned PR #211 to the trusted policy,
   keeping the immutable worker and runner-group repository/workflow restrictions.
   Apply/read back routing, then push without skip-ci and drain five local jobs.
+- Dependency #211 passes all 23 checks at 42bb1b2 and squash-merges at
+  260aec5067d37247b240a8641829bc520ae74bf3 with the identical reviewed tree.
+  Apple artifact 12382323858 verifies archive digest, app/DMG hashes, ARM64
+  binaries and synthetic merge parents/tree. Packaged shell smoke passes;
+  Pi spawn explicitly skips because the bundle does not install Pi.
+- Final S3-M1 tracking slice: reconcile all PR dispositions; update source-merge
+  versus release-gate language, README Node guidance and qualification metadata
+  index. Retain source CI/merge/artifact evidence; run Markdown/JSON/link/structural
+  checks and protected CI, merge the final documentation PR, then fast-forward
+  the main checkout without removing private untracked files. Source post-merge
+  macOS checks are draining; no controller or standalone Tart run overlaps.
+- Source backlog disposition readback: FingerTrap and Pi each have zero open
+  PRs. All six dependency originals are closed with incorporation links; #188
+  is closed as superseded. GitHub marks #82 merged by the same #83 commit,
+  because it is an ancestor; no separate old-tree merge ran. The saved #82
+  reference remains restored. Exact states and check/artifact records are copied
+  into evidence/pr-merge-20261021; publication and private upstream reports remain
+  untouched. The final tracking branch starts at merged dev 260aec5.
+- Final tracking checks: six Markdown files lint clean after correcting a line
+  beginning with a PR number; formatting, JSON parsing and all 72 direct local
+  links pass. The 261-entry qualification index is refreshed only for its two
+  changed narrative metadata files; every other indexed byte identity verifies.

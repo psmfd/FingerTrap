@@ -4,7 +4,7 @@ Maintainer authorization: 2026-10-21 request to review/merge open PRs and leave
 a clean continuation baseline. Source integration is authorized; release/tag,
 production pin, SDK adoption and managed activation remain separately gated.
 
-## Inventory and intended disposition
+## Initial inventory and intended disposition
 
 | Repository / PR | Reviewed head                                                 | Disposition / validation                                                                                                  |
 | --------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
@@ -110,6 +110,24 @@ fixtures resolves that prerequisite. CI will stage fresh source-built binaries
 and validate all three platforms and Apple Silicon packaging. Canvas capability
 messages and the existing large-chunk warning remain informational.
 
-Dependency reconciliation draft #211 is backed up at `2a2c6a0`. Its protected CI
-and merge are pending. The six original proposals remain open
-until the reviewed combined result is integrated.
+Dependency reconciliation #211 merged at
+`260aec5067d37247b240a8641829bc520ae74bf3` after all 23 checks pass at
+`42bb1b2a210acf30e17de1744257a60988398ecc`. Merged tree equals reviewed tree
+`1dfecf4beec8fabb5df68a172690938cba00d14a`. The six original proposals are
+closed as incorporated. [Check URLs](dependency-head-checks.json) and
+[settled PR states](settled-prs.json) retain the exact identities. GitHub marks
+Pi #82 merged through #83's same merge commit; no separate old-tree merge ran.
+After these dispositions, both repositories have zero open source-backlog PRs.
+
+Apple artifact **12382323858**, run **39677894315**, verifies GitHub's archive
+SHA-256 `452d2f93ff10ad5bf677df54581192a7a371cf72cf4fa42079da92615fe57f6e`,
+app/DMG manifest digests and all three ARM64 binaries. Build merge parents are
+cc3bf88 / 42bb1b2, and its tree equals the checked head. Retain the
+[artifact review](apple-artifact-review.json) and
+[packaged shell smoke](packaged-sidecar-smoke.txt). Pi spawn explicitly skips;
+the product does not install Pi. No GUI/keychain acceptance is claimed.
+
+The final tracking checkpoint refreshes source-integration wording, the Node
+setup summary and the qualification metadata index. Production/test code and
+qualified Pi bytes are unchanged. Release/tag/pin and managed activation remain
+gated by the [promotion record](../pi-next/promotion-rollback.md).

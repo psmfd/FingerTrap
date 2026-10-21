@@ -3,8 +3,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 8619,
-      "sha256": "4c10d767b3103046cb02267e9c1a1ee87d4809d5068b1823b9d625610e9d827e"
+      "bytes": 9112,
+      "sha256": "352a4d5199ff4a8df29e910dad19ae1c33a901e599a21c2a338ac1b11ba2fd5a"
     },
     {
       "path": "apple-artifact-review.json",
@@ -543,8 +543,8 @@
     },
     {
       "path": "promotion-rollback.md",
-      "bytes": 4469,
-      "sha256": "4ba6b4c60e8862f32903ff396d194fffd677b07b7b2bb1a0850b792a8d0cd0f9"
+      "bytes": 5664,
+      "sha256": "bc9b43da34fc697041f6705cdbbd9b90ef4567201011e2afbdfb89e9ccaaec4b"
     },
     {
       "path": "protocol-drift.patch",
