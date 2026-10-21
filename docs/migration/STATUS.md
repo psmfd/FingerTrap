@@ -22,10 +22,12 @@ with exactly the qualified source tree; #81/#82 are closed as superseded.
 GitHub removed #82's reference branch during integration; the exact saved head
 is restored and remotely verified. #209 merged to dev at
 `cc3bf8855b0f748c04c44a92093a9a708381f264` after all 23 head checks passed;
-post-merge CI is running. #188 is closed as superseded. Dependency reconciliation
-is being prepared in `/private/tmp/ft-pr-integration`; all 100 UI tests and
-native tests pass locally. Fixed Vite/brace-expansion versions replace vulnerable
-versions proposed by the older dependency PRs; combined audit now passes.
+all 19 post-merge checks pass. #188 is closed as superseded. Dependency
+reconciliation draft #211 is remotely backed up at `2a2c6a0`; all 100 UI tests,
+eight native tests and Clippy pass locally. Fixed Vite/brace-expansion versions
+replace vulnerable older proposals; combined audit reports zero findings.
+Enroll #211 in the existing local Tart routing, then queue its full protected
+suite and Apple Silicon packaging. The six dependency originals remain open.
 
 ## Authorization and scope
 

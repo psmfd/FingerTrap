@@ -1398,3 +1398,9 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   metadata and a sandboxed frozen install uses a different store. Align only
   its lock specifier and verify the frozen install in the normal store before
   backing up the draft. Resolved versions and previously tested code are unchanged.
+- Corrected frozen lock install passes in the normal pnpm store. Checkpoint
+  2a2c6a0 is secret-scanned, remotely backed up and opens draft #211. All 19
+  post-merge dev checks pass at cc3bf88; its four disposable Tart VMs are cleaned.
+  Before the full source CI push, add only owned PR #211 to the trusted policy,
+  keeping the immutable worker and runner-group repository/workflow restrictions.
+  Apply/read back routing, then push without skip-ci and drain five local jobs.

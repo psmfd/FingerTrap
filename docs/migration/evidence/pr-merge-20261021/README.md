@@ -66,7 +66,7 @@ during integration; the exact `95e95f0` reference was restored and verified.
 FingerTrap #209 merged by protected squash at
 `cc3bf8855b0f748c04c44a92093a9a708381f264` after all 23 checks passed at
 `d1891e7c3a8f76c0bee89ccd54f58363b78dba67`. Merged tree equals checked head.
-Post-merge checks are running. #188 is closed as superseded; its implementation
+All 19 post-merge checks pass. #188 is closed as superseded; its implementation
 issues remain open. [Source check snapshot](source-checks.json) retains URLs.
 
 ## Combined dependency review
@@ -110,5 +110,6 @@ fixtures resolves that prerequisite. CI will stage fresh source-built binaries
 and validate all three platforms and Apple Silicon packaging. Canvas capability
 messages and the existing large-chunk warning remain informational.
 
-Dependency PR CI and merge are pending. The six original proposals remain open
+Dependency reconciliation draft #211 is backed up at `2a2c6a0`. Its protected CI
+and merge are pending. The six original proposals remain open
 until the reviewed combined result is integrated.
