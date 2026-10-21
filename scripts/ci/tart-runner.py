@@ -175,8 +175,16 @@ def guest(vm, script, *, timeout=60, capture_output=True, **kwargs):
 
 def verify_network(vm):
     """A real listening host endpoint must time out; refusal is not evidence."""
+    route = guest(vm, "/sbin/route -n get default").stdout
+    gateway = str(ipaddress.IPv4Address(next(
+        line.split()[1] for line in route.splitlines()
+        if line.strip().startswith("gateway:"))))
+    if ipaddress.IPv4Address(gateway).is_unspecified:
+        raise RuntimeError("Guest gateway must name a specific host interface")
+    # Bind only the VM bridge, never the workstation's LAN/VPN interfaces.
+    # Binding also proves the discovered gateway belongs to this host.
     with socket.socket() as listener:
-        listener.bind(("0.0.0.0", 0))
+        listener.bind((gateway, 0))
         listener.listen()
         listener.settimeout(1)
         port = listener.getsockname()[1]
@@ -196,15 +204,13 @@ def verify_network(vm):
         thread = threading.Thread(target=serve, daemon=True)
         thread.start()
         try:
-            with socket.create_connection(("127.0.0.1", port), timeout=2) as sock:
+            with socket.create_connection((gateway, port), timeout=2) as sock:
                 if sock.recv(64) != b"fingertrap-host-canary\n":
                     raise RuntimeError("Host network canary failed")
             result = guest(vm, f"""set -euo pipefail
 python3 - <<'PY'
-import json, socket, subprocess, urllib.request
-gateway = next(line.split()[1] for line in
-    subprocess.check_output(['/sbin/route', '-n', 'get', 'default'], text=True).splitlines()
-    if line.strip().startswith('gateway:'))
+import json, socket, urllib.request
+gateway = {gateway!r}
 try:
     with socket.create_connection((gateway, {port}), timeout=3):
         raise RuntimeError('Guest reached the host canary')

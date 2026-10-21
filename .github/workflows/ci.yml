@@ -236,6 +236,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - run: bash scripts/check.sh
+      - name: Validate local runner policy and network canary
+        run: python3 -m unittest discover -s scripts/ci -p 'test_tart_runner.py' -v
 
   lint-actions:
     name: lint-actions

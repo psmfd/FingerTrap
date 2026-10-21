@@ -480,3 +480,26 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   evidence without another hosted matrix. Next source session starts the local
   controller after jobs queue. S3's exact-Pi discovery blocker remains the next
   migration decision; no managed activation, SDK change, pin bump or retirement.
+
+## 2026-10-21 — Approved coordinated merge preparation
+
+- **Authorization:** maintainer approved proceeding after the final handoff.
+  Final prior docs checkpoint `d701bdf` is pushed; source `e042746` is the prior
+  23-check pass. Preserve exact-candidate validation before merging.
+- **Inspection:** PR #207 is draft, conflict-free, based on unchanged `dev`
+  `8ffeae8`. No human change request; one CodeQL review flags the canary's
+  all-interface socket. Narrow it to the VM gateway and verify live isolation.
+- **Plan:** validate the resulting head; map only the three equivalent macOS
+  contexts in `dev` ruleset/classic protection immediately before squash merge.
+  Preserve all other requirements and use no bypass. `main` still uses the old
+  workflow, so defer its mapping to the later release promotion. Then verify
+  protected `dev` CI and a manual Apple Silicon candidate on local Tart.
+- **Canary correction:** query the clean guest gateway, validate a specific IPv4
+  address, and bind/probe only that host interface. The canary still requires
+  guest timeout plus GitHub HTTPS before JIT registration. Nine controller tests
+  pass, including a real-socket binding check; restoring the wildcard bind in
+  memory fails that check. Keep the suite in `repo-check`. Sandbox socket denial
+  required an authorized unsandboxed run; macOS loopback-alias/SO_ACCEPTCONN
+  assumptions were replaced with the portable kernel `getsockname` assertion.
+- **Next:** push this candidate without CI skipping, run local macOS jobs,
+  verify CodeQL finding #8 is fixed, and only then coordinate `dev` protection.

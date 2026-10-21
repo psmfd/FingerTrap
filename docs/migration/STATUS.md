@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-21 UTC, after the verified local macOS cutover.
+Updated: 2026-10-21 UTC, during approved merge preparation.
 
 ## Authorization and scope
 
@@ -20,7 +20,15 @@ approval capabilities and repository retirement retain their separate gates.
 
 ## Resume here
 
-**Current activity: S3 foundation and local macOS runner verified; handoff.**
+**Current activity: approved PR #207 merge and protected-branch verification.**
+
+The maintainer approved proceeding after the runner handoff. Prepare the actual
+merge candidate, address the CodeQL network-canary finding, run its checks with
+local macOS workers, then map only `dev`'s three equivalent required contexts
+and squash-merge through GitHub without bypassing protections. Verify `dev` CI
+and a candidate dispatch afterward. Preserve the pinned worker branch. Leave
+`main`'s mapping for its later dev-to-main promotion. No managed activation,
+SDK change, runtime-pin change or retirement is included.
 
 1. Follow the [approved S3 plan](s3-launch-isolation-plan.html).
 2. Read [S3 discovery audit](s3-discovery-audit.md): project migrations precede

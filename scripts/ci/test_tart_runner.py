@@ -2,6 +2,9 @@
 import copy
 import importlib.util
 from pathlib import Path
+import re
+import socket
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -9,6 +12,32 @@ spec = importlib.util.spec_from_file_location(
     "tart_runner", Path(__file__).with_name("tart-runner.py"))
 runner = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(runner)
+
+
+class NetworkCanaryTests(unittest.TestCase):
+    def test_canary_listens_only_on_the_selected_interface(self):
+        # Inspect the kernel's real listening socket; the guest transport is the seam.
+        # Actual Softnet denial still requires the retained live VM check.
+        sockets = []
+        real_socket = socket.socket
+
+        def open_socket(*args, **kwargs):
+            sock = real_socket(*args, **kwargs)
+            sockets.append(sock)
+            return sock
+
+        def guest(_vm, script):
+            if script == "/sbin/route -n get default":
+                return SimpleNamespace(stdout="gateway: 127.0.0.1\n")
+            port = int(re.search(r"socket.create_connection\(\(gateway, (\d+)\)", script)[1])
+            with socket.create_connection(("127.0.0.1", port), timeout=2) as sock:
+                self.assertEqual(sock.recv(64), b"fingertrap-host-canary\n")
+            self.assertEqual(sockets[0].getsockname(), ("127.0.0.1", port))
+            return SimpleNamespace(stdout='{"host_canary_blocked":true,"github_https":true}')
+
+        with patch.object(runner, "guest", side_effect=guest), \
+                patch.object(runner.socket, "socket", side_effect=open_socket):
+            runner.verify_network("test-transport")
 
 
 class GroupPolicyTests(unittest.TestCase):
