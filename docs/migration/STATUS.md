@@ -2,6 +2,19 @@
 
 Updated: 2026-10-21 UTC. Pi 1.3.0 qualified; source PR backlog integrated.
 
+**S3-M3 — final CI readback.** Late Dependabot #214 is reviewed and closed as
+superseded by #211. Current source dev is
+`b0292a9fb3c38f70abfec534d004c6ccf13dbac4`; all 19 post-merge checks pass.
+PR #214 targets older main: all six sidecar/Tauri failures are NuGet audit NU1902
+for MessagePack 2.5.302; Gitflow rejects a dependency branch targeting main.
+Dev already contains MessagePack 2.5.303 and audited Vite 8.3.3. Main still needs
+normal dev-to-main release promotion; closing the duplicate does not remediate
+main. No audit/protection is suppressed. Read the
+[exact CI snapshot](evidence/pr-merge-20261021/final-ci-readback.json) and
+[#214 disposition](https://github.com/psmfd/FingerTrap/pull/214#issuecomment-6328122599).
+Finish protected verification of [#215](https://github.com/psmfd/FingerTrap/pull/215) if it is still open,
+then continue with the exact release/pin decision below.
+
 **S3-M2 — golden handshake ordering follow-up.** #212 merged at `9d8b892`;
 its dev run 39683025954 exposed a Linux golden-scenario ordering race (408 pass,
 one failure, 12 skips). The parse response may arrive before startup hello, and
@@ -10,8 +23,10 @@ the failure. The scenario now awaits readiness with its existing event budget;
 all 13 focused cases and 410 full-suite tests pass locally (12 opt-in skips).
 Only tests/harness change; production code and golden bytes are intact. See the
 [red/green evidence](evidence/golden-handshake/README.md). Protected verification
-and merge state are recorded in [#213](https://github.com/psmfd/FingerTrap/pull/213);
-if resuming before it merges, complete that fix's checks and merge first.
+and merge state are recorded in [#213](https://github.com/psmfd/FingerTrap/pull/213).
+It merged at `b0292a9fb3c38f70abfec534d004c6ccf13dbac4` after all 23 head
+checks passed; all 19 post-merge checks pass. The digest-verified Apple artifact
+12385811971 matches the checked source tree and passes packaged shell smoke.
 
 Current candidate: Pi #83 at `28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2`;
 FingerTrap fixture source #209 at `0143c3317db5343d004bbfa1b75fd566b87c1b6c`.
@@ -206,26 +221,26 @@ or an outstanding concern. See the [runner runbook](../local-github-runner.md).
 
 ## Work board
 
-| ID | Approved result | Status | Evidence / remaining work |
-| --- | --- | --- | --- |
-| M0 | Ownership ADR, inventory and successors | Committed and backed up | `6a999c9`; ADR-0034 accepted; inventory and #200–#206 exist |
-| M1a | Token/cache-meter source package | Verified, backed up, inactive | [Report](m1a-import.md); runtime package CI passed on all three platforms at `6a999c9` |
-| S1 | Profile schema, compatibility and baseline | Verified locally and in CI; backed up | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed |
-| S2 | Reviewed import slices and test registration | Verified locally and in CI; backed up | `92137c4`; [manifest report](import-manifests.md); all platform checks and Apple Silicon package/smoke passed |
-| S3 | PTY/RPC launch isolation | Foundation merged; candidate qualified; pin decision pending | Production baseline still lacks managed policy; maintained candidate is qualified in G6; S3 is not complete |
-| S3-G | Close the pinned-Pi startup/discovery gap | G1–G6 implemented, qualified and source backed up | [Maintained report](s3-managed-startup-maintained-qualification.html); production pin/release and activation remain gated |
-| S3-G6 | Preserve maintained fork fixes and requalify managed startup | Complete; source backed up; CI verified | Pi `1f37eea` / FT `faa4242`; exact host/Tart/protocol/mutations pass; 7 Pi and 23 FT checks pass; dependency disposition required before production promotion |
-| Pi-next | Upgrade to latest Pi release and validate | v1.3.0 qualified and source merged; promotion pending | Pi main `5f1f1df` / FT #209 `cc3bf88`; [evidence/decision record](evidence/pi-next/README.md); #210 stays open for release/pin decision |
-| S3-M1 | Review/integrate open source PRs | Original backlog settled; source checks and artifacts verified | #83/#209/#211 merged; alternatives/dependency originals reconciled; [review](evidence/pr-merge-20261021/README.md) |
-| CI-local | Reduce hosted builds with a local runner | Merged and verified on protected dev | `9bfc092`; 22 post-merge checks passed, five macOS jobs local; artifact/cleanup verified; dev protection mapped; main mapping deferred to promotion; Windows/Linux hosted |
-| S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
-| S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |
-| S5-B | Guards and typed tools | Pending | Enforcement tests, identity, tool ownership, vendor notices |
-| S5-C | Worktree/subagent dispatch | Pending | PR #1170 fix, #280 reconciliation, child isolation |
-| S5-D | Context/presentation | Pending | Preserve tuning; gate unsupported RPC UI |
-| S5-E | Capability-dependent source | Pending | Preserve reviewed contracts/tests; #203/#204 activation gates |
-| S5-F | Curated defaults | Pending | Explicit selection, rights review, restrictions and evaluations |
-| S6 | Integration qualification and issue reconciliation | Pending | Real pinned runtime, independent profiles, native/process evidence, hosted CI |
+| ID       | Approved result                                              | Status                                                         | Evidence / remaining work                                                                                                                                                 |
+| -------- | ------------------------------------------------------------ | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| M0       | Ownership ADR, inventory and successors                      | Committed and backed up                                        | `6a999c9`; ADR-0034 accepted; inventory and #200–#206 exist                                                                                                               |
+| M1a      | Token/cache-meter source package                             | Verified, backed up, inactive                                  | [Report](m1a-import.md); runtime package CI passed on all three platforms at `6a999c9`                                                                                    |
+| S1       | Profile schema, compatibility and baseline                   | Verified locally and in CI; backed up                          | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed                                                                 |
+| S2       | Reviewed import slices and test registration                 | Verified locally and in CI; backed up                          | `92137c4`; [manifest report](import-manifests.md); all platform checks and Apple Silicon package/smoke passed                                                             |
+| S3       | PTY/RPC launch isolation                                     | Foundation merged; candidate qualified; pin decision pending   | Production baseline still lacks managed policy; maintained candidate is qualified in G6; S3 is not complete                                                               |
+| S3-G     | Close the pinned-Pi startup/discovery gap                    | G1–G6 implemented, qualified and source backed up              | [Maintained report](s3-managed-startup-maintained-qualification.html); production pin/release and activation remain gated                                                 |
+| S3-G6    | Preserve maintained fork fixes and requalify managed startup | Complete; source backed up; CI verified                        | Pi `1f37eea` / FT `faa4242`; exact host/Tart/protocol/mutations pass; 7 Pi and 23 FT checks pass; dependency disposition required before production promotion             |
+| Pi-next  | Upgrade to latest Pi release and validate                    | v1.3.0 qualified and source merged; promotion pending          | Pi main `5f1f1df` / FT #209 `cc3bf88`; [evidence/decision record](evidence/pi-next/README.md); #210 stays open for release/pin decision                                   |
+| S3-M1    | Review/integrate open source PRs                             | Original backlog settled; source checks and artifacts verified | #83/#209/#211 merged; alternatives/dependency originals reconciled; [review](evidence/pr-merge-20261021/README.md)                                                        |
+| CI-local | Reduce hosted builds with a local runner                     | Merged and verified on protected dev                           | `9bfc092`; 22 post-merge checks passed, five macOS jobs local; artifact/cleanup verified; dev protection mapped; main mapping deferred to promotion; Windows/Linux hosted |
+| S4       | Stores, resume and isolated meters                           | Pending                                                        | Inject profile roots; preserve ADR-0028 and recovery behavior                                                                                                             |
+| S5-A     | State/observability import wave                              | Pending                                                        | Shared closure, prefill dependency, artifact handoff                                                                                                                      |
+| S5-B     | Guards and typed tools                                       | Pending                                                        | Enforcement tests, identity, tool ownership, vendor notices                                                                                                               |
+| S5-C     | Worktree/subagent dispatch                                   | Pending                                                        | PR #1170 fix, #280 reconciliation, child isolation                                                                                                                        |
+| S5-D     | Context/presentation                                         | Pending                                                        | Preserve tuning; gate unsupported RPC UI                                                                                                                                  |
+| S5-E     | Capability-dependent source                                  | Pending                                                        | Preserve reviewed contracts/tests; #203/#204 activation gates                                                                                                             |
+| S5-F     | Curated defaults                                             | Pending                                                        | Explicit selection, rights review, restrictions and evaluations                                                                                                           |
+| S6       | Integration qualification and issue reconciliation           | Pending                                                        | Real pinned runtime, independent profiles, native/process evidence, hosted CI                                                                                             |
 
 “Pending” means not started. Source import is not activation. A local pass
 does not imply hosted CI, package installation, provider login or release
