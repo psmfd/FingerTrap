@@ -629,3 +629,121 @@ The compact [status board](STATUS.md) is the starting point for a new session.
 - **Next:** save the documentation checkpoint and establish the implementation
   draft PR for local runner enrollment. Then implement early parsing and an
   explicit managed resource/service path in Pi; retain the red comparator.
+
+## 2026-10-21 — G2 runtime patch in progress; draft established
+
+- **Checkpoint:** contract/approval `2d82399`, pushed on
+  `feat/managed-pi-startup`; draft FingerTrap #209 targets dev. No source CI
+  was requested for that documentation-only checkpoint.
+- **G2 intended change:** early validated policy, explicit managed loader,
+  in-memory configuration/auth/model inputs, persistent lifecycle policy and
+  interactive startup controls. Focused tests and the real binary qualifier
+  must pass before candidate qualification is claimed.
+- **Working changes:** first Pi core implementation exists only in the isolated
+  worktree. Candidate qualifier exists locally in FingerTrap. Neither is yet
+  committed or CI verified. Runtime/profile activation is disabled.
+- **Runner action:** enroll same-repository draft #209 with the existing worker
+  SHA before source pushes. Keep Windows/Linux hosted and preserve #207 entry.
+- **Next:** complete interactive controls and regression tests, build the
+  unpublished exact-source candidate, and rerun the isolation matrix.
+
+## 2026-10-21 — G2 policy implemented; first local build checks
+
+- **Implemented locally:** pure early selector validation, immutable managed
+  resource inputs, in-memory settings/auth/models, lifecycle rejection guards,
+  interactive keybindings/themes/helper/background/trust/auth/session controls.
+  Explicit extension failures now fail startup. No production composition change.
+- **Checks:** `npm run check` passes after correcting theme API/test types and
+  hydrating the exact `@earendil-works/pi-ai@0.85.1` model data (including its
+  manifest). `npm run build:offline` passes; dependencies/lockfiles unchanged.
+  First focused test attempt exposed unbuilt workspace exports; rerun after build.
+- **Toolchain:** temporary Bun 1.3.10 from the official release, matching the
+  fork workflow. Model package integrity:
+  `sha512-+VgVIJDkDO2efYJKEEqvPTH4zmnIaXdAppGbO+vKFA9qy5PdhFiAenuFAkU+oiCSfOC4dMHDyrjdQeL4ZoC5CQ==`.
+- **Not yet qualified:** source edits/tests remain local and uncommitted; the
+  standalone build and focused tests are running. Next run the retained binary
+  qualifier, then expand direct PTY/RPC and rejection/mutation coverage before G3.
+
+## 2026-10-21 — G2 initial executable passes; G3 started
+
+- **Local evidence:** all 110 focused Pi tests pass. The first standalone macOS
+  ARM64 build passes both retained direct-RPC cases (migration and poisoned
+  profile), including reload/new-session, literal prompt, cwd and factory count.
+  Development executable SHA-256:
+  `1f1a604cb44a733441d6bb660a9f2e16b4604853a6c5e17446c5fef998f2d596`.
+  This is an uncommitted development build, not a promotable identity.
+- **G3 intended change:** strict descriptor v2, independently host-selected
+  source revision and descriptor digest, required managed-v1 policy, shared
+  transport arguments, candidate-only project .pi allowance. Keep production
+  selection absent and the remaining profile/override/credential/resume guards.
+- **Validation:** host rejection tests and both transport process tests; then
+  published fixture-host/native companion qualification against the real Pi
+  candidate. Full Pi hermetic tests and expanded qualification remain in flight.
+
+## 2026-10-21 — G2 broader checks pass; G3 host checks pass
+
+- **Pi:** required static checks and the full hermetic `./test.sh` pass after
+  allowing local sockets; the sandboxed run failed on EPERM listeners. Two old
+  interactive test doubles were updated for the new guard method. Added service
+  traps prove no implicit settings/auth/default-loader/package-resolution calls;
+  all 30 instrumented policy/theme tests pass after that addition.
+- **Direct artifact:** RPC migration, poisoned profile and linked-project cases
+  pass concurrently. Real PTY startup, new-session, reload, unsupported command
+  rejection and clean quit pass. Installer/helper canaries and the controlled
+  network endpoint show no attempts. One harness assertion incorrectly required
+  the word "managed" in the duplicate-selector error; actual bounded rejection
+  and unchanged state passed. Removed that wording-specific assertion.
+- **FingerTrap:** descriptor v2 and exact host-selected revision/policy checks
+  implemented. Shared args include managed-v1. Build: zero warnings/errors.
+  Sidecar tests: 406 passed, 12 skipped, 0 failures on macOS ARM64, including
+  native process tests and goldens. Test runner needed local pipe permission.
+- **G4 preparation:** separate qualification project compiles the same Program
+  with a test-only selection loader. Production compilation excludes that loader
+  and selection branch; no runtime setting/env switch enables managed mode.
+  Publish/real-process validation and mutation evidence are next. Production
+  activation and exact-pin promotion remain pending.
+
+## 2026-10-21 — Mutation exposed and corrected a fixture blind spot
+
+- Restoring the migration call initially escaped the expanded qualifier: adding
+  an ambient `prompts` directory had suppressed the legacy commands-to-prompts
+  rename. This was a test-fixture defect, not isolation evidence.
+- Separate legacy-layout cases from current-layout resource cases. Migration
+  fixtures now omit the destination prompts directory; current-layout fixtures
+  independently exercise discovered prompts. Re-run baseline, both mutations
+  and the restored candidate before trusting the expanded suite.
+
+## 2026-10-21 — Pi checkpoint backed up; committed candidate direct pass
+
+- **Pi source:** `39b729b625f50d4c82bd993151865d5ded8dd78e`, clean candidate
+  branch pushed; draft [Pi #81](https://github.com/psmfd/pi/pull/81). CI skipped
+  on this dependency checkpoint; no hosted Pi macOS jobs or release requested.
+- **Exact artifact:** rebuilt from that commit with offline model data/Bun
+  1.3.10; binary SHA remains
+  `1f1a604cb44a733441d6bb660a9f2e16b4604853a6c5e17446c5fef998f2d596`.
+  Corrected direct RPC/PTY/CLI/network matrix passes. Both migration and discovery
+  mutations now fail the relevant assertions; original source/build restored.
+- **Host fixture:** initial published test host did not pick up the synthetic
+  settings via platform path lookup. Change its compile-time-only entry to
+  explicitly select its settings and orphan registry and skip login-shell PATH
+  discovery. The product path remains unchanged. Re-publish before retrying.
+- **Next:** finish real host qualification, host capability mutation, exact
+  source checkpoint/CI, clean Tart execution and protocol evidence. Do not mark
+  candidate qualified or S3 complete yet. Tart preflight passes; #209 is enrolled.
+
+## 2026-10-21 — Published host matrix and host mutation verified locally
+
+- **Published qualification host:** two concurrent profiles, each real RPC and
+  native PTY, pass startup/reload/new-session/cancellation/state, parent canary
+  exclusion, independent roots, unchanged project/home/profile inputs, override
+  and resume rejection, sibling survival, graceful host exit and complete reaping.
+  Development host SHA `d22b8e476e4c5e4bf06128a1d28d976ca7320294f4318c79bd1f54058e5ec14e`;
+  native SHA `4644ce3598bf59a4f1999e4e42b1312586ce9a00a7fa33059217308707f1b4a0`.
+- **Host red proof:** removing only the startup-policy comparison produced the
+  expected missing-exception failure for `startupPolicy=managed-v2` (1 failed,
+  7 passed). The runner summary omits theory inputs; detailed UTF-16 test output
+  confirms the precise case. Source guard restored and full tests rerunning.
+- **Baseline:** corrected retained baseline comparison fails project migration,
+  profile mutation and literal-prompt assertions while RPC itself succeeds.
+- **Next:** source checkpoint, republish to bind host identity to that commit,
+  twice-recorded RPC compatibility, clean Tart artifact run and required CI.

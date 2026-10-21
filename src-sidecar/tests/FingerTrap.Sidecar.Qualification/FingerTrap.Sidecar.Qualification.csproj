@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>FingerTrap.Sidecar.Qualification</AssemblyName>
+    <RootNamespace>FingerTrap.Sidecar.Qualification</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <DefineConstants>$(DefineConstants);FINGERTRAP_MANAGED_QUALIFICATION</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/FingerTrap.Sidecar/FingerTrap.Sidecar.csproj" />
+    <Compile Include="../../src/FingerTrap.Sidecar/Program.cs" Link="Program.cs" />
+  </ItemGroup>
+</Project>

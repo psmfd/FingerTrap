@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-21 UTC, S3-G approved; contract and regression work starting.
+Updated: 2026-10-21 UTC, S3-G2 local policy/build validation in progress.
 
 ## Authorization and scope
 
@@ -26,15 +26,21 @@ their separate decisions.
 
 ## Resume here
 
-**Current activity: S3-G1 evidence established; preparing S3-G2 runtime patch.**
+**Current activity: S3-G4 — exact candidate and published-host qualification.**
 
 The [resolution plan](s3-discovery-resolution-plan.html) is approved. Begin
 with [Pi #80](https://github.com/psmfd/pi/issues/80), ADR-0038 and the separate
-candidate qualifier. Both initial baseline cases fail actual isolation checks;
-RPC startup/lifecycle itself succeeds. Next implement the managed runtime path and
-qualify the policy through S3-G4 before preparing the S3-G5 pin report.
-Plan checkpoint `0dc2b926fe7df637e6f83186fc9d6282989fc91b` is committed and
-pushed on `docs/runtime-migration-handoff`.
+candidate qualifier. Both baseline cases fail actual isolation checks while RPC lifecycle succeeds.
+The managed core/interactive path is now implemented locally; Pi static checks
+and the offline package build pass. Next qualify the standalone candidate and
+complete G3/G4 before preparing the S3-G5 pin report.
+Approved contract checkpoint `2d82399` is committed and pushed on
+`feat/managed-pi-startup`; draft [#209](https://github.com/psmfd/FingerTrap/pull/209)
+targets dev. Pi work is isolated at `/private/tmp/ft-pi-managed`, branch
+`fix/managed-startup-v1`, based on `e7d09c9`. Pi candidate `39b729b625f50d4c82bd993151865d5ded8dd78e` is committed/pushed
+with draft [Pi #81](https://github.com/psmfd/pi/pull/81). Its standalone macOS
+ARM64 direct RPC/PTY/CLI matrix passes. Full qualification still needs the
+published host, host mutation, RPC recording, clean Tart and platform evidence.
 
 1. PR [#207](https://github.com/psmfd/FingerTrap/pull/207) squash-merged into
    `dev` as `9bfc0926cf387644a1cd2512e3fcb63f22287165`. The actual candidate
@@ -49,10 +55,9 @@ pushed on `docs/runtime-migration-handoff`.
    Five local jobs used distinct VMs; artifact source/digests/runner identity
    were verified. No job VMs, runner registrations or open dev CodeQL findings
    remain.
-4. This handoff branch is `docs/runtime-migration-handoff`, based on merged
-   `dev`. The final documentation is checkpointed with CI skipped; its identity
-   is recorded in [#208](https://github.com/psmfd/FingerTrap/issues/208). Carry these docs
-   into the next implementation PR; do not repush the merged migration branch.
+4. Current implementation branch is `feat/managed-pi-startup`, draft #209,
+   carrying the handoff documentation. Its initial checkpoint skipped CI so
+   #209 could be enrolled for local macOS execution before source builds.
 5. Resume migration with the [approved S3 plan](s3-launch-isolation-plan.html),
    [discovery audit](s3-discovery-audit.md) and [foundation report](s3-launch-foundation.md).
    The pinned Pi performs project migrations before trust, so arbitrary-project
@@ -77,7 +82,7 @@ record with `git status`, `git log` and any active process/test output.
 | S1 | Profile schema, compatibility and baseline | Verified locally and in CI; backed up | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed |
 | S2 | Reviewed import slices and test registration | Verified locally and in CI; backed up | `92137c4`; [manifest report](import-manifests.md); all platform checks and Apple Silicon package/smoke passed |
 | S3 | PTY/RPC launch isolation | Foundation merged and CI verified; discovery blocked | `95424b3`; [report](s3-launch-foundation.md); package retry passed; exact-pin project migrations prevent full qualification |
-| S3-G | Close the pinned-Pi startup/discovery gap | Approved; G1 in progress | [Resolution plan](s3-discovery-resolution-plan.html); policy ADR, tracker and baseline-failing fixtures first; pin promotion remains gated |
+| S3-G | Close the pinned-Pi startup/discovery gap | Approved; G2 in progress | [Resolution plan](s3-discovery-resolution-plan.html); policy ADR, tracker and baseline-failing fixtures first; pin promotion remains gated |
 | CI-local | Reduce hosted builds with a local runner | Merged and verified on protected dev | `9bfc092`; 22 post-merge checks passed, five macOS jobs local; artifact/cleanup verified; dev protection mapped; main mapping deferred to promotion; Windows/Linux hosted |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
 | S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |

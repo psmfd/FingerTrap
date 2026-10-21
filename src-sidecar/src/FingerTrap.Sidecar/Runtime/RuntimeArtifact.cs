@@ -7,7 +7,7 @@ namespace FingerTrap.Sidecar.Runtime;
 /// <summary>Verified immutable artifact selection; the descriptor digest comes from the host.</summary>
 internal sealed record RuntimeArtifact(string Executable, IReadOnlyList<string> Extensions)
 {
-    public const string PinnedRevision = "e7d09c9dc5fca409f46a5476669e3c0404054d69";
+    public const string StartupPolicy = "managed-v1";
     public const int MaxDescriptorBytes = 1024 * 1024;
     public const int MaxFiles = 8192;
     private const long MaxFileBytes = 512L * 1024 * 1024;
@@ -20,7 +20,7 @@ internal sealed record RuntimeArtifact(string Executable, IReadOnlyList<string> 
     public static string Architecture => RuntimeInformation.OSArchitecture.ToString().ToLowerInvariant();
 
     public static RuntimeArtifact Verify(string artifactRoot, string descriptorPath, string expectedSha256,
-        string runtimeId, CancellationToken cancellationToken)
+        string runtimeId, string expectedRevision, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         var root = LaunchPaths.ExistingDirectory(artifactRoot);
@@ -40,10 +40,12 @@ internal sealed record RuntimeArtifact(string Executable, IReadOnlyList<string> 
         using var document = JsonDocument.Parse(bytes, new JsonDocumentOptions { MaxDepth = 8 });
         var definition = document.RootElement;
         RequireFields(definition, "version", "runtimeId", "forkRevision", "platform", "architecture",
-            "executable", "files", "extensions");
-        if (definition.GetProperty("version").GetInt32() != 1
+            "executable", "files", "extensions", "startupPolicy");
+        if (definition.GetProperty("version").GetInt32() != 2
             || definition.GetProperty("runtimeId").GetString() != runtimeId
-            || definition.GetProperty("forkRevision").GetString() != PinnedRevision
+            || expectedRevision.Length != 40 || !expectedRevision.All(char.IsAsciiHexDigit)
+            || definition.GetProperty("forkRevision").GetString() != expectedRevision
+            || definition.GetProperty("startupPolicy").GetString() != StartupPolicy
             || definition.GetProperty("platform").GetString() != Platform
             || definition.GetProperty("architecture").GetString() != Architecture)
         {

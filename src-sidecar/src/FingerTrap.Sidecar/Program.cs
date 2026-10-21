@@ -34,7 +34,12 @@ var handler = new HeaderDelimitedMessageHandler(stdio, stdio, formatter);
 FingerTrapSettings settings;
 try
 {
+#if FINGERTRAP_MANAGED_QUALIFICATION
+    settings = SettingsLoader.LoadFrom(args.Length == 7 ? args[6]
+        : throw new ArgumentException("qualification requires an explicit settings fixture"));
+#else
     settings = SettingsLoader.Load();
+#endif
 }
 catch (SettingsException ex)
 {
@@ -49,18 +54,31 @@ catch (SettingsException ex)
 // panes spawn by absolute path with no shell, so applying it to this process
 // is what makes their inherited PATH correct. Fails soft — a broken profile
 // leaves PATH untouched.
+#if !FINGERTRAP_MANAGED_QUALIFICATION
 FingerTrap.Sidecar.Executables.LoginEnvironment.ApplyToProcess(TimeSpan.FromSeconds(5));
+#endif
 
 // Single platform-agnostic PtyService backed by Porta.Pty (ADR-0008);
 // platform branching now lives inside the vendored library.
 // ADR-0036: production supplies no managed selection; qualification remains gated.
+#if FINGERTRAP_MANAGED_QUALIFICATION
+// Only the separately published test host compiles this branch. The product
+// assembly contains neither this selection loader nor a runtime enable switch.
+var piLaunchResolver = FingerTrap.Sidecar.Qualification.Selection.Load(args, settings.Pi);
+#else
 var piLaunchResolver = new FingerTrap.Sidecar.Runtime.PiLaunchContextResolver();
+#endif
 await using var pty = new PtyService(settings.Pi, piLaunchResolver);
 // Reap pi RPC children orphaned by a prior sidecar crash before spawning any
 // new panes (#124): an unclean sidecar death reparents its children, which
 // keep holding worktree locks and making billed LLM calls untracked. The same
 // registry then tracks this run's children.
+#if FINGERTRAP_MANAGED_QUALIFICATION
+var rpcChildRegistry = new FingerTrap.Sidecar.PiRpc.RpcChildRegistry(
+    Path.Combine(args[0], "qualification-" + settings.Pi!.ProfileId + "-children.json"));
+#else
 var rpcChildRegistry = new FingerTrap.Sidecar.PiRpc.RpcChildRegistry();
+#endif
 var reaped = rpcChildRegistry.ReapOrphans();
 if (reaped > 0)
 {
