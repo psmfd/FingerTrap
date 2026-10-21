@@ -134,3 +134,22 @@ The final tracking checkpoint refreshes source-integration wording, the Node
 setup summary and the qualification metadata index. Production/test code and
 qualified Pi bytes are unchanged. Release/tag/pin and managed activation remain
 gated by the [promotion record](../pi-next/promotion-rollback.md).
+
+## Final CI diagnosis
+
+The documentation merge #212 exposed a Linux golden replay ordering race.
+Test-only follow-up #213 has a delayed-hello red/green regression and preserves
+production code and golden bytes. It passes all 23 distinct head checks and
+merges at `b0292a9fb3c38f70abfec534d004c6ccf13dbac4`; all 19 dev checks pass.
+See [golden evidence](../golden-handshake/README.md) and the
+[exact final check snapshot](final-ci-readback.json).
+
+Late Dependabot #214 proposes Vite 8.1.6 against older main. Both changed files
+are reviewed; #211's audited Vite 8.3.3 supersedes that intent. Gitflow correctly
+rejects its main base. All six sidecar/Tauri failures on macOS, Windows and Linux
+are NU1902 for main's MessagePack 2.5.302 (GHSA-qhrr-8q5h-9q3h); dev explicitly
+selects 2.5.303 since #207 and passes those six jobs. Exact error excerpts and
+job URLs are in the snapshot. The proposal is
+[closed as superseded](https://github.com/psmfd/FingerTrap/pull/214#issuecomment-6328122599).
+Main remains older until normal dev-to-main release promotion. This closure
+does not remediate main, suppress NuGet audit or dismiss a security alert.

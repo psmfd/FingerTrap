@@ -1,0 +1,160 @@
+{
+  "checked": "2026-10-21",
+  "dev": "b0292a9fb3c38f70abfec534d004c6ccf13dbac4",
+  "main": "eba86c0d7e6e5d69107f259de21bf82e4d50d6b6",
+  "dependabotPR": 214,
+  "dependabotHead": "73f02f0387efa019b88c56f3b544989dace73be2",
+  "devChecks": [
+    {
+      "name": "Analyze (javascript-typescript)",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235491/job/119520888094"
+    },
+    {
+      "name": "Analyze (actions)",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235491/job/119520888063"
+    },
+    {
+      "name": "Analyze (rust)",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235491/job/119520887966"
+    },
+    {
+      "name": "Analyze (csharp)",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235491/job/119520887872"
+    },
+    {
+      "name": "Analyze (python)",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235491/job/119520887653"
+    },
+    {
+      "name": "tauri (macos-15) / validate",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881632"
+    },
+    {
+      "name": "sidecar (macos-15) / validate",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881513"
+    },
+    {
+      "name": "agent-runtime (ubuntu-24.04)",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881479"
+    },
+    {
+      "name": "agent-runtime (windows-2025)",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881471"
+    },
+    {
+      "name": "agent-runtime (macos-15) / validate",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881461"
+    },
+    {
+      "name": "ui (macos-15) / validate",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881429"
+    },
+    {
+      "name": "ui (windows-2025)",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881417"
+    },
+    {
+      "name": "tauri (ubuntu-24.04)",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881397"
+    },
+    {
+      "name": "sidecar (windows-2025)",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881323"
+    },
+    {
+      "name": "tauri (windows-2025)",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881306"
+    },
+    {
+      "name": "repo-check",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881292"
+    },
+    {
+      "name": "lint-actions",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881253"
+    },
+    {
+      "name": "ui (ubuntu-24.04)",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881214"
+    },
+    {
+      "name": "sidecar (ubuntu-24.04)",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39686235496/job/119520881048"
+    }
+  ],
+  "failureExcerpts": [
+    {
+      "jobId": 119523613401,
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39687038280/job/119523613401",
+      "errors": [
+        "2026-10-21T22:30:56.1394291Z ERROR [pr-base] PRs targeting 'main' must come from 'dev' per ADR-0004 promotion strategy."
+      ]
+    },
+    {
+      "jobId": 119523614136,
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39687038276/job/119523614136",
+      "errors": [
+        "2026-10-21T22:31:11.3917558Z /home/runner/work/FingerTrap/FingerTrap/src-sidecar/src/FingerTrap.Sidecar/FingerTrap.Sidecar.csproj : error NU1902: Warning As Error: Package 'MessagePack' 2.5.302 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qhrr-8q5h-9q3h [/home/runner/work/FingerTrap/FingerTrap/src-sidecar/FingerTrap.slnx]",
+        "2026-10-21T22:31:11.4884025Z /home/runner/work/FingerTrap/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Tests/FingerTrap.Sidecar.Tests.csproj : error NU1902: Warning As Error: Package 'MessagePack' 2.5.302 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qhrr-8q5h-9q3h [/home/runner/work/FingerTrap/FingerTrap/src-sidecar/FingerTrap.slnx]"
+      ]
+    },
+    {
+      "jobId": 119523613971,
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39687038276/job/119523613971",
+      "errors": [
+        "2026-10-21T22:31:27.9566920Z /Users/runner/work/FingerTrap/FingerTrap/src-sidecar/src/FingerTrap.Sidecar/FingerTrap.Sidecar.csproj : error NU1902: Warning As Error: Package 'MessagePack' 2.5.302 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qhrr-8q5h-9q3h"
+      ]
+    },
+    {
+      "jobId": 119523614058,
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39687038276/job/119523614058",
+      "errors": [
+        "2026-10-21T22:32:24.7892752Z D:\\a\\FingerTrap\\FingerTrap\\src-sidecar\\src\\FingerTrap.Sidecar\\FingerTrap.Sidecar.csproj : error NU1902: Warning As Error: Package 'MessagePack' 2.5.302 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qhrr-8q5h-9q3h [D:\\a\\FingerTrap\\FingerTrap\\src-sidecar\\FingerTrap.slnx]\r",
+        "2026-10-21T22:32:27.1090854Z D:\\a\\FingerTrap\\FingerTrap\\src-sidecar\\tests\\FingerTrap.Sidecar.Tests\\FingerTrap.Sidecar.Tests.csproj : error NU1902: Warning As Error: Package 'MessagePack' 2.5.302 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qhrr-8q5h-9q3h [D:\\a\\FingerTrap\\FingerTrap\\src-sidecar\\FingerTrap.slnx]\r"
+      ]
+    },
+    {
+      "jobId": 119523614067,
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39687038276/job/119523614067",
+      "errors": [
+        "2026-10-21T22:31:08.0318040Z /Users/runner/work/FingerTrap/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Tests/FingerTrap.Sidecar.Tests.csproj : error NU1902: Warning As Error: Package 'MessagePack' 2.5.302 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qhrr-8q5h-9q3h [/Users/runner/work/FingerTrap/FingerTrap/src-sidecar/FingerTrap.slnx]",
+        "2026-10-21T22:31:08.0352140Z /Users/runner/work/FingerTrap/FingerTrap/src-sidecar/src/FingerTrap.Sidecar/FingerTrap.Sidecar.csproj : error NU1902: Warning As Error: Package 'MessagePack' 2.5.302 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qhrr-8q5h-9q3h [/Users/runner/work/FingerTrap/FingerTrap/src-sidecar/FingerTrap.slnx]"
+      ]
+    },
+    {
+      "jobId": 119523614059,
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39687038276/job/119523614059",
+      "errors": [
+        "2026-10-21T22:31:33.6264772Z D:\\a\\FingerTrap\\FingerTrap\\src-sidecar\\src\\FingerTrap.Sidecar\\FingerTrap.Sidecar.csproj : error NU1902: Warning As Error: Package 'MessagePack' 2.5.302 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qhrr-8q5h-9q3h\r"
+      ]
+    },
+    {
+      "jobId": 119523614481,
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39687038276/job/119523614481",
+      "errors": [
+        "2026-10-21T22:31:42.8544266Z /home/runner/work/FingerTrap/FingerTrap/src-sidecar/src/FingerTrap.Sidecar/FingerTrap.Sidecar.csproj : error NU1902: Warning As Error: Package 'MessagePack' 2.5.302 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-qhrr-8q5h-9q3h"
+      ]
+    }
+  ],
+  "mainRemediation": "Pending normal dev-to-main release promotion; closure of duplicate PR does not remediate main.",
+  "releaseDispatched": false
+}

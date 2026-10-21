@@ -1464,3 +1464,26 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   policy, preserve the immutable worker and runner-group restrictions, then
   queue full protected CI and Apple packaging. Previous dev runner drain is
   complete; no local Tart controller remains active before cutover.
+- S3-M2 protected completion: #213 passes all 23 distinct head checks at
+  0a287c4eb6769ee810330de6d625861f241f65ce and merges at
+  b0292a9fb3c38f70abfec534d004c6ccf13dbac4 with the same source tree.
+  All 19 dev checks pass. Apple artifact 12385811971 matches its GitHub digest,
+  checked tree and merge parents; app/DMG and all three ARM64 binaries verify,
+  and packaged shell smoke passes. Pi spawn explicitly skips without installed
+  Pi. All five PR and four dev disposable Tart VMs/registrations are removed.
+- S3-M3 starts after the maintainer reports CI concerns. A newly created #214
+  proposes Vite 8.1.6 against older main. Inspect its exact dependency delta,
+  Gitflow and platform logs; compare current dev's dependency fixes and checks.
+  Record why current dev passes and main still fails, close an already
+  incorporated proposal, and finish this tracking update through protected CI.
+  No release promotion, security alert dismissal or protection bypass is in scope.
+- S3-M3 diagnosis and disposition: #214 has no unresolved review threads and
+  changes only the UI manifest/lock. Its Vite 8.1.6 intent is superseded by #211's
+  audited 8.3.3 graph. All six platform failures are NU1902 for main's MessagePack
+  2.5.302; dev has explicit 2.5.303 since #207. Gitflow correctly rejects its
+  main base. Saved exact error excerpts, job URLs and all 19 successful dev
+  checks in evidence/pr-merge-20261021/final-ci-readback.json. Closed #214 with
+  a reviewed explanation and independent state readback; no alerts dismissed.
+  Main remains older until normal release promotion. Next: validate these
+  tracking files, checkpoint and complete protected CI, then leave #210's exact
+  runtime release/pin and example dependency disposition as the concrete gate.
