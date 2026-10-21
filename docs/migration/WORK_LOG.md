@@ -1314,3 +1314,15 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   are backed up at 0143c33; the final documentation checkpoint follows after
   checks. Next action is maintainer review of Pi #83 and promotion/rollback
   record, including remaining Gondolin/node-forge example findings.
+
+- Final qualification/decision checkpoint f8225ebc125aede6cc226fdf8bf74222ac550107
+  is committed and remotely backed up. Scoped secret scan passes; its first
+  launch could not write the sandboxed report cache, and the approved retry
+  passes. Markdown, JSON parsing, local links, script syntax, structural and
+  whitespace checks pass. Source CI remains attributed to 0143c33 / 28741c97f.
+- Existing Pi #82/#83, FingerTrap #209 and #210 descriptions now reflect the
+  final results and were independently read back. #210's first five items are
+  complete; the last production decision/verification item remains unchecked.
+  No issue was closed, PR merged, release dispatched, production pin changed,
+  SDK switched or managed mode activated. The next action is recorded at the
+  top of STATUS; there is no outstanding command or disposable runtime process.

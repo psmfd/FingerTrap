@@ -145,7 +145,10 @@ not a blanket waiver. Do not promote without the recorded disposition decision.
 - All five disposable CI VMs and registrations are removed. Independent
   readback: zero GitHub runners; all remaining Tart VMs stopped; base preserved.
 - Source/evidence checkpoint `0143c33` is committed and remotely backed up.
-  Subsequent documentation/evidence commits do not inherit fresh source CI.
+  Final qualification/decision checkpoint `f8225ebc125aede6cc226fdf8bf74222ac550107`
+  is secret-scanned and remotely backed up. Pi #82/#83, FingerTrap #209 and
+  #210 descriptions were updated and independently read back. This subsequent
+  tracking-readback checkpoint does not inherit fresh source CI.
 
 **Recovery:** keep `.artifacts/pi-next/preserved-20261021/` across patching.
 All 215 copied files match sources: runtime, host, npm model archive, upstream
