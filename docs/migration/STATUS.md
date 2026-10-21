@@ -9,6 +9,16 @@ FingerTrap checks pass. Read [qualification/evidence](evidence/pi-next/README.md
 and the [promotion/rollback record](evidence/pi-next/promotion-rollback.md).
 Production release/pin and activation retain their separate approval gates.
 
+**Active slice S3-M1 — review and integrate open PRs.** The maintainer now
+explicitly requests review/merge of open PRs to leave a clean continuation
+baseline. This authorizes source PR integration and disposition of superseded
+drafts; release/tag/pin, SDK and managed-activation gates remain separate.
+Inventory: FingerTrap #209, #188 and dependency PRs #199/#198/#197/#195/#190/#165;
+Pi #83 plus superseded #81/#82. Review exact diffs, threads, dependency changes,
+checks and protection rules; repair or close redundant proposals, merge reviewed
+changes in dependency order and verify resulting branches/CI. Preserve private
+local evidence. No PR has been merged under this new slice yet.
+
 ## Authorization and scope
 
 The maintainer approved the
@@ -103,13 +113,14 @@ Suggested restart text:
 
 ## Resume here
 
-**Next action: maintainer review of Pi #83 and the digest-bound promotion/rollback
-record.** Review pending security patches 021–024, proposed retirements
-016/017/019 and remaining Gondolin/node-forge example dependency disposition.
-Then decide the exact merge/release/pin transaction. Existing approvals do not
-authorize that final production decision. #210 stays open for it; the first five
-qualification items are complete. SDK/backend adoption and managed activation
-retain ADR-0034's separate gates. No build/test command is pending.
+**Next action: complete S3-M1 source PR integration.** Review Pi #83's remaining
+threads, merge its verified head without publishing, and close superseded Pi
+#81/#82. Re-run protected checks on the current FingerTrap #209 review
+checkpoint before its squash merge to dev. Review dependency updates together
+on the resulting baseline; close #188 as superseded by accepted migration ADRs.
+See the [integration review](evidence/pr-merge-20261021/README.md).
+Release/pin and managed activation remain separately gated. #210 stays open for
+the exact production decision; its first five qualification items are complete.
 
 Known blocker for a clean production dependency recommendation: two high findings
 remain in the optional Gondolin example chain, with no published node-forge fix.

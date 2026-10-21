@@ -1326,3 +1326,29 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   No issue was closed, PR merged, release dispatched, production pin changed,
   SDK switched or managed mode activated. The next action is recorded at the
   top of STATUS; there is no outstanding command or disposable runtime process.
+
+## 2026-10-21 — S3-M1 open-PR review and integration authorized
+
+- Maintainer explicitly requests inclusion of review/merge of open PRs so the
+  repository is clean for continuation. Source merge authorization supersedes
+  the earlier wait-for-merge decision; release/pin and activation gates remain.
+- Intended change: inventory and review all eight FingerTrap PRs and the three
+  Pi campaign drafts; assess dependencies/threads/rules, resolve redundant or
+  stale proposals, merge reviewed heads in dependency order, verify protected
+  branch results and leave the local checkout synchronized without losing the
+  operator's three private untracked entries or sibling checkout state.
+- Validation: exact-head diffs and existing checks first; rerun affected checks
+  for changed inputs, verify merged tree/commit/CI and cleanup. FingerTrap #199
+  targets main, contrary to feature/dependency branch convention, so assess its
+  current dev equivalent before any retarget/merge. Pi #81/#82 are older
+  alternatives; do not merge their old-base trees over the latest candidate.
+
+- Pi #83's eight exact-head checks pass. Four remaining quality threads were
+  reviewed against full context and upstream identity: two inferred-type
+  regression checks, one deliberate pre-GC reference release, and one unused
+  example assignment whose awaited initialization is preserved. Record rationale
+  in evidence/pr-merge-20261021/README.md before resolving. No source edit needed.
+- Dependency lock updates overlap and most proposals predate local CI routing.
+  Plan one reviewed reconciliation PR against merged dev, with full combined
+  validation, then close incorporated originals. #199 must not merge into main.
+  #188's architecture proposal is superseded; its implementation issues stay open.
