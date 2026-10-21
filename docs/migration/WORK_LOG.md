@@ -1007,3 +1007,31 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   disposition, then execute #210. Source CI is green on FT `faa4242` and
   Pi `1f37eea`; documentation commits intentionally skip those build lanes.
   This status/log-only recovery note records the preceding verified backup.
+
+## 2026-10-21 — Session stop for patching
+
+- Maintainer requests ending the session and a durable restart handoff.
+  Implementation is paused; no qualification/build command is pending.
+  Previous recovery checkpoint `42aab08fffc0a854f5664f11630bba68721c0e36`
+  is verified on local and remote `feat/managed-pi-startup`. Pi remains clean
+  at pushed `1f37eea`; #209/#82 are open drafts, and #210 remains open.
+- Refreshed GitHub runner listing shows zero registrations. Tart listing
+  shows every VM stopped, with no job/qualification clones. This stop does
+  not need a runner drain or additional source test run.
+- Preserved exact artifacts outside `/private/tmp`, under ignored local
+  `.artifacts/s3-discovery/patching-handoff-20261021/`: candidate runtime and
+  archive, published host closure, released comparison and attestation,
+  model-data archive and metadata. Verified 426 files/symlinks against their
+  sources plus the qualified binary hashes. Inventory SHA-256:
+  `8ae0a0357b0614696989a675f6b43ff761f80b6eb6bfe01412bd9fa90ff531a5`.
+  Binary preservation is local only; source/evidence remote backup is separate.
+- STATUS now contains restart wording, branch recovery and artifact locations.
+  Ledger records the patching pause; qualification and activation states do
+  not change. This handoff is documentation only and skips build CI.
+- Next session: verify local/remote state and toolchain after patching, review
+  qualified companion drafts and settle integration/promotion disposition;
+  then execute latest-Pi #210. Dependency findings still require disposition
+  before a production pin. Keep pi_config retired from new implementation.
+- Handoff finalization: validate documents, commit/push this scoped update,
+  and link its actual commit in the companion PR and #210 handoff notes.
+  The session's final response reports the observed backup result.

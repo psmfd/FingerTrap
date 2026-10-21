@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-21 UTC, maintained-base qualification and exact-source CI complete.
+Updated: 2026-10-21 UTC, session stopped at maintainer request for patching.
 
 ## Authorization and scope
 
@@ -35,6 +35,63 @@ After this campaign settles, the maintainer requests a latest-Pi release
 upgrade and validation campaign. Track it here now; resolve "latest" from
 upstream/fork release provenance when that campaign starts, then retain the
 managed policy and required fork patches and repeat protocol/artifact tests.
+
+## Patching handoff — 2026-10-21
+
+**Paused at the maintainer's request for system patching.** No implementation
+or qualification command is awaiting completion. Resume the next action below
+when the maintainer starts the next session; existing approvals persist.
+
+- Repository: `/Users/pdavis/projects/_personal/FingerTrap`, branch
+  `feat/managed-pi-startup`. Before this handoff, local and remote head were
+  `42aab08fffc0a854f5664f11630bba68721c0e36`; this documentation-only commit
+  follows it. Read `git log -1` for the handoff commit rather than resetting
+  to the older checkpoint. Tested source remains `faa4242`.
+- Pi branch `fix/managed-startup-maintained` is clean and remotely backed
+  up at `1f37eea4bf71f95ed9a4e62674949de3a9feb8b0`. The temporary worktree
+  `/private/tmp/ft-pi-maintained` is convenient, not the recovery authority.
+  If patching removes it, recover the exact remote branch into a fresh
+  isolated worktree; preserve the operator's sibling Pi checkout and any
+  unrelated edits. Do not reuse the historical `fix/managed-startup-v1`.
+- Independent stop-time checks: #209 and Pi #82 remain open drafts at the
+  expected heads; #210 is open. GitHub runner registrations: zero. All Tart
+  VMs are stopped; no job or qualification clone remains. No build drain or
+  standalone qualification needs restarting merely because the session ended.
+- Exact runtime, host, maintained comparison artifact, model-data archive
+  and metadata were copied out of temporary storage. All 426 copied files
+  and symlinks were checked against their sources, including the qualified
+  executable hashes. Local preservation directory:
+  `.artifacts/s3-discovery/patching-handoff-20261021/`.
+  Its `inventory.json` SHA-256 is
+  `8ae0a0357b0614696989a675f6b43ff761f80b6eb6bfe01412bd9fa90ff531a5`.
+  These binary copies are ignored and local only; source and the 102 retained
+  qualification evidence files are backed up through GitHub. Keep `.artifacts`
+  during patching. The downloaded product package remains separately in
+  `.artifacts/s3-discovery/maintained-package/`.
+- Preserved artifact paths under that directory: runtime `candidate/darwin-arm64`,
+  published host `host`, released comparison `baseline/pi`. Verify hashes
+  before reuse. A rebuilt binary is a new artifact if its digest differs;
+  previous exact-artifact results do not automatically qualify it.
+- Preserve `.local-testing/`, `LEGACY_pi_config_3579dc1.patch`, and
+  `NEXT_SESSION_pi-fold-reassessment.md`; they are unrelated untracked
+  private state and have not been added to this handoff.
+
+On restart, read this file and the latest WORK_LOG entries, inspect local
+changes, fetch/read the companion PR heads with the repository-authorized
+`TheSemicolon` identity without changing the global active account, and
+reconcile any intervening changes before editing. Temporary helper scripts
+under `/private/tmp` are not required recovery inputs. Recheck toolchain and
+Tart readiness after patching before new builds; retain local macOS execution
+and the existing hosted Windows/Linux lanes. Do not rerun completed tests
+without a changed input or an outstanding concern.
+
+Suggested restart text:
+
+> Resume FingerTrap's Pi migration from the patching handoff in
+> docs/migration/STATUS.md and the latest WORK_LOG.md entries. Verify saved
+> branches and remote PR state, then continue the recorded next action within
+> existing approvals. Once this campaign is settled, proceed with the latest-Pi
+> upgrade and validation tracked in #210. Keep status and evidence durable.
 
 ## Resume here
 
