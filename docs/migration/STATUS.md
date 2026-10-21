@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-21 UTC, S3 discovery-resolution proposal ready for review.
+Updated: 2026-10-21 UTC, S3-G approved; contract and regression work starting.
 
 ## Authorization and scope
 
@@ -18,20 +18,23 @@ Executable/RPC and Pi `v0.85.1-psmfd.1` remain the migration baseline.
 Production SDK adoption, managed distribution/activation, new trusted
 approval capabilities and repository retirement retain their separate gates.
 
+The maintainer approved S3-G1 through S3-G4 and preparation of the S3-G5
+qualification report on 2026-10-21. This includes the focused Pi fork patch,
+FingerTrap fixture integration, companion commits/draft PRs and unpublished
+qualification artifacts. Exact-pin promotion and production activation retain
+their separate decisions.
+
 ## Resume here
 
-**Current activity: S3-G discovery-resolution plan; awaiting maintainer review.**
+**Current activity: S3-G1 evidence established; preparing S3-G2 runtime patch.**
 
-The requested proposal is [S3 discovery resolution](s3-discovery-resolution-plan.html).
-Planning covers an explicit managed startup policy in the Pi executable,
-candidate artifact qualification and FingerTrap integration. Implementation has
-not begun. Document references, navigation, JavaScript syntax and narrow/desktop
-layout passed validation; Markdown and repository structural checks passed.
-Next: review the proposal. After approval, record authorization and begin S3-G1
-with a linked Pi regression tracker, policy ADR and failing qualification fixtures.
-The previous
-handoff checkpoint is `44b37cad0f8d4cbb776a219975483a39bc4b7fb8`, pushed to
-`docs/runtime-migration-handoff`.
+The [resolution plan](s3-discovery-resolution-plan.html) is approved. Begin
+with [Pi #80](https://github.com/psmfd/pi/issues/80), ADR-0038 and the separate
+candidate qualifier. Both initial baseline cases fail actual isolation checks;
+RPC startup/lifecycle itself succeeds. Next implement the managed runtime path and
+qualify the policy through S3-G4 before preparing the S3-G5 pin report.
+Plan checkpoint `0dc2b926fe7df637e6f83186fc9d6282989fc91b` is committed and
+pushed on `docs/runtime-migration-handoff`.
 
 1. PR [#207](https://github.com/psmfd/FingerTrap/pull/207) squash-merged into
    `dev` as `9bfc0926cf387644a1cd2512e3fcb63f22287165`. The actual candidate
@@ -53,9 +56,8 @@ handoff checkpoint is `44b37cad0f8d4cbb776a219975483a39bc4b7fb8`, pushed to
 5. Resume migration with the [approved S3 plan](s3-launch-isolation-plan.html),
    [discovery audit](s3-discovery-audit.md) and [foundation report](s3-launch-foundation.md).
    The pinned Pi performs project migrations before trust, so arbitrary-project
-   managed activation remains blocked under #201/#202. Review the new S3-G
-   proposal before implementing the fork change. No SDK or production pin
-   change is authorized by the infrastructure rollout or this planning request.
+   managed activation remains blocked under #201/#202. S3-G implementation is
+   now approved; production pin promotion and SDK adoption remain separate.
 6. Before future source pushes, run `python3 scripts/ci/tart-runner.py check`.
    Once jobs queue, run `python3 scripts/ci/tart-runner.py drain --max-jobs 5`;
    use four when only CI is queued. The controller is session-started.
@@ -75,7 +77,7 @@ record with `git status`, `git log` and any active process/test output.
 | S1 | Profile schema, compatibility and baseline | Verified locally and in CI; backed up | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed |
 | S2 | Reviewed import slices and test registration | Verified locally and in CI; backed up | `92137c4`; [manifest report](import-manifests.md); all platform checks and Apple Silicon package/smoke passed |
 | S3 | PTY/RPC launch isolation | Foundation merged and CI verified; discovery blocked | `95424b3`; [report](s3-launch-foundation.md); package retry passed; exact-pin project migrations prevent full qualification |
-| S3-G | Close the pinned-Pi startup/discovery gap | Proposed; approval pending | [Resolution plan](s3-discovery-resolution-plan.html); executable policy, explicit artifact capability and real-process qualification; no source implementation yet |
+| S3-G | Close the pinned-Pi startup/discovery gap | Approved; G1 in progress | [Resolution plan](s3-discovery-resolution-plan.html); policy ADR, tracker and baseline-failing fixtures first; pin promotion remains gated |
 | CI-local | Reduce hosted builds with a local runner | Merged and verified on protected dev | `9bfc092`; 22 post-merge checks passed, five macOS jobs local; artifact/cleanup verified; dev protection mapped; main mapping deferred to promotion; Windows/Linux hosted |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
 | S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |
@@ -112,7 +114,7 @@ validation after resuming an incomplete edit and update this record.
   41 links and 13 unique IDs checked; script syntax, 390-pixel mobile layout,
   desktop layout and section navigation passed. No remote assets. Markdown,
   structural and whitespace checks passed. These are document checks only;
-  implementation and exact-pin promotion remain pending approval.
+  implementation approved 2026-10-21; exact-pin promotion remains gated.
 - Merged migration: `docs/pi-runtime-migration`, PR #207, squash `9bfc092` on dev.
 - Active handoff branch: `docs/runtime-migration-handoff`, based on `9bfc092`.
   The remote `ci/tart-runner-pilot` branch preserves worker checkpoint

@@ -134,7 +134,7 @@
       <li><a href="#approval">Approval scope and finish line</a></li>
       <li><a href="#references">Source references</a></li>
     </ol></nav>
-    <div class="sidebar-note">Prepared 21 October 2026 UTC<br>Status: proposed; approval pending<br>Standalone, offline document</div>
+    <div class="sidebar-note">Prepared 21 October 2026 UTC<br>Status: approved 21 October 2026<br>Standalone, offline document</div>
     <button class="print-button" type="button" id="print">Print / save as PDF</button>
   </aside>
   <main id="main">
@@ -142,7 +142,7 @@
       <div class="eyebrow">Runtime migration · S3-G · #201 / #202</div>
       <h1>Give managed Pi launches an explicit discovery policy.</h1>
       <p class="lead">Keep the executable and RPC architecture. Add a small, versioned startup policy to the Pi fork, then prove that FingerTrap can launch it in an existing project without consuming or migrating ambient configuration.</p>
-      <div class="meta"><span class="tag">Proposed · approval pending</span><span class="tag">Five implementation checkpoints</span><span class="tag">Production activation stays gated</span></div>
+      <div class="meta"><span class="tag">Approved · 21 October 2026</span><span class="tag">Five implementation checkpoints</span><span class="tag">Production activation stays gated</span></div>
     </header>
 
     <section id="decision">
@@ -150,7 +150,7 @@
       <p><strong>Recommendation:</strong> implement an opt-in <code>managed-v1</code> startup policy in <code>psmfd/pi</code>, selected by FingerTrap only for a verified candidate artifact. Apply that policy before configuration, command dispatch, migrations or resource discovery can have side effects. Carry it through reload and runtime recreation.</p>
       <p>FingerTrap already owns launch selection, profile paths, executable verification and process environment replacement. The remaining gap is inside Pi. Fixing it there preserves the existing PTY and RPC paths and avoids expanding this slice into a second backend.</p>
       <div class="callout"><p><strong>Expected result:</strong> a keyless managed fixture can start in a real repository containing existing <code>.pi</code> configuration, preserve that configuration, and load only its explicitly selected local resources.</p><p>FingerTrap remains the owner of migration work, imported extensions, qualification and future distribution. The Pi repository remains an upstream runtime dependency. No new implementation belongs in <code>pi_config</code>.</p></div>
-      <p>This is a proposal. No Pi patch, artifact capability, new runtime pin or managed product activation has been implemented in this planning step.</p>
+      <p>Approved on 21 October 2026 for S3-G1 through S3-G4 and preparation of the S3-G5 report. The behavior below is the implementation contract; approval does not claim that the patch or qualification already exists.</p>
     </section>
 
     <section id="evidence">
@@ -274,7 +274,7 @@
     </section>
 
     <section id="approval" class="approval">
-      <div class="section-number">10 · Approval requested</div><h2>Approve the dependency fix and its qualification scope.</h2>
+      <div class="section-number">10 · Approval recorded</div><h2>Approved dependency fix and qualification scope.</h2>
       <blockquote>Approve S3-G1 through S3-G4 and preparation of the S3-G5 qualification report: a versioned managed startup policy in the Pi executable, FingerTrap artifact-capability integration, focused companion commits/draft PRs, and unpublished real-process qualification. Retain the separate exact-pin promotion and production activation decisions.</blockquote>
       <p>The separate pin/backend decision comes from <a href="../../adrs/0036-resolve-managed-launches-before-process-creation.md">ADR-0036</a>: “No SDK or pin change is authorized by this ADR.” The existing S3 approval covered the launch foundation; this proposal makes the additional fork work concrete for review.</p>
       <p><strong>Immediate next action after approval:</strong> record authorization in STATUS, create the linked Pi regression tracker, add the policy ADR and candidate qualification fixtures, and demonstrate the original pin failing those isolation assertions before applying the runtime patch.</p>
@@ -292,7 +292,7 @@
       </ul>
       <p class="small">Prepared from repository records and authenticated exact-source/issue reads on 21 October 2026 UTC (20 October locally). Newer-fork observations are source inspection, not executable results. All implementation acceptance criteria in this proposal are future work.</p>
     </section>
-    <footer>FingerTrap · S3 discovery resolution · Proposed 21 October 2026 UTC · Approval pending</footer>
+    <footer>FingerTrap · S3 discovery resolution · Prepared 21 October 2026 UTC · Approved 21 October 2026</footer>
   </main>
 </div>
 

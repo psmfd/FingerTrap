@@ -592,3 +592,40 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   S3-G1: linked Pi regression tracker, policy ADR, and baseline-failing candidate
   qualification fixtures. Preserve unrelated local files and existing runner
   enrollment requirements.
+
+## 2026-10-21 — S3-G approval recorded; G1 started
+
+- **Authorization:** maintainer approved the presented plan. Proceed with G1–G4
+  and preparation of the G5 report, including focused companion commits/draft
+  PRs and unpublished builds. Exact-pin promotion and activation stay gated.
+- **Starting checkpoint:** `0dc2b926fe7df637e6f83186fc9d6282989fc91b`, committed
+  and pushed. Preserve the three unrelated untracked local paths.
+- **G1 intended work:** linked Pi regression tracker, ADR-0038, immutable policy
+  contract and separate candidate qualification fixtures. Use an isolated Pi
+  worktree at `e7d09c9`; do not switch or modify the operator's Pi checkout.
+- **Validation:** original pinned executable must fail isolation assertions for
+  its known behavior; keep the baseline reproducer's existing success semantics.
+  Record each fixture's observed outcome before implementing the fork patch.
+- **Next:** create the tracker/worktree and inspect the exact entry/services
+  paths before writing the policy and retained tests.
+
+## 2026-10-21 — G1 regression evidence and dependency worktree
+
+- **Tracker:** [Pi #80](https://github.com/psmfd/pi/issues/80), linked to #201/#202.
+- **Dependency worktree:** `/private/tmp/ft-pi-managed`, branch
+  `fix/managed-startup-v1`, exact baseline `e7d09c9`. Original Pi checkout
+  remains on its existing branch. Pinned `npm ci --ignore-scripts` succeeded
+  after sandbox DNS failure and authorized network retry; no lockfile changes.
+- **Contract:** ADR-0038 records the approved managed-v1 boundary and descriptor
+  capability. Runtime implementation has not begun yet.
+- **Red evidence:** the new candidate qualifier runs the baseline without the
+  unsupported policy flag. Actual RPC hello, state, new-session and reload
+  requests succeed, but project state changes, profile migration changes inputs,
+  and a literal system prompt is interpreted as a filename. Both isolation
+  cases fail as expected. Evidence: `.artifacts/s3-discovery/baseline.json`.
+- **Harness correction:** count extension factory invocations separately from
+  session-start events; the existing lifecycle emits additional start events.
+  This avoids misclassifying an event as a duplicate extension load.
+- **Next:** save the documentation checkpoint and establish the implementation
+  draft PR for local runner enrollment. Then implement early parsing and an
+  explicit managed resource/service path in Pi; retain the red comparator.
