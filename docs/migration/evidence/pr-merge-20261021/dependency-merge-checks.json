@@ -1,0 +1,119 @@
+{
+  "sha": "260aec5067d37247b240a8641829bc520ae74bf3",
+  "checks": [
+    {
+      "name": "Analyze (python)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679885832/job/119499299228"
+    },
+    {
+      "name": "Analyze (javascript-typescript)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679885832/job/119499299076"
+    },
+    {
+      "name": "Analyze (actions)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679885832/job/119499299066"
+    },
+    {
+      "name": "Analyze (csharp)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679885832/job/119499299055"
+    },
+    {
+      "name": "Analyze (rust)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679885832/job/119499298595"
+    },
+    {
+      "name": "tauri (macos-15) / validate",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499291645"
+    },
+    {
+      "name": "ui (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499291505"
+    },
+    {
+      "name": "agent-runtime (macos-15) / validate",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499291483"
+    },
+    {
+      "name": "ui (windows-2025)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499291482"
+    },
+    {
+      "name": "agent-runtime (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499291461"
+    },
+    {
+      "name": "repo-check",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499291396"
+    },
+    {
+      "name": "sidecar (macos-15) / validate",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499291367"
+    },
+    {
+      "name": "tauri (windows-2025)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499291288"
+    },
+    {
+      "name": "sidecar (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499291279"
+    },
+    {
+      "name": "ui (macos-15) / validate",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499291232"
+    },
+    {
+      "name": "lint-actions",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499291214"
+    },
+    {
+      "name": "tauri (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499291199"
+    },
+    {
+      "name": "sidecar (windows-2025)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499291191"
+    },
+    {
+      "name": "agent-runtime (windows-2025)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39679886096/job/119499290816"
+    }
+  ]
+}

@@ -1,8 +1,7 @@
 # Pi 1.3.0 candidate qualification
 
-The maintained 0.87.1 campaign is settled as a qualified reference: Pi #82 and
-FingerTrap #209 stay drafts; production promotion was deferred for dependency
-resolution. FingerTrap #210 then selected latest stable upstream **v1.3.0**
+The maintained 0.87.1 campaign is settled as a qualified reference. FingerTrap
+Issue #210 selected latest stable upstream **v1.3.0**
 (`71023aec1546d6d677a65669c5665c0927ce0dd0`, published 2026-10-15).
 
 The corrected candidate is committed and backed up in
@@ -12,6 +11,15 @@ The corrected candidate is committed and backed up in
 FingerTrap fixture source is `0143c3317db5343d004bbfa1b75fd566b87c1b6c` in
 [#209](https://github.com/psmfd/FingerTrap/pull/209). These are qualification
 identities; no production pin, release, SDK adoption or managed activation changed.
+
+Source integration is complete: Pi #83 merged at
+`5f1f1dfbacb508086ed9b68563c78c3aa1456d7c` with the qualified tree unchanged;
+Pi #82 is incorporated through that merge, with its reference branch preserved.
+FingerTrap #209 merged to dev at `cc3bf8855b0f748c04c44a92093a9a708381f264`;
+dependency reconciliation #211 follows at `260aec5067d37247b240a8641829bc520ae74bf3`.
+The [integration record](../pr-merge-20261021/README.md) distinguishes source
+checks, artifacts, merge results and the remaining production gates. Upstream
+latest stable was rechecked after integration and remains v1.3.0.
 
 ## Evidence and results
 

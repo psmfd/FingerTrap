@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-21 UTC. Resume completed; Pi 1.3.0 candidate qualified.
+Updated: 2026-10-21 UTC. Pi 1.3.0 qualified; source PR backlog integrated.
 
 Current candidate: Pi #83 at `28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2`;
 FingerTrap fixture source #209 at `0143c3317db5343d004bbfa1b75fd566b87c1b6c`.
@@ -9,25 +9,23 @@ FingerTrap checks pass. Read [qualification/evidence](evidence/pi-next/README.md
 and the [promotion/rollback record](evidence/pi-next/promotion-rollback.md).
 Production release/pin and activation retain their separate approval gates.
 
-**Active slice S3-M1 — review and integrate open PRs.** The maintainer now
-explicitly requests review/merge of open PRs to leave a clean continuation
-baseline. This authorizes source PR integration and disposition of superseded
-drafts; release/tag/pin, SDK and managed-activation gates remain separate.
-Inventory: FingerTrap #209, #188 and dependency PRs #199/#198/#197/#195/#190/#165;
-Pi #83 plus superseded #81/#82. Review exact diffs, threads, dependency changes,
-checks and protection rules; repair or close redundant proposals, merge reviewed
-changes in dependency order and verify resulting branches/CI. Preserve private
-local evidence. Pi #83 merged at `5f1f1dfbacb508086ed9b68563c78c3aa1456d7c`,
-with exactly the qualified source tree; #81/#82 are closed as superseded.
-GitHub removed #82's reference branch during integration; the exact saved head
-is restored and remotely verified. #209 merged to dev at
-`cc3bf8855b0f748c04c44a92093a9a708381f264` after all 23 head checks passed;
-all 19 post-merge checks pass. #188 is closed as superseded. Dependency
-reconciliation draft #211 is remotely backed up at `2a2c6a0`; all 100 UI tests,
-eight native tests and Clippy pass locally. Fixed Vite/brace-expansion versions
-replace vulnerable older proposals; combined audit reports zero findings.
-Enroll #211 in the existing local Tart routing, then queue its full protected
-suite and Apple Silicon packaging. The six dependency originals remain open.
+**S3-M1 source integration complete.** Maintainer authorization covers source
+merges and superseded drafts; release/tag/pin, SDK and managed activation retain
+their separate gates. Pi #83 merged at `5f1f1dfbacb508086ed9b68563c78c3aa1456d7c`
+with exactly the qualified tree. GitHub marks #82 incorporated through that
+merge; its exact reference branch is restored. #81 is closed without merging
+its older tree. All six Pi post-merge checks pass.
+
+FingerTrap #209 merged at `cc3bf8855b0f748c04c44a92093a9a708381f264`
+after 23 head checks; all 19 post-merge checks pass. #188 is superseded by the
+accepted migration ADRs. Combined dependency #211 merged at
+`260aec5067d37247b240a8641829bc520ae74bf3` after all 23 checks and artifact
+verification, incorporating #199/#198/#197/#195/#190/#165, which are now closed.
+All 19 checks also pass on the merged dependency commit.
+The combined UI audit reports zero findings. Read the
+[integration review and evidence](evidence/pr-merge-20261021/README.md).
+The original backlog has zero open PRs in both repositories. This subsequent
+tracking checkpoint records those results; its own CI is visible in #212.
 
 ## Authorization and scope
 
@@ -123,14 +121,14 @@ Suggested restart text:
 
 ## Resume here
 
-**Next action: complete S3-M1 dependency PR integration.** Source #83/#209 are
-merged and superseded drafts closed. Prepare the combined dependency PR from
-dev cc3bf88, enroll it in the existing local Tart routing, run protected CI,
-then merge and close the six incorporated dependency proposals. Verify post-merge
-CI and synchronize the main working checkout, preserving private local evidence.
-See the [integration review](evidence/pr-merge-20261021/README.md).
-Release/pin and managed activation remain separately gated. #210 stays open for
-the exact production decision; its first five qualification items are complete.
+**Next action: the exact runtime release/pin decision for #210.** Source merge
+review is complete. Review the [promotion/rollback record](evidence/pi-next/promotion-rollback.md)
+and resolve the remaining Gondolin/node-forge example dependency disposition,
+then approve the exact release/tag/pin transaction before publication or install.
+Production remains v0.85.1-psmfd.1, with managed selection disabled. #210's first
+five qualification items are complete; its production verification item stays
+open. SDK/backend adoption, GUI/keychain acceptance and managed activation retain
+ADR-0034's separate gates. No qualification test is pending for the named bytes.
 
 Known blocker for a clean production dependency recommendation: two high findings
 remain in the optional Gondolin example chain, with no published node-forge fix.
@@ -139,8 +137,8 @@ not a blanket waiver. Do not promote without the recorded disposition decision.
 
 - Latest stable upstream was rechecked at completion: v1.3.0,
   `71023aec1546d6d677a65669c5665c0927ce0dd0`; fork release remains
-  v0.87.1-psmfd.1. Pi branch `sync/upstream-v1.3.0` is clean and remotely
-  backed up at `28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2`, draft #83.
+  v0.87.1-psmfd.1. Pi source `28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2`
+  is integrated by #83 into protected main `5f1f1dfbacb508086ed9b68563c78c3aa1456d7c`.
 - Qualified ARM64 executable SHA-256:
   `901a10f67a06f04310f4d064e95f7e3e60ec523d253366731e077a239237407f`.
   Direct 18-case, published-host two-profile RPC/PTY and offline Tart matrices
@@ -175,13 +173,13 @@ not a blanket waiver. Do not promote without the recorded disposition decision.
 All 215 copied files match sources: runtime, host, npm model archive, upstream
 source archive and Bun archive. Inventory SHA-256:
 `67587ddb8e4d1d4d5755b4edc1aa0fe12dc76141fae1e2e83b6f1c6c52096ef6`.
-Copies are ignored/local. Recover the exact remote branch into an isolated clone;
+Copies are ignored/local. Recover merged Pi commit `5f1f1df` into an isolated clone;
 temporary worktree `/private/tmp/ft-pi-latest` is convenient, not authoritative.
 Preserve the sibling operator checkout and three private untracked entries.
 Changed executable digests require fresh qualification. Reproduction and
 mutation scripts are retained with the evidence.
 
-**Prior disposition:** retain Pi #82 and its qualified 0.87.1 artifact as a
+**Historical disposition, superseded by S3-M1:** retain Pi #82 and its qualified 0.87.1 artifact as a
 reference draft, defer its production promotion, and use #83 for latest-release
 review. G7 `95e95f0` is backed up in #82; all seven checks pass and alert 87 is
 fixed. Runtime source remains identical to qualified `1f37eea`; its binary keeps
@@ -206,7 +204,8 @@ or an outstanding concern. See the [runner runbook](../local-github-runner.md).
 | S3 | PTY/RPC launch isolation | Foundation merged; candidate qualified; pin decision pending | Production baseline still lacks managed policy; maintained candidate is qualified in G6; S3 is not complete |
 | S3-G | Close the pinned-Pi startup/discovery gap | G1–G6 implemented, qualified and source backed up | [Maintained report](s3-managed-startup-maintained-qualification.html); production pin/release and activation remain gated |
 | S3-G6 | Preserve maintained fork fixes and requalify managed startup | Complete; source backed up; CI verified | Pi `1f37eea` / FT `faa4242`; exact host/Tart/protocol/mutations pass; 7 Pi and 23 FT checks pass; dependency disposition required before production promotion |
-| Pi-next | Upgrade to latest Pi release and validate | v1.3.0 candidate qualified, backed up, CI verified; promotion pending | Pi #83 `28741c97f` / FT `0143c33`; [evidence/decision record](evidence/pi-next/README.md); #210 stays open for exact release/pin decision |
+| Pi-next | Upgrade to latest Pi release and validate | v1.3.0 qualified and source merged; promotion pending | Pi main `5f1f1df` / FT #209 `cc3bf88`; [evidence/decision record](evidence/pi-next/README.md); #210 stays open for release/pin decision |
+| S3-M1 | Review/integrate open source PRs | Original backlog settled; source checks and artifacts verified | #83/#209/#211 merged; alternatives/dependency originals reconciled; [review](evidence/pr-merge-20261021/README.md) |
 | CI-local | Reduce hosted builds with a local runner | Merged and verified on protected dev | `9bfc092`; 22 post-merge checks passed, five macOS jobs local; artifact/cleanup verified; dev protection mapped; main mapping deferred to promotion; Windows/Linux hosted |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
 | S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |

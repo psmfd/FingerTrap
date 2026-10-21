@@ -1,0 +1,53 @@
+{
+  "artifactId": 12382323858,
+  "archiveDigest": "sha256:452d2f93ff10ad5bf677df54581192a7a371cf72cf4fa42079da92615fe57f6e",
+  "downloadVerified": true,
+  "sourceHead": "42bb1b2a210acf30e17de1744257a60988398ecc",
+  "build": {
+    "commit": "3991595de5e8bac4a3f379285ee66701a34406cf",
+    "run": "https://github.com/psmfd/FingerTrap/actions/runs/39677894315",
+    "runner": "ft-actions-job-20261021t212034z-c8c3c636",
+    "app_version": "0.1.0",
+    "target": "aarch64-apple-darwin",
+    "tauri_cli": "2.11.4",
+    "distribution": "unsigned candidate; not notarized; not a published release",
+    "manual_validation": "pending clean Tart GUI, keychain, real pi and shutdown smoke"
+  },
+  "sourceTree": "1dfecf4beec8fabb5df68a172690938cba00d14a",
+  "mergeParents": [
+    "cc3bf8855b0f748c04c44a92093a9a708381f264",
+    "42bb1b2a210acf30e17de1744257a60988398ecc"
+  ],
+  "sourceTreeMatches": true,
+  "contentsChecksums": [
+    {
+      "path": "./FingerTrap-apple-silicon.app.zip",
+      "sha256": "b554859759db5a4a00c5b2f99948587e909812ea973c88a3552af1dc226d27a8",
+      "verified": true
+    },
+    {
+      "path": "./FingerTrap_0.1.0_aarch64.dmg",
+      "sha256": "5d1245fda6bc19f53ee43d1b02ecb152d3354e15c12fd23b48d2a80000f8396f",
+      "verified": true
+    }
+  ],
+  "binaries": [
+    {
+      "path": "FingerTrap.app/Contents/MacOS/fingertrap",
+      "sha256": "d105ba441b1f07924245421d0b65bfdb2c759fee7c69232d29c6c6165eeadd55",
+      "architecture": "arm64"
+    },
+    {
+      "path": "FingerTrap.app/Contents/MacOS/fingertrap-sidecar",
+      "sha256": "f1d0ca1a4b0ab3832e8e2364c50a90e49f9317692ebb0bb1d134cc73479460d4",
+      "architecture": "arm64"
+    },
+    {
+      "path": "FingerTrap.app/Contents/MacOS/libporta_pty.dylib",
+      "sha256": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3",
+      "architecture": "arm64"
+    }
+  ],
+  "managedRuntimeEmbedded": false,
+  "guiAcceptance": "separately gated"
+}

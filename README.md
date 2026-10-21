@@ -64,7 +64,8 @@ scripts/dev-setup.sh --install   # install missing tools (.NET via dotnet-instal
                                  # rustup, cargo-tauri CLI, pnpm via corepack, apt deps)
 ```
 
-Tools required: .NET 10 SDK, Node.js 22+, pnpm 10 (via corepack), rustup
+Tools required: .NET 10 SDK, Node.js 22.22.2+ (22.x), 24.15.0+ (24.x), or 26+;
+pnpm 10 (via corepack), rustup
 (stable) + cargo, the `cargo-tauri` CLI (`tauri-cli ^2.0`), and on Linux
 the Tauri system libraries (`libwebkit2gtk-4.1-dev`, `libappindicator3-dev`,
 `librsvg2-dev`, `patchelf`, `build-essential`). After install, add the new
