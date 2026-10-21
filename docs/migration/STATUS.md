@@ -1,28 +1,13 @@
 # Runtime migration: current status
 
-Updated: 2026-10-21 UTC, resumed after system patching; companion review in progress.
+Updated: 2026-10-21 UTC. Resume completed; Pi 1.3.0 candidate qualified.
 
-Current checkpoint: Pi-next source `c7d2a827d7956fcdd8e2a300b5096f6b263dc579`
-is remotely backed up in draft Pi #83. Its exact ARM64 binary
-`64a5c7c79c821457f47be724a4cc6de6eaf601e7bde4a1d6067b5b672f97b649`
-passes direct, published-host and offline Tart startup matrices. Hosted Linux
-release-build job 119388342468 passes. These are candidate qualification results,
-not production activation. Eight new CodeQL alerts prevent a clean security
-recommendation. N2-S next: review full traces and upstream fix availability,
-retain executable false-positive proof, prepare bounded S-class fixes for real
-findings with aligned manifest/guards, then rerun affected checks. Protocol pairs,
-regression mutations and final FingerTrap CI remain outstanding. The first local
-.NET test launch failed on sandbox-denied named pipes; its unsandboxed retry passes.
-
-N2-S follow-up `28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2` is committed,
-secret-scanned and remotely backed up in Pi #83. All four real findings have
-failing-then-passing controls; full static check, full hermetic suite, actual
-release block and guard parity pass. Rebuilt binary SHA-256 is
-`901a10f67a06f04310f4d064e95f7e3e60ec523d253366731e077a239237407f`.
-Repeat direct/host/Tart and protocol qualification on these new bytes, then
-regression mutations and exact-head CI readback. Four false positives have
-retained review evidence; GitHub state readback needs reconciliation before
-claiming dismissal. Production release/pin/activation gates remain intact.
+Current candidate: Pi #83 at `28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2`;
+FingerTrap fixture source #209 at `0143c3317db5343d004bbfa1b75fd566b87c1b6c`.
+Both are committed, remotely backed up and CI verified: all eight Pi and 23
+FingerTrap checks pass. Read [qualification/evidence](evidence/pi-next/README.md)
+and the [promotion/rollback record](evidence/pi-next/promotion-rollback.md).
+Production release/pin and activation retain their separate approval gates.
 
 ## Authorization and scope
 
@@ -58,11 +43,12 @@ upgrade and validation campaign. Track it here now; resolve "latest" from
 upstream/fork release provenance when that campaign starts, then retain the
 managed policy and required fork patches and repeat protocol/artifact tests.
 
-## Patching handoff — 2026-10-21
+## Historical patching handoff — 2026-10-21
 
-**Paused at the maintainer's request for system patching.** No implementation
-or qualification command is awaiting completion. Resume the next action below
-when the maintainer starts the next session; existing approvals persist.
+This historical handoff was resumed and verified on 2026-10-21. Saved branches,
+remote PRs and all 426 preserved artifact entries matched. G7 corrected a test
+fixture alert. The current resume action below supersedes the old restart action;
+the original evidence follows for recovery.
 
 - Repository: `/Users/pdavis/projects/_personal/FingerTrap`, branch
   `feat/managed-pi-startup`. Before this handoff, local and remote head were
@@ -117,167 +103,73 @@ Suggested restart text:
 
 ## Resume here
 
-**Active slice S3-G7: companion disposition and review correction.** Local and
-fetched FingerTrap head matches handoff `7f99454`; remote #209/#82 remain open
-drafts at `7f99454` / `1f37eea`, with unchanged bases. Recovered Pi into isolated
-clone `/private/tmp/ft-pi-resume` after patching removed the old worktree.
-Do not use the sibling operator checkout. Tart readiness check passes and all
-VMs are stopped. Default Node is now 24.17.0; recover the reviewed Node 22/Bun
-toolchain before Pi checks. No completed artifact tests need repeating yet.
+**Next action: maintainer review of Pi #83 and the digest-bound promotion/rollback
+record.** Review pending security patches 021–024, proposed retirements
+016/017/019 and remaining Gondolin/node-forge example dependency disposition.
+Then decide the exact merge/release/pin transaction. Existing approvals do not
+authorize that final production decision. #210 stays open for it; the first five
+qualification items are complete. SDK/backend adoption and managed activation
+retain ADR-0034's separate gates. No build/test command is pending.
 
-Review found unresolved Pi CodeQL alert 87 in test fixture code construction
-at `managed-startup-policy.test.ts:108`; successful CI reports did not establish
-zero security findings. Replace generated path interpolation with a static
-module-relative fixture, run affected tests and full `npm run check`, recount
-patch 020, checkpoint and verify remote analysis. Production promotion stays
-deferred for dependency disposition. Keep both qualified drafts as integration
-candidates until their separately gated merge/pin decisions. Once this review
-correction is settled, proceed with #210 in an isolated candidate branch.
+Known blocker for a clean production dependency recommendation: two high findings
+remain in the optional Gondolin example chain, with no published node-forge fix.
+Core install-lock exclusion and managed non-discovery are recorded evidence,
+not a blanket waiver. Do not promote without the recorded disposition decision.
 
-Pi-next discovery readback: upstream latest stable is `v1.3.0`, published
-2026-10-15; fork latest remains `v0.87.1-psmfd.1`. Resolve exact tag commits,
-review release/security changes and reconcile every patch before porting.
-Recount against the new upstream base and stop on an ADR-0039 ceiling breach.
-Next validation: fixture regression, static checks, patch accounting and
-CodeQL readback; then latest-release source/provenance review.
+- Latest stable upstream was rechecked at completion: v1.3.0,
+  `71023aec1546d6d677a65669c5665c0927ce0dd0`; fork release remains
+  v0.87.1-psmfd.1. Pi branch `sync/upstream-v1.3.0` is clean and remotely
+  backed up at `28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2`, draft #83.
+- Qualified ARM64 executable SHA-256:
+  `901a10f67a06f04310f4d064e95f7e3e60ec523d253366731e077a239237407f`.
+  Direct 18-case, published-host two-profile RPC/PTY and offline Tart matrices
+  pass, including MCP canaries/rejection. Four runtime regressions and the
+  host policy mutation are caught; restored source/builds pass.
+- Node 22.23.0 / Bun 1.3.14 and integrity-verified npm pi-ai 1.3.0 data:
+  static/full hermetic tests and actual release build pass. Source-release/npm
+  model differences are retained. Hosted Linux/Bubblewrap passes.
+- All 12 RPC scenarios record twice for baseline and candidate. New durationMs
+  volatility failed the first recorder pass; a red-first narrow normalizer
+  correction resolves it. Outbound commands/process controls match exactly;
+  upstream inbound additions are reviewed. Raw pairs/drift remain; production
+  0.85.1 goldens are unchanged.
+- Actual C accounting is 6 patches / 23 paths / 2,021 lines (020: 682), within
+  unchanged 7 / 25 / 2,200 limits. Manifest/text/both guards agree, with no
+  unexplained upstream residual. Four real CodeQL findings are fixed; four
+  false positives have specific proof, rationale and verified dismissal.
+- FingerTrap `0143c33` passes all 23 exact-source checks. Five macOS jobs ran
+  locally on Tart; Windows/Linux remain hosted. Apple artifact 12376529013
+  verifies download/app/DMG digests and ARM64 binaries. Merge `5b88cdff` has
+  parents `9bfc092` / `0143c33` and identical source tree. Packaged shell smoke
+  passes; product Pi smoke explicitly skips because Pi is not installed.
+- All five disposable CI VMs and registrations are removed. Independent
+  readback: zero GitHub runners; all remaining Tart VMs stopped; base preserved.
+- Source/evidence checkpoint `0143c33` is committed and remotely backed up.
+  Subsequent documentation/evidence commits do not inherit fresh source CI.
 
-G7 correction `95e95f0eca5dd6638f4e8c308932134a6d071798` is committed and
-pushed to Pi #82. All 23 policy tests and full `npm run check` pass on Node
-22.23.0 after hydrating 42 JSON files from the preserved, digest-verified
-0.87.1 model-data archive. Initial unhydrated checks failed on missing data;
-they are not policy regressions. Production runtime source is identical to
-`1f37eea`; the previously qualified binary retains that original source identity.
-Accounting is unchanged at 7 / 25 / 2,090. Remote allowlist and secret checks
-pass; all seven remote reports now pass and alert 87 reads back fixed.
-No completed artifact qualification was repeated. Recovery documentation
-checkpoint `6f4b491` is committed, secret-scanned and remotely backed up in #209.
+**Recovery:** keep `.artifacts/pi-next/preserved-20261021/` across patching.
+All 215 copied files match sources: runtime, host, npm model archive, upstream
+source archive and Bun archive. Inventory SHA-256:
+`67587ddb8e4d1d4d5755b4edc1aa0fe12dc76141fae1e2e83b6f1c6c52096ef6`.
+Copies are ignored/local. Recover the exact remote branch into an isolated clone;
+temporary worktree `/private/tmp/ft-pi-latest` is convenient, not authoritative.
+Preserve the sibling operator checkout and three private untracked entries.
+Changed executable digests require fresh qualification. Reproduction and
+mutation scripts are retained with the evidence.
 
-**Pi-next N1: latest-release reconciliation and isolated port preview.**
-Selected upstream `v1.3.0` resolves to
-`71023aec1546d6d677a65669c5665c0927ce0dd0`. Its source is in independent
-worktree `/private/tmp/ft-pi-latest`, branch `feat/fingertrap-pi-1.3`.
-This is a preparation candidate; do not infer fork integration from it.
-Retain G6 as a qualified reference, defer its production promotion for the
-recorded dependencies, and carry the managed policy into this next campaign.
-N1 validation: compare against verified v0.87.1 content baseline (the fork's
-squash ancestry is stale), reconcile every live patch, preserve new upstream
-behavior, record every conflict and recount before any candidate build.
-Never restore upstream-deleted implementations solely to preserve old patches.
-Patch retirement requires equivalent-behavior or removed-reachability evidence.
-No ceiling increase, merge, release or activation is authorized by this preview.
-
-N1 local result: capability port and three conflict resolutions pass static
-checks; 91 focused tests pass, one binary-dependent test skips before build.
-Preliminary accounting excluding proposed Chord retirement: 6 patches / 23
-paths / 2,019 lines. Node 22 reproduces the old 100,000-item overflow, while
-the unmodified 1.3.0 replacement passes exact contents/replay/adoption, 27 splice
-cases and 20,000-item middle insertion. Security ports 001/003/005/014/015 are
-applied; package-manager test conflict preserves upstream peer-dependency
-handling. Ports 016/017 target upstream-deleted experimental implementations;
-record removed reachability rather than restoring obsolete source.
-
-Root audit reports three high findings (Vite and gondolin/node-forge), with
-brace-expansion 5.0.12 and shell-quote 1.12.0 in the root lock. The separate
-sandbox lock still carried vulnerable shell-quote 1.10.0 after the old patch;
-regenerated in an independent copy to 1.12.0, also correcting root dependency
-metadata to its already-pinned manifest. The first nested audit accidentally
-resolved the parent workspace and is not sandbox evidence. Independent audit
-and runtime-reachability checks are next. Full hermetic Pi suite is running;
-no artifact build or qualification is claimed for 1.3.0 yet.
-
-N1 continuation: offline workspace build and required Rust env daemon build
-pass. Outside the sandbox, all workspaces pass except one stale pinned-git
-fixture, reproduced on unchanged upstream code; its corrected cache identity
-passes all 13 Git-update tests. Final static check passes. The retained release
-order guard fails with the old workflow and passes after updating TypeScript,
-workspace order/model-data copying and Bun 1.3.14. Preflight tests pass; the
-Linux/Bubblewrap integration lane remains outstanding. Proposed metadata retires
-016/017 (removed harness) and 019 (replacement verified), retains other patches,
-and admits pending S-class 021 for Vite 8.1.6. Both guard data sets are reconciled;
-review their exact parity and residual diff before checkpoint. Actual C count is
-6 / 23 / 2,021, with 020 at 682 lines, within the unchanged ceiling.
-
-**Next slice Pi-next N2: exact candidate qualification.** Before building the
-standalone candidate, checkpoint the reviewed source and overlay records and
-verify model-data/toolchain identities. Extend the retained synthetic fixture
-for 1.3.0's MCP config/process canary and CLI rejection. Validate the compiled
-artifact, published host, protocol pairs and regression mutations; run macOS
-jobs locally and retain hosted Windows/Linux host lanes. No release or pin
-promotion is implied. GitHub app description writes returned 403; authorized
-CLI fallback updated/read back #209/#82/#210 without changing global identity.
-
-N1 full suite is now green: coding-agent 2,737 pass / 50 skip; all other
-workspaces pass, including both durable modes and the env daemon lane. Both
-guard sets/text/manifest and runtime install-lock exclusion checks pass; no
-unexplained upstream residual remains. MCP canary control confirms ordinary
-1.3.0 CLI executes the seeded helper and the external guard detects it.
-
-N2 model-data check found source-release versus npm-package differences in
-`.manifest.json` and `openrouter.json`. The published pi-ai 1.3.0 tarball passes
-recorded SHA-512 integrity verification. Select that input to match the existing
-PSMFD release workflow, retain both input identities/difference and rerun affected
-static/build/test checks before source checkpoint or standalone compilation.
-Earlier full-suite evidence is explicitly for source-archive model data.
-
-**N2-L: Linux release-build gate.** The changed inline release block needs its
-retained Bubblewrap test. This Mac has no Linux test runtime installed. Prepare
-a PSMFD-developed, read-only qualification workflow scoped to the same-repository
-`sync/upstream-v1.3.0` draft, with the exact selected model-data digest and Node
-22. Run the retained Linux test in a hosted Ubuntu job; register/review the
-workflow in the existing allowlist. No publication, secrets, branch protection,
-or existing macOS/Windows/Linux routing changes. Validate YAML locally, then
-observe the exact candidate head's hosted result before recommending promotion.
-
-**S3-G6 implementation and qualification are complete; production promotion
-remains unapproved.** Read the
-[maintained-base report](s3-managed-startup-maintained-qualification.html).
-
-Next action: review the qualified companion drafts
-[Pi #82](https://github.com/psmfd/pi/pull/82) and
-[FingerTrap #209](https://github.com/psmfd/FingerTrap/pull/209), settle this
-campaign's integration/promotion disposition, then execute the requested
-[latest-Pi upgrade and validation #210](https://github.com/psmfd/FingerTrap/issues/210).
-Resolve the recorded dependency findings before a production pin: the unchanged
-baseline has 15 npm findings, including vulnerable brace-expansion 5.0.9 in
-the runtime shrinkwrap. No merge, release, installed pin or activation changed.
-
-- Pi `1f37eea4bf71f95ed9a4e62674949de3a9feb8b0` is committed/pushed in #82,
-  based on maintained `42429b9`. Isolated worktree `/private/tmp/ft-pi-maintained`,
-  branch `fix/managed-startup-maintained`; all seven Pi check reports pass.
-- FingerTrap `faa4242f1add364191078d9bc12f4aaf154983e6` is committed/pushed
-  in #209. All 23 exact-source checks pass, including full platform CI and
-  Apple Silicon packaging. Five macOS jobs used local Tart; independent
-  listings confirm zero runner registrations/clones and a stopped base.
-- Qualified Pi binary SHA-256:
-  `9a9f53131cec748801b8c176190ef4dc77e7b6e833859ff734fcfa3d297c7614`.
-  Exact direct, two-profile published host and clean Tart matrices pass.
-  Four Pi mutations and the host policy mutation are caught and restored.
-- Twelve scenarios record twice per artifact and match the attested 0.87.1
-  release exactly after documented volatile-value normalization. Both raw
-  recordings are retained; current production-pin goldens remain unchanged.
-  The report separately records 0.85.1-to-0.87.1 system-message/version drift.
-- ADR-0039 bounds patch 020: actual 7 patches / 25 paths / 2,090 changed
-  lines; maximum 7 / 25 / 2,200. Both guard sets and text allowlist agree;
-  guard logic and existing fixes are preserved.
-- Package artifact `12354825465` and app/DMG digests verify. Its PR merge tree
-  equals `faa4242`; sidecar/native-shell smoke passes. Product Pi smoke skips
-  because Pi is not bundled; managed-runtime evidence is the separate matrix.
-- Evidence/report `0cf4c98188204489a9e45c21e4895f9cc1f1090b` and retained
-  command logs `7d081d01603761fc1f057c46d31a61aab1476b11` are committed and
-  remotely backed up. All 102 evidence files are tracked; scoped secret scans
-  pass. Companion drafts and #210 descriptions were updated and independently
-  read back. This final recovery note follows those observed checkpoints.
-  Documentation commits skip CI; source CI belongs to `faa4242`.
-
-The [G5 report](s3-managed-startup-qualification.html), Pi #81 and its
-`39b729b` source remain historical evidence. Do not merge that old-base branch
-over maintained main. S3 as a whole, #200, #201 and #202 remain open.
+**Prior disposition:** retain Pi #82 and its qualified 0.87.1 artifact as a
+reference draft, defer its production promotion, and use #83 for latest-release
+review. G7 `95e95f0` is backed up in #82; all seven checks pass and alert 87 is
+fixed. Runtime source remains identical to qualified `1f37eea`; its binary keeps
+that source identity. The maintained report/102 evidence files remain historical.
+Pi #81 / `39b729b` is the old-base experiment and must not overwrite maintained
+main. S3, #200, #201 and #202 remain open.
 
 Before future source pushes, run `python3 scripts/ci/tart-runner.py check`.
 After jobs queue, run `python3 scripts/ci/tart-runner.py drain --max-jobs 5`;
-use four for CI without packaging. Do not run that controller concurrently
-with standalone Tart qualification. Only enrolled PRs use this local route;
-see the [runbook](../local-github-runner.md). No managed launch is enabled.
+use four for CI without packaging. Do not run the controller concurrently with
+standalone Tart qualification. Repeat completed checks only for changed inputs
+or an outstanding concern. See the [runner runbook](../local-github-runner.md).
 
 ## Work board
 
@@ -290,7 +182,7 @@ see the [runbook](../local-github-runner.md). No managed launch is enabled.
 | S3 | PTY/RPC launch isolation | Foundation merged; candidate qualified; pin decision pending | Production baseline still lacks managed policy; maintained candidate is qualified in G6; S3 is not complete |
 | S3-G | Close the pinned-Pi startup/discovery gap | G1–G6 implemented, qualified and source backed up | [Maintained report](s3-managed-startup-maintained-qualification.html); production pin/release and activation remain gated |
 | S3-G6 | Preserve maintained fork fixes and requalify managed startup | Complete; source backed up; CI verified | Pi `1f37eea` / FT `faa4242`; exact host/Tart/protocol/mutations pass; 7 Pi and 23 FT checks pass; dependency disposition required before production promotion |
-| Pi-next | Upgrade to latest Pi release and validate | Tracked in [#210](https://github.com/psmfd/FingerTrap/issues/210); after this campaign | Discover latest at execution time; preserve fork/managed patches, review dependencies and repeat protocol/platform/artifact qualification |
+| Pi-next | Upgrade to latest Pi release and validate | v1.3.0 candidate qualified, backed up, CI verified; promotion pending | Pi #83 `28741c97f` / FT `0143c33`; [evidence/decision record](evidence/pi-next/README.md); #210 stays open for exact release/pin decision |
 | CI-local | Reduce hosted builds with a local runner | Merged and verified on protected dev | `9bfc092`; 22 post-merge checks passed, five macOS jobs local; artifact/cleanup verified; dev protection mapped; main mapping deferred to promotion; Windows/Linux hosted |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
 | S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |
@@ -321,7 +213,7 @@ process state before rerunning; read diffs before assuming a step finished.
 Use the pinned source identities, not a newer branch tip. Run the affected
 validation after resuming an incomplete edit and update this record.
 
-## Current checkpoint / validation state
+## Historical foundation checkpoints / validation state
 
 - S3-G proposal: [HTML review document](s3-discovery-resolution-plan.html),
   41 links and 13 unique IDs checked; script syntax, 390-pixel mobile layout,
@@ -412,6 +304,11 @@ documentation-only or changed head has CI evidence from a different commit.
 
 ## Known gates and protected local state
 
+- Authorized tests are limited to owned repositories, synthetic data, loopback
+  fixtures and disposable environments. The maintainer clarified this scope after
+  reporting additional platform safety checks. Keep defensive proof minimal;
+  retain exact rejection context if a block occurs. Do not bypass safeguards.
+
 - Exact-fork discovery and credential-source controls require verification.
   A missing control blocks managed activation; it does not authorize a pin
   bump or SDK switch.
@@ -427,7 +324,7 @@ documentation-only or changed head has CI evidence from a different commit.
 [import]: https://github.com/psmfd/FingerTrap/issues/200
 [profile]: https://github.com/psmfd/FingerTrap/issues/201
 
-## Approved merge evidence
+## Approved foundation merge evidence
 
 - Maintainer approved coordinated merge and protected-branch verification.
 - Candidate `8196b4f`: [CI](https://github.com/psmfd/FingerTrap/actions/runs/39530284288)

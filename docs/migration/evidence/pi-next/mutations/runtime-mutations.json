@@ -1,0 +1,68 @@
+[
+  {
+    "mutation": "migrations",
+    "caught": true,
+    "sha256": "ee10c4dac974b63c22b915c33006967be6ec99386ac73065180ea555e02c2da2",
+    "failedCases": {
+      "migration": [
+        "projectUnchanged"
+      ],
+      "poisoned": [
+        "projectUnchanged",
+        "profileInputsUnchanged"
+      ],
+      "linked-project": [
+        "profileInputsUnchanged",
+        "linkedTargetUnchanged"
+      ],
+      "interactive": [
+        "projectUnchanged",
+        "profileInputsUnchanged"
+      ]
+    }
+  },
+  {
+    "mutation": "discovery",
+    "caught": true,
+    "sha256": "c1cbfeb25e7043ab39f287374395917b4fa9af936d4cef3de68739dd8d721c2b",
+    "failedCases": {
+      "migration": [
+        "literalPrompt"
+      ],
+      "poisoned": [
+        "literalPrompt"
+      ],
+      "linked-project": [
+        "literalPrompt"
+      ],
+      "current-layout-resources": [
+        "literalPrompt"
+      ],
+      "interactive": [
+        "literalPrompt"
+      ]
+    }
+  },
+  {
+    "mutation": "crash-discovery",
+    "caught": true,
+    "sha256": "7fdc408f2cb8783353113eb39418480465a8de1f26726c99cbf6ee001a3289e1",
+    "failedCases": {
+      "interactive": [
+        "profileInputsUnchanged",
+        "noAmbientCrashNotice"
+      ]
+    }
+  },
+  {
+    "mutation": "bug-report",
+    "caught": true,
+    "sha256": "eb1a0a03275d0c455c561d3831062bd72c582c207381383a6a53b503a7cffbfc",
+    "failedCases": {
+      "interactive": [
+        "lifecycleCompleted",
+        "bugReportRejected"
+      ]
+    }
+  }
+]

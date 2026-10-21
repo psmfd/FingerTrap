@@ -1,0 +1,31 @@
+{
+  "source": "28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2",
+  "tree": "46fd5cc4faf0a5c7a2e053cea52359a09ad5ceb2",
+  "upstream": "71023aec1546d6d677a65669c5665c0927ce0dd0",
+  "capabilityPatches": 6,
+  "distinctCapabilityPaths": 23,
+  "changedLines": 2021,
+  "perPatch": {
+    "psmfd-patch-010": 392,
+    "psmfd-patch-011": 439,
+    "psmfd-patch-012": 277,
+    "psmfd-patch-013": 80,
+    "psmfd-patch-018": 151,
+    "psmfd-patch-020": 682
+  },
+  "unchangedCeiling": [
+    7,
+    25,
+    2200
+  ],
+  "guardDataParity": true,
+  "unexplainedResidualPaths": [],
+  "workflowRegistryParity": true,
+  "runtimeInstallLockExcluded": [
+    "vite",
+    "node-forge",
+    "@earendil-works/gondolin",
+    "shell-quote"
+  ],
+  "integrationStatus": "draft; pending patches/retirements require merge review"
+}

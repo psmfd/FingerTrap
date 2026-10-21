@@ -1,0 +1,10 @@
+{
+  "commit": "5b88cdff238ca469b330cef31402bde3ce2aaff1",
+  "run": "https://github.com/psmfd/FingerTrap/actions/runs/39666062264",
+  "runner": "ft-actions-job-20261021t195714z-5a9ff3a3",
+  "app_version": "0.1.0",
+  "target": "aarch64-apple-darwin",
+  "tauri_cli": "2.11.4",
+  "distribution": "unsigned candidate; not notarized; not a published release",
+  "manual_validation": "pending clean Tart GUI, keychain, real pi and shutdown smoke"
+}

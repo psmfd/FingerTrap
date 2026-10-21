@@ -1,0 +1,307 @@
+{
+  "kind": "candidate",
+  "executableSha256": "c1cbfeb25e7043ab39f287374395917b4fa9af936d4cef3de68739dd8d721c2b",
+  "sourceRevision": "28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2+mutation:discovery",
+  "scope": "direct-rpc-pty-cli",
+  "cases": [
+    {
+      "case": "migration",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "noMcpProcess": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": false,
+        "cleanExit": true
+      },
+      "passed": false,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "poisoned",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "noMcpProcess": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": false,
+        "cleanExit": true
+      },
+      "passed": false,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "linked-project",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "noMcpProcess": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": false,
+        "linkedTargetUnchanged": true,
+        "cleanExit": true
+      },
+      "passed": false,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "current-layout-resources",
+      "transport": "direct-rpc",
+      "checks": {
+        "hello": true,
+        "rpc-0-get_state": true,
+        "rpc-1-switch_session": true,
+        "rpc-2-new_session": true,
+        "rpc-3-fork": true,
+        "rpc-4-new_session": true,
+        "rpc-5-prompt": true,
+        "rpc-6-abort": true,
+        "rpc-7-get_state": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "noMcpProcess": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": false,
+        "cleanExit": true
+      },
+      "passed": false,
+      "exitCode": 0,
+      "diagnostics": []
+    },
+    {
+      "case": "interactive",
+      "transport": "direct-pty",
+      "checks": {
+        "interactiveStartup": true,
+        "unsupportedCommandsNonfatal": true,
+        "projectUnchanged": true,
+        "homeUnchanged": true,
+        "profileInputsUnchanged": true,
+        "noAmbientExtension": true,
+        "noPackageOrHelperCommand": true,
+        "noMcpProcess": true,
+        "oneExtensionPerGeneration": true,
+        "actualCwd": true,
+        "literalPrompt": false,
+        "cleanExit": true,
+        "bugReportRejected": true,
+        "noAmbientCrashNotice": true
+      },
+      "passed": false,
+      "exitCode": 0,
+      "diagnostics": [
+        "\ufffd\ufffd\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\u001b[37;1H\u001b[2K\u001b[7m \u001b[27m                                                                                                                       \u001b[0m\u001b]8;;\u0007\u001b[38;1H\u001b[2K\u001b[38;5;66m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\u001b[37;1H\u001b[?25l\u001b[?2026l\u001b[?2026h\u001b[19;1H\u001b[2K \u001b[38;5;174mError: managed-v1 does not support login\u001b[39m                                                                               \u001b[0m\u001b]8;;\u0007\u001b[37;1H\u001b[?25l\u001b[?2026l\u001b[?2026h\u001b[37;1H\u001b[?25l\u001b[?2026l\u001b[?2026h\u001b[21;1H\u001b[2K \u001b[38;5;174mError: managed-v1 does not support project trust\u001b[39m                                                                       \u001b[0m\u001b]8;;\u0007\u001b[37;1H\u001b[?25l\u001b[?2026l\u001b[?2026h\u001b[37;1H\u001b[?25l\u001b[?2026l\u001b[?2026h\u001b[23;1H\u001b[2K \u001b[38;5;174mError: managed-v1 does not support session selection\u001b[39m                                                                   \u001b[0m\u001b]8;;\u0007\u001b[37;1H\u001b[?25l\u001b[?2026l\u001b[?2026h\u001b[37;1H\u001b[?25l\u001b[?2026l\u001b[?2026h\u001b[25;1H\u001b[2K \u001b[38;5;174mError: managed-v1 does not support session import\u001b[39m                                                                      \u001b[0m\u001b]8;;\u0007\u001b[37;1H\u001b[?25l\u001b[?2026l\u001b[?2026h\u001b[37;1H\u001b[?25l\u001b[?2026l\u001b[?2026h\u001b[27;1H\u001b[2K \u001b[38;5;174mError: managed-v1 does not support bug reports\u001b[39m                                                                         \u001b[0m\u001b]8;;\u0007\u001b[37;1H\u001b[?25l\u001b[?2026l\u001b[?2026h\u001b[37;1H\u001b[?25l\u001b[?2026l\u001b[<u\u001b[?2026h\u001b[37;1H\u001b[?25l\u001b[?2026l\u001b[?2026h\u001b[?1006l\u001b[?1004l\u001b[?1003l\u001b[?1002l\u001b[?1000l\u001b[?7h\u001b[?2026l\u001b[?25h\u001b[?2004l\u001b[?2026h\u001b[?1049l\u001b[?25h\u001b[?2026l\u001b[?2026h\u001b[0m\u001b]8;;\u0007\r\r\n \u001b[38;5;174m\u001b[48;5;67m\u2580\u001b[0m\u001b[38;5;174m\u2580\u2588\u001b[0m  \u001b[38;5;102mv1.3.0\u001b[39m                                                                                                            \u001b[0m\u001b]8;;\u0007\r\r\n \u001b[38;5;67m\u2588\u2580\u001b[0m \u001b[38;5;179m\u2588\u001b[0m \u001b[38;5;102mescape\u001b[39m\u001b[38;5;145m interrupt\u001b[39m\u001b[38;5;145m \u00b7 \u001b[39m\u001b[38;5;102mctrl+c/ctrl+d\u001b[39m\u001b[38;5;145m clear/exit\u001b[39m\u001b[38;5;145m \u00b7 \u001b[39m\u001b[38;5;102m/\u001b[39m\u001b[38;5;145m commands\u001b[39m\u001b[38;5;145m \u00b7 \u001b[39m\u001b[38;5;102m!\u001b[39m\u001b[38;5;145m bash\u001b[39m\u001b[38;5;145m \u00b7 \u001b[39m\u001b[38;5;102mctrl+o\u001b[39m\u001b[38;5;145m more\u001b[39m                                   \u001b[0m\u001b]8;;\u0007\r\r\n \u001b[38;5;102mPress ctrl+o to show full startup help and loaded resources.\u001b[39m                                                           \u001b[0m\u001b]8;;\u0007\r\r\n                                                                                                                        \u001b[0m\u001b]8;;\u0007\r\r\n \u001b[38;5;102mPi can explain its own features and look up its docs. Ask it how to use or extend Pi.\u001b[39m                                  \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[38;5;172m[Context]\u001b[39m                                                                                                               \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[38;5;102m  /private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-pi-qualify-9yxp1zyg/interactive/literal-system-prompt.txt,\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[38;5;102m/private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-pi-qualify-9yxp1zyg/interactive/agent/APPEND_SYSTEM.md\u001b[39m      \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[38;5;172m[Extensions]\u001b[39m                                                                                                            \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[38;5;102m  explicit-probe.mjs\u001b[39m                                                                                                    \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[0m\u001b]8;;\u0007\r\r\n \u001b[38;5;102mReloaded keybindings, extensions, skills, prompts, themes, and context files\u001b[39m                                           \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[0m\u001b]8;;\u0007\r\r\n \u001b[38;5;174mError: managed-v1 does not support login\u001b[39m                                                                               \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[0m\u001b]8;;\u0007\r\r\n \u001b[38;5;174mError: managed-v1 does not support project trust\u001b[39m                                                                       \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[0m\u001b]8;;\u0007\r\r\n \u001b[38;5;174mError: managed-v1 does not support session selection\u001b[39m                                                                   \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[0m\u001b]8;;\u0007\r\r\n \u001b[38;5;174mError: managed-v1 does not support session import\u001b[39m                                                                      \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[0m\u001b]8;;\u0007\r\r\n \u001b[38;5;174mError: managed-v1 does not support bug reports\u001b[39m                                                                         \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[38;5;66m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[7m \u001b[27m                                                                                                                       \u001b[0m\u001b]8;;\u0007\r\r\n\u001b[38;5;66m\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[38;5;102m/private/var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-pi-qualify-9yxp1zyg/interactive/project\u001b[39m\u001b[0m\u001b]8;;\u0007\r\r\n\u001b[38;5;102m0.0%/0 (auto)\u001b[39m\u001b[38;5;102m                                                                                                    unknown\u001b[39m\u001b[0m\u001b]8;;\u0007\u001b[?2026l\u001b[3A\u001b[1G\u001b[?25l \u001b[4B\r\r\n\u001b[?25h\u001b[?2004l\u001b]0;\u03c0 - project\u0007"
+      ]
+    },
+    {
+      "case": "reject-install",
+      "arguments": [
+        "install",
+        "npm:synthetic"
+      ],
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject-config",
+      "arguments": [
+        "config"
+      ],
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject-auth",
+      "arguments": [
+        "auth",
+        "login"
+      ],
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject-mcp",
+      "arguments": [
+        "mcp",
+        "list"
+      ],
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject-mcp",
+      "arguments": [
+        "mcp",
+        "login",
+        "synthetic"
+      ],
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---extension",
+      "arguments": [
+        "--extension",
+        "builtin:mcp"
+      ],
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---resume",
+      "arguments": [
+        "--resume",
+        "synthetic"
+      ],
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---session",
+      "arguments": [
+        "--session",
+        "/synthetic/missing.jsonl"
+      ],
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---startup-policy",
+      "arguments": [
+        "--startup-policy",
+        "managed-v1"
+      ],
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---extension",
+      "arguments": [
+        "--extension",
+        "npm:synthetic"
+      ],
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "reject---provider",
+      "arguments": [
+        "--provider",
+        "synthetic"
+      ],
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "unknown-policy",
+      "transport": "direct-cli",
+      "checks": {
+        "boundedFailure": true,
+        "noStartupWrites": true
+      },
+      "passed": true
+    },
+    {
+      "case": "controlled-network-endpoint",
+      "checks": {
+        "noAttempts": true
+      },
+      "passed": true,
+      "attempts": []
+    }
+  ],
+  "passed": false
+}

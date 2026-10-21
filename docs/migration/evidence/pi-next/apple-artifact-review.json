@@ -1,0 +1,54 @@
+{
+  "artifactId": 12376529013,
+  "downloadSha256": "06e2c29e87fc9733726f26766ec0e4b0d3bad5901e06393212c2b6f593f3165f",
+  "downloadDigestMatchesGitHub": true,
+  "build": {
+    "commit": "5b88cdff238ca469b330cef31402bde3ce2aaff1",
+    "run": "https://github.com/psmfd/FingerTrap/actions/runs/39666062264",
+    "runner": "ft-actions-job-20261021t195714z-5a9ff3a3",
+    "app_version": "0.1.0",
+    "target": "aarch64-apple-darwin",
+    "tauri_cli": "2.11.4",
+    "distribution": "unsigned candidate; not notarized; not a published release",
+    "manual_validation": "pending clean Tart GUI, keychain, real pi and shutdown smoke"
+  },
+  "contentsChecksums": [
+    {
+      "path": "./FingerTrap-apple-silicon.app.zip",
+      "sha256": "8a240b8df1e1d876541401a6296e9eec3d968c4eaf60283f3d5980341f907de1",
+      "verified": true
+    },
+    {
+      "path": "./FingerTrap_0.1.0_aarch64.dmg",
+      "sha256": "5bee8ee10a7497a4406616073d7f44183506d3934a5d642d0d4891b4594c6e63",
+      "verified": true
+    }
+  ],
+  "binaryArchitectures": [
+    {
+      "path": "FingerTrap.app/Contents/MacOS/fingertrap",
+      "sha256": "536bacdb7d2bb211f6b01f5c0e01716504081962497de52e9966a07c93a5ceaf",
+      "file": "/Users/pdavis/projects/_personal/FingerTrap/.artifacts/pi-next/apple-candidate/fingertrap: Mach-O 64-bit executable arm64"
+    },
+    {
+      "path": "FingerTrap.app/Contents/MacOS/fingertrap-sidecar",
+      "sha256": "f6e088ac5fa75e601bda7f2205eb8865b6d2297b4e8fcfd531399a34df840245",
+      "file": "/Users/pdavis/projects/_personal/FingerTrap/.artifacts/pi-next/apple-candidate/fingertrap-sidecar: Mach-O 64-bit executable arm64"
+    },
+    {
+      "path": "FingerTrap.app/Contents/MacOS/libporta_pty.dylib",
+      "sha256": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3",
+      "file": "/Users/pdavis/projects/_personal/FingerTrap/.artifacts/pi-next/apple-candidate/libporta_pty.dylib: Mach-O 64-bit dynamically linked shared library arm64"
+    }
+  ],
+  "mergeSourceVerification": {
+    "parents": [
+      "9bfc0926cf387644a1cd2512e3fcb63f22287165",
+      "0143c3317db5343d004bbfa1b75fd566b87c1b6c"
+    ],
+    "tree": "7788969856a1307e8b24258971226f554b88909f",
+    "sourceTreeIdentical": true
+  },
+  "managedRuntimeEmbedded": false,
+  "guiAcceptance": "separately gated"
+}

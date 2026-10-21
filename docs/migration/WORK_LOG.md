@@ -1247,3 +1247,70 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   all twelve RPC scenarios twice under the same normalizer. Both raw recording
   sets remain available; production goldens restore unchanged. Protocol drift
   review and runtime/host mutation controls are in progress.
+
+- FingerTrap fixture checkpoint 0143c3317db5343d004bbfa1b75fd566b87c1b6c
+  is secret-scanned and remotely backed up in #209. Its unchanged hosted
+  Windows/Linux lanes are passing; five macOS jobs are draining locally on
+  disposable Tart runners under the existing runner-group policy.
+- All four rebuilt runtime regressions are caught at their expected external
+  checks (migrations, resource discovery, crash discovery and bug-report fallback).
+  Source and clean package build restore afterward. Host policy-check removal
+  fails exactly the bad-policy descriptor case; restored full sidecar suite
+  passes 409 tests with 12 opt-in skips. First helper read failed because the
+  test detail log is UTF-16; exact source still restored, then decoding was
+  corrected and both red/green checks completed.
+- Structural protocol review confirms identical outbound commands and process
+  controls across all twelve scenarios. Inbound differences are Pi version,
+  added started/queued disposition, elapsed timing, thinkingLevel, settled
+  aborted field and system documentation for MCP/codemode. Full changed paths,
+  raw recordings and drift patch are retained. No production golden was changed.
+
+## 2026-10-21 — Authorized test scope and additional safety checks
+
+- Maintainer clarified that reported additional safety checks concern testing
+  this owned app and repositories. Read the linked OpenAI Help Center guidance:
+  [additional safety checks](https://help.openai.com/en/articles/20001326-additional-safety-checks-for-biological-and-cybersecurity-requests-in-chatgpt-codex-and-the-api).
+- Continue with narrowly scoped defensive validation: owned FingerTrap/Pi
+  checkouts, synthetic data, loopback fixtures and disposable local VMs. Keep
+  security controls limited to proof needed to verify prevention/remediation;
+  omit unrelated exploit detail. Preserve production approval gates.
+- No automated safety rejection text or request ID is available in this session;
+  do not invent either. If a block recurs, retain its exact message, product/model,
+  date/time/timezone and request ID when available for redacted support review.
+  Do not disable, evade or claim to override platform safeguards.
+- While making the Chord retirement control portable, a default-stack standalone
+  probe did not reproduce the historical 100,000-item overflow; larger inputs
+  can also exceed the replacement's public JavaScript call envelope. Existing
+  source/artifact qualification remains green. Record this reproducibility limit
+  and use native and replacement controls before claiming the original red proof.
+
+- Portable Chord proof now pins an 850 KiB Node 22 stack. In the same process,
+  native push and the unchanged replacement accept 100,000 inputs, while the
+  exact original upstream module throws. Exact contents/replay/adoption, 27
+  splice cases and 20,000-item middle insertion pass. Default stack did not
+  reproduce; a smaller 820 KiB stack also exceeded the replacement's public
+  call envelope and was rejected as proof. The explicit controlled budget is
+  retained in the executable fixture and output rather than hiding this limit.
+
+## 2026-10-21 — N2 qualification complete; production decision remains gated
+
+- All eight Pi checks at 28741c97f and all 23 FingerTrap source checks at
+  0143c33 pass. Five macOS jobs ran locally; all five VM/runner cleanup records
+  are clean. Independent final GitHub readback shows zero registrations;
+  independent Tart listing shows no disposable clones and all VMs stopped.
+- Downloaded Apple artifact 12376529013 matches GitHub's SHA-256. App/DMG
+  checksums, three ARM64 binaries, runner identity and build merge parents/tree
+  verify. The merge tree equals tested source 0143c33. Packaged shell smoke
+  passes; product Pi smoke explicitly skips. Separate runtime/host/Tart matrices
+  establish candidate managed behavior; no GUI or activation claim is inferred.
+- Latest stable rechecked at completion: upstream remains v1.3.0; fork remains
+  v0.87.1-psmfd.1. No release/tag/pin changed. Final digest-bound qualification,
+  dependency disposition and promotion/rollback preparation are retained beside
+  the evidence README. #210's production decision/verification item stays open.
+- Copied the exact runtime/host, selected npm model archive, source archive and
+  Bun archive outside temporary storage. All 215 copied files match sources;
+  local inventory SHA-256 is 67587ddb8e4d1d4d5755b4edc1aa0fe12dc76141fae1e2e83b6f1c6c52096ef6.
+  Preserve .artifacts/pi-next/preserved-20261021 across patching. Source/evidence
+  are backed up at 0143c33; the final documentation checkpoint follows after
+  checks. Next action is maintainer review of Pi #83 and promotion/rollback
+  record, including remaining Gondolin/node-forge example findings.

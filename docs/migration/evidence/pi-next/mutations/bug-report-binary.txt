@@ -1,0 +1,16 @@
+==> Skipping npm ci (--skip-install)
+==> Skipping package build (--skip-build)
+==> Building binaries...
+Building for darwin-arm64...
+  [83ms]  bundle  2204 modules
+  [63ms] compile  /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-next-mutations-b7ea03b_/bug-report/darwin-arm64/pi
+==> Creating release archives...
+Creating pi-darwin-arm64.tar.gz...
+==> Extracting archives for testing...
+
+==> Build complete!
+Archives available in /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-next-mutations-b7ea03b_/bug-report/
+-rw-r--r--@ 1 pdavis  staff    30M Oct 21 15:52 pi-darwin-arm64.tar.gz
+
+Extracted directories for testing:
+  /var/folders/x9/g6z9gkjn1wlbgk06xqgv28vw0000gn/T/ft-next-mutations-b7ea03b_/bug-report/darwin-arm64/pi
