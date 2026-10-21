@@ -1,0 +1,4 @@
+{
+  "extends": "./extensions/token-meter/tsconfig.json",
+  "include": ["extensions/**/*.ts", "runtime/**/*.ts"]
+}

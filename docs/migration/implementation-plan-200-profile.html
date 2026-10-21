@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>FingerTrap · Runtime migration implementation plan</title>
+  <style>
+    :root { --ink:#1c2932; --muted:#53636c; --paper:#fffefa; --canvas:#f2f2ec; --line:#d9dfd8; --green:#205b49; --pale:#eaf2ec; --amber:#78510e; --amber-bg:#fff4d9; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-padding-top:30px; }
+    body { margin:0; color:var(--ink); background:var(--canvas); font:17px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    a { color:var(--green); text-underline-offset:3px; }
+    a:hover { text-decoration-thickness:2px; }
+    a:focus-visible,button:focus-visible { outline:3px solid #92722b; outline-offset:4px; }
+    .skip { position:fixed; left:16px; top:-90px; padding:8px 16px; background:white; z-index:5; }
+    .skip:focus { top:12px; }
+    .layout { max-width:1440px; margin:auto; display:grid; grid-template-columns:250px minmax(0,1fr); gap:44px; padding:36px 44px 90px; }
+    aside { position:sticky; top:32px; align-self:start; max-height:calc(100vh - 64px); overflow:auto; padding:8px 0; }
+    .brand { font-size:14px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--green); }
+    .sidebar-title { font-size:21px; line-height:1.3; font-weight:650; margin:14px 0 24px; }
+    nav ol { list-style:none; padding:0; margin:0; counter-reset:toc; }
+    nav li { counter-increment:toc; margin:4px 0; }
+    nav a { display:flex; gap:12px; padding:9px 10px; border-radius:6px; text-decoration:none; color:var(--muted); font-size:14px; line-height:1.4; }
+    nav a::before { content:counter(toc,decimal-leading-zero); font-variant-numeric:tabular-nums; color:var(--green); }
+    nav a:hover,nav a[aria-current="location"] { background:#e2e9e1; color:var(--ink); }
+    .sidebar-note { margin-top:26px; border-top:1px solid var(--line); padding-top:18px; font-size:13px; color:var(--muted); }
+    button { font:inherit; cursor:pointer; border:1px solid #a6b9ac; border-radius:6px; padding:8px 13px; background:transparent; color:var(--green); }
+    .print-button { margin-top:14px; font-size:13px; }
+    main { min-width:0; background:var(--paper); border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:0 10px 35px #263c2e05; }
+    header { padding:54px 54px 36px; background:linear-gradient(125deg,#edf4eb,#fffefa 85%); border-bottom:1px solid var(--line); }
+    .eyebrow { color:var(--green); font-size:12px; letter-spacing:.13em; font-weight:750; text-transform:uppercase; }
+    h1 { font-family:Georgia,"Times New Roman",serif; font-weight:500; font-size:clamp(36px,4vw,52px); letter-spacing:-.035em; line-height:1.12; margin:18px 0 22px; }
+    .lead { font-size:20px; line-height:1.55; max-width:680px; }
+    .meta { display:flex; flex-wrap:wrap; gap:8px; margin-top:26px; }
+    .tag { padding:5px 10px; border:1px solid #c9d5c7; border-radius:30px; font-size:12px; font-weight:650; color:var(--green); background:#ffffff90; }
+    section { padding:40px 54px; border-bottom:1px solid var(--line); scroll-margin-top:20px; }
+    section:last-child { border-bottom:0; }
+    .section-number { color:var(--green); font-size:12px; font-weight:750; letter-spacing:.13em; }
+    h2 { font-size:29px; font-weight:650; letter-spacing:-.025em; line-height:1.25; margin:8px 0 22px; }
+    h3 { font-size:20px; line-height:1.4; margin:29px 0 10px; }
+    p { margin:0 0 16px; }
+    p:last-child { margin-bottom:0; }
+    ul,ol { padding-left:24px; margin:12px 0 20px; }
+    li { margin:7px 0; padding-left:3px; }
+    strong { font-weight:700; }
+    .callout { border-left:4px solid var(--green); border-radius:0 7px 7px 0; padding:18px 21px; background:var(--pale); margin:22px 0; }
+    .caution { border-color:#b27b21; background:var(--amber-bg); color:#59431e; }
+    .callout p { margin-bottom:9px; }
+    .callout p:last-child { margin-bottom:0; }
+    .cards { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin:22px 0; }
+    .card { border:1px solid var(--line); padding:21px; border-radius:8px; }
+    .card h3 { margin:4px 0 10px; font-size:19px; }
+    .card p { font-size:15px; line-height:1.6; }
+    .status { font-size:11px; font-weight:750; text-transform:uppercase; letter-spacing:.08em; color:var(--green); }
+    .muted { color:var(--muted); }
+    .small { font-size:14px; line-height:1.6; }
+    code { font: .88em/1.5 ui-monospace,SFMono-Regular,Consolas,monospace; background:#eef0eb; border-radius:3px; padding:2px 4px; overflow-wrap:anywhere; }
+    .table-wrap { overflow-x:auto; margin:18px 0 24px; border:1px solid var(--line); border-radius:7px; }
+    table { width:100%; border-collapse:collapse; text-align:left; font-size:14px; line-height:1.6; }
+    caption { text-align:left; padding:12px 16px; font-weight:650; background:#f4f6f0; }
+    th,td { padding:13px 16px; vertical-align:top; border-top:1px solid var(--line); }
+    thead th { border-top:0; background:#eef2ea; color:#35493e; font-size:12px; letter-spacing:.02em; }
+    tbody th { font-weight:650; width:25%; }
+    .phase { border:1px solid var(--line); border-radius:8px; padding:23px; margin:20px 0; }
+    .phase h3 { margin:0 0 12px; }
+    .phase .exit { margin:18px -23px -23px; padding:13px 23px; border-top:1px solid var(--line); background:#f4f7f1; font-size:14px; border-radius:0 0 8px 8px; }
+    .phase-label { display:block; color:var(--green); font-size:11px; font-weight:750; letter-spacing:.1em; text-transform:uppercase; margin-bottom:7px; }
+    .flow { list-style:none; padding:0; display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:26px 0; }
+    .flow li { margin:0; padding:17px 13px; border-top:3px solid var(--green); background:#eef3eb; font-size:13px; line-height:1.5; }
+    .flow b { display:block; margin-bottom:7px; font-size:14px; }
+    .approval { background:#f1f6ed; }
+    blockquote { margin:20px 0; padding:18px 23px; background:white; border:1px solid #c4d3bd; border-radius:7px; font-size:18px; }
+    .sources li { font-size:14px; margin:12px 0; }
+    footer { font-size:12px; color:var(--muted); padding:22px 54px; background:#f5f6f0; }
+    @media (max-width:1050px) {
+      .layout { grid-template-columns:205px minmax(0,1fr); gap:24px; padding:24px; }
+      header,section { padding:34px; }
+      .flow { grid-template-columns:1fr 1fr; }
+    }
+    @media (max-width:760px) {
+      .layout { display:block; padding:18px 12px 45px; }
+      aside { position:static; max-height:none; padding:8px 10px 24px; }
+      .sidebar-title { margin:8px 0 15px; }
+      nav ol { display:grid; grid-template-columns:1fr 1fr; }
+      nav a { padding:7px 5px; font-size:13px; }
+      .sidebar-note { display:none; }
+      header,section { padding:28px 22px; }
+      h1 { font-size:38px; }
+      h2 { font-size:26px; }
+      body { font-size:16px; }
+      .lead { font-size:18px; }
+      .cards { grid-template-columns:1fr; }
+      th,td { padding:11px; }
+      footer { padding:20px 22px; }
+    }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+    @media print {
+      @page { margin:16mm; }
+      body { background:white; font-size:10.5pt; line-height:1.5; }
+      .layout { display:block; max-width:none; padding:0; }
+      aside,.skip,.print-button { display:none; }
+      main { border:0; border-radius:0; box-shadow:none; overflow:visible; }
+      header,section { padding:18px 0; background:white; }
+      h1 { font-size:30pt; } h2 { font-size:19pt; } h3 { font-size:13pt; }
+      .lead { font-size:13pt; }
+      h2,h3 { break-after:avoid; }
+      .card,.phase,.callout,blockquote,.flow li { break-inside:avoid; }
+      .table-wrap { overflow:visible; }
+      tr { break-inside:avoid; }
+      table { font-size:9pt; }
+      a { text-decoration:underline; color:#205b49; }
+      footer { padding:15px 0; }
+    }
+  </style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to plan</a>
+<div class="layout">
+  <aside aria-label="Document navigation">
+    <div class="brand">FingerTrap</div>
+    <div class="sidebar-title">Runtime migration<br>Implementation plan</div>
+    <nav aria-label="Contents">
+      <ol>
+        <li><a href="#decision">Recommendation &amp; scope</a></li>
+        <li><a href="#baseline">Where we are</a></li>
+        <li><a href="#contract">Managed profile contract</a></li>
+        <li><a href="#sequence">Implementation sequence</a></li>
+        <li><a href="#imports">Source import waves</a></li>
+        <li><a href="#verification">Verification &amp; completion</a></li>
+        <li><a href="#boundaries">Dependencies &amp; rollback</a></li>
+        <li><a href="#approval">Approval recorded</a></li>
+        <li><a href="#references">Evidence &amp; references</a></li>
+      </ol>
+    </nav>
+    <div class="sidebar-note">
+      Prepared 20 October 2026<br>
+      Status: approved 20 October 2026<br>
+      Local, self-contained document
+      <br><button class="print-button" type="button" id="print">Print / save as PDF</button>
+    </div>
+  </aside>
+
+  <main id="main">
+    <header>
+      <div class="eyebrow">ADR-0034 · Curated source + managed profiles</div>
+      <h1>Bring the runtime home.<br>Make its boundaries explicit.</h1>
+      <p class="lead">Continue moving pi_config functionality into FingerTrap, establish one managed profile across every launch and child process, and prove the result before enabling it.</p>
+      <div class="meta">
+        <span class="tag">Approved · 20 October 2026</span>
+        <span class="tag">#200 · source import</span>
+        <span class="tag">#201 · managed profiles</span>
+        <span class="tag">Executable / RPC retained</span>
+      </div>
+    </header>
+
+    <section id="decision">
+      <div class="section-number">01 / Recommendation &amp; scope</div>
+      <h2>Build the profile foundation, then migrate in bounded slices.</h2>
+      <div class="callout">
+        <p><strong>Approved on 20 October 2026.</strong> The maintainer approved this plan and requested durable tracking across failures and sessions. Follow the <a href="STATUS.md">current status and resume instructions</a> and <a href="WORK_LOG.md">activity log</a> for implementation progress.</p>
+        <p><strong>Recorded scope:</strong> #201 + #200. The original request named #210; that lookup returned “Not Found,” and this plan disclosed the proposed #201 mapping before approval. No requirements are attributed to #210.</p>
+      </div>
+      <p><strong>Recommended next implementation:</strong> define the shared profile contract, prove it with the already imported token and cache meters, and extend the import tooling before moving the remaining components. Profile work and source review can overlap; activation follows successful isolation and runtime qualification.</p>
+      <p>FingerTrap becomes the place where retained runtime source and fixes evolve. pi_config supplies immutable source snapshots and historical evidence during the transition. Each migrated component gets one owner, a recorded source identity, and its applicable regression tests.</p>
+      <ol class="flow" aria-label="Dependency sequence">
+        <li><b>1. Establish</b>Profile schema, compatibility mode, explicit resource selection.</li>
+        <li><b>2. Prove</b>PTY, RPC, storage and resume agree for two isolated profiles.</li>
+        <li><b>3. Expand</b>Import complete dependency and test sets; carry pending fixes.</li>
+        <li><b>4. Qualify</b>Real pinned executable, child propagation and failure recovery.</li>
+      </ol>
+      <p><strong>Backend decision:</strong> retain the current Pi executable/RPC integration and <code>v0.85.1-psmfd.1</code> baseline. The profile contract will also serve a future SDK worker, but a backend switch belongs to <a href="https://github.com/psmfd/FingerTrap/issues/202">#202</a> and a successor ADR. If the current fork cannot enforce a required discovery boundary, record that gap and block managed activation until an explicit fork change or backend decision is qualified.</p>
+    </section>
+
+    <section id="baseline">
+      <div class="section-number">02 / Where we are</div>
+      <h2>The first source slice exists. Managed execution does not yet.</h2>
+      <div class="cards">
+        <article class="card">
+          <div class="status">Completed locally · M1a</div>
+          <h3>Token and cache meters</h3>
+          <p>20 imported files, including the MIT license; independent package and lockfile; provenance verification; six inherited test files with 41 passing tests. No app activation.</p>
+        </article>
+        <article class="card">
+          <div class="status">Still open · M1 / M2</div>
+          <h3>Profile isolation and wider import</h3>
+          <p>Legacy home paths remain. Other extensions and defaults need reviewed dependency sets. Pending subagent fixes must be reconciled before dispatch is enabled.</p>
+        </article>
+      </div>
+      <p class="small muted">The migration changes are currently uncommitted on <code>docs/pi-runtime-migration</code>. Prior local validation is recorded in <a href="m1a-import.md">the M1a report</a>; the configured hosted CI matrix has not run for those changes. This plan does not claim production qualification.</p>
+      <div class="table-wrap">
+        <table>
+          <caption>Findings that determine the implementation</caption>
+          <thead><tr><th scope="col">Current behavior</th><th scope="col">Required change</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Session and worktree readers</th><td><code>SessionStore</code> and <code>WorktreeReconciler</code> default to <code>~/.pi/agent/…</code>. Inject the selected profile into the readers and every corresponding writer.</td></tr>
+            <tr><th scope="row">RPC environment</th><td><code>PiRpcClientOptions</code> deliberately uses inherited variables plus overrides. Add a distinct managed replacement-environment mode while preserving user-managed compatibility.</td></tr>
+            <tr><th scope="row">PTY environment</th><td>Porta.Pty merges the parent environment; its Unix native launcher also applies variables over inherited state. Both layers need explicit replacement semantics, with native process tests.</td></tr>
+            <tr><th scope="row">Executable selection</th><td>The existing resolver checks request, settings, environment and PATH. Managed launches must resolve a verified absolute executable from a selected runtime record.</td></tr>
+            <tr><th scope="row">Import tooling</th><td>The provenance checker expects exactly 20 files and the test runner names two extensions. Extend both through reviewed slice manifests and explicit suite registration.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small">Code references: <a href="../../src-sidecar/src/FingerTrap.Sidecar/PiRpc/PiRpcClientOptions.cs">RPC options</a>, <a href="../../src-sidecar/external/Porta.Pty/Porta.Pty/PtyProvider.cs">PTY environment merge</a>, <a href="../../src-sidecar/external/Porta.Pty/Porta.Pty.Native/porta_pty.c">Unix native spawn</a>, <a href="../../packages/agent-runtime/scripts/check-provenance.mjs">provenance checker</a>.</p>
+    </section>
+
+    <section id="contract">
+      <div class="section-number">03 / Managed profile contract</div>
+      <h2>One resolved context for the entire process tree.</h2>
+      <p>Add a sidecar-owned <code>RuntimeProfile</code> and immutable <code>ResolvedLaunchContext</code>: profile ID and schema version, runtime identity, resource manifest, canonical storage roots, workspace cwd, launch environment, credential references, and supported capability gates. A versioned, non-secret projection gives TypeScript consumers the same context. Shared fixtures verify that the two implementations agree.</p>
+      <div class="table-wrap">
+        <table>
+          <caption>Proposed storage and resource ownership</caption>
+          <thead><tr><th scope="col">Area</th><th scope="col">Proposed contract</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Profile root</th><td><code>&lt;FingerTrap app-data&gt;/profiles/&lt;id&gt;/</code>, using the existing platform path convention. Validate IDs and canonical paths; missing or invalid managed roots are errors, never a fallback to the cwd or operator home.</td></tr>
+            <tr><th scope="row">Pi state</th><td>An explicit profile-local agent directory for settings, models and sessions. Preserve supported Pi file formats. Keep application profile metadata separate from Pi settings.</td></tr>
+            <tr><th scope="row">Credentials</th><td>Persist references in profile metadata. Resolve only explicitly configured credentials through the established trusted host boundary. No automatic import of provider variables, operator auth files, GitHub tokens or credential-helper settings. Production login/brokering remains a dependency where incomplete.</td></tr>
+            <tr><th scope="row">Extension state</th><td>Profile-local roots for meters, shared state, worktree manifests, caches and temporary files. Preserve recorder schemas while replacing hidden home-directory defaults.</td></tr>
+            <tr><th scope="row">Runtime resources</th><td>A versioned immutable resource manifest identifies the exact executable, package dependencies and selected extension/default files. Source ownership and enabled-resource lists remain separate.</td></tr>
+            <tr><th scope="row">Worktrees</th><td>Keep Git worktrees in the repository’s supported <code>.worktrees</code> layout. Qualify names and manifests by profile/session to avoid collisions. Recovery must respect recorded host and process ownership.</td></tr>
+            <tr><th scope="row">Repository identity</th><td>Store per-repository identity overrides outside tracked source, scoped to profile and canonical repository identity. Define explicit opt-in compatibility for existing untracked identity files from pi-gh-identity-guard #10; never copy live values into the package.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>Launch and discovery rules</h3>
+      <ul>
+        <li><strong>Managed mode is explicit.</strong> Existing installations retain user-managed behavior until opted in. A managed failure never falls back to an ambient executable, profile or auth source.</li>
+        <li><strong>Resolve once, propagate everywhere.</strong> PTY and RPC Pi sessions, resume, subagents and auxiliary tool children receive the selected executable, profile and explicit cwd. Child credentials are narrowed to the operation’s needs.</li>
+        <li><strong>Construct the child environment from an allowlist.</strong> Supply profile-local HOME/USERPROFILE, XDG and temporary roots plus required OS/terminal variables and approved tool paths. Exclude ambient provider keys, preload variables and credential-helper configuration. Do not mutate the sidecar’s process-wide environment during a launch.</li>
+        <li><strong>Verify the exact fork’s discovery controls.</strong> Enumerate global, user, package and project resource loaders, including extensions, agents, rules, skills and prompts. Managed mode loads only selected resources; project additions require an explicit supported trust path. Assert each extension initializes once.</li>
+        <li><strong>Treat WebView inputs as requests.</strong> Resolve profile IDs and session references in the sidecar; reject caller overrides of managed roots, executable, resource lists or credentials. Resume must stay within the selected profile, including symlink and traversal checks.</li>
+      </ul>
+      <div class="callout">
+        <p><strong>Boundary of the guarantee:</strong> this establishes independent configuration, discovery and state for managed launches. It does not make arbitrary same-user code an operating-system sandbox. Native approval and confinement guarantees still require their own designs and tests.</p>
+      </div>
+      <p>Preserve ordinary shell-pane behavior. Audit the startup login-shell PATH enrichment separately: managed selection must use its explicit tool paths, and credential helpers or login scripts must not reintroduce ambient state through a child command.</p>
+    </section>
+
+    <section id="sequence">
+      <div class="section-number">04 / Implementation sequence</div>
+      <h2>Six reviewable changes, each with exit evidence.</h2>
+      <p>Use separate commits or PRs for these boundaries. The first implementation milestone is steps 1–4: a working isolation foundation with the two meters. Steps 5–6 expand and qualify the retained runtime. A foundation-only delivery leaves the wider issues open.</p>
+
+      <article class="phase">
+        <span class="phase-label">Step 1 · Baseline and contract · #201 + #200</span>
+        <h3>Record the profile schema and approved source slices.</h3>
+        <p>Reconcile the existing M0/M1a changes into reviewable history, preserving unrelated local artifacts. Refresh source and pending-fix identities. Document profile schema, mode precedence, resource selection, path ownership, credential references and compatibility behavior.</p>
+        <p class="small"><strong>Touchpoints:</strong> <code>docs/migration/</code>; sidecar settings models and validation; a versioned contract under <code>packages/agent-runtime/</code>. Add explicit profile selection to pane/session requests only where needed.</p>
+        <div class="exit"><strong>Exit:</strong> approved contract fixtures cover two profiles, invalid settings and missing managed runtime; existing user-managed settings remain valid.</div>
+      </article>
+
+      <article class="phase">
+        <span class="phase-label">Step 2 · Reproducible imports · #200</span>
+        <h3>Make the package support reviewed incremental imports.</h3>
+        <p>Replace the single 20-file assumption with an explicit per-slice manifest and aggregate verifier. Record source repository, commit/blob, destination digest, notices and transformations, including fixes derived from separate PR heads. Reject missing, duplicate, escaped and unaccounted imported paths.</p>
+        <p>Register each slice’s inherited test suites explicitly. Retain isolated temporary homes, clean environments, locked dependencies and disabled install scripts. Each slice must restore and validate without a private checkout or home-cache symlink.</p>
+        <div class="exit"><strong>Exit:</strong> the original 20 files and six suites remain accounted for; deliberate hash/path/suite omissions fail; the independent package passes its checks.</div>
+      </article>
+
+      <article class="phase">
+        <span class="phase-label">Step 3 · Launch isolation · #201</span>
+        <h3>Apply the context to RPC and native PTY launches.</h3>
+        <p>Introduce one resolver shared by <code>PiExecutableResolver</code>, <code>RpcPaneService</code> and <code>PtyService</code>. Add explicit inherited-versus-replacement environment handling to the RPC client and vendored PTY interface. Carry replacement semantics through the Unix native spawn and Windows environment block; preserve vendor provenance.</p>
+        <p>Keep per-launch cwd and environment independent under concurrency. Extend <code>FakePi</code> and real PTY probes to report selected context using synthetic values. Preserve startup deadlines, bounded output, backpressure, cancellation and process-tree cleanup.</p>
+        <div class="exit"><strong>Exit:</strong> concurrent PTY/RPC children see only their own profile and approved variables; absent or mismatched managed resources fail clearly; existing user-managed launches still pass.</div>
+      </article>
+
+      <article class="phase">
+        <span class="phase-label">Step 4 · First complete profile slice · #201</span>
+        <h3>Connect storage, session browsing and the two meters.</h3>
+        <p>Inject profile roots into <code>SessionStore</code> and <code>WorktreeReconciler</code>, then expose profile identity through session-list and resume requests. Preserve ADR-0028’s bounded metadata scan, <code>TotalCount</code>, corrupt-file reporting and absence of extension-starting inspector processes.</p>
+        <p>Add a common runtime path/context helper and update every token/cache-meter entry point, settings reader and writer to use it. Add compatibility fixtures for existing JSONL records. Track profile identity in crash/recovery state and review shared registry concurrency so one profile cannot reap a live sibling’s child.</p>
+        <div class="exit"><strong>Exit:</strong> two profiles can record, list, restart and resume independently; synthetic operator files stay untouched; cross-profile resume is rejected. The controlled test fixture may load meters, while normal app discovery stays gated.</div>
+      </article>
+
+      <article class="phase">
+        <span class="phase-label">Step 5 · Remaining source and fixes · #200 + #201</span>
+        <h3>Import each component with its complete dependency and test set.</h3>
+        <p>Use the waves below. For every retained component, enumerate shared modules, vendor files, fixtures, runtime dependencies and activation gates before exporting exact Git blobs. Adapt paths and child launching to the established profile contract; record behavior changes separately from relocation.</p>
+        <p>Reapply the subagent declaration/shadowing and patch-audit fixes from pi_config PR #1170 independently of its version bump. Reconcile #280’s legacy spawn-error patch against current serial execution. Preserve errors, aborts and cleanup; retain protected project-agent restrictions.</p>
+        <div class="exit"><strong>Exit:</strong> every retained component has provenance, independent tests, a source owner and a stated activation disposition. No dispatch becomes available before its restriction and child-isolation tests pass.</div>
+      </article>
+
+      <article class="phase">
+        <span class="phase-label">Step 6 · Integration and completion · #201 + #200</span>
+        <h3>Qualify the assembled profile using the pinned executable.</h3>
+        <p>Run the approved resource set through real PTY and RPC launches on macOS ARM64, including a subagent and tool subprocess. Use synthetic credentials or an isolated local provider fixture for deterministic tests. Record exact runtime hashes, loaded resources, path observations and failure results.</p>
+        <p>Run the relevant package, sidecar, UI and native checks; obtain hosted CI evidence. Update the migration ledger and issue checklists with precise completed scope. Managed installation and general activation remain coordinated with #187 and #202.</p>
+        <div class="exit"><strong>Exit:</strong> the acceptance matrix below passes for the retained scope; unresolved components remain explicitly disabled and tracked; issue closure matches actual evidence.</div>
+      </article>
+    </section>
+
+    <section id="imports">
+      <div class="section-number">05 / Source import waves</div>
+      <h2>Move complete components, with an explicit activation decision.</h2>
+      <p>The inventory covers 26 extensions plus shared code. Two extensions are already imported. These proposed waves account for the rest; exact file lists and dependency order are produced in step 2 before any additional source export.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Wave</th><th scope="col">Components and review focus</th><th scope="col">Activation gate</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">A · State and observability</th><td>Required <code>shared</code> modules, existing meter adaptations, <code>prefill-meter</code>, <code>artifact-handoff</code>.</td><td>Profile paths and JSONL contracts. Qualify prefill’s runtime formatter dependency; importing that API does not adopt an SDK backend.</td></tr>
+            <tr><th scope="row">B · Guards and typed tools</th><td><code>secrets-guard</code>, <code>bash-destructive-guard</code>, <code>gh-identity-guard</code>, <code>git-read</code>, <code>github-read</code>, <code>web-fetch</code>, <code>hashline-edit</code>, with parser/vendor notices.</td><td>Existing enforcement and adversarial tests, tool-name ownership and last-writer behavior, explicit identity configuration; no copied operator allowlists.</td></tr>
+            <tr><th scope="row">C · Worktrees and dispatch</th><td><code>worktree</code>, <code>subagent</code>, their shared contracts, PR #1170 fixes and #280 reconciliation.</td><td>Profile propagation, constrained tools, same-name shadows, spawn errors/aborts, host-aware recovery and porcelain parsing. Protected project agents stay refused until authorized correctly.</td></tr>
+            <tr><th scope="row">D · Context and presentation</th><td><code>auto-router</code>, <code>compaction-optimizer</code>, <code>context-manager</code>, <code>payload-tuner</code>, <code>plain-english</code>, <code>repo-dash</code>.</td><td>Preserve hooks and tuning defaults; qualify selected fork behavior. RPC-incompatible custom UI stays disabled until adapted; native dashboard work remains #157.</td></tr>
+            <tr><th scope="row">E · Capability-dependent source</th><td><code>indexing</code>, four expertise extensions, <code>package-agent-broker</code>, <code>bash-confinement</code>.</td><td>Preserve reviewed source/contracts/tests in an inactive state as appropriate. Mac dependencies, native grants and confinement require #203/#204 evidence.</td></tr>
+            <tr><th scope="row">F · Curated defaults</th><td>Selected agents, rules, prompts and skills; rewritten safe settings/model examples and runtime catalog.</td><td>Content/license review, tool restrictions, project trust and relevant evaluations. Record exclusions; keep the whole historical catalog out of automatic discovery.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Required subagent regression cases:</strong> absent tool declarations retain documented compatibility; present empty or malformed declarations fail closed; CSV and array forms agree; a malformed same-name definition cannot reveal a less restricted fallback; restored records validate field types. Spawn failures must produce actionable diagnostics without swallowing errors or weakening abort behavior.</p>
+      <p>Legacy installer, publisher and mirror automation receive retirement dispositions. New dependency setup belongs to this package’s lockfile and the managed distribution contract. pi-workflow and agent-expertise-api remain separate source owners.</p>
+    </section>
+
+    <section id="verification">
+      <div class="section-number">06 / Verification &amp; completion</div>
+      <h2>Test observable behavior at each boundary.</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Scenario</th><th scope="col">Required result</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Two profiles, one repository</th><td>Concurrent PTY/RPC sessions and descendants use distinct settings, session state, meters, caches and worktree identity. Restart preserves that association.</td></tr>
+            <tr><th scope="row">Ambient-state probes</th><td>Synthetic parent credentials, auth files, home extensions, project extensions and preload variables do not enter managed execution. No writes to the synthetic operator <code>~/.pi</code>, global npm tree or shell rc files.</td></tr>
+            <tr><th scope="row">Resume and corruption</th><td>Correct profile resumes its own session; profile mismatch, escaped paths and symlink escapes fail. Malformed state is reported without silently switching to legacy defaults. Browser count/bounds behavior remains intact.</td></tr>
+            <tr><th scope="row">Discovery</th><td>Each selected extension initializes exactly once. Unselected user/global/package/project resources remain unloaded. Missing resources fail before usable session activation.</td></tr>
+            <tr><th scope="row">Failure and recovery</th><td>Missing executable, invalid cwd, startup timeout, child crash, abort, shutdown and app restart preserve diagnostics and cleanup. Live sibling sessions and worktrees remain intact.</td></tr>
+            <tr><th scope="row">Imported behavior</th><td>Inherited regression tests pass; schemas, tool restrictions and selected settings precedence remain compatible. New tests target changed boundaries and known defects.</td></tr>
+            <tr><th scope="row">Independent build</th><td>Package-only frozen restore and validation succeed without pi_config or home caches. Provenance, license review and secret scans cover the actual imported output.</td></tr>
+            <tr><th scope="row">Platforms and compatibility</th><td>Run the configured Node 22 package matrix on Linux, Windows and macOS; relevant .NET/UI/native checks pass. macOS ARM64 real-process evidence is mandatory for the primary app target. User-managed mode remains covered.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <h3>When the issues can close</h3>
+      <p><strong>#201:</strong> all retained managed consumers use the common contract; PTY, RPC, resume, worktrees, meters, discovery and every child path have passing isolation evidence; explicit user-managed compatibility and repository identity behavior are documented. The meter-only milestone is insufficient to close it.</p>
+      <p><strong>#200:</strong> the approved curated scope is fully imported with its source/license/test closure; every inventoried group has a completed or explicitly deferred/excluded disposition; pending dispatch fixes and the legacy patch are reconciled and tested; no incomplete component is enabled by default. Any reduced scope must be recorded explicitly before closure.</p>
+      <p>Neither issue closure implies that all inherited feature requests are fixed, live installations have migrated, the SDK has been adopted, or pi_config can be archived. Those remain individually tracked outcomes.</p>
+    </section>
+
+    <section id="boundaries">
+      <div class="section-number">07 / Dependencies &amp; rollback</div>
+      <h2>Keep the migration separable from backend and release decisions.</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th scope="col">Dependency</th><th scope="col">How this plan handles it</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">#202 · Fork / SDK qualification</th><td>Consumes the same profile contract. Required CLI discovery gaps become explicit blockers. A newer fork release or npm type package is not qualification evidence.</td></tr>
+            <tr><th scope="row">#186 / #187 / draft #188</th><td>Coordinate onboarding, runtime artifact layout and supported login. This plan supplies a verified development fixture and profile interface; installer, updater and distribution acceptance stay there.</td></tr>
+            <tr><th scope="row">#203 · Trusted authority</th><td>No new native approval bridge, protected package-agent dispatch, credential grants or FT-3 access. Existing TUI/refusal restrictions remain; RPC/SDK hosts must never claim TUI mode to bypass them.</td></tr>
+            <tr><th scope="row">#204 / #205</th><td>Expertise platform readiness and pi-workflow integration remain separate. Preserve contracts and blockers without claiming macOS support from Linux-only evidence.</td></tr>
+            <tr><th scope="row">#206 · Retirement</th><td>Record component ownership here now. Archive pi_config or change mirror publishing only after replacement consumers and recovery paths are verified.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p><strong>Rollback strategy:</strong> managed mode starts opt-in with a versioned profile and resource selection. Do not rewrite the operator’s existing Pi installation or automatically move live sessions/auth. A failed profile selection leaves the prior data intact and reports the failure. A deliberate switch back to user-managed mode launches a new session; it never changes the backend underneath a live session.</p>
+      <p><strong>Highest implementation risks:</strong> native PTY environment inheritance, project resource discovery, credential-helper side effects, shared crash-registry concurrency and subprocesses that reconstruct legacy paths. Resolve these with process-level evidence early. If a dependency blocks activation, continue safe source ownership work and leave that capability disabled with a linked blocker.</p>
+    </section>
+
+    <section id="approval" class="approval">
+      <div class="section-number">08 / Approval recorded</div>
+      <h2>Approval recorded; implementation is tracked separately.</h2>
+      <p>The maintainer approved the implementation steps above on 20 October 2026, beginning with the profile contract, import harness and isolated meter integration. Work proceeds through reviewable slices and the stated completion gates. Current completion and validation are recorded in <a href="STATUS.md">STATUS.md</a>; approval does not mean implementation is complete.</p>
+      <ul>
+        <li>Working issue pair: <strong>#201 and #200</strong>.</li>
+        <li>Explicit managed profiles with user-managed compatibility and no automatic state/credential migration.</li>
+        <li>Reviewed import waves and evidence-based activation gates while retaining executable/RPC.</li>
+      </ul>
+      <p class="small muted">Maintainer instruction:</p>
+      <blockquote>I approve that plan. Be sure that we are tracking things durably so that we do not lose track of current status/activity should anything go amiss during our work as as well maintain momentum/consistency between sessions</blockquote>
+      <p class="small">Production SDK adoption, live installation migration, publishing/retirement changes and new protected-operation approvals remain separate decisions.</p>
+    </section>
+
+    <section id="references">
+      <div class="section-number">09 / Evidence &amp; references</div>
+      <h2>Plan of record and source evidence.</h2>
+      <p class="small muted">Prepared from local source and GitHub issue reads on 20 October 2026. “Completed locally” refers to the existing M1a record, not fresh execution of those tests while writing this document. Proposed paths/types are implementation choices for review.</p>
+      <ol class="sources">
+        <li><a href="https://github.com/psmfd/FingerTrap/issues/200">FingerTrap #200 — curated runtime import</a> and <a href="https://github.com/psmfd/FingerTrap/issues/201">#201 — managed profiles</a>. FingerTrap #210 returned “Not Found” in the authenticated read.</li>
+        <li><a href="../../adrs/0034-own-agent-runtime-and-retire-pi-config.md">Accepted ADR-0034</a>: ownership migration, backend decision, approval boundaries and completion gates.</li>
+        <li><a href="README.md">Migration inventory</a>, <a href="issue-ledger.md">issue ledger</a>, <a href="source-manifest.json">immutable source manifest</a> and <a href="m1a-import.md">M1a implementation evidence</a>.</li>
+        <li><a href="../../packages/agent-runtime/README.md">Current runtime package</a> and <a href="../../packages/agent-runtime/provenance.json">per-file provenance</a>. pi_config baseline: <code>9862f35a50f5f0d0770d90665cac1a4b8d3f0947</code>.</li>
+        <li><a href="../../src-sidecar/src/FingerTrap.Sidecar/Sessions/SessionStore.cs">SessionStore</a>, <a href="../../src-sidecar/src/FingerTrap.Sidecar/Sessions/WorktreeReconciler.cs">WorktreeReconciler</a>, <a href="../../src-sidecar/src/FingerTrap.Sidecar/PiRpc/RpcChildRegistry.cs">RPC child registry</a> and <a href="../../src-sidecar/src/FingerTrap.Sidecar/Settings/SettingsLoader.cs">settings path and compatibility rules</a>.</li>
+        <li><a href="../../src-sidecar/src/FingerTrap.Sidecar/Executables/PiExecutableResolver.cs">Executable resolver</a>, <a href="../../src-sidecar/src/FingerTrap.Sidecar/Pty/PtyService.cs">PTY service</a>, <a href="../../src-sidecar/src/FingerTrap.Sidecar/PiRpc/RpcPaneService.cs">RPC pane service</a> and <a href="../../src-sidecar/src/FingerTrap.Sidecar/Ipc/RpcSurface.cs">IPC surface</a>.</li>
+        <li><a href="https://github.com/psmfd/pi_config/pull/1170">pi_config PR #1170</a>, <a href="https://github.com/psmfd/pi_config/issues/280">spawn-error issue #280</a>, and <a href="https://github.com/psmfd/pi-gh-identity-guard/issues/10">repository identity requirement #10</a>. Private source links require repository access.</li>
+      </ol>
+    </section>
+    <footer>FingerTrap · Runtime migration · Approved 20 October 2026 · Current implementation status: STATUS.md · All substantive content is visible without JavaScript.</footer>
+  </main>
+</div>
+<script>
+  document.getElementById("print").addEventListener("click", () => window.print());
+  const links = [...document.querySelectorAll('nav a[href^="#"]')];
+  const sections = links.map(link => document.querySelector(link.getAttribute("href")));
+  let scheduled = false;
+  function updateSection() {
+    let active = sections[0];
+    for (const section of sections) {
+      if (section.getBoundingClientRect().top <= 150) active = section;
+    }
+    for (const link of links) {
+      if (link.hash === "#" + active.id) link.setAttribute("aria-current", "location");
+      else link.removeAttribute("aria-current");
+    }
+    scheduled = false;
+  }
+  window.addEventListener("scroll", () => {
+    if (!scheduled) { scheduled = true; requestAnimationFrame(updateSection); }
+  }, { passive:true });
+  updateSection();
+</script>
+</body>
+</html>

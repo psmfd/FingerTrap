@@ -3,6 +3,7 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="MessagePack" Version="2.5.303" />
     <PackageVersion Include="Nerdbank.MessagePack" Version="1.2.36" />
     <PackageVersion Include="Octokit" Version="14.0.0" />
     <PackageVersion Include="StreamJsonRpc" Version="2.25.29" />

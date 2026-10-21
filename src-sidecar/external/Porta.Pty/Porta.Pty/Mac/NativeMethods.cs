@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace Porta.Pty.Mac
@@ -254,6 +254,15 @@ namespace Porta.Pty.Mac
         /// </summary>
         [DllImport(LibPortaPty, SetLastError = true)]
         internal static extern PtySpawnResult pty_spawn(
+            [MarshalAs(UnmanagedType.LPStr)] string file,
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string?[] argv,
+            [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string?[]? envp,
+            [MarshalAs(UnmanagedType.LPStr)] string? workingDir,
+            ref PtyTermios termios,
+            ref PtyWinSize winsize);
+
+        [DllImport(LibPortaPty, SetLastError = true)]
+        internal static extern PtySpawnResult pty_spawn_replace(
             [MarshalAs(UnmanagedType.LPStr)] string file,
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string?[] argv,
             [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string?[]? envp,

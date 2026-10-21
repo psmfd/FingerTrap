@@ -1,6 +1,8 @@
 # 0014 — Settings file, schema versioning, and configuration precedence
 
 - Status: Accepted
+- Extended by [0035](0035-version-managed-runtime-profiles.md): retain v1
+  compatibility and require settings v2 for managed-profile selection.
 - Date: 2026-08-15
 
 ## Context and problem statement
@@ -23,7 +25,7 @@ share a dependency: the settings foundation, absorbing the env vars, user
 config (theme/font/profiles), and **persisted layout**. Layout cannot precede
 FT-1 — there is exactly one pane today, and persisting a layout of one
 non-splittable pane is not a feature. That dependency inversion is recorded in
-#51; this ADR covers the foundation and the absorption.
+[#51](https://github.com/psmfd/FingerTrap/issues/51); this ADR covers the foundation and the absorption.
 
 ## Considered options
 

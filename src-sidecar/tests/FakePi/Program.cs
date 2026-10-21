@@ -31,6 +31,23 @@ internal static class Program
 
     private static int Main(string[] args)
     {
+        if (args.Length == 2 && args[0] == "--observe")
+        {
+            LaunchObservation.Write(args[1], includeChild: false);
+            return 0;
+        }
+
+        if (Environment.GetEnvironmentVariable("FINGERTRAP_PROFILE_ID") is not null
+            && args.Length > 0 && args[0].StartsWith("--", StringComparison.Ordinal))
+        {
+            var path = Path.Combine(Environment.GetEnvironmentVariable("PI_CODING_AGENT_DIR")!,
+                args.Contains("--mode", StringComparer.Ordinal) ? "launch-rpc.json" : "launch-pty.json");
+            LaunchObservation.Write(path, includeChild: true);
+            Console.WriteLine("""{"type":"hello","piVersion":"fixture","protocol":1,"capabilities":[]}""");
+            while (Console.ReadLine() is not null) { }
+            return 0;
+        }
+
         if (args.Length != 1)
         {
             Console.Error.WriteLine("usage: FakePi <script.json>");

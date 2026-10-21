@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "slices": [
+    {
+      "id": "M1a",
+      "source": {
+        "repo": "psmfd/pi_config",
+        "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+        "license": "MIT"
+      },
+      "files": [
+        {
+          "path": "LICENSE",
+          "source_path": "LICENSE",
+          "source_blob": "30bde73114ebfb6661dad88811a2e2221b747577"
+        },
+        {
+          "path": "extensions/cache-meter/README.md",
+          "source_path": "agent/extensions/cache-meter/README.md",
+          "source_blob": "172cbc8f0731675d04af4bbefbaf99c4f5f9cc5b"
+        },
+        {
+          "path": "extensions/cache-meter/index.ts",
+          "source_path": "agent/extensions/cache-meter/index.ts",
+          "source_blob": "22230669faf9234af7c2cf69210bffb00677b64f"
+        },
+        {
+          "path": "extensions/cache-meter/record.ts",
+          "source_path": "agent/extensions/cache-meter/record.ts",
+          "source_blob": "a5bccf7ffdec4c44cefe6b93f1de169b7a703b4b"
+        },
+        {
+          "path": "extensions/cache-meter/state.ts",
+          "source_path": "agent/extensions/cache-meter/state.ts",
+          "source_blob": "d5e9abcf0e62294fc4e9398fafb19cc5bb4984da"
+        },
+        {
+          "path": "extensions/cache-meter/test/record.test.ts",
+          "source_path": "agent/extensions/cache-meter/test/record.test.ts",
+          "source_blob": "1bf80f37226e242142e397998adc9dc43edacb51"
+        },
+        {
+          "path": "extensions/cache-meter/test/state.test.ts",
+          "source_path": "agent/extensions/cache-meter/test/state.test.ts",
+          "source_blob": "2182cfdc21a3337c8628b419e366121def789cec"
+        },
+        {
+          "path": "extensions/cache-meter/tsconfig.json",
+          "source_path": "agent/extensions/cache-meter/tsconfig.json",
+          "source_blob": "3aa715c37d28efa9b5040251421f00c1b147116c"
+        },
+        {
+          "path": "extensions/cache-meter/types.ts",
+          "source_path": "agent/extensions/cache-meter/types.ts",
+          "source_blob": "9d4ddeea3d3e0c91bd4e0c92b218e55cc710eb0e"
+        },
+        {
+          "path": "extensions/token-meter/README.md",
+          "source_path": "agent/extensions/token-meter/README.md",
+          "source_blob": "152f3dfc545739244648e5e01e9c0703fae76cbe"
+        },
+        {
+          "path": "extensions/token-meter/index.ts",
+          "source_path": "agent/extensions/token-meter/index.ts",
+          "source_blob": "438f2f225a9fea246862688e8b643918ed34dbb8"
+        },
+        {
+          "path": "extensions/token-meter/record.ts",
+          "source_path": "agent/extensions/token-meter/record.ts",
+          "source_blob": "da690dc7e29d01cf6a5baf6b983a4d9993f07bbd"
+        },
+        {
+          "path": "extensions/token-meter/state.ts",
+          "source_path": "agent/extensions/token-meter/state.ts",
+          "source_blob": "8985c5d64ced0fd6a812070b25ee270e53835bcf"
+        },
+        {
+          "path": "extensions/token-meter/test/index.test.ts",
+          "source_path": "agent/extensions/token-meter/test/index.test.ts",
+          "source_blob": "94e4f8c5509ce839244c93cd6917f93969fcd207"
+        },
+        {
+          "path": "extensions/token-meter/test/record.test.ts",
+          "source_path": "agent/extensions/token-meter/test/record.test.ts",
+          "source_blob": "d3ab4a7c6c9921ba7617e783e13b4c49cf547f0f"
+        },
+        {
+          "path": "extensions/token-meter/test/state.test.ts",
+          "source_path": "agent/extensions/token-meter/test/state.test.ts",
+          "source_blob": "64b805d899f4635cdee6f57a45ad6f36e4a8ffa7"
+        },
+        {
+          "path": "extensions/token-meter/test/tiers.test.ts",
+          "source_path": "agent/extensions/token-meter/test/tiers.test.ts",
+          "source_blob": "60fc3aefaa52338776cf21b1bae1461a88dc7f9a"
+        },
+        {
+          "path": "extensions/token-meter/tiers.json",
+          "source_path": "agent/extensions/token-meter/tiers.json",
+          "source_blob": "21923f20ab9c90ada848241142329cf60a44da77"
+        },
+        {
+          "path": "extensions/token-meter/tsconfig.json",
+          "source_path": "agent/extensions/token-meter/tsconfig.json",
+          "source_blob": "3aa715c37d28efa9b5040251421f00c1b147116c"
+        },
+        {
+          "path": "extensions/token-meter/types.ts",
+          "source_path": "agent/extensions/token-meter/types.ts",
+          "source_blob": "46e63a87a4bf36cb1fb61ebc4f51287638854d29"
+        }
+      ],
+      "tests": [
+        "extensions/cache-meter/test/record.test.ts",
+        "extensions/cache-meter/test/state.test.ts",
+        "extensions/token-meter/test/index.test.ts",
+        "extensions/token-meter/test/record.test.ts",
+        "extensions/token-meter/test/state.test.ts",
+        "extensions/token-meter/test/tiers.test.ts"
+      ]
+    }
+  ],
+  "authored_tests": [
+    "runtime/test/profile.test.ts",
+    "scripts/test/import-manifest.test.mjs"
+  ]
+}

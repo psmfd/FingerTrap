@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "slice": "M1a",
+  "status": "source-imported-not-activated",
+  "implementation_record": "../../packages/agent-runtime/provenance.json",
+  "source_repo": "psmfd/pi_config",
+  "source_commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+  "activation": "disabled-until-profile-isolation-and-runtime-qualification",
+  "files": [
+    {
+      "source_path": "LICENSE",
+      "blob": "30bde73114ebfb6661dad88811a2e2221b747577",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/LICENSE"
+    },
+    {
+      "source_path": "agent/extensions/cache-meter/README.md",
+      "blob": "172cbc8f0731675d04af4bbefbaf99c4f5f9cc5b",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/cache-meter/README.md"
+    },
+    {
+      "source_path": "agent/extensions/cache-meter/index.ts",
+      "blob": "22230669faf9234af7c2cf69210bffb00677b64f",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/cache-meter/index.ts"
+    },
+    {
+      "source_path": "agent/extensions/cache-meter/record.ts",
+      "blob": "a5bccf7ffdec4c44cefe6b93f1de169b7a703b4b",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/cache-meter/record.ts"
+    },
+    {
+      "source_path": "agent/extensions/cache-meter/state.ts",
+      "blob": "d5e9abcf0e62294fc4e9398fafb19cc5bb4984da",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/cache-meter/state.ts"
+    },
+    {
+      "source_path": "agent/extensions/cache-meter/test/record.test.ts",
+      "blob": "1bf80f37226e242142e397998adc9dc43edacb51",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/cache-meter/test/record.test.ts"
+    },
+    {
+      "source_path": "agent/extensions/cache-meter/test/state.test.ts",
+      "blob": "2182cfdc21a3337c8628b419e366121def789cec",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/cache-meter/test/state.test.ts"
+    },
+    {
+      "source_path": "agent/extensions/cache-meter/tsconfig.json",
+      "blob": "3aa715c37d28efa9b5040251421f00c1b147116c",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/cache-meter/tsconfig.json"
+    },
+    {
+      "source_path": "agent/extensions/cache-meter/types.ts",
+      "blob": "9d4ddeea3d3e0c91bd4e0c92b218e55cc710eb0e",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/cache-meter/types.ts"
+    },
+    {
+      "source_path": "agent/extensions/token-meter/README.md",
+      "blob": "152f3dfc545739244648e5e01e9c0703fae76cbe",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/token-meter/README.md"
+    },
+    {
+      "source_path": "agent/extensions/token-meter/index.ts",
+      "blob": "438f2f225a9fea246862688e8b643918ed34dbb8",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/token-meter/index.ts"
+    },
+    {
+      "source_path": "agent/extensions/token-meter/record.ts",
+      "blob": "da690dc7e29d01cf6a5baf6b983a4d9993f07bbd",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/token-meter/record.ts"
+    },
+    {
+      "source_path": "agent/extensions/token-meter/state.ts",
+      "blob": "8985c5d64ced0fd6a812070b25ee270e53835bcf",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/token-meter/state.ts"
+    },
+    {
+      "source_path": "agent/extensions/token-meter/test/index.test.ts",
+      "blob": "94e4f8c5509ce839244c93cd6917f93969fcd207",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/token-meter/test/index.test.ts"
+    },
+    {
+      "source_path": "agent/extensions/token-meter/test/record.test.ts",
+      "blob": "d3ab4a7c6c9921ba7617e783e13b4c49cf547f0f",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/token-meter/test/record.test.ts"
+    },
+    {
+      "source_path": "agent/extensions/token-meter/test/state.test.ts",
+      "blob": "64b805d899f4635cdee6f57a45ad6f36e4a8ffa7",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/token-meter/test/state.test.ts"
+    },
+    {
+      "source_path": "agent/extensions/token-meter/test/tiers.test.ts",
+      "blob": "60fc3aefaa52338776cf21b1bae1461a88dc7f9a",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/token-meter/test/tiers.test.ts"
+    },
+    {
+      "source_path": "agent/extensions/token-meter/tiers.json",
+      "blob": "21923f20ab9c90ada848241142329cf60a44da77",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/token-meter/tiers.json"
+    },
+    {
+      "source_path": "agent/extensions/token-meter/tsconfig.json",
+      "blob": "3aa715c37d28efa9b5040251421f00c1b147116c",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/token-meter/tsconfig.json"
+    },
+    {
+      "source_path": "agent/extensions/token-meter/types.ts",
+      "blob": "46e63a87a4bf36cb1fb61ebc4f51287638854d29",
+      "mode": "100644",
+      "destination": "packages/agent-runtime/extensions/token-meter/types.ts"
+    }
+  ],
+  "reference_only": [
+    {
+      "path": "scripts/test-token-meter.sh",
+      "blob": "698ada94c7c56645a224122ae101aa892646a3c2"
+    },
+    {
+      "path": "scripts/test-cache-meter.sh",
+      "blob": "a95b2fdf58db2c5511974307d8c5b74dcbacc8f5"
+    },
+    {
+      "path": "scripts/typecheck-extensions.sh",
+      "blob": "72f2be18feb45fc0522a66c8f9f62911b3276f02"
+    },
+    {
+      "path": "scripts/lint-extensions.sh",
+      "blob": "880f0e5023be875212888ae67da5991502bf3f6e"
+    },
+    {
+      "path": "scripts/lib/extension-deps.sh",
+      "blob": "eeb8f5ae6e4056af1fc40b2ed8b0fe57af486cb3"
+    },
+    {
+      "path": "eslint.config.js",
+      "blob": "1c4171bab438adfaad4514354b94aecf450413ee"
+    }
+  ],
+  "new_destination_files": [
+    "packages/agent-runtime/package.json",
+    "packages/agent-runtime/pnpm-lock.yaml",
+    "packages/agent-runtime/README.md",
+    "packages/agent-runtime/eslint.config.js",
+    "packages/agent-runtime/provenance.json"
+  ],
+  "requirements": [
+    "Export exact Git blobs; never copy the working tree or Git history.",
+    "Review all candidate content, preserve the MIT notice, rewrite private-only documentation links and examples, then scan the complete staged import.",
+    "Record every local transformation and destination digest in the import provenance.",
+    "Use a package-local dependency lock and commands; never use the old home-cache install/symlink helper.",
+    "Preserve record/schema behavior and run all six existing test files, strict typecheck and lint.",
+    "Keep runtime loading, app installer, SDK backend and global configuration unchanged."
+  ]
+}

@@ -177,6 +177,18 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
     {
         ArgumentNullException.ThrowIfNull(options);
 
+        if (!Enum.IsDefined(options.EnvironmentMode))
+        {
+            throw new ArgumentException("invalid child environment mode", nameof(options));
+        }
+
+        if (options.EnvironmentMode == ChildEnvironmentMode.Replace
+            && !Path.IsPathFullyQualified(options.ExecutablePath))
+        {
+            throw new ArgumentException("replacement requires an absolute executable", nameof(options));
+        }
+
+        var environment = ChildEnvironment.Snapshot(options.EnvironmentOverrides);
         var startInfo = new ProcessStartInfo(options.ExecutablePath)
         {
             RedirectStandardInput = true,
@@ -195,9 +207,14 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
             startInfo.WorkingDirectory = options.WorkingDirectory;
         }
 
-        if (options.EnvironmentOverrides is not null)
+        if (options.EnvironmentMode == ChildEnvironmentMode.Replace)
         {
-            foreach (var (key, value) in options.EnvironmentOverrides)
+            startInfo.Environment.Clear();
+        }
+
+        if (environment.Count > 0)
+        {
+            foreach (var (key, value) in environment)
             {
                 startInfo.Environment[key] = value;
             }

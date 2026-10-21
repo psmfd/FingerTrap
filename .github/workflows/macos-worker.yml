@@ -1,0 +1,94 @@
+name: macos-worker
+
+on:
+  workflow_call:
+    inputs:
+      lane:
+        description: sidecar, ui, agent-runtime, tauri or candidate
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: validate
+    if: github.repository == 'psmfd/FingerTrap'
+    # This definition is called by full commit SHA and independently permitted
+    # by the runner group. A PR cannot edit the local routing decision.
+    runs-on: >-
+      ${{ ((github.event_name == 'push' &&
+            (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main')) ||
+           (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/dev') ||
+           (github.event_name == 'pull_request' &&
+            github.event.pull_request.head.repo.full_name == github.repository &&
+            contains(fromJSON(vars.FINGERTRAP_TART_PRS || '[]'), github.event.pull_request.number))) &&
+          fromJSON('["self-hosted","macOS","ARM64","fingertrap-tart"]') || 'macos-15' }}
+    timeout-minutes: 60
+    env:
+      DOTNET_CLI_DO_NOT_USE_MSBUILD_SERVER: "1"
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "1"
+      FT_MACOS_LANE: ${{ inputs.lane }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Require Apple Silicon and a supported lane
+        run: |
+          test "$(uname -m)" = arm64
+          case "$FT_MACOS_LANE" in
+            sidecar|ui|agent-runtime|tauri|candidate) ;;
+            *) echo "Unsupported validation lane" >&2; exit 2 ;;
+          esac
+      - name: Ensure modern Bash on the hosted compatibility lane
+        if: runner.environment == 'github-hosted'
+        run: |
+          if test ! -x /opt/homebrew/bin/bash; then
+            HOMEBREW_NO_AUTO_UPDATE=1 /opt/homebrew/bin/brew install bash
+          fi
+      - uses: pnpm/action-setup@v6
+        if: inputs.lane == 'ui' || inputs.lane == 'agent-runtime' || inputs.lane == 'candidate'
+        with:
+          version: 10.34.5
+      - uses: actions/setup-node@v7
+        if: inputs.lane == 'ui' || inputs.lane == 'agent-runtime' || inputs.lane == 'candidate'
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: |
+            src-ui/pnpm-lock.yaml
+            packages/agent-runtime/pnpm-lock.yaml
+      - uses: actions/setup-dotnet@v6
+        if: inputs.lane == 'sidecar' || inputs.lane == 'tauri' || inputs.lane == 'candidate'
+        with:
+          dotnet-version: "10.0"
+      - uses: dtolnay/rust-toolchain@stable
+        if: inputs.lane == 'tauri' || inputs.lane == 'candidate'
+        with:
+          targets: aarch64-apple-darwin
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        if: inputs.lane == 'tauri' || inputs.lane == 'candidate'
+        with:
+          workspaces: src-tauri
+      - name: Validate selected lane
+        run: /opt/homebrew/bin/bash scripts/ci/validate-macos.sh "$FT_MACOS_LANE"
+      - name: Upload candidate
+        if: inputs.lane == 'candidate'
+        uses: actions/upload-artifact@v7
+        with:
+          name: apple-silicon-candidate-${{ github.sha }}
+          path: candidate/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload failure diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: macos-${{ inputs.lane }}-diagnostics-${{ github.sha }}
+          path: |
+            candidate/*.log
+            src-sidecar/tests/**/TestResults/
+          if-no-files-found: ignore

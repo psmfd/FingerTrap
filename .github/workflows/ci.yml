@@ -27,7 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, windows-2025, macos-15]
+        os: [ubuntu-24.04, windows-2025]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -60,7 +60,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, windows-2025, macos-15]
+        os: [ubuntu-24.04, windows-2025]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -81,6 +81,32 @@ jobs:
       - run: pnpm test
       - run: pnpm build
 
+  agent-runtime:
+    name: agent-runtime (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: packages/agent-runtime
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10.34.5
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: packages/agent-runtime/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+      - run: pnpm check:provenance
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+
   tauri:
     name: tauri (${{ matrix.os }})
     strategy:
@@ -95,10 +121,6 @@ jobs:
             rid: win-x64
             triple: x86_64-pc-windows-msvc
             ext: ".exe"
-          - os: macos-15
-            rid: osx-arm64
-            triple: aarch64-apple-darwin
-            ext: ""
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -182,12 +204,40 @@ jobs:
       - run: cargo check --locked
       - run: cargo test --locked
 
+  # The group permits this immutable worker, whose routing policy selects
+  # Tart for enrolled repository work and hosted macOS for other PRs.
+  sidecar-macos:
+    name: sidecar (macos-15)
+    uses: psmfd/FingerTrap/.github/workflows/macos-worker.yml@cf1cd50ca296ad2b35711b028acfe2f66f7c8aa4
+    with:
+      lane: sidecar
+
+  ui-macos:
+    name: ui (macos-15)
+    uses: psmfd/FingerTrap/.github/workflows/macos-worker.yml@cf1cd50ca296ad2b35711b028acfe2f66f7c8aa4
+    with:
+      lane: ui
+
+  agent-runtime-macos:
+    name: agent-runtime (macos-15)
+    uses: psmfd/FingerTrap/.github/workflows/macos-worker.yml@cf1cd50ca296ad2b35711b028acfe2f66f7c8aa4
+    with:
+      lane: agent-runtime
+
+  tauri-macos:
+    name: tauri (macos-15)
+    uses: psmfd/FingerTrap/.github/workflows/macos-worker.yml@cf1cd50ca296ad2b35711b028acfe2f66f7c8aa4
+    with:
+      lane: tauri
+
   repo-check:
     name: repo-check
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
       - run: bash scripts/check.sh
+      - name: Validate local runner policy and network canary
+        run: python3 -m unittest discover -s scripts/ci -p 'test_tart_runner.py' -v
 
   lint-actions:
     name: lint-actions

@@ -22,6 +22,7 @@ FingerTrap-specific fixes are recorded here and must be reapplied during a sync:
 | Date | File | Purpose | Upstream PR (if any) |
 |---|---|---|---|
 | 2026-09-08 | `Porta.Pty.Native/porta_pty.c` | Mark the parent PTY master `FD_CLOEXEC` before releasing FingerTrap's process-wide Darwin spawn gate; fail closed and reap the child if marking fails (#175, ADR-0030). | None |
+| 2026-10-20 | `Porta.Pty/{EnvironmentMode,PtyOptions,PtyProvider}.cs`, Mac/Linux providers and native declarations, Windows provider, `Porta.Pty.Native/porta_pty.c` | Explicit replacement environments, immutable option snapshots, distinct `pty_spawn_replace` ABI with execve/error reporting, Windows empty block and absolute executable handling (S3, ADR-0036). | None |
 
 The `Porta.Pty.csproj` here has been modified relative to upstream to drop
 NuGet packaging metadata and to invoke the C-shim CMake build as part of

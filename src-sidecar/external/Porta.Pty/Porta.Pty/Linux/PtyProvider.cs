@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 namespace Porta.Pty.Linux
@@ -26,7 +26,7 @@ namespace Porta.Pty.Linux
 
             // Convert environment dictionary to "KEY=VALUE" string array for native code
             string?[]? envp = null;
-            if (options.Environment != null && options.Environment.Count > 0)
+            if (options.EnvironmentMode == EnvironmentMode.Replace || options.Environment.Count > 0)
             {
                 envp = options.Environment
                     .Select(kvp => $"{kvp.Key}={kvp.Value}")
@@ -64,13 +64,18 @@ namespace Porta.Pty.Linux
     
             // Use native shim to spawn process - this avoids W^X issues
             // by performing fork+exec entirely in native code
-            var result = pty_spawn(
-                options.App,
-                terminalArgs,
-                envp,
-                options.Cwd,
-                ref term,
-                ref winSize);
+            PtySpawnResult result;
+            try
+            {
+                result = options.EnvironmentMode == EnvironmentMode.Replace
+                    ? pty_spawn_replace(options.App, terminalArgs, envp, options.Cwd, ref term, ref winSize)
+                    : pty_spawn(options.App, terminalArgs, envp, options.Cwd, ref term, ref winSize);
+            }
+            catch (EntryPointNotFoundException exception) when (options.EnvironmentMode == EnvironmentMode.Replace)
+            {
+                throw new InvalidOperationException(
+                    "The native PTY companion lacks replacement support; rebuild/install matching sidecar and native library.", exception);
+            }
 
             if (result.Pid == -1)
             {

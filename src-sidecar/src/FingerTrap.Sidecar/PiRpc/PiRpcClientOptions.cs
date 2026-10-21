@@ -1,3 +1,5 @@
+using FingerTrap.Sidecar.Processes;
+
 namespace FingerTrap.Sidecar.PiRpc;
 
 /// <summary>
@@ -28,14 +30,18 @@ internal sealed record PiRpcClientOptions
 
     public string? WorkingDirectory { get; init; }
 
+    /// <summary>Replacement clears inheritance, even when the supplied map is empty.</summary>
+    public ChildEnvironmentMode EnvironmentMode { get; init; } = ChildEnvironmentMode.Inherit;
+
     /// <summary>
-    /// Additive overrides applied on top of the inherited process
+    /// In inherited mode, additive overrides applied on top of the inherited process
     /// environment. The child's environment is exactly
     /// <em>inherited + these overrides</em> and nothing else:
     /// <see cref="PiRpcClient"/> takes no credential dependency and never
     /// injects variables of its own — an invariant the conformance suite
-    /// pins. Inheritance is deliberate: pi needs the operator's PATH,
+    /// pins. Inheritance is the compatibility default: user-managed pi needs the operator's PATH,
     /// HOME, and provider keys to behave like an interactive session.
+    /// Replacement mode uses only this map. Empty values are literal values.
     /// </summary>
     public IReadOnlyDictionary<string, string>? EnvironmentOverrides { get; init; }
 

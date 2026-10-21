@@ -1,0 +1,716 @@
+{
+  "schema_version": 1,
+  "observed_on": "2026-10-20",
+  "purpose": "Inventory, not a source import or activation allowlist. Counts include tracked blobs only; no working-tree or private issue content is copied.",
+  "fingertrap_base": "8ffeae809f7b4579d6b4f006c3f6e8414df60620",
+  "source": {
+    "repo": "psmfd/pi_config",
+    "branch": "dev",
+    "commit": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+    "tree": "e661ede8f85e561b6a248f282389502edec83c53",
+    "tracked_files": 944
+  },
+  "runtime": {
+    "current": {
+      "repo": "psmfd/pi",
+      "tag": "v0.85.1-psmfd.1",
+      "commit": "e7d09c9dc5fca409f46a5476669e3c0404054d69"
+    },
+    "candidate": {
+      "repo": "psmfd/pi",
+      "tag": "v0.87.1-psmfd.1",
+      "commit": "42429b94e4aca33fdbb8d094de29758b36411ba1",
+      "qualified": false
+    }
+  },
+  "workflow": {
+    "repo": "psmfd/pi-workflow",
+    "commit": "fd78b8e89a0ce571d72a22fe0204c334019f1f3e",
+    "disposition": "retain-separate-owner"
+  },
+  "components": [
+    {
+      "path": ".dockerignore",
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "9dea0fcc835c5bef4d4d63cf7265e6b00eca4460",
+      "tracked_files": 1,
+      "disposition": "replace-or-retire-distribution-infrastructure"
+    },
+    {
+      "path": ".github",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "d4647e032ba88561dd2ded32b109ebef17dff0d2",
+      "tracked_files": 13,
+      "disposition": "replace-or-retire-distribution-infrastructure"
+    },
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "717731296e67432a785a7525667fb45d06e31897",
+      "tracked_files": 1,
+      "disposition": "replace-or-retire-distribution-infrastructure"
+    },
+    {
+      "path": ".markdownlint-cli2.yaml",
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "f1d8dedc7209829e03b0b2aaa279176243e1d75e",
+      "tracked_files": 1,
+      "disposition": "select-tests-tools-and-dependencies"
+    },
+    {
+      "path": ".pi",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "e4888c221cbbf92269ff226bf60368421fc101cb",
+      "tracked_files": 1,
+      "disposition": "exclude-from-runtime-import"
+    },
+    {
+      "path": ".review",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "1e10c91c3e6d0c95d77bc511d6e4adaeaa3d1b66",
+      "tracked_files": 1,
+      "disposition": "exclude-from-runtime-import"
+    },
+    {
+      "path": "CODEOWNERS",
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "0b1652c136bdce601f98df129c653b5b522c7823",
+      "tracked_files": 1,
+      "disposition": "replace-or-retire-distribution-infrastructure"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "30bde73114ebfb6661dad88811a2e2221b747577",
+      "tracked_files": 1,
+      "disposition": "preserve-notice"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "fc5ba4b51b8e11936f6ce6329f9b2b28c877c019",
+      "tracked_files": 1,
+      "disposition": "replace-or-retire-distribution-infrastructure"
+    },
+    {
+      "path": "adrs",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "f6050717acb08fca139fa855eae2ff337520f1ff",
+      "tracked_files": 163,
+      "disposition": "reference-only-select-public-contracts"
+    },
+    {
+      "path": "docs",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "570796b8f402485a03de5de1f8f204c0c63e24ee",
+      "tracked_files": 8,
+      "disposition": "reference-only-select-public-contracts"
+    },
+    {
+      "path": "eslint.config.js",
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1c4171bab438adfaad4514354b94aecf450413ee",
+      "tracked_files": 1,
+      "disposition": "select-tests-tools-and-dependencies"
+    },
+    {
+      "path": "hooks",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "1394f66ed39b407df65eaf8e784f1e674caaa965",
+      "tracked_files": 3,
+      "disposition": "select-tests-tools-and-dependencies"
+    },
+    {
+      "path": "install-expertise.sh",
+      "mode": "100755",
+      "kind": "blob",
+      "oid": "c9ed04ccae389d9b8b8724235a0287cf706c3825",
+      "tracked_files": 1,
+      "disposition": "replace-or-retire-distribution-infrastructure"
+    },
+    {
+      "path": "install.sh",
+      "mode": "100755",
+      "kind": "blob",
+      "oid": "e844c6fcd679d22cbcf1be257518d44fdca33764",
+      "tracked_files": 1,
+      "disposition": "replace-or-retire-distribution-infrastructure"
+    },
+    {
+      "path": "mirror",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "8e42a2fa6ad391d6f6218fea2d32629640db2357",
+      "tracked_files": 16,
+      "disposition": "replace-or-retire-distribution-infrastructure"
+    },
+    {
+      "path": "notes",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "0481790718850f7e1118ef49ebd7f396beb1c05e",
+      "tracked_files": 26,
+      "disposition": "reference-only-select-public-contracts"
+    },
+    {
+      "path": "scripts",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "86a5a4fd4618d9b8be1bcda649cd9d88a6672912",
+      "tracked_files": 101,
+      "disposition": "select-tests-tools-and-dependencies"
+    },
+    {
+      "path": "security",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "d0667b010a54ee04e30bfa1282ee6b84ef450cc9",
+      "tracked_files": 1,
+      "disposition": "reference-only-select-public-contracts"
+    },
+    {
+      "path": "setup.local.env.example",
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "81e51e1ce141b6ca07a675a13f6f654e04bef5b7",
+      "tracked_files": 1,
+      "disposition": "exclude-from-runtime-import"
+    },
+    {
+      "path": "setup.sh",
+      "mode": "100755",
+      "kind": "blob",
+      "oid": "7514117d58c3d3091eb31d84251ffcd8c65da870",
+      "tracked_files": 1,
+      "disposition": "replace-or-retire-distribution-infrastructure"
+    },
+    {
+      "path": "tests",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "e2ea8c8f0a9925998e191af49533472cb8e6961f",
+      "tracked_files": 5,
+      "disposition": "select-tests-tools-and-dependencies"
+    },
+    {
+      "path": "update.sh",
+      "mode": "100755",
+      "kind": "blob",
+      "oid": "de41886ce709d15b73193f7eb9f946305ff5eb59",
+      "tracked_files": 1,
+      "disposition": "replace-or-retire-distribution-infrastructure"
+    },
+    {
+      "path": "agent/AGENTS.md",
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "4b54d0fd9d48c9e88b57e870bfcd5fe118133a48",
+      "tracked_files": 1,
+      "disposition": "curate-defaults"
+    },
+    {
+      "path": "agent/agents",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "272d8f08442325f0209f2f75851d3ecb93d52c90",
+      "tracked_files": 21,
+      "disposition": "curate-defaults"
+    },
+    {
+      "path": "agent/models.example.json",
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "c2f25db140730d648b0fc828f263fad8cd45b659",
+      "tracked_files": 1,
+      "disposition": "curate-defaults"
+    },
+    {
+      "path": "agent/npm",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "96233b34ccba706a9f89dca87a9282a3cd836e0a",
+      "tracked_files": 1,
+      "disposition": "select-tests-tools-and-dependencies"
+    },
+    {
+      "path": "agent/prompts",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "affc9d94d10ba79f8c62f6c64cfaaf38bb6d2e9c",
+      "tracked_files": 8,
+      "disposition": "curate-defaults"
+    },
+    {
+      "path": "agent/rules",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "eec88e7f9cbf6bf20aed009d4cd38896cf9033d7",
+      "tracked_files": 26,
+      "disposition": "curate-defaults"
+    },
+    {
+      "path": "agent/settings.example.json",
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "1f69b58b39aeceb4edc07aef1dbff8df0f76a77e",
+      "tracked_files": 1,
+      "disposition": "curate-defaults"
+    },
+    {
+      "path": "agent/skills",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "76dd3b679d8ef8274de46db90a0e032a75d53347",
+      "tracked_files": 68,
+      "disposition": "curate-defaults"
+    },
+    {
+      "path": "agent/vendor",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "1aa4ead2653ec106e56fba3ff8076af4feaf127a",
+      "tracked_files": 31,
+      "disposition": "select-tests-tools-and-dependencies"
+    },
+    {
+      "path": "agent/extensions/README.md",
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6fe3c791ca2a99830f1b086fa9124507466f14ca",
+      "tracked_files": 1,
+      "disposition": "replace-package-docs"
+    },
+    {
+      "path": "agent/extensions/artifact-handoff",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "1b5f86366cd3f3de829cacde4f19457895a05a25",
+      "tracked_files": 4,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/auto-router",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "39115f0871cd981649c0a48c04c65705ff4230a9",
+      "tracked_files": 28,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/bash-confinement",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "f01abed15b2fa29ddf9f820b92b5ab4cda86f489",
+      "tracked_files": 4,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/bash-destructive-guard",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "87d72dc3815c32917b1dc1a55c6e01135c943ae5",
+      "tracked_files": 12,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/cache-meter",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "92a7da5ad01b8f30926e951a52444e9b84485597",
+      "tracked_files": 8,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/compaction-optimizer",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "4613518a6bff98eecb17c7062b36694a212cad55",
+      "tracked_files": 25,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/context-manager",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "d136315d61e4655245390598213b00d5fa206809",
+      "tracked_files": 10,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/expertise-client",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "4efaa0b4e329cb08177157630270ae1df1d190f9",
+      "tracked_files": 15,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/expertise-fanout-gate",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "de1542db2a741e5bbb0e6d5282529118d9046e9e",
+      "tracked_files": 8,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/expertise-indexer",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "717040aef6a8d3545922e88df39b35b7d9afb3d4",
+      "tracked_files": 17,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/expertise-mutation-boundary",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "1f8cb363b02881edc509c875717480026892c4bd",
+      "tracked_files": 3,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/gh-identity-guard",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "e471b28156ff327981d9fa56303a5898b83a4994",
+      "tracked_files": 16,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/git-read",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "9f2141b5b31c18f70530380ef7473b6005a43e65",
+      "tracked_files": 4,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/github-read",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "cc9d9043c129c69c4f70a7a1925aaf06a1841963",
+      "tracked_files": 6,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/hashline-edit",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "deaa74e5a04fd1e0078257cb9cd5b851883d397d",
+      "tracked_files": 51,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/indexing",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "a0af376c376aa4aae36c416b79e2cbfa20bf3fa2",
+      "tracked_files": 20,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/package-agent-broker",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "90ba0878a7442019a17918534dd8bba8dedb72d1",
+      "tracked_files": 42,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/package.json",
+      "mode": "100644",
+      "kind": "blob",
+      "oid": "6b2e76d5aa10dc9b41912c26c751536ba89f639f",
+      "tracked_files": 1,
+      "disposition": "replace-package-docs"
+    },
+    {
+      "path": "agent/extensions/payload-tuner",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "eaac515e104dfe4ab23bdcb1c615004b36d85093",
+      "tracked_files": 12,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/plain-english",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "15ff72ad428f10052d0b9fcbb2695e6f3c56885f",
+      "tracked_files": 7,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/prefill-meter",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "2d41d70e863079924fa9092b653a4ac11094badf",
+      "tracked_files": 8,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/repo-dash",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "5176e2f47d7459877b28fcd61ff8b5d86275687f",
+      "tracked_files": 15,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/secrets-guard",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "15120c6de4cf8f33042a20398f484ea4ba306470",
+      "tracked_files": 5,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/shared",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "4e817cb9877f71dbb5aa6f3ccf7a8ed780cb6f99",
+      "tracked_files": 62,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/subagent",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "ef8529849fae09566f63aa4ce318a48bb2d60bad",
+      "tracked_files": 20,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/token-meter",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "6bdfe10f89d0f4b00aa17c1dfc0731b6e94a734b",
+      "tracked_files": 11,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/web-fetch",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "58e58c38a066ecdb22688462cea79bc0f26ebbf6",
+      "tracked_files": 5,
+      "disposition": "curate-runtime"
+    },
+    {
+      "path": "agent/extensions/worktree",
+      "mode": "040000",
+      "kind": "tree",
+      "oid": "4906247e769d41de2c6bc961c7e981113b297e1d",
+      "tracked_files": 16,
+      "disposition": "curate-runtime"
+    }
+  ],
+  "mirrors": [
+    {
+      "repo": "psmfd/pi-artifact-handoff",
+      "commit": "f3fbdb9d225ce79d3f5f64e7a05f1f36a7843c5e",
+      "tree": "08a95ed94de6773e52861d91134998672f6bee78",
+      "disposition": "transition-publishing-or-retire",
+      "successor": "RETIRE",
+      "provenance_blob": "6d03d74907dd16e11e16334da4ab35931919d39d",
+      "source_repo": "psmfd/pi_config",
+      "source_commit": "ed10bf6c18db736215565d32516f255fa3a2a58c",
+      "package_blob": "83014e23437884f2a169fcf42a366ce27aabc04f"
+    },
+    {
+      "repo": "psmfd/pi-auto-router",
+      "commit": "070de5cf1e8779d8bd0cbdb68e9c8ce774ff420d",
+      "tree": "56da7ec0a772f745a9f4a13390b42c69944fc102",
+      "disposition": "transition-publishing-or-retire",
+      "successor": "RETIRE",
+      "provenance_blob": "18aa1ab04ae11bafd84000004ab10ea514d75f5b",
+      "source_repo": "psmfd/pi_config",
+      "source_commit": "9b6e7331e026bcf58c0220cb8e69c749cb2b7ee8",
+      "package_blob": "677a35ad078a3dd964e67f8fcdf19ecf67a95d04"
+    },
+    {
+      "repo": "psmfd/pi-bash-destructive-guard",
+      "commit": "970f45bd510b7a2ef5c70352ff1cf9981f2ab9ff",
+      "tree": "6fc75633b1373ea5c51099541625797ee113f905",
+      "disposition": "transition-publishing-or-retire",
+      "successor": "RETIRE",
+      "provenance_blob": "9e1f206b2c1639cf4238e54535df455d5761a397",
+      "source_repo": "psmfd/pi_config",
+      "source_commit": "091d90e81a46e8053dcc9b69735c06253988855e",
+      "package_blob": "279122da69c3d94722eb6cef750f4cab4965a94b"
+    },
+    {
+      "repo": "psmfd/pi-cache-meter",
+      "commit": "36b522c185de42ec02fb0a259eb466212c8ee0b7",
+      "tree": "1003eeed613ed7a187901b07b3825641d0cf0e9b",
+      "disposition": "transition-publishing-or-retire",
+      "successor": "RETIRE",
+      "provenance_blob": "9e1f206b2c1639cf4238e54535df455d5761a397",
+      "source_repo": "psmfd/pi_config",
+      "source_commit": "091d90e81a46e8053dcc9b69735c06253988855e",
+      "package_blob": "8d6722259cce4fa526c4f2befaf159556296cbba"
+    },
+    {
+      "repo": "psmfd/pi-compaction-optimizer",
+      "commit": "d52e4646f16dfe7029690f998dbf0aff361c0a44",
+      "tree": "53a61bcd5129d495db3f81b06a03a09e779da27a",
+      "disposition": "transition-publishing-or-retire",
+      "successor": "RETIRE",
+      "provenance_blob": "67ef533c7a52933009129f9a998dcd451c6af1e6",
+      "source_repo": "psmfd/pi_config",
+      "source_commit": "cea510a2dd65c3f6cadc65a49986feccd8a1ef6b",
+      "package_blob": "33b44b173f8b92b64e5aba012859c49a5fbd7c2b"
+    },
+    {
+      "repo": "psmfd/pi-config",
+      "commit": "3f00743016efe006598a594af229f122f2d054a7",
+      "tree": "e4645f07682ebe526a2095a7d29fe9d42a9380f6",
+      "disposition": "transition-publishing-or-retire",
+      "successor": "RETIRE"
+    },
+    {
+      "repo": "psmfd/pi-context-manager",
+      "commit": "86fb2d33d7e85f37d695a1909149ffcc427aee49",
+      "tree": "2a9e8e2e95db89c861911668a33a23db0ad0d7d2",
+      "disposition": "transition-publishing-or-retire",
+      "successor": "RETIRE",
+      "provenance_blob": "9e1f206b2c1639cf4238e54535df455d5761a397",
+      "source_repo": "psmfd/pi_config",
+      "source_commit": "091d90e81a46e8053dcc9b69735c06253988855e",
+      "package_blob": "32dd67e2552a73a609caedcc220a581179b9d405"
+    },
+    {
+      "repo": "psmfd/pi-expertise-client",
+      "commit": "1b038889f5144c1734a3e47a9d1c5391b0bdf737",
+      "tree": "a34bb7198cc8b21b01e7f5fe26e1b8694df291c3",
+      "disposition": "transition-publishing-or-retire",
+      "successor": "RETIRE",
+      "provenance_blob": "76efe30878bd96a399b8a367395790251e68806a",
+      "source_repo": "psmfd/pi_config",
+      "source_commit": "5e5c34231158df357baad1dca6d938172a7a7fa4",
+      "package_blob": "547c4b77c74c28b803ff3000ab0f8cd3eede3fbc"
+    },
+    {
+      "repo": "psmfd/pi-gh-identity-guard",
+      "commit": "3d16ce9b3fbe47106c10fd52d60cc7545b99e3e3",
+      "tree": "cf8e7a73eefed2ca7e77599370d95128e82fd661",
+      "disposition": "transition-publishing-or-retire",
+      "successor": "RETIRE",
+      "provenance_blob": "9e1f206b2c1639cf4238e54535df455d5761a397",
+      "source_repo": "psmfd/pi_config",
+      "source_commit": "091d90e81a46e8053dcc9b69735c06253988855e",
+      "package_blob": "de49286a5a167cf7d79367aa302b744469346fdc"
+    },
+    {
+      "repo": "psmfd/pi-indexing",
+      "commit": "24edf63b1005c09e0f569c91df2cbef208e9f8cd",
+      "tree": "128f3dd2d074910e747d4ace8c58301ae9fdd7eb",
+      "disposition": "transition-publishing-or-retire",
+      "successor": "RETIRE",
+      "provenance_blob": "6d03d74907dd16e11e16334da4ab35931919d39d",
+      "source_repo": "psmfd/pi_config",
+      "source_commit": "ed10bf6c18db736215565d32516f255fa3a2a58c",
+      "package_blob": "d2d839da092ad99494097bc53cb8a9668d7ff7f4"
+    },
+    {
+      "repo": "psmfd/pi-secrets-guard",
+      "commit": "e0180491e93edf155875239b40aab08300c88fcf",
+      "tree": "1e005f9b1189315b3a4bf7d29025031c516bb11e",
+      "disposition": "transition-publishing-or-retire",
+      "successor": "RETIRE",
+      "provenance_blob": "9e1f206b2c1639cf4238e54535df455d5761a397",
+      "source_repo": "psmfd/pi_config",
+      "source_commit": "091d90e81a46e8053dcc9b69735c06253988855e",
+      "package_blob": "de837f091e4650f7c62650c2daad006bef30ffa3"
+    },
+    {
+      "repo": "psmfd/pi-token-meter",
+      "commit": "a14dc0720659f9b9c6abccad620f8986590a6bd8",
+      "tree": "66b49e890afaa89424c8037055e4bb332dbeaba6",
+      "disposition": "transition-publishing-or-retire",
+      "successor": "RETIRE",
+      "provenance_blob": "9e1f206b2c1639cf4238e54535df455d5761a397",
+      "source_repo": "psmfd/pi_config",
+      "source_commit": "091d90e81a46e8053dcc9b69735c06253988855e",
+      "package_blob": "13153ad0c5b727d5671c1237cdd2469a0ebb1b63"
+    },
+    {
+      "repo": "psmfd/pi-web-fetch",
+      "commit": "510746b8a9e60abafd1f14f888166bc46b7417e7",
+      "tree": "ed1aaf389c10c08dd304a798f7e675d2da82e250",
+      "disposition": "transition-publishing-or-retire",
+      "successor": "RETIRE",
+      "provenance_blob": "6d03d74907dd16e11e16334da4ab35931919d39d",
+      "source_repo": "psmfd/pi_config",
+      "source_commit": "ed10bf6c18db736215565d32516f255fa3a2a58c",
+      "package_blob": "edcfea83cbfefd10b3b5463c668f9b7a3d78e7b0"
+    }
+  ],
+  "pending_pull_requests": [
+    {
+      "repo": "psmfd/pi_config",
+      "pull_request": 1170,
+      "base": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+      "head": "090d3eea4af3f59bdd768e73bcb2ebdae25468a7",
+      "draft": true,
+      "changed_files": 16,
+      "disposition": "split-fix-from-version-qualification"
+    },
+    {
+      "repo": "psmfd/pi_config",
+      "pull_request": 1172,
+      "base": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+      "head": "ea85cda4a23b2425eee04b5eaf0fd55558b1ead4",
+      "draft": false,
+      "changed_files": 6,
+      "disposition": "duplicate-pin-update-review-with-1170"
+    },
+    {
+      "repo": "psmfd/pi_config",
+      "pull_request": 1174,
+      "base": "9862f35a50f5f0d0770d90665cac1a4b8d3f0947",
+      "head": "0b2170cf1f74ce395b113da981d38412f5bdc425",
+      "draft": true,
+      "changed_files": 93,
+      "disposition": "diagnostic-evidence-not-production"
+    }
+  ],
+  "local_evidence": [
+    {
+      "repo": "psmfd/pi_config",
+      "path": "notes/session-handoff.md",
+      "state": "tracked-working-tree-change",
+      "disposition": "preserve-privately-do-not-import"
+    },
+    {
+      "repo": "psmfd/FingerTrap",
+      "path": "LEGACY_pi_config_3579dc1.patch",
+      "sha256": "4c8e9c89497aed6682abe1811315485c40dc4d98550644b554c723433f4b86b1",
+      "source_issue": 280,
+      "disposition": "reconcile-against-current-subagent-before-port"
+    },
+    {
+      "repo": "psmfd/FingerTrap",
+      "path": "NEXT_SESSION_pi-fold-reassessment.md",
+      "disposition": "local-handoff-not-public-import"
+    },
+    {
+      "repo": "psmfd/FingerTrap",
+      "path": ".local-testing/",
+      "disposition": "local-evidence-not-public-import"
+    }
+  ]
+}
