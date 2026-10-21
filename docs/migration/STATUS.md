@@ -12,7 +12,7 @@ normal dev-to-main release promotion; closing the duplicate does not remediate
 main. No audit/protection is suppressed. Read the
 [exact CI snapshot](evidence/pr-merge-20261021/final-ci-readback.json) and
 [#214 disposition](https://github.com/psmfd/FingerTrap/pull/214#issuecomment-6328122599).
-Finish protected verification of this tracking checkpoint if it is still open,
+Finish protected verification of [#215](https://github.com/psmfd/FingerTrap/pull/215) if it is still open,
 then continue with the exact release/pin decision below.
 
 **S3-M2 — golden handshake ordering follow-up.** #212 merged at `9d8b892`;

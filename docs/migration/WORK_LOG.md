@@ -1487,3 +1487,9 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   Main remains older until normal release promotion. Next: validate these
   tracking files, checkpoint and complete protected CI, then leave #210's exact
   runtime release/pin and example dependency disposition as the concrete gate.
+- S3-M3 checkpoint bb326a1 is committed, secret-scanned and remotely backed up
+  in draft #215. Markdown, formatting, JSON, all 38 direct local links, whitespace
+  and repository structural checks pass. Enroll only owned #215 in the existing
+  Tart policy, keep the immutable worker and restricted runner group, mark ready
+  before the full CI push, then run all required checks and merge normally.
+  This documentation slice introduces no production or test behavior change.
