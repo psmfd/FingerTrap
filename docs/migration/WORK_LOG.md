@@ -547,3 +547,48 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   Runtime activation remains disabled. #208 retains later main-promotion check
   mapping and any unattended-controller decision. Enroll future trusted PRs
   before source builds as documented; keep the immutable worker branch.
+
+## 2026-10-21 — S3-G discovery-resolution planning started
+
+- **Request:** present an implementation plan for S3's pinned-Pi discovery
+  blocker. The earlier HTML review preference and durable-tracking requirement
+  remain applicable. This request authorizes planning; the new fork change is
+  proposed, not implemented or approved.
+- **Checkpoint:** `44b37cad0f8d4cbb776a219975483a39bc4b7fb8` is committed and
+  pushed on `docs/runtime-migration-handoff`; merged source remains `9bfc092`.
+- **Evidence:** refreshed #201/#202 and exact-source startup files for baseline
+  `e7d09c9` and release `v0.87.1-psmfd.1` / `42429b9`. Both source revisions
+  invoke migrations before final project trust; bootstrap settings also precede
+  normal argument parsing. The newer release has not been executable-qualified.
+  The retained baseline probe already demonstrates the project rename.
+- **Intended change:** a standalone HTML proposal for a versioned, opt-in
+  managed startup policy; explicit artifact capability; retained executable/RPC;
+  real PTY/RPC regression evidence; separate candidate and promotion gates.
+- **Validation planned:** source/link/anchor checks, JavaScript syntax, desktop
+  and mobile rendering, Markdown/structural checks, and scoped documentation
+  commit/push with CI skipped. No runtime source or Pi checkout changes.
+- **Next:** finish and validate the proposal, then present it for approval.
+
+## 2026-10-21 — S3-G proposal ready for review
+
+- **Deliverable:** [HTML plan](s3-discovery-resolution-plan.html), five proposed
+  checkpoints covering a managed Pi startup policy, descriptor v2 capability,
+  shared host integration, actual artifact qualification and a separate pin
+  decision. The proposed CLI flag does not exist yet. Executable/RPC remains
+  the recommended backend for this slice.
+- **Approval boundary:** approval would cover the focused fork/host changes,
+  companion commits/draft PRs and unpublished qualification artifacts, plus
+  preparation of the promotion report. Exact production pin promotion and
+  managed activation remain separate gates under ADR-0034/0036.
+- **Validation:** 41 links, 13 unique IDs and local targets passed; no remote
+  assets. JavaScript syntax, 390-pixel mobile width, desktop rendering and
+  section navigation passed. Markdown lint and repository structural checks
+  passed with zero errors/warnings; whitespace check passed. No runtime code
+  changed and no implementation acceptance result is claimed.
+- **Checkpoint:** save the three documentation files on the existing handoff
+  branch with CI skipped; verify remote identity before reporting backup. The
+  exact resulting commit is available in git history and the session handoff.
+- **Next:** maintainer review. After approval, record authorization and start
+  S3-G1: linked Pi regression tracker, policy ADR, and baseline-failing candidate
+  qualification fixtures. Preserve unrelated local files and existing runner
+  enrollment requirements.
