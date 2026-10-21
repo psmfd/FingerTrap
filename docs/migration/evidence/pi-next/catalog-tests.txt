@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: builds revision scoped storage keys
+ok 1 - builds revision scoped storage keys
+  ---
+  duration_ms: 0.480375
+  type: 'test'
+  ...
+# Subtest: orders Pi versions with semver precedence
+ok 2 - orders Pi versions with semver precedence
+  ---
+  duration_ms: 0.362
+  type: 'test'
+  ...
+# Subtest: selects the newest catalog a Pi version supports
+ok 3 - selects the newest catalog a Pi version supports
+  ---
+  duration_ms: 0.15425
+  type: 'test'
+  ...
+# Subtest: redirects Pi user agents to an explicit catalog version
+ok 4 - redirects Pi user agents to an explicit catalog version
+  ---
+  duration_ms: 0.525
+  type: 'test'
+  ...
+# Subtest: serves explicit and unversioned catalog requests without redirecting
+ok 5 - serves explicit and unversioned catalog requests without redirecting
+  ---
+  duration_ms: 0.109625
+  type: 'test'
+  ...
+# Subtest: rejects invalid catalog request parameters
+ok 6 - rejects invalid catalog request parameters
+  ---
+  duration_ms: 0.110708
+  type: 'test'
+  ...
+# Subtest: validates stored indexes and drops publication metadata
+ok 7 - validates stored indexes and drops publication metadata
+  ---
+  duration_ms: 0.200042
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 64.173292

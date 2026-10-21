@@ -1,0 +1,11 @@
+Applied patch to 'packages/ai/src/utils/overflow.ts' cleanly.
+Falling back to direct application...
+Applied patch to 'packages/coding-agent/examples/extensions/sandbox/package-lock.json' cleanly.
+Applied patch to 'packages/coding-agent/src/core/package-manager.ts' cleanly.
+Applied patch to 'packages/coding-agent/src/utils/git.ts' cleanly.
+Applied patch to 'packages/coding-agent/test/git-ssh-url.test.ts' cleanly.
+Applied patch to 'packages/coding-agent/test/git-update.test.ts' cleanly.
+Applied patch to 'packages/coding-agent/test/package-manager.test.ts' with conflicts.
+Applied patch to 'packages/tui/src/latex.ts' cleanly.
+Falling back to direct application...
+U packages/coding-agent/test/package-manager.test.ts

@@ -1,0 +1,7 @@
+{"ctl":"spawn","args":["--mode","rpc","--provider","canned","--model","canned-model","--extension","/Users/pdavis/projects/_personal/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Tests/bin/Release/net10.0/Goldens/fixtures/session-start-dialog.ts"],"cwd":"/tmp/ft-goldens-625d98d116564d219d817b764e631a5f/cwd-1"}
+{"dir":"in","line":"{\"type\":\"hello\",\"piVersion\":\"1.3.0\",\"protocol\":1,\"capabilities\":[\"extension_ui\",\"queue_modes\",\"fork\",\"get_commands\",\"list_sessions\",\"clear_queue\"]}"}
+{"dir":"in","line":"{\"type\":\"extension_ui_request\",\"id\":\"43f2d6fd-c65d-405c-9747-dd33b65402ad\",\"method\":\"confirm\",\"title\":\"golden-spawn-confirm\",\"message\":\"Answerable before the first command?\"}"}
+{"dir":"out","line":"{\"id\":\"43f2d6fd-c65d-405c-9747-dd33b65402ad\",\"type\":\"extension_ui_response\",\"confirmed\":true}"}
+{"dir":"in","line":"{\"type\":\"extension_ui_request\",\"id\":\"3df798c1-5f7a-4f78-8226-761f7ab008cc\",\"method\":\"notify\",\"message\":\"golden-spawn-confirm-resolved:true\",\"notifyType\":\"info\"}"}
+{"ctl":"stdin_eof"}
+{"ctl":"exit","code":0}

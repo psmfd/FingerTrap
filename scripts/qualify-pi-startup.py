@@ -147,6 +147,7 @@ def rejection_cases(binary, root):
     args = fixture.arguments(binary)
     before = snapshot(root)
     changes = [["install", "npm:synthetic"], ["config"], ["auth", "login"],
+        ["mcp", "list"], ["mcp", "login", "synthetic"], ["--extension", "builtin:mcp"],
         ["--resume", "synthetic"], ["--session", "/synthetic/missing.jsonl"],
         ["--startup-policy", "managed-v1"], ["--extension", "npm:synthetic"], ["--provider", "synthetic"]]
     results = []
@@ -155,7 +156,7 @@ def rejection_cases(binary, root):
             capture_output=True, timeout=15)
         checks = {"boundedFailure": child.returncode != 0,
             "noStartupWrites": snapshot(root) == before}
-        results.append({"case": "reject-" + extra[0], "transport": "direct-cli",
+        results.append({"case": "reject-" + extra[0], "arguments": extra, "transport": "direct-cli",
             "checks": checks, "passed": all(checks.values())})
     unknown = args.copy()
     unknown[2] = "managed-v999"

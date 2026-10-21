@@ -1,0 +1,90 @@
+{
+  "sourceRevision": "28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2",
+  "binarySha256": "901a10f67a06f04310f4d064e95f7e3e60ec523d253366731e077a239237407f",
+  "qualificationHostSha256": "80beb8542052fe1246528d2a9a0617e2b3760c81c39163f228b0c128d97af3da",
+  "nativeCompanionSha256": "4644ce3598bf59a4f1999e4e42b1312586ce9a00a7fa33059217308707f1b4a0",
+  "descriptorSha256": "6234636945700e4f24dfe8294f46814daa5e03728a6b7cc089ad1d3394c18f14",
+  "profiles": [
+    {
+      "profile": "alpha",
+      "checks": {
+        "bothTransportsStarted": true,
+        "cancelAndState": true,
+        "rpc-projectUnchanged": true,
+        "rpc-homeUnchanged": true,
+        "rpc-profileInputsUnchanged": true,
+        "rpc-noAmbientExtension": true,
+        "rpc-noPackageOrHelperCommand": true,
+        "rpc-noMcpProcess": true,
+        "rpc-oneExtensionPerGeneration": true,
+        "rpc-actualCwd": true,
+        "rpc-literalPrompt": true,
+        "rpc-profileRoots": true,
+        "rpc-noParentEnvironment": true,
+        "pty-projectUnchanged": true,
+        "pty-homeUnchanged": true,
+        "pty-profileInputsUnchanged": true,
+        "pty-noAmbientExtension": true,
+        "pty-noPackageOrHelperCommand": true,
+        "pty-noMcpProcess": true,
+        "pty-oneExtensionPerGeneration": true,
+        "pty-actualCwd": true,
+        "pty-literalPrompt": true,
+        "pty-profileRoots": true,
+        "pty-noParentEnvironment": true,
+        "reject-override": true,
+        "reject-resume": true,
+        "ptySurvivesRpcShutdown": true,
+        "allChildrenReaped": true,
+        "hostCleanExit": true
+      },
+      "passed": true,
+      "diagnostics": [
+        "fingertrap-sidecar: starting\n",
+        "fingertrap-sidecar: listening on stdio\n",
+        "fingertrap-sidecar: graceful shutdown requested\n"
+      ]
+    },
+    {
+      "profile": "beta",
+      "checks": {
+        "bothTransportsStarted": true,
+        "cancelAndState": true,
+        "rpc-projectUnchanged": true,
+        "rpc-homeUnchanged": true,
+        "rpc-profileInputsUnchanged": true,
+        "rpc-noAmbientExtension": true,
+        "rpc-noPackageOrHelperCommand": true,
+        "rpc-noMcpProcess": true,
+        "rpc-oneExtensionPerGeneration": true,
+        "rpc-actualCwd": true,
+        "rpc-literalPrompt": true,
+        "rpc-profileRoots": true,
+        "rpc-noParentEnvironment": true,
+        "pty-projectUnchanged": true,
+        "pty-homeUnchanged": true,
+        "pty-profileInputsUnchanged": true,
+        "pty-noAmbientExtension": true,
+        "pty-noPackageOrHelperCommand": true,
+        "pty-noMcpProcess": true,
+        "pty-oneExtensionPerGeneration": true,
+        "pty-actualCwd": true,
+        "pty-literalPrompt": true,
+        "pty-profileRoots": true,
+        "pty-noParentEnvironment": true,
+        "reject-override": true,
+        "reject-resume": true,
+        "ptySurvivesRpcShutdown": true,
+        "allChildrenReaped": true,
+        "hostCleanExit": true
+      },
+      "passed": true,
+      "diagnostics": [
+        "fingertrap-sidecar: starting\n",
+        "fingertrap-sidecar: listening on stdio\n",
+        "fingertrap-sidecar: graceful shutdown requested\n"
+      ]
+    }
+  ],
+  "passed": true
+}

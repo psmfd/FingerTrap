@@ -1,0 +1,10 @@
+  FingerTrap.Sidecar.Abstractions -> /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/src/FingerTrap.Sidecar.Abstractions/bin/Release/net10.0/FingerTrap.Sidecar.Abstractions.dll
+  [Porta.Pty] clang -dynamiclib -> /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/external/Porta.Pty/Porta.Pty/../Porta.Pty.Native/build/bin/libporta_pty.dylib
+  Porta.Pty -> /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/external/Porta.Pty/Porta.Pty/bin/Debug/netstandard2.0/Porta.Pty.dll
+  FingerTrap.Sidecar -> /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/src/FingerTrap.Sidecar/bin/Release/net10.0/fingertrap-sidecar.dll
+  FakePi -> /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/tests/FakePi/bin/Release/net10.0/FakePi.dll
+  FakeMcm -> /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/tests/FakeMcm/bin/Release/net10.0/FakeMcm.dll
+  FingerTrap.Sidecar.Tests -> /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Tests/bin/Release/net10.0/FingerTrap.Sidecar.Tests.dll
+  Run tests: '/Users/pdavis/projects/_personal/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Tests/bin/Release/net10.0/FingerTrap.Sidecar.Tests.dll' [net10.0|arm64]
+  Failed! - Failed: 1, Passed: 2, Skipped: 0, Total: 3, Duration: 113ms - FingerTrap.Sidecar.Tests.dll (net10.0|arm64)
+/Users/pdavis/projects/_personal/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Tests/bin/Release/net10.0/FingerTrap.Sidecar.Tests.dll : error run failed: Tests failed: '/Users/pdavis/projects/_personal/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Tests/bin/Release/net10.0/TestResults/FingerTrap.Sidecar.Tests_net10.0_arm64.log' [net10.0|arm64] [/Users/pdavis/projects/_personal/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Tests/FingerTrap.Sidecar.Tests.csproj]

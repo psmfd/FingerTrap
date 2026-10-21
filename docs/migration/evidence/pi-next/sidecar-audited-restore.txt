@@ -1,0 +1,8 @@
+  Determining projects to restore...
+  Restored /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/tests/FakeMcm/FakeMcm.csproj (in 38 ms).
+  Restored /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/tests/FakePi/FakePi.csproj (in 38 ms).
+  Restored /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/src/FingerTrap.Sidecar.Abstractions/FingerTrap.Sidecar.Abstractions.csproj (in 38 ms).
+  Restored /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/external/Porta.Pty/Porta.Pty/Porta.Pty.csproj (in 592 ms).
+  Restored /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/src/FingerTrap.Sidecar/FingerTrap.Sidecar.csproj (in 592 ms).
+  Restored /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Qualification/FingerTrap.Sidecar.Qualification.csproj (in 592 ms).
+  Restored /Users/pdavis/projects/_personal/FingerTrap/src-sidecar/tests/FingerTrap.Sidecar.Tests/FingerTrap.Sidecar.Tests.csproj (in 592 ms).

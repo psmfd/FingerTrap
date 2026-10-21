@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: OAuth pages and the callback route escape reflected HTML
+ok 1 - OAuth pages and the callback route escape reflected HTML
+  ---
+  duration_ms: 53.67925
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 84.318625

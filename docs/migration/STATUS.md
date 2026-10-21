@@ -2,6 +2,28 @@
 
 Updated: 2026-10-21 UTC, resumed after system patching; companion review in progress.
 
+Current checkpoint: Pi-next source `c7d2a827d7956fcdd8e2a300b5096f6b263dc579`
+is remotely backed up in draft Pi #83. Its exact ARM64 binary
+`64a5c7c79c821457f47be724a4cc6de6eaf601e7bde4a1d6067b5b672f97b649`
+passes direct, published-host and offline Tart startup matrices. Hosted Linux
+release-build job 119388342468 passes. These are candidate qualification results,
+not production activation. Eight new CodeQL alerts prevent a clean security
+recommendation. N2-S next: review full traces and upstream fix availability,
+retain executable false-positive proof, prepare bounded S-class fixes for real
+findings with aligned manifest/guards, then rerun affected checks. Protocol pairs,
+regression mutations and final FingerTrap CI remain outstanding. The first local
+.NET test launch failed on sandbox-denied named pipes; its unsandboxed retry passes.
+
+N2-S follow-up `28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2` is committed,
+secret-scanned and remotely backed up in Pi #83. All four real findings have
+failing-then-passing controls; full static check, full hermetic suite, actual
+release block and guard parity pass. Rebuilt binary SHA-256 is
+`901a10f67a06f04310f4d064e95f7e3e60ec523d253366731e077a239237407f`.
+Repeat direct/host/Tart and protocol qualification on these new bytes, then
+regression mutations and exact-head CI readback. Four false positives have
+retained review evidence; GitHub state readback needs reconciliation before
+claiming dismissal. Production release/pin/activation gates remain intact.
+
 ## Authorization and scope
 
 The maintainer approved the
@@ -126,7 +148,9 @@ pushed to Pi #82. All 23 policy tests and full `npm run check` pass on Node
 they are not policy regressions. Production runtime source is identical to
 `1f37eea`; the previously qualified binary retains that original source identity.
 Accounting is unchanged at 7 / 25 / 2,090. Remote allowlist and secret checks
-pass; CodeQL is running. No completed artifact qualification was repeated.
+pass; all seven remote reports now pass and alert 87 reads back fixed.
+No completed artifact qualification was repeated. Recovery documentation
+checkpoint `6f4b491` is committed, secret-scanned and remotely backed up in #209.
 
 **Pi-next N1: latest-release reconciliation and isolated port preview.**
 Selected upstream `v1.3.0` resolves to
@@ -141,6 +165,68 @@ behavior, record every conflict and recount before any candidate build.
 Never restore upstream-deleted implementations solely to preserve old patches.
 Patch retirement requires equivalent-behavior or removed-reachability evidence.
 No ceiling increase, merge, release or activation is authorized by this preview.
+
+N1 local result: capability port and three conflict resolutions pass static
+checks; 91 focused tests pass, one binary-dependent test skips before build.
+Preliminary accounting excluding proposed Chord retirement: 6 patches / 23
+paths / 2,019 lines. Node 22 reproduces the old 100,000-item overflow, while
+the unmodified 1.3.0 replacement passes exact contents/replay/adoption, 27 splice
+cases and 20,000-item middle insertion. Security ports 001/003/005/014/015 are
+applied; package-manager test conflict preserves upstream peer-dependency
+handling. Ports 016/017 target upstream-deleted experimental implementations;
+record removed reachability rather than restoring obsolete source.
+
+Root audit reports three high findings (Vite and gondolin/node-forge), with
+brace-expansion 5.0.12 and shell-quote 1.12.0 in the root lock. The separate
+sandbox lock still carried vulnerable shell-quote 1.10.0 after the old patch;
+regenerated in an independent copy to 1.12.0, also correcting root dependency
+metadata to its already-pinned manifest. The first nested audit accidentally
+resolved the parent workspace and is not sandbox evidence. Independent audit
+and runtime-reachability checks are next. Full hermetic Pi suite is running;
+no artifact build or qualification is claimed for 1.3.0 yet.
+
+N1 continuation: offline workspace build and required Rust env daemon build
+pass. Outside the sandbox, all workspaces pass except one stale pinned-git
+fixture, reproduced on unchanged upstream code; its corrected cache identity
+passes all 13 Git-update tests. Final static check passes. The retained release
+order guard fails with the old workflow and passes after updating TypeScript,
+workspace order/model-data copying and Bun 1.3.14. Preflight tests pass; the
+Linux/Bubblewrap integration lane remains outstanding. Proposed metadata retires
+016/017 (removed harness) and 019 (replacement verified), retains other patches,
+and admits pending S-class 021 for Vite 8.1.6. Both guard data sets are reconciled;
+review their exact parity and residual diff before checkpoint. Actual C count is
+6 / 23 / 2,021, with 020 at 682 lines, within the unchanged ceiling.
+
+**Next slice Pi-next N2: exact candidate qualification.** Before building the
+standalone candidate, checkpoint the reviewed source and overlay records and
+verify model-data/toolchain identities. Extend the retained synthetic fixture
+for 1.3.0's MCP config/process canary and CLI rejection. Validate the compiled
+artifact, published host, protocol pairs and regression mutations; run macOS
+jobs locally and retain hosted Windows/Linux host lanes. No release or pin
+promotion is implied. GitHub app description writes returned 403; authorized
+CLI fallback updated/read back #209/#82/#210 without changing global identity.
+
+N1 full suite is now green: coding-agent 2,737 pass / 50 skip; all other
+workspaces pass, including both durable modes and the env daemon lane. Both
+guard sets/text/manifest and runtime install-lock exclusion checks pass; no
+unexplained upstream residual remains. MCP canary control confirms ordinary
+1.3.0 CLI executes the seeded helper and the external guard detects it.
+
+N2 model-data check found source-release versus npm-package differences in
+`.manifest.json` and `openrouter.json`. The published pi-ai 1.3.0 tarball passes
+recorded SHA-512 integrity verification. Select that input to match the existing
+PSMFD release workflow, retain both input identities/difference and rerun affected
+static/build/test checks before source checkpoint or standalone compilation.
+Earlier full-suite evidence is explicitly for source-archive model data.
+
+**N2-L: Linux release-build gate.** The changed inline release block needs its
+retained Bubblewrap test. This Mac has no Linux test runtime installed. Prepare
+a PSMFD-developed, read-only qualification workflow scoped to the same-repository
+`sync/upstream-v1.3.0` draft, with the exact selected model-data digest and Node
+22. Run the retained Linux test in a hosted Ubuntu job; register/review the
+workflow in the existing allowlist. No publication, secrets, branch protection,
+or existing macOS/Windows/Linux routing changes. Validate YAML locally, then
+observe the exact candidate head's hosted result before recommending promotion.
 
 **S3-G6 implementation and qualification are complete; production promotion
 remains unapproved.** Read the

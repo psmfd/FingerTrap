@@ -135,6 +135,8 @@ class Fixture:
         ambient += json.dumps(str(root / "ambient-extension-ran")) + ', "unexpected");\n'
         for location in (project / ".pi", agent, home / ".pi/agent", root / ".pi"):
             seed(location / "extensions/ambient.mjs", ambient)
+            seed(location / "mcp.json", json.dumps({"mcpServers": {
+                "ambient": {"command": str(tools / "ft-mcp-canary"), "args": []}}}))
             seed(location / "skills/ambient/SKILL.md", "---\nname: ambient\ndescription: must not load\n---\n"+SENTINEL)
             # A pre-existing prompts directory suppresses the old migration.
             # Keep migration inputs separate from current-layout resource cases.
@@ -142,7 +144,7 @@ class Fixture:
                 seed(location / "prompts/ambient.md", SENTINEL)
             seed(location / "themes/ambient.json", "{invalid ambient theme")
         command_log = root / "commands.log"
-        for name in ("npm", "fd", "rg", "curl", "wget", "git"):
+        for name in ("npm", "fd", "rg", "curl", "wget", "git", "ft-mcp-canary"):
             # Git metadata queries are ordinary project semantics; a package
             # clone/fetch or any installer/helper invocation is a failure.
             allow = 'case "$1" in clone|fetch|pull) ;; *) exit 1 ;; esac\n' if name == "git" else ""
@@ -183,6 +185,8 @@ class Fixture:
             "profileInputsUnchanged": all(actual.get(key) == value for key, value in self.before[str(self.agent)].items()),
             "noAmbientExtension": not (self.root / "ambient-extension-ran").exists(),
             "noPackageOrHelperCommand": not (self.root / "commands.log").exists(),
+            "noMcpProcess": not (self.root / "commands.log").exists()
+                or "ft-mcp-canary" not in (self.root / "commands.log").read_text(),
             "oneExtensionPerGeneration": sum(item["kind"] == "load" for item in events) == generations,
             "actualCwd": bool(starts) and all(item["cwd"] == str(self.project) for item in starts),
             "literalPrompt": bool(starts) and all((prompt or str(self.literal)) in item["prompt"] and SENTINEL not in item["prompt"] for item in starts)}

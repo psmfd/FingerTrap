@@ -1085,3 +1085,165 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   pico3/skills implementations and replaced Chord tracking; do not restore
   obsolete files to make old patches apply. Validate replacement behavior or
   removed reachability before proposing retirement. Ceilings stay binding.
+
+## 2026-10-21 — G7 remote verification complete; N1 port and dependency review
+
+- All seven Pi `95e95f0` check reports pass, including every CodeQL language
+  analysis. Alert 87 independently reads back `fixed`; no dismissal. G7 is
+  settled as a test-only correction to the retained qualified reference.
+- FingerTrap recovery checkpoint `6f4b491` is committed, scanned and pushed
+  in #209. Scoped staged paths exclude the operator's three private untracked
+  entries. Initial raw diff evidence triggered whitespace checks on patch
+  context; retained the exact input as a JSON string instead of altering it.
+- N1 capability source port preserves new upstream provider help, theme schema
+  validation, MCP dispatch, terminal-color behavior and RPC response fields.
+  Three conflicts resolved; source static checks pass after hydrating 43 JSON
+  files from upstream's digest-verified 1.3.0 source release. Initial check on
+  the fresh checkout lacked model data and found an old theme-test API name;
+  fixed that API reference, then all static checks and 91 focused tests pass
+  (one binary test skips before build).
+- Preliminary 6 / 23 / 2,019 C accounting assumes proposed retirement of 019.
+  Node 22 probe reproduces the original upstream 100,000-item RangeError and
+  verifies replacement exact contents, replay, preparation/adoption, 27 native
+  splice comparisons and a 20,000-item middle insertion. No Chord source changed.
+- Security ports 001/003/005/014/015 applied; test conflict preserves new
+  `--legacy-peer-deps` while retaining safe git argument assertions. Static
+  check passes. 016/017 target source removed by upstream; deletion/reachability
+  evidence is required before proposed retirement, not an `--ours` restore.
+- Refreshed root audit has three high findings: Vite plus gondolin/node-forge.
+  Core brace-expansion is 5.0.12; root shell-quote is 1.12.0. Nested sandbox
+  lock is separate and still had vulnerable 1.10.0 after old patch 003. Its
+  independent copied lock refresh selects 1.12.0 with zero audit findings;
+  also reconciles already-pinned sandbox dependency metadata. First audit from
+  the workspace subdirectory selected the parent graph and is not proof for
+  that nested lock. Maintainer shell-quote advisory confirms <1.11.0 affected.
+- Full hermetic suite is running. Next: finish independent audit/reachability,
+  retain failure/pass evidence, reconcile overlay/patch metadata and actual
+  accounting, then source checkpoint and exact-artifact validation.
+
+## 2026-10-21 — N1 source validation and release-workflow reconciliation
+
+- Offline 1.3.0 workspace build passes; required Rust environment daemon
+  builds with the locked Cargo graph. First full Pi suite failed in the tool
+  sandbox on fixture sockets and pre-build exports. A fresh credential-isolated
+  run outside the sandbox passes all workspaces except one pinned-git cache
+  fixture (2,736 coding-agent cases pass, 50 skip). That fixture also fails
+  with unmodified upstream package-manager code. Corrected its cache identity
+  to include the ref; all 13 Git-update cases pass. Final static check passes.
+- Vite security override now resolves 8.1.6 after explicit npm re-resolution;
+  the first lock-only install left the old transitive version intact. Registry
+  integrity/publication age and Vite release notes were reviewed. Candidate
+  registers pending security patch 021; upstream main still has 8.0.16 and no
+  open Vite fix PR was found. Root audit now retains only gondolin/node-forge;
+  production install-lock reachability still needs recorded disposition.
+- 003 refresh independently regenerates the sandbox lock at shell-quote
+  1.12.0; isolated audit is clean. Proposed retirements 016/017 preserve upstream
+  harness removal; 019 has real Node 22 replacement-behavior proof. Manifest,
+  text allowlist and both guard data sets are reconciled; no guard logic changes.
+- Copied approved PSMFD overlays and quarantined all 13 upstream workflows.
+  Release workspace-order guard fails against the stale 0.87.1 build block.
+  Updated inline sequence/TypeScript 7/model-data copy and Bun pin to upstream's
+  1.3.14; order guard and both release-preflight tests pass. Linux/Bubblewrap
+  integration has not run and remains a release-validation gate.
+- Actual C accounting: 6 patches / 23 paths / 2,021 lines (020: 682). Ceiling
+  stays 7 / 25 / 2,200; other patches remain within their original budget.
+- GitHub app reads succeed but description mutations return 403 (integration
+  lacks write access). Authorized CLI fallback updates and independently reads
+  back #209/#82/#210; no global account switch. Evidence retained.
+- N2 intended change: extend synthetic startup qualification for MCP config
+  and helper discovery/rejection, then qualify digest-selected compiled Pi,
+  published host, twice-recorded protocol, mutations and clean Tart. Before
+  standalone build, finish source/overlay review, checkpoint and verify exact
+  model-data/toolchain identities. Production release/pin/activation stay gated.
+
+## 2026-10-21 — N1 green; N2 catches model-data input difference
+
+- Complete unsandboxed, credential-isolated suite passes after fixture repair:
+  coding-agent 2,737 passed / 50 skipped; AI 1,357 / 864; Chord 517 passed;
+  both durable modes 1,220 / 4 each; env 85 / 2; other workspaces pass. No paid
+  provider, user auth or product activation was used. This run used the exact
+  source-release model data.
+- Verified manifest/text/both guard parity, active workflow allowlist parity,
+  no unexplained residual upstream paths, 6 / 23 / 2,021 cap accounting and
+  runtime install-lock exclusion of Vite, gondolin/node-forge and shell-quote.
+  Ordinary 1.3.0 CLI executes the valid seeded MCP helper; fixture external
+  process/log guard detects it. Managed matrices remain to run on the binary.
+- npm-integrity-verified pi-ai 1.3.0 tarball differs from the source release
+  data in `.manifest.json` and `openrouter.json`. Do not silently treat these
+  inputs as identical. Select the published package input required by the
+  PSMFD release workflow, retain the differences/identities, rerun affected
+  static/build/test checks and then checkpoint/compile. Previous full-suite
+  pass remains bound to the source-archive data.
+
+- N2-L intended change: narrow read-only PSMFD candidate-qualification workflow
+  on same-repository `sync/upstream-v1.3.0`, using Node 22 and the selected model
+  archive digest, to execute the retained Linux/Bubblewrap release-build gate.
+  No Linux runtime is installed on this Mac. Register the workflow under the
+  existing execution policy, validate YAML locally and observe exact-head
+  hosted results. No release, secrets, protection or existing platform routing
+  change is part of this check.
+
+## 2026-10-21 — N2 exact startup green; N2-S security review
+
+- Source c7d2a827d7956fcdd8e2a300b5096f6b263dc579 is clean, committed and
+  remotely backed up in draft Pi #83. Complete static/build/hermetic tests were
+  repeated successfully with the selected npm model data. ARM64 standalone
+  SHA-256 is 64a5c7c79c821457f47be724a4cc6de6eaf601e7bde4a1d6067b5b672f97b649.
+- Direct 18-case matrix, exact preserved published host with two profiles and
+  offline disposable Tart qualification pass, including MCP process canaries.
+  Tart state confirms clone cleanup; independent listing shows all VMs stopped.
+  Hosted Linux release-build job 119388342468 passes, including Bubblewrap.
+- CodeQL aggregate fails with eight newly imported alerts (88–95). Full data
+  flows are retained locally for review; language-analysis jobs themselves pass.
+  No alert has been dismissed. Review identifies regex backtracking, returned
+  internal errors and possible command-reference disclosure; HTML escaping,
+  fixture-only operations and Chord draft semantics require executable proof.
+- N2-S intended change: check current upstream source/open fix PRs, retain
+  false-positive evidence, register bounded S-class corrections where needed,
+  run failing-then-passing tests and static checks, checkpoint and read back
+  security analysis. Do not claim prior binary evidence for changed bytes.
+- Current sidecar audited locked restore and Release build pass (zero warnings).
+  First test launch failed on sandbox-denied named pipes; unsandboxed retry
+  passes. Protocol recordings, mutations and final source CI are next.
+
+- N2-S four real findings reproduce: ambiguous whitespace exceeds an external
+  one-second parser limit; HTTP errors return a synthetic internal path;
+  failed credential command text is exposed; plain and actual Chord containers
+  mutate Object.prototype when streamed JSON contains `__proto__`. All controls
+  pass after corrections. Retained before/after runner restores source bytes.
+  Pending S-class 022/023/024 register only the reviewed source/test paths;
+  manifest/text/both guards agree and C accounting remains 6 / 23 / 2,021.
+- Latest upstream main retains affected code and the open-PR search found no
+  applicable fix. Private upstream reporting is left for maintainer assessment;
+  no message or report was sent. Actual OAuth callback/HTML escaping proof
+  passes; fixture-only SCRIPT extraction and public URL hashing are reviewed
+  separately as false positives. No broad scan suppression is introduced.
+- Baseline RPC recording passes all 12 scenarios twice with the exact preserved
+  0.87.1 comparison binary. All original goldens restore byte-for-byte. Full
+  static check, catalog tests, actionlint, release block and repository checks
+  pass; final complete Pi suite is running on the corrected source.
+
+- Security follow-up 28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2 is committed,
+  secret-scanned and remotely backed up. Complete Pi suite passes (coding-agent
+  2,738 / 50; both durable modes 1,220 / 4); new binary digest is
+  901a10f67a06f04310f4d064e95f7e3e60ec523d253366731e077a239237407f.
+  Direct and published-host matrices pass; offline Tart reports completion.
+- Candidate RPC recorder fails determinism in four of twelve scenarios solely
+  at the newly added durationMs clock value. Eight scenarios pass; raw pairs
+  and failure details are preserved and production goldens restore. N2-R
+  intended change: add narrow duration-field normalization with a red-first
+  unit test, then rerun baseline/candidate pairs under the same normalizer and
+  review protocol drift. Do not mask message content, costs or token counts.
+- GitHub alert review initially skipped null top-level state for PR-only alerts;
+  switched to instance state. First mutation attempt is rejected by the API's
+  280-character comment limit. Short rationale retry is pending readback; full
+  rationale remains in the review helper and will be retained as evidence.
+
+- Four real alerts 88/92/93/95 now read fixed; four reviewed false positives
+  89/90/91/94 read dismissed with specific rationale. All eight exact-source
+  checks pass at 28741c97f, including CodeQL and hosted Linux/Bubblewrap.
+- Narrow duration normalization fails its new test before the change and passes
+  all three normalizer tests afterward. Baseline and candidate now each pass
+  all twelve RPC scenarios twice under the same normalizer. Both raw recording
+  sets remain available; production goldens restore unchanged. Protocol drift
+  review and runtime/host mutation controls are in progress.

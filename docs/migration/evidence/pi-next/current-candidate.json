@@ -1,0 +1,11 @@
+{
+  "source": "28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2",
+  "branch": "sync/upstream-v1.3.0",
+  "url": "https://github.com/psmfd/pi/pull/83",
+  "remoteHeadVerified": true,
+  "draft": true,
+  "binarySha256": "901a10f67a06f04310f4d064e95f7e3e60ec523d253366731e077a239237407f",
+  "initialSource": "c7d2a827d7956fcdd8e2a300b5096f6b263dc579",
+  "initialBinarySha256": "64a5c7c79c821457f47be724a4cc6de6eaf601e7bde4a1d6067b5b672f97b649",
+  "productionPromotion": false
+}

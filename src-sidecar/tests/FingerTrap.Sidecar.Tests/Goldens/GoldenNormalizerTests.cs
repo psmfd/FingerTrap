@@ -5,6 +5,20 @@ namespace FingerTrap.Sidecar.Tests.Goldens;
 public sealed class GoldenNormalizerTests
 {
     [Fact]
+    public void DurationNormalizationPreservesOtherPayload()
+    {
+        // Latest Pi qualification (#210): tool/message timings vary between recordings.
+        const string wire = "{\"type\":\"message_end\",\"durationMs\":14,\"tokens\":14,\"text\":\"durationMs:14\"}";
+        var normalizer = new GoldenNormalizer([]);
+        var normalized = normalizer.NormalizeText(wire);
+        Assert.Equal(wire.Replace("\"durationMs\":14", "\"durationMs\":\"@TIME:duration@\""), normalized);
+        Assert.Equal(normalized, normalizer.NormalizeText(wire.Replace("\"durationMs\":14", "\"durationMs\":10")));
+        Assert.Equal(normalized, normalizer.NormalizeText(normalized));
+        Assert.NotEqual(normalized, normalizer.NormalizeText(wire.Replace("\"tokens\":14", "\"tokens\":10")));
+        Assert.NotEqual(normalized, normalizer.NormalizeText(wire.Replace("durationMs:14", "durationMs:10")));
+    }
+
+    [Fact]
     public void EpochTimestampCollisionsDoNotChangeTheTranscript()
     {
         // Maintained Pi qualification (#202): adjacent events can share a millisecond.

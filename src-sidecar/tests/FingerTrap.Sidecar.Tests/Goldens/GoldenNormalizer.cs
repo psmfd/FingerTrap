@@ -45,6 +45,10 @@ internal sealed partial class GoldenNormalizer
     [GeneratedRegex("(\"timestamp\"\\s*:\\s*)(\\d{10,13})")]
     private static partial Regex EpochTimestampPattern();
 
+    // Pi 1.3.0 records elapsed tool/message time; retain the field, tokenize its clock value.
+    [GeneratedRegex("(\"durationMs\"\\s*:\\s*)(\\d+(?:\\.\\d+)?)")]
+    private static partial Regex DurationPattern();
+
     public IReadOnlyList<GoldenRecord> Normalize(IReadOnlyList<GoldenRecord> records)
     {
         var normalized = records.Select(record => record with
@@ -73,6 +77,8 @@ internal sealed partial class GoldenNormalizer
             Token(_timestamps, match.Value, "TS"));
         result = EpochTimestampPattern().Replace(result, match =>
             match.Groups[1].Value + "\"@TIME:epoch@\"");
+        result = DurationPattern().Replace(result, match =>
+            match.Groups[1].Value + "\"@TIME:duration@\"");
         return result;
     }
 
