@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-21 UTC, S3-G4 clean-artifact and compatibility validation.
+Updated: 2026-10-21 UTC, S3-G1–G4 complete for the macOS candidate; G5 report ready.
 
 ## Authorization and scope
 
@@ -26,7 +26,7 @@ their separate decisions.
 
 ## Resume here
 
-**Current activity: S3-G4 — required CI; G5 report prepared with promotion limits.**
+**Current state: candidate qualified on macOS ARM64; production promotion pending.**
 
 The [resolution plan](s3-discovery-resolution-plan.html) is approved. Begin
 with [Pi #80](https://github.com/psmfd/pi/issues/80), ADR-0038 and the separate
@@ -36,12 +36,15 @@ verified. Committed Pi direct qualification and the published host matrix pass.
 The exact artifacts also pass in a clean disposable Tart VM with verified
 cleanup. All twelve twice-recorded RPC scenarios match the baseline exactly;
 the seven differences from committed goldens are shared path spelling only.
-Next push the qualification checkpoint without CI skipping and drain five
-local macOS jobs, then verify every platform check and packaging artifact.
-The [G5 report](s3-managed-startup-qualification.html) records identities and
-results; its CI row remains pending. The candidate is not production-ready:
-newer fork fixes and the maintained branch's full capability cap need a
-separate forward-port/base decision before pin promotion.
+All 23 CI check reports pass on `c6f088c7cf7b2ef8294a104a091c5d5d08271e03`,
+including the full platform matrix and Apple Silicon package/smoke. All five
+macOS jobs ran locally; independent listings verify cleanup and a stopped base.
+The [G5 report](s3-managed-startup-qualification.html) records exact identities,
+fork accounting, protocol equality, platform limits and recovery instructions.
+Next action: obtain the separate maintained-base/forward-port and fork-cap
+decision, then requalify that candidate before an exact production pin decision.
+Do not merge the old-base Pi draft over newer main or treat this as S3 complete.
+No further implementation within G1–G4 or report preparation is outstanding.
 Host checkpoint `bb5f02fd64b41310a7f35aec92a60b67bdd8bad8` is committed and pushed on
 `feat/managed-pi-startup`; draft [#209](https://github.com/psmfd/FingerTrap/pull/209)
 targets dev. Pi work is isolated at `/private/tmp/ft-pi-managed`, branch
@@ -52,6 +55,10 @@ ARM64 direct RPC/PTY/CLI matrix passes. Published host SHA-256
 passes two profiles with real RPC/PTY children. Migration, discovery and host
 capability mutations are detected and restored. All essential artifact reports
 are retained under `docs/migration/evidence/s3-managed-startup/`.
+Pi metadata checkpoint `b0a151df397d88db1cb3f52b7e8a526ee22deb1e` is pushed;
+pending patch 020 and both guard allowlists agree, with guard logic unchanged.
+It does not change tested runtime source `39b729b`. Current main's cap is full;
+straight addition projects 7 patches / 25 paths / 2,081 changed lines.
 
 1. PR [#207](https://github.com/psmfd/FingerTrap/pull/207) squash-merged into
    `dev` as `9bfc0926cf387644a1cd2512e3fcb63f22287165`. The actual candidate
@@ -92,8 +99,8 @@ record with `git status`, `git log` and any active process/test output.
 | M1a | Token/cache-meter source package | Verified, backed up, inactive | [Report](m1a-import.md); runtime package CI passed on all three platforms at `6a999c9` |
 | S1 | Profile schema, compatibility and baseline | Verified locally and in CI; backed up | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed |
 | S2 | Reviewed import slices and test registration | Verified locally and in CI; backed up | `92137c4`; [manifest report](import-manifests.md); all platform checks and Apple Silicon package/smoke passed |
-| S3 | PTY/RPC launch isolation | Foundation merged and CI verified; discovery blocked | `95424b3`; [report](s3-launch-foundation.md); package retry passed; exact-pin project migrations prevent full qualification |
-| S3-G | Close the pinned-Pi startup/discovery gap | G1–G3 backed up; G4 artifacts pass; CI pending | [Report](s3-managed-startup-qualification.html); exact host/direct Tart and RPC comparison pass; maintained-base/cap decision and pin promotion remain gated |
+| S3 | PTY/RPC launch isolation | Foundation merged; candidate qualified; pin decision pending | Production baseline still lacks managed policy; candidate evidence is in the G5 report; S3 is not complete |
+| S3-G | Close the pinned-Pi startup/discovery gap | G1–G4 implemented/verified/backed up; G5 report ready | [Report](s3-managed-startup-qualification.html); exact host/direct Tart, RPC comparison and 23 CI reports pass; maintained-base/cap decision and pin promotion remain gated |
 | CI-local | Reduce hosted builds with a local runner | Merged and verified on protected dev | `9bfc092`; 22 post-merge checks passed, five macOS jobs local; artifact/cleanup verified; dev protection mapped; main mapping deferred to promotion; Windows/Linux hosted |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
 | S5-A | State/observability import wave | Pending | Shared closure, prefill dependency, artifact handoff |

@@ -790,3 +790,50 @@ The compact [status board](STATUS.md) is the starting point for a new session.
 - Next: commit/push this checkpoint without skipping CI, drain five enrolled
   local macOS jobs, verify hosted lanes and package evidence. Required matrix
   is still pending; no runtime release, pin change, SDK switch or activation.
+
+## 2026-10-21 — Qualification checkpoint pushed; fork bookkeeping completion
+
+- `c6f088c7cf7b2ef8294a104a091c5d5d08271e03` is pushed. Required CI
+  [39598135785](https://github.com/psmfd/FingerTrap/actions/runs/39598135785)
+  and packaging [39598135709](https://github.com/psmfd/FingerTrap/actions/runs/39598135709)
+  are queued/running. Five macOS jobs route to the enrolled Tart worker;
+  the bounded local controller is running. Hosted checks are in progress.
+- Complete experimental Pi patch bookkeeping as pending `psmfd-patch-020`,
+  avoiding IDs 013–019 already used on maintained main. Add the exact 13
+  touched paths to manifest/allowlist/both guards without altering guard logic.
+  Keep the tested binary bound to source `39b729b`; this metadata checkpoint
+  is distinct and does not replace the artifact identity.
+- Old-base conservative capability accounting is 4 patches / 19 paths /
+  1,772 changed lines including the candidate (1,108 existing per-path patch
+  sums plus 664 candidate additions/deletions). Maintained main has 6 active
+  patches already; a forward-port requires fresh accounting and a decision.
+
+## 2026-10-21 — G4 and G5 report complete; separate promotion decision remains
+
+- All 23 check reports pass for source `c6f088c`. Five distinct local Tart
+  jobs cover packaging, UI, Tauri, sidecar and runtime package; Windows/Linux
+  hosted checks and all five CodeQL analyses pass. Every controller record is
+  cleaned; independent GitHub runner count is zero, Tart has no generated job
+  or qualification clones, and the base is stopped. Unrelated VMs preserved.
+- Downloaded product artifact `12345815425`: archive SHA-256
+  `05d764a2a98d78cfaa35981bcda17f2186a801714fe8626b29a927cf815d9789`;
+  app/DMG hashes and local runner match. Build `f87c1a9` is the PR test merge;
+  tree `83ea0036e69d0153248e1a4afe326447a32ede91` equals head `c6f088c`.
+  Packaged native-shell smoke passes; its Pi case skips (product has no Pi).
+  The first evidence helper expected a generic PASS string; corrected it to
+  the script's actual spawn/write/echo success markers. This was an evidence
+  parser error, not a failed package job. Managed artifact evidence is separate.
+- Pi metadata `b0a151df397d88db1cb3f52b7e8a526ee22deb1e` is pushed in #81.
+  Pending patch 020 is synchronized in manifest/text/both guard sets; only
+  allowlist data changed. Candidate source remains `39b729b`. Maintained-base
+  projection is 7 patches / 25 paths / 2,081 changed lines; no cap waiver.
+- Secret scans pass across both scoped histories. HTML preview exposed missing
+  table cell openers; corrected and rechecked the 390px layout and desktop
+  rendering. Structural/links/markup checks accompany the final doc checkpoint.
+- Authorized S3-G1–G4 and G5 report preparation are complete for the macOS
+  artifact. No production pin, release, managed activation, SDK adoption or
+  pi_config development occurred. Next: separate maintained-base/cap decision,
+  then exact-candidate requalification/pin review before S4. Keep #201/#202 open.
+- Final follow-up changes only documentation/evidence and is saved with CI
+  skipped. CI attribution remains explicitly `c6f088c`, distinct from the
+  later documentation head. Both PRs remain drafts; no merge requested.

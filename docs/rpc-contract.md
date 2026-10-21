@@ -24,6 +24,12 @@ multi-session daemon protocol (CBOR over Unix sockets). It is **not** what
 
 ## Pin-bump ritual (record–replay goldens, #139)
 
+S3 candidate `39b729b` (not a production pin change) was qualified on
+2026-10-21. All twelve scenarios recorded twice on both the baseline and
+candidate; the resulting transcripts match exactly. Shared macOS path spelling
+differences are documented in the [qualification report](migration/s3-managed-startup-qualification.html#protocol).
+Committed baseline goldens remain unchanged.
+
 This study is now backed by committed wire transcripts —
 `src-sidecar/tests/FingerTrap.Sidecar.Tests/Goldens/data/*.golden.jsonl` —
 recorded from the real pinned pi and replayed keylessly through

@@ -1,0 +1,257 @@
+{
+  "sourceHead": "c6f088c7cf7b2ef8294a104a091c5d5d08271e03",
+  "checks": [
+    {
+      "name": "CodeQL",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/runs/119215718588"
+    },
+    {
+      "name": "agent-runtime (macos-15) / validate",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480932"
+    },
+    {
+      "name": "agent-runtime (windows-2025)",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480603"
+    },
+    {
+      "name": "tauri (windows-2025)",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480591"
+    },
+    {
+      "name": "sidecar (macos-15) / validate",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480565"
+    },
+    {
+      "name": "sidecar (windows-2025)",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480512"
+    },
+    {
+      "name": "tauri (macos-15) / validate",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480468"
+    },
+    {
+      "name": "repo-check",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480391"
+    },
+    {
+      "name": "ui (macos-15) / validate",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480380"
+    },
+    {
+      "name": "sidecar (ubuntu-24.04)",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480198"
+    },
+    {
+      "name": "tauri (ubuntu-24.04)",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480196"
+    },
+    {
+      "name": "lint-actions",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480182"
+    },
+    {
+      "name": "ui (windows-2025)",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480120"
+    },
+    {
+      "name": "ui (ubuntu-24.04)",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480104"
+    },
+    {
+      "name": "agent-runtime (ubuntu-24.04)",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215479705"
+    },
+    {
+      "name": "package and smoke (Apple Silicon) / validate",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135709/job/119215479432"
+    },
+    {
+      "name": "enforce-gitflow",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135647/job/119215478703"
+    },
+    {
+      "name": "lint",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135548/job/119215478381"
+    },
+    {
+      "name": "Analyze (actions)",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598131003/job/119215471423"
+    },
+    {
+      "name": "Analyze (rust)",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598131003/job/119215471164"
+    },
+    {
+      "name": "Analyze (csharp)",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598131003/job/119215471111"
+    },
+    {
+      "name": "Analyze (python)",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598131003/job/119215471066"
+    },
+    {
+      "name": "Analyze (javascript-typescript)",
+      "conclusion": "success",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598131003/job/119215470846"
+    }
+  ],
+  "jobs": [
+    {
+      "id": 119215479705,
+      "name": "agent-runtime (ubuntu-24.04)",
+      "conclusion": "success",
+      "runner_name": "GitHub Actions 1000023539",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215479705"
+    },
+    {
+      "id": 119215480104,
+      "name": "ui (ubuntu-24.04)",
+      "conclusion": "success",
+      "runner_name": "GitHub Actions 1000023542",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480104"
+    },
+    {
+      "id": 119215480120,
+      "name": "ui (windows-2025)",
+      "conclusion": "success",
+      "runner_name": "GitHub Actions 1000023545",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480120"
+    },
+    {
+      "id": 119215480182,
+      "name": "lint-actions",
+      "conclusion": "success",
+      "runner_name": "GitHub Actions 1000023541",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480182"
+    },
+    {
+      "id": 119215480196,
+      "name": "tauri (ubuntu-24.04)",
+      "conclusion": "success",
+      "runner_name": "GitHub Actions 1000023540",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480196"
+    },
+    {
+      "id": 119215480198,
+      "name": "sidecar (ubuntu-24.04)",
+      "conclusion": "success",
+      "runner_name": "GitHub Actions 1000023543",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480198"
+    },
+    {
+      "id": 119215480380,
+      "name": "ui (macos-15) / validate",
+      "conclusion": "success",
+      "runner_name": "ft-actions-job-20261021t121849z-c298770f",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480380"
+    },
+    {
+      "id": 119215480391,
+      "name": "repo-check",
+      "conclusion": "success",
+      "runner_name": "GitHub Actions 1000023544",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480391"
+    },
+    {
+      "id": 119215480468,
+      "name": "tauri (macos-15) / validate",
+      "conclusion": "success",
+      "runner_name": "ft-actions-job-20261021t121942z-3a6e87a9",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480468"
+    },
+    {
+      "id": 119215480512,
+      "name": "sidecar (windows-2025)",
+      "conclusion": "success",
+      "runner_name": "GitHub Actions 1000023547",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480512"
+    },
+    {
+      "id": 119215480565,
+      "name": "sidecar (macos-15) / validate",
+      "conclusion": "success",
+      "runner_name": "ft-actions-job-20261021t122201z-e27427c1",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480565"
+    },
+    {
+      "id": 119215480591,
+      "name": "tauri (windows-2025)",
+      "conclusion": "success",
+      "runner_name": "GitHub Actions 1000023548",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480591"
+    },
+    {
+      "id": 119215480603,
+      "name": "agent-runtime (windows-2025)",
+      "conclusion": "success",
+      "runner_name": "GitHub Actions 1000023546",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480603"
+    },
+    {
+      "id": 119215480932,
+      "name": "agent-runtime (macos-15) / validate",
+      "conclusion": "success",
+      "runner_name": "ft-actions-job-20261021t122059z-cef5ae3f",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135785/job/119215480932"
+    },
+    {
+      "id": 119215479432,
+      "name": "package and smoke (Apple Silicon) / validate",
+      "conclusion": "success",
+      "runner_name": "ft-actions-job-20261021t121543z-36717d4c",
+      "html_url": "https://github.com/psmfd/FingerTrap/actions/runs/39598135709/job/119215479432"
+    }
+  ],
+  "localCleanup": [
+    {
+      "runner": "ft-actions-job-20261021t121849z-c298770f",
+      "phase": "cleaned",
+      "runnerId": 42
+    },
+    {
+      "runner": "ft-actions-job-20261021t121942z-3a6e87a9",
+      "phase": "cleaned",
+      "runnerId": 43
+    },
+    {
+      "runner": "ft-actions-job-20261021t122201z-e27427c1",
+      "phase": "cleaned",
+      "runnerId": 45
+    },
+    {
+      "runner": "ft-actions-job-20261021t122059z-cef5ae3f",
+      "phase": "cleaned",
+      "runnerId": 44
+    },
+    {
+      "runner": "ft-actions-job-20261021t121543z-36717d4c",
+      "phase": "cleaned",
+      "runnerId": 41
+    }
+  ],
+  "independentRunnerCount": 0,
+  "independentTartListing": "No ft-actions-job or ft-s3-qualification clones; base stopped; unrelated VMs preserved",
+  "passed": true
+}
