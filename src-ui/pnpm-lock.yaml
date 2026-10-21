@@ -21,7 +21,7 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       vscode-jsonrpc:
-        specifier: 9.0.3
+        specifier: ^9.0.3
         version: 9.0.3
     devDependencies:
       '@eslint/js':

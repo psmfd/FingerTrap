@@ -1393,3 +1393,8 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   all three tracking/review files now pass Markdown lint and formatting.
   Prepare a draft checkpoint with CI skipped solely until its PR number is
   enrolled in existing local Tart routing, then queue the full required suite.
+- Dependency checkpoint 5ccfd5a is committed and secret-scanned. Restored the
+  proposed vscode-jsonrpc caret range; offline lock regeneration lacks cached
+  metadata and a sandboxed frozen install uses a different store. Align only
+  its lock specifier and verify the frozen install in the normal store before
+  backing up the draft. Resolved versions and previously tested code are unchanged.
