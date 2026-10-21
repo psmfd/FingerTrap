@@ -1,0 +1,51 @@
+{
+  "piSource": "1f37eea4bf71f95ed9a4e62674949de3a9feb8b0",
+  "hostSource": "bb5f02fd64b41310a7f35aec92a60b67bdd8bad8",
+  "fixtureSource": "faa4242f1add364191078d9bc12f4aaf154983e6",
+  "comparisonBase": "42429b94e4aca33fdbb8d094de29758b36411ba1",
+  "platform": "darwin-arm64",
+  "node": "22.23.0",
+  "bun": "1.3.10",
+  "dependencyChanges": false,
+  "releasePublished": false,
+  "productionActivated": false,
+  "modelPackageIntegrity": "sha512-X/3PfQBnnoeVdO9Cv8zHghUMglzlgNZYGNzoPnbRoGnHl3Rw3TlA2UKSUB7BRHUOxMryHXYa8dnjWZlbRheDZA==",
+  "files": {
+    "pi": {
+      "sha256": "9a9f53131cec748801b8c176190ef4dc77e7b6e833859ff734fcfa3d297c7614",
+      "bytes": 73172624
+    },
+    "pi-darwin-arm64.tar.gz": {
+      "sha256": "fde413d00ceece7a4817c602560f30c1c1903bb9e95739da3512896f9b547f67",
+      "bytes": 28906235
+    },
+    "FingerTrap.Sidecar.Qualification": {
+      "sha256": "80beb8542052fe1246528d2a9a0617e2b3760c81c39163f228b0c128d97af3da",
+      "bytes": 88216417
+    },
+    "libporta_pty.dylib": {
+      "sha256": "4644ce3598bf59a4f1999e4e42b1312586ce9a00a7fa33059217308707f1b4a0",
+      "bytes": 34848
+    },
+    "darwin-platform.node": {
+      "sha256": "84da948f1a1e7d666b6814164567aead7d68e88ceef1a5d914249684a0fa71b8",
+      "bytes": 51480
+    },
+    "package-lock.json": {
+      "sha256": "95dbf4d7aa54eebf235edccd6926efac42fbf4e1c6a92c625c9ac706a8b367f7",
+      "bytes": 178161
+    },
+    "npm-shrinkwrap.json": {
+      "sha256": "e29f0b61463e48a81ca173eaeb462b0bdd03d04b863168895daae3816d62c470",
+      "bytes": 61942
+    },
+    "bun-1.3.10.zip": {
+      "sha256": "82034e87c9d9b4398ea619aee2eed5d2a68c8157e9a6ae2d1052d84d533ccd8d",
+      "bytes": 22289708
+    },
+    "pi-ai-0.87.1.tgz": {
+      "sha256": "35b4432f27cc2665f86beebb9af6a39b1251970883c3044bd8be4f4e8c731ca0",
+      "bytes": 838330
+    }
+  }
+}

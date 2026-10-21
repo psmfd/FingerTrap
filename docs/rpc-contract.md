@@ -127,7 +127,7 @@ All commands are `{ id?, type, ...params }` with exactly one response, except
 are listed so the enumeration is complete against the pin.
 
 | Command | Params → response data | FT-2 |
-|---|---|---|
+| --- | --- | --- |
 | `prompt` | `message`, `images?`, `streamingBehavior?: "steer"\|"followUp"` → ack only; work streams as events | ● |
 | `steer` | `message`, `images?` → none (interrupt current turn) | ● |
 | `follow_up` | `message`, `images?` → none (queue after current turn) | ● |
@@ -316,7 +316,7 @@ text) — not a reuse of the repo-dash panel.
 ## FT-2 feature mapping
 
 | FT-2 feature | Serving surface | Status |
-|---|---|---|
+| --- | --- | --- |
 | Model/status readouts | `get_state`, `get_session_stats` (context-fill ships as a percent), `get_available_models`; incremental usage via `message_update` | covered |
 | Session resume | `switch_session` (path known) or spawn-time `--session` | delivered in FT-2 slice 5 (session browser → RPC or PTY pane; ADR-0026 disables RPC resume on a missing cwd and offers the PTY fallback); reaped-cwd RPC recovery still blocked on pi#55 |
 | Session list | The sidecar's bounded direct scan of `~/.pi/agent/sessions/` — **deliberately retained** per ADR-0028 (the browser's primary case is zero panes open, and `list_sessions` only runs inside a live child; a headless child would fire operator extensions). The `list_sessions` RPC command (since `v0.84.2-psmfd.1`, psmfd-patch-011) remains available to live panes via the command passthrough; migration is deferred behind FT#151's prerequisites | delivered in FT-2 slice 5 via the direct scan; #140 added the `skippedFiles` visibility (ADR-0028) |

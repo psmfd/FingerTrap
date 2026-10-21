@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-21 UTC, maintained-base forward-port and requalification approved.
+Updated: 2026-10-21 UTC, maintained-base qualification and exact-source CI complete.
 
 ## Authorization and scope
 
@@ -38,87 +38,53 @@ managed policy and required fork patches and repeat protocol/artifact tests.
 
 ## Resume here
 
-**Current activity: S3-G6 — maintained-base forward-port and requalification.**
+**S3-G6 implementation and qualification are complete; production promotion
+remains unapproved.** Read the
+[maintained-base report](s3-managed-startup-maintained-qualification.html).
 
-Next action: checkpoint and push the FingerTrap fixtures/recorder, run its
-required CI with five local macOS jobs, and save the qualification report.
-The repaired recorder passes all twelve scenarios twice on both binaries;
-their normalized transcripts match exactly. Four runtime mutations are caught
-and source restored. Pi `1f37eea` is committed/pushed
-in draft [#82](https://github.com/psmfd/pi/pull/82), isolated worktree
-`/private/tmp/ft-pi-maintained`, branch `fix/managed-startup-maintained`.
-Static checks, full hermetic suite, exact direct/published-host/Tart isolation
-pass. ADR-0039 bounds the cap exception: 7 patches / 25 paths / 2,090 lines.
-Candidate binary SHA-256 is
-`9a9f53131cec748801b8c176190ef4dc77e7b6e833859ff734fcfa3d297c7614`.
-Original committed goldens remain unchanged. Maintained 0.87.1 adds system
-message/tool-schema events compared with the production 0.85.1 baseline;
-that version drift is retained separately from the zero candidate drift.
-The old candidate and evidence below remain comparison history. Keep the
-original Pi draft/branch intact until the replacement is backed up.
+Next action: review the qualified companion drafts
+[Pi #82](https://github.com/psmfd/pi/pull/82) and
+[FingerTrap #209](https://github.com/psmfd/FingerTrap/pull/209), settle this
+campaign's integration/promotion disposition, then execute the requested
+[latest-Pi upgrade and validation #210](https://github.com/psmfd/FingerTrap/issues/210).
+Resolve the recorded dependency findings before a production pin: the unchanged
+baseline has 15 npm findings, including vulnerable brace-expansion 5.0.9 in
+the runtime shrinkwrap. No merge, release, installed pin or activation changed.
 
-The [resolution plan](s3-discovery-resolution-plan.html) is approved. Begin
-with [Pi #80](https://github.com/psmfd/pi/issues/80), ADR-0038 and the separate
-candidate qualifier. Both baseline cases fail actual isolation checks while RPC lifecycle succeeds.
-Pi policy and FingerTrap capability integration are implemented and locally
-verified. Committed Pi direct qualification and the published host matrix pass.
-The exact artifacts also pass in a clean disposable Tart VM with verified
-cleanup. All twelve twice-recorded RPC scenarios match the baseline exactly;
-the seven differences from committed goldens are shared path spelling only.
-All 23 CI check reports pass on `c6f088c7cf7b2ef8294a104a091c5d5d08271e03`,
-including the full platform matrix and Apple Silicon package/smoke. All five
-macOS jobs ran locally; independent listings verify cleanup and a stopped base.
-The [G5 report](s3-managed-startup-qualification.html) records exact identities,
-fork accounting, protocol equality, platform limits and recovery instructions.
-Maintained-base/forward-port and fork-cap work is now approved. Requalify that
-candidate before an exact production pin decision.
-Do not merge the old-base Pi draft over newer main or treat this as S3 complete.
-No further implementation within G1–G4 or report preparation is outstanding.
-Host checkpoint `bb5f02fd64b41310a7f35aec92a60b67bdd8bad8` is committed and pushed on
-`feat/managed-pi-startup`; draft [#209](https://github.com/psmfd/FingerTrap/pull/209)
-targets dev. Pi work is isolated at `/private/tmp/ft-pi-managed`, branch
-`fix/managed-startup-v1`, based on `e7d09c9`. Pi candidate `39b729b625f50d4c82bd993151865d5ded8dd78e` is committed/pushed
-with draft [Pi #81](https://github.com/psmfd/pi/pull/81). Its standalone macOS
-ARM64 direct RPC/PTY/CLI matrix passes. Published host SHA-256
-`80beb8542052fe1246528d2a9a0617e2b3760c81c39163f228b0c128d97af3da`
-passes two profiles with real RPC/PTY children. Migration, discovery and host
-capability mutations are detected and restored. All essential artifact reports
-are retained under `docs/migration/evidence/s3-managed-startup/`.
-Pi metadata checkpoint `b0a151df397d88db1cb3f52b7e8a526ee22deb1e` is pushed;
-pending patch 020 and both guard allowlists agree, with guard logic unchanged.
-It does not change tested runtime source `39b729b`. Current main's cap is full;
-straight addition projects 7 patches / 25 paths / 2,081 changed lines.
+- Pi `1f37eea4bf71f95ed9a4e62674949de3a9feb8b0` is committed/pushed in #82,
+  based on maintained `42429b9`. Isolated worktree `/private/tmp/ft-pi-maintained`,
+  branch `fix/managed-startup-maintained`; all seven Pi check reports pass.
+- FingerTrap `faa4242f1add364191078d9bc12f4aaf154983e6` is committed/pushed
+  in #209. All 23 exact-source checks pass, including full platform CI and
+  Apple Silicon packaging. Five macOS jobs used local Tart; independent
+  listings confirm zero runner registrations/clones and a stopped base.
+- Qualified Pi binary SHA-256:
+  `9a9f53131cec748801b8c176190ef4dc77e7b6e833859ff734fcfa3d297c7614`.
+  Exact direct, two-profile published host and clean Tart matrices pass.
+  Four Pi mutations and the host policy mutation are caught and restored.
+- Twelve scenarios record twice per artifact and match the attested 0.87.1
+  release exactly after documented volatile-value normalization. Both raw
+  recordings are retained; current production-pin goldens remain unchanged.
+  The report separately records 0.85.1-to-0.87.1 system-message/version drift.
+- ADR-0039 bounds patch 020: actual 7 patches / 25 paths / 2,090 changed
+  lines; maximum 7 / 25 / 2,200. Both guard sets and text allowlist agree;
+  guard logic and existing fixes are preserved.
+- Package artifact `12354825465` and app/DMG digests verify. Its PR merge tree
+  equals `faa4242`; sidecar/native-shell smoke passes. Product Pi smoke skips
+  because Pi is not bundled; managed-runtime evidence is the separate matrix.
+- Final evidence/documentation checkpoint skips CI. Attribute source CI to
+  `faa4242`, not to a later documentation-only head. See WORK_LOG for the
+  actual documentation checkpoint/backup result.
 
-1. PR [#207](https://github.com/psmfd/FingerTrap/pull/207) squash-merged into
-   `dev` as `9bfc0926cf387644a1cd2512e3fcb63f22287165`. The actual candidate
-   `8196b4f` passed every check, including all five local macOS jobs and CodeQL;
-   the merged tree is identical. CodeQL #8 is fixed by a gateway-only canary.
-2. Only the three macOS context names changed in `dev`'s ruleset and classic
-   protection. App bindings, strictness and every other protection are unchanged.
-   `main` retains old names until the later dev-to-main release promotion.
-3. Protected [dev CI](https://github.com/psmfd/FingerTrap/actions/runs/39531687800)
-   and [dev packaging](https://github.com/psmfd/FingerTrap/actions/runs/39531859652)
-   passed. All 22 reported checks passed, including CodeQL and hosted lanes.
-   Five local jobs used distinct VMs; artifact source/digests/runner identity
-   were verified. No job VMs, runner registrations or open dev CodeQL findings
-   remain.
-4. Current implementation branch is `feat/managed-pi-startup`, draft #209,
-   carrying the handoff documentation. Its initial checkpoint skipped CI so
-   #209 could be enrolled for local macOS execution before source builds.
-5. Resume migration with the [approved S3 plan](s3-launch-isolation-plan.html),
-   [discovery audit](s3-discovery-audit.md) and [foundation report](s3-launch-foundation.md).
-   The pinned Pi performs project migrations before trust, so arbitrary-project
-   managed activation remains blocked under #201/#202. S3-G implementation is
-   now approved; production pin promotion and SDK adoption remain separate.
-6. Before future source pushes, run `python3 scripts/ci/tart-runner.py check`.
-   Once jobs queue, run `python3 scripts/ci/tart-runner.py drain --max-jobs 5`;
-   use four when only CI is queued. The controller is session-started.
-   See the [runbook](../local-github-runner.md) for recovery and trusted PR
-   enrollment; future PRs are not enrolled automatically.
+The [G5 report](s3-managed-startup-qualification.html), Pi #81 and its
+`39b729b` source remain historical evidence. Do not merge that old-base branch
+over maintained main. S3 as a whole, #200, #201 and #202 remain open.
 
-No managed launch is enabled.
-Read the latest [activity entry](WORK_LOG.md) before resuming; compare this
-record with `git status`, `git log` and any active process/test output.
+Before future source pushes, run `python3 scripts/ci/tart-runner.py check`.
+After jobs queue, run `python3 scripts/ci/tart-runner.py drain --max-jobs 5`;
+use four for CI without packaging. Do not run that controller concurrently
+with standalone Tart qualification. Only enrolled PRs use this local route;
+see the [runbook](../local-github-runner.md). No managed launch is enabled.
 
 ## Work board
 
@@ -128,9 +94,9 @@ record with `git status`, `git log` and any active process/test output.
 | M1a | Token/cache-meter source package | Verified, backed up, inactive | [Report](m1a-import.md); runtime package CI passed on all three platforms at `6a999c9` |
 | S1 | Profile schema, compatibility and baseline | Verified locally and in CI; backed up | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed |
 | S2 | Reviewed import slices and test registration | Verified locally and in CI; backed up | `92137c4`; [manifest report](import-manifests.md); all platform checks and Apple Silicon package/smoke passed |
-| S3 | PTY/RPC launch isolation | Foundation merged; candidate qualified; pin decision pending | Production baseline still lacks managed policy; candidate evidence is in the G5 report; S3 is not complete |
-| S3-G | Close the pinned-Pi startup/discovery gap | G1–G4 implemented/verified/backed up; G5 report ready | [Report](s3-managed-startup-qualification.html); exact host/direct Tart, RPC comparison and 23 CI reports pass; maintained-base/cap decision and pin promotion remain gated |
-| S3-G6 | Preserve maintained fork fixes and requalify managed startup | Port and cap disposition implemented; qualification in progress | Main `42429b9`; ADR-0039; 7 patches / 25 paths / 2,090 lines; exact host/Tart/protocol evidence pending |
+| S3 | PTY/RPC launch isolation | Foundation merged; candidate qualified; pin decision pending | Production baseline still lacks managed policy; maintained candidate is qualified in G6; S3 is not complete |
+| S3-G | Close the pinned-Pi startup/discovery gap | G1–G6 implemented, qualified and source backed up | [Maintained report](s3-managed-startup-maintained-qualification.html); production pin/release and activation remain gated |
+| S3-G6 | Preserve maintained fork fixes and requalify managed startup | Complete; source backed up; CI verified | Pi `1f37eea` / FT `faa4242`; exact host/Tart/protocol/mutations pass; 7 Pi and 23 FT checks pass; dependency disposition required before production promotion |
 | Pi-next | Upgrade to latest Pi release and validate | Tracked in [#210](https://github.com/psmfd/FingerTrap/issues/210); after this campaign | Discover latest at execution time; preserve fork/managed patches, review dependencies and repeat protocol/platform/artifact qualification |
 | CI-local | Reduce hosted builds with a local runner | Merged and verified on protected dev | `9bfc092`; 22 post-merge checks passed, five macOS jobs local; artifact/cleanup verified; dev protection mapped; main mapping deferred to promotion; Windows/Linux hosted |
 | S4 | Stores, resume and isolated meters | Pending | Inject profile roots; preserve ADR-0028 and recovery behavior |
@@ -170,7 +136,7 @@ validation after resuming an incomplete edit and update this record.
   structural and whitespace checks passed. These are document checks only;
   implementation approved 2026-10-21; exact-pin promotion remains gated.
 - Merged migration: `docs/pi-runtime-migration`, PR #207, squash `9bfc092` on dev.
-- Active handoff branch: `docs/runtime-migration-handoff`, based on `9bfc092`.
+- Historical handoff branch: `docs/runtime-migration-handoff`, based on `9bfc092`.
   The remote `ci/tart-runner-pilot` branch preserves worker checkpoint
   `cf1cd50` for immutable reuse; do not delete it.
 - Base: `8ffeae809f7b4579d6b4f006c3f6e8414df60620`.

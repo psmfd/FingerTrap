@@ -1,0 +1,24 @@
+{
+  "artifactId": 12354825465,
+  "archiveSha256": "333ccbdd3c79035e750b4708c9105eef2d6816ec788f731c196f2e44d256e46a",
+  "sourceHead": "faa4242f1add364191078d9bc12f4aaf154983e6",
+  "builtCommit": "7b8a83bd270f2696f0a80b6695eb128c8fb743ec",
+  "matchingTree": "3243d2eff6a982c963750669f2987e4116f0ea18",
+  "runner": "ft-actions-job-20261021t144513z-0bd8efd4",
+  "run": "https://github.com/psmfd/FingerTrap/actions/runs/39618649346",
+  "checksums": [
+    {
+      "name": "FingerTrap-apple-silicon.app.zip",
+      "sha256": "eb042821d6f2655d68d30260284dc3d7dea0e45af39a146a9bce18751ac77e70"
+    },
+    {
+      "name": "FingerTrap_0.1.0_aarch64.dmg",
+      "sha256": "c365b9f1887ba64221a2a5841f6fead8e8d4ef665d8adbdb354cd03c6fe7b1bc"
+    }
+  ],
+  "packagedSidecarSmoke": true,
+  "packagedPiSmoke": "skipped: Pi is not included in the product bundle",
+  "distribution": "unsigned candidate; not notarized; not a published release",
+  "manualGuiAcceptance": "not performed by this S3 task",
+  "managedRuntimeIncluded": false
+}

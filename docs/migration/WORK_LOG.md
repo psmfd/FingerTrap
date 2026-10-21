@@ -931,3 +931,54 @@ The compact [status board](STATUS.md) is the starting point for a new session.
 - Structural checks pass with zero errors/warnings. Next: checkpoint/push
   FingerTrap source and run five macOS jobs locally; retain exact CI/package,
   report and promotion/next-campaign handoff evidence afterward.
+
+## 2026-10-21 — G6 complete; exact CI/package and future campaign recorded
+
+- FingerTrap source checkpoint `faa4242f1add364191078d9bc12f4aaf154983e6`
+  is pushed in #209. All 23 check reports pass: CI `39618649368` and package
+  `39618649346`, including CodeQL and Windows/Linux. Five macOS jobs ran
+  locally in distinct Tart clones, all cleaned. Independent GitHub runner
+  count is zero; no job/qualification clones remain and base is stopped.
+- Downloaded product artifact `12354825465`: archive SHA-256
+  `333ccbdd3c79035e750b4708c9105eef2d6816ec788f731c196f2e44d256e46a`.
+  App/DMG checksums and runner match. Build `7b8a83b` is the PR test merge;
+  tree `3243d2eff6a982c963750669f2987e4116f0ea18` equals `faa4242`.
+  Packaged sidecar/native-shell smoke passes; bundled Pi case skips because
+  the product does not bundle Pi. Managed evidence remains separate.
+- Host-policy mutation repeated: removing the comparison fails the
+  `startupPolicy` rejection case; restored tests pass. Pi source and production
+  host source are clean. All runtime mutations were restored.
+- Full dependency audit retained: 15 findings (3 moderate, 11 high, 1 critical).
+  brace-expansion 5.0.9 is in the core runtime shrinkwrap and has high-severity
+  advisories. Critical shell-quote 1.10.0 is absent from that core shrinkwrap;
+  example/development reachability still needs disposition. No dependencies
+  changed and production promotion is not recommended before that review.
+- [G6 HTML report](s3-managed-startup-maintained-qualification.html) and
+  `evidence/s3-managed-startup-maintained/` preserve exact identities, source
+  summaries, all raw/normalized RPC pairs, mutations, audit, attestation,
+  asset inventory and CI/package/cleanup evidence. Mobile 390px and desktop
+  layouts verified. Old report now points to this maintained candidate.
+- Requested latest-release upgrade remains queued in #210 with dependency
+  resolution and full validation criteria. No pi_config implementation, merge,
+  release, installed pin, SDK switch or managed activation occurred.
+- Authorized G6 implementation and qualification are complete. Next: settle
+  companion draft integration/promotion, then execute #210. S3/#200/#201/#202
+  remain open. Final documentation/evidence checkpoint skips CI; source
+  verification belongs to `faa4242` and Pi `1f37eea`.
+
+## 2026-10-21 — Final evidence review and backup preparation
+
+- Validated 102 retained evidence files; all 95 JSON/JSONL files parse.
+  Current report: 37 links and 10 unique IDs; historical report: 41 links
+  and eight unique IDs. All local references and HTML anchors resolve.
+- Final Markdown lint initially found two pre-existing compact table
+  separators in the touched RPC contract document. Added table spacing;
+  all six reviewed Markdown files now pass. Structural checks pass with
+  zero errors/warnings, and the working diff has no whitespace errors.
+- Pi source remains clean; production host source remains identical to
+  `bb5f02f`. Only qualification evidence and documentation enter this
+  checkpoint. Unrelated private files remain untouched.
+- Companion draft and #210 descriptions are prepared with exact tested
+  sources, dependency disposition and follow-on acceptance. Next: scoped
+  commit, secret scan, remote backup and description readback; then record
+  those observed results. The documentation checkpoint skips source CI.
