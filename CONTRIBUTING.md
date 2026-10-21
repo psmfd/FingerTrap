@@ -11,7 +11,9 @@ scripts/dev-setup.sh             # check what's missing
 scripts/dev-setup.sh --install   # install missing deps (Debian/Ubuntu and macOS)
 ```
 
-Required tools: .NET 10 SDK, Node 22+, pnpm 10, rustup + cargo, Tauri Linux deps (Linux only).
+Required tools: .NET 10 SDK, Node 22.22.2+ (22.x), 24.15.0+ (24.x), or 26+;
+pnpm 10, rustup + cargo, Tauri Linux deps (Linux only). The Node minimum matches
+the UI's jsdom test dependency and `src-ui/package.json` engines.
 
 ## Repo layout
 

@@ -144,13 +144,17 @@ check_node() {
     if command -v node >/dev/null 2>&1; then
         local ver
         ver="$(node --version 2>/dev/null)"
-        local major="${ver#v}"
-        major="${major%%.*}"
-        if [[ "$major" -ge 22 ]]; then
+        if node -e '
+            const [major, minor, patch] = process.versions.node.split(".").map(Number);
+            const supported = major >= 26 ||
+                (major === 24 && minor >= 15) ||
+                (major === 22 && (minor > 22 || (minor === 22 && patch >= 2)));
+            process.exit(supported ? 0 : 1);
+        '; then
             ok "node" "$ver"
             return 0
         else
-            warn "node" "$ver — Node 22+ required (use nvm or volta to upgrade)"
+            warn "node" "$ver — Node 22.22.2+ (22.x), 24.15.0+ (24.x), or 26+ required"
             ((warns++)) || true
             return 1
         fi

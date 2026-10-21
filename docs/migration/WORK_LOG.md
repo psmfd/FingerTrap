@@ -1357,3 +1357,50 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   the new review table's alignment. Prettier corrected that file before push.
   Tart readiness check passes (group 5); the GitHub connector cannot resolve
   review threads, so use the existing per-command TheSemicolon CLI identity.
+- Review/format checkpoint d1891e7 is scanned, committed and remotely verified;
+  fresh #209 protected CI is running, five macOS jobs on local Tart.
+- Pi #83 merged at 5f1f1dfbacb508086ed9b68563c78c3aa1456d7c with parents
+  42429b94 / 28741c97 and identical qualified tree 46fd5cc4. All four reviewed
+  threads are resolved with individual rationale. #81/#82 closed as superseded.
+  Readback found #82's branch absent after merge cleanup; its commit is retained
+  in #83 ancestry and locally. Restore that exact remote reference, then verify.
+- Dependency worktree created on chore/reconcile-open-dependencies from dev
+  9bfc092. Cargo #198 patch applies cleanly; UI proposals combined in package.json.
+  jsdom 30 requires a higher Node patch minimum; record engines and align setup
+  guidance. Sandboxed registry DNS failed; stopped that install and retried with
+  network approval. No install lifecycle scripts enabled during dependency review.
+- #82's exact branch 95e95f0 is restored and remotely verified after GitHub's
+  cleanup removed it. #188 is closed as superseded, with #186/#187 left open.
+- #209 head d1891e7 passes all 23 checks and squash-merges to protected dev at
+  cc3bf8855b0f748c04c44a92093a9a708381f264. Merged tree equals checked head;
+  four dev macOS jobs are draining locally. Pi main's six post-merge checks pass.
+- Combined dependency graph initially resolves newer releases under caret ranges;
+  narrowed to reviewed proposal versions. Audit then identifies nine advisories
+  (three high) in stale Vite 8.3.1 and brace-expansion 5.0.9. Select Vite 8.3.3
+  and brace-expansion 5.0.12 fixes; post-fix audit exits zero. Retain concise
+  advisory IDs/ranges and counts, without unnecessary reproduction payloads.
+- All 100 UI tests pass on Node 22.23.0 with Vitest 5.0.0/jsdom 30.0.1; build
+  and ESLint pass. Native cargo test first fails because the isolated checkout
+  lacks required sidecar binaries. Staging existing local fixtures resolves the
+  prerequisite; cargo test --locked passes. Fresh source staging/package CI will
+  validate the real bundle. Structural check passes with zero warnings;
+  actionlint, shellcheck and whitespace checks pass. All six dependency PRs have
+  no unresolved review threads. Release action v8 uses Node 24 and requires
+  semantic-release >=20; this repository has no incompatible version pin.
+
+- Final local dependency checks: Clippy passes with warnings denied; UI audit
+  reports zero findings. Corrected a Markdown line beginning with a PR number;
+  all three tracking/review files now pass Markdown lint and formatting.
+  Prepare a draft checkpoint with CI skipped solely until its PR number is
+  enrolled in existing local Tart routing, then queue the full required suite.
+- Dependency checkpoint 5ccfd5a is committed and secret-scanned. Restored the
+  proposed vscode-jsonrpc caret range; offline lock regeneration lacks cached
+  metadata and a sandboxed frozen install uses a different store. Align only
+  its lock specifier and verify the frozen install in the normal store before
+  backing up the draft. Resolved versions and previously tested code are unchanged.
+- Corrected frozen lock install passes in the normal pnpm store. Checkpoint
+  2a2c6a0 is secret-scanned, remotely backed up and opens draft #211. All 19
+  post-merge dev checks pass at cc3bf88; its four disposable Tart VMs are cleaned.
+  Before the full source CI push, add only owned PR #211 to the trusted policy,
+  keeping the immutable worker and runner-group repository/workflow restrictions.
+  Apply/read back routing, then push without skip-ci and drain five local jobs.

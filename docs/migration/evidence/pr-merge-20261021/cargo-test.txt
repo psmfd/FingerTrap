@@ -1,0 +1,31 @@
+   Compiling tauri-plugin-single-instance v2.5.3
+   Compiling fingertrap v0.1.0 (/private/tmp/ft-pr-integration/src-tauri)
+   Compiling tauri-plugin-shell v2.5.0
+   Compiling tauri-plugin-opener v2.7.1
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.87s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/fingertrap_lib-659f06ed80477e32)
+
+running 8 tests
+test sidecar::tests::duplicate_exit_requests_wait_until_the_internal_exit_is_allowed ... ok
+test sidecar::tests::shutdown_frame_is_one_complete_json_rpc_notification ... ok
+test links::tests::rejects_everything_else ... ok
+test links::tests::allows_https_on_allowlisted_hosts ... ok
+test sidecar_process::tests::dead_child_rejects_input_and_oversized_frames_are_rejected ... ok
+test sidecar_process::tests::observed_exit_and_absent_child_do_not_wait_for_deadline ... ok
+test sidecar_process::tests::queued_frames_arrive_in_order_without_interleaving ... ok
+test sidecar_process::tests::full_input_queue_does_not_block_kill_or_exit_observation ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.31s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/fingertrap-7c1789d5ec55bd91)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests fingertrap_lib
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

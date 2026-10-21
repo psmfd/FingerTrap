@@ -1,0 +1,89 @@
+{
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 1,
+      "moderate": 5,
+      "high": 3,
+      "critical": 0
+    },
+    "dependencies": 201,
+    "devDependencies": 0,
+    "optionalDependencies": 0,
+    "totalDependencies": 201
+  },
+  "advisories": [
+    {
+      "module_name": "brace-expansion",
+      "severity": "moderate",
+      "github_advisory_id": "GHSA-q2hr-2g5m-vwhr",
+      "patched_versions": ">=5.0.12",
+      "vulnerable_versions": ">=4.0.0 <5.0.12",
+      "url": "https://github.com/advisories/GHSA-q2hr-2g5m-vwhr"
+    },
+    {
+      "module_name": "brace-expansion",
+      "severity": "high",
+      "github_advisory_id": "GHSA-qhr7-859c-m2p7",
+      "patched_versions": ">=5.0.11",
+      "vulnerable_versions": ">=4.0.0 <5.0.11",
+      "url": "https://github.com/advisories/GHSA-qhr7-859c-m2p7"
+    },
+    {
+      "module_name": "brace-expansion",
+      "severity": "high",
+      "github_advisory_id": "GHSA-6j4f-fj2g-mc7p",
+      "patched_versions": ">=5.0.10",
+      "vulnerable_versions": ">=4.0.0 <5.0.10",
+      "url": "https://github.com/advisories/GHSA-6j4f-fj2g-mc7p"
+    },
+    {
+      "module_name": "vite",
+      "severity": "moderate",
+      "github_advisory_id": "GHSA-698v-4r3x-3vcv",
+      "patched_versions": ">=8.3.3",
+      "vulnerable_versions": ">=8.3.0 <=8.3.2",
+      "url": "https://github.com/advisories/GHSA-698v-4r3x-3vcv"
+    },
+    {
+      "module_name": "vite",
+      "severity": "moderate",
+      "github_advisory_id": "GHSA-r825-w8mm-5pxw",
+      "patched_versions": ">=8.3.3",
+      "vulnerable_versions": ">=8.3.0 <=8.3.2",
+      "url": "https://github.com/advisories/GHSA-r825-w8mm-5pxw"
+    },
+    {
+      "module_name": "vite",
+      "severity": "high",
+      "github_advisory_id": "GHSA-587h-7wmj-h5pm",
+      "patched_versions": ">=8.3.3",
+      "vulnerable_versions": ">=8.3.0 <=8.3.2",
+      "url": "https://github.com/advisories/GHSA-587h-7wmj-h5pm"
+    },
+    {
+      "module_name": "vite",
+      "severity": "low",
+      "github_advisory_id": "GHSA-9jrq-w75r-8gcw",
+      "patched_versions": ">=8.3.3",
+      "vulnerable_versions": ">=8.3.0 <=8.3.2",
+      "url": "https://github.com/advisories/GHSA-9jrq-w75r-8gcw"
+    },
+    {
+      "module_name": "vite",
+      "severity": "moderate",
+      "github_advisory_id": "GHSA-rq7h-c2jc-7f22",
+      "patched_versions": ">=8.3.3",
+      "vulnerable_versions": ">=8.3.0 <=8.3.2",
+      "url": "https://github.com/advisories/GHSA-rq7h-c2jc-7f22"
+    },
+    {
+      "module_name": "vite",
+      "severity": "moderate",
+      "github_advisory_id": "GHSA-vfpm-58rq-9qcg",
+      "patched_versions": ">=8.3.3",
+      "vulnerable_versions": ">=8.3.0 <=8.3.2",
+      "url": "https://github.com/advisories/GHSA-vfpm-58rq-9qcg"
+    }
+  ]
+}

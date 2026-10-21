@@ -17,7 +17,17 @@ Inventory: FingerTrap #209, #188 and dependency PRs #199/#198/#197/#195/#190/#16
 Pi #83 plus superseded #81/#82. Review exact diffs, threads, dependency changes,
 checks and protection rules; repair or close redundant proposals, merge reviewed
 changes in dependency order and verify resulting branches/CI. Preserve private
-local evidence. No PR has been merged under this new slice yet.
+local evidence. Pi #83 merged at `5f1f1dfbacb508086ed9b68563c78c3aa1456d7c`,
+with exactly the qualified source tree; #81/#82 are closed as superseded.
+GitHub removed #82's reference branch during integration; the exact saved head
+is restored and remotely verified. #209 merged to dev at
+`cc3bf8855b0f748c04c44a92093a9a708381f264` after all 23 head checks passed;
+all 19 post-merge checks pass. #188 is closed as superseded. Dependency
+reconciliation draft #211 is remotely backed up at `2a2c6a0`; all 100 UI tests,
+eight native tests and Clippy pass locally. Fixed Vite/brace-expansion versions
+replace vulnerable older proposals; combined audit reports zero findings.
+Enroll #211 in the existing local Tart routing, then queue its full protected
+suite and Apple Silicon packaging. The six dependency originals remain open.
 
 ## Authorization and scope
 
@@ -113,11 +123,11 @@ Suggested restart text:
 
 ## Resume here
 
-**Next action: complete S3-M1 source PR integration.** Review Pi #83's remaining
-threads, merge its verified head without publishing, and close superseded Pi
-#81/#82. Re-run protected checks on the current FingerTrap #209 review
-checkpoint before its squash merge to dev. Review dependency updates together
-on the resulting baseline; close #188 as superseded by accepted migration ADRs.
+**Next action: complete S3-M1 dependency PR integration.** Source #83/#209 are
+merged and superseded drafts closed. Prepare the combined dependency PR from
+dev cc3bf88, enroll it in the existing local Tart routing, run protected CI,
+then merge and close the six incorporated dependency proposals. Verify post-merge
+CI and synchronize the main working checkout, preserving private local evidence.
 See the [integration review](evidence/pr-merge-20261021/README.md).
 Release/pin and managed activation remain separately gated. #210 stays open for
 the exact production decision; its first five qualification items are complete.
