@@ -99,7 +99,9 @@ def configure_routing(env, group, workflows, prs):
     if set(group["selected_workflows"]) == {WORKFLOW}:
         validate_group(group, repos["repositories"])
     elif set(group["selected_workflows"]) == set(workflows):
-        validate_group(group, repos["repositories"], workflows)
+        # Recover only the safe, empty-repository intermediate state left by
+        # GitHub's group PATCH. Normal read/check never accepts this state.
+        validate_group(group, repos["repositories"] or [{"id": REPO_ID}], workflows)
     else:
         # This admin-controlled variable records the last applied policy.
         # Contents-read workflow tokens cannot modify it. Refuse unexplained
@@ -113,6 +115,10 @@ def configure_routing(env, group, workflows, prs):
         "allows_public_repositories": True,
         "restricted_to_workflows": True, "selected_workflows": workflows,
     })
+    # GitHub may clear selected repository membership when patching the group's
+    # visibility. Reapply exactly one repository, then verify via get_group.
+    api(env, "PUT", f"orgs/{ORG}/actions/runner-groups/{group['id']}/repositories",
+        {"selected_repository_ids": [REPO_ID]})
     for name, value in (("FINGERTRAP_TART_PRS", prs),
                         ("FINGERTRAP_TART_WORKFLOWS", workflows)):
         present = name in values

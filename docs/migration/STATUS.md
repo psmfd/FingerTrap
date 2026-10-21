@@ -20,7 +20,7 @@ approval capabilities and repository retirement retain their separate gates.
 
 ## Resume here
 
-**Current activity: local pilot passed; preparing the pinned macOS worker.**
+**Current activity: local pilot passed; pinned worker policy verified.**
 
 1. Follow the [approved S3 plan](s3-launch-isolation-plan.html).
 2. Read [S3 discovery audit](s3-discovery-audit.md): project migrations precede
@@ -43,11 +43,12 @@ approval capabilities and repository retirement retain their separate gates.
    exposed lost template writes after abrupt shutdown; the base was repaired,
    flushed and shut down from inside macOS. A fresh clone verified Bash before
    registration. Local retry job `118970292546` passed validation/packaging and
-   uploaded the candidate; controller cleanup passed. Collect final job status.
+   uploaded the candidate; final GitHub status and controller cleanup passed.
 5. The maintainer explicitly selected **macOS jobs locally first; Windows/Linux
    stay hosted**. GitHub rejected PR refs and test-merge SHAs in group policies.
-   Prepare/pin a reusable worker, configure/read back its restricted policy,
-   push the routing change to PR #207 and drain five macOS jobs. Their required
+   Worker `cf1cd50` is published and pinned; its restricted policy was applied
+   and read back. Commit/push caller routing to PR #207 and drain five macOS jobs.
+   Their required
    check names gain `/ validate`; update only equivalent protection mappings
    after the checks pass. Tracker: [#208](https://github.com/psmfd/FingerTrap/issues/208).
    Do not claim cutover success before those steps finish.

@@ -77,6 +77,25 @@ class GroupPolicyTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             runner.routing_policy({}, {"trustedPullRequests": [], "workerRevision": "main"})
 
+    def test_cutover_restores_membership_cleared_by_github_patch(self):
+        state = {"repositories": copy.deepcopy(self.repos)}
+
+        def github(_env, method, path, payload=None):
+            if method == "GET" and path.endswith("/repositories"):
+                return {"repositories": copy.deepcopy(state["repositories"])}
+            if method == "GET" and "/actions/variables?" in path:
+                return {"variables": []}
+            if method == "PATCH" and "/runner-groups/" in path:
+                state["repositories"] = []
+            elif method == "PUT" and path.endswith("/repositories"):
+                state["repositories"] = [{"id": x} for x in payload["selected_repository_ids"]]
+            return {}
+
+        self.group["id"] = 5
+        with patch.object(runner, "api", side_effect=github):
+            runner.configure_routing({}, self.group, [runner.WORKFLOW, "pinned-worker"], [207])
+        self.assertEqual(state["repositories"], self.repos)
+
 
 if __name__ == "__main__":
     unittest.main()

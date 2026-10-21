@@ -431,3 +431,21 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   Preserve enforcement by mapping the three existing required macOS checks to
   their equivalent names after observing successful execution. Windows/Linux
   names and all other protection settings remain as read.
+
+## 2026-10-21 — Pilot final success; pinned worker policy verified
+
+- **Final pilot:** GitHub reports job `118970292546` completed successfully.
+  Artifact `12312192004` contains the `a403061` candidate (71,490,490 bytes),
+  archive digest `b54803491980300cd24168e52a29acaf0533ce00048128e66d0440e632feba17`.
+  Controller deleted its VM and registration; local diagnostics were retained.
+- **Worker checkpoint:** `cf1cd50ca296ad2b35711b028acfe2f66f7c8aa4` committed/
+  pushed with CI skipped, so callers can pin an existing immutable worker.
+- **Group read-back finding:** GitHub's successful group PATCH cleared its
+  selected repository membership. Strict validation caught the empty set.
+  Added an explicit PUT of FingerTrap alone after PATCH; read-back now verifies
+  repository ID `1221327956`, restricted workflows, pilot plus exact worker SHA,
+  and both matching administration-controlled routing variables. No runner was
+  registered while policy validation failed.
+- **Next:** commit caller routing, fast-forward the migration branch, push PR
+  #207, run five disposable macOS workers, and inspect the actual check names
+  before mapping their equivalent protection entries. #208 tracks completion.
