@@ -10,7 +10,8 @@ the failure. The scenario now awaits readiness with its existing event budget;
 all 13 focused cases and 410 full-suite tests pass locally (12 opt-in skips).
 Only tests/harness change; production code and golden bytes are intact. See the
 [red/green evidence](evidence/golden-handshake/README.md). Protected verification
-and merge state are recorded in the follow-up PR; check it before promotion.
+and merge state are recorded in [#213](https://github.com/psmfd/FingerTrap/pull/213);
+if resuming before it merges, complete that fix's checks and merge first.
 
 Current candidate: Pi #83 at `28741c97f9baf5649e8ad3ba1c996d7bbcb5abd2`;
 FingerTrap fixture source #209 at `0143c3317db5343d004bbfa1b75fd566b87c1b6c`.

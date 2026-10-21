@@ -26,5 +26,6 @@ away. The one-second delay belongs only to the regression's child fixture.
 
 All 13 [focused tests](green.txt) pass; the [full suite](full-suite.txt) passes
 410 tests with 12 opt-in skips. The golden-data diff is empty. Protected CI and
-merge identities belong in the follow-up PR; this record attributes these local
+merge identities are in [#213](https://github.com/psmfd/FingerTrap/pull/213);
+this record attributes these local
 results to the reviewed patch rather than inventing a self-referential hash.

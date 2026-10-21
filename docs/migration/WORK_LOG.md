@@ -1459,3 +1459,8 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   Change scope is three test-only C# files and tracking/evidence. Production
   runtime, normalizer and transcript bytes are unchanged; qualify the fix through
   a dedicated PR under the same restricted local Tart/hosted Linux/Windows policy.
+- Test/evidence checkpoint 7e4e727 is committed, secret-scanned and remotely
+  backed up in draft #213. Enroll only this owned PR in the existing trusted
+  policy, preserve the immutable worker and runner-group restrictions, then
+  queue full protected CI and Apple packaging. Previous dev runner drain is
+  complete; no local Tart controller remains active before cutover.
