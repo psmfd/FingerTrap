@@ -118,6 +118,9 @@ closed as incorporated. [Check URLs](dependency-head-checks.json) and
 [settled PR states](settled-prs.json) retain the exact identities. GitHub marks
 Pi #82 merged through #83's same merge commit; no separate old-tree merge ran.
 After these dispositions, both repositories have zero open source-backlog PRs.
+All 19 [post-merge checks](dependency-merge-checks.json) pass on 260aec5; its four
+disposable macOS VMs and registrations are cleaned. Final tracking PR #212
+records these results and is enrolled in the same restricted Tart policy.
 
 Apple artifact **12382323858**, run **39677894315**, verifies GitHub's archive
 SHA-256 `452d2f93ff10ad5bf677df54581192a7a371cf72cf4fa42079da92615fe57f6e`,

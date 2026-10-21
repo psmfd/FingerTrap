@@ -1426,3 +1426,11 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   beginning with a PR number; formatting, JSON parsing and all 72 direct local
   links pass. The 261-entry qualification index is refreshed only for its two
   changed narrative metadata files; every other indexed byte identity verifies.
+- Tracking checkpoint 993e709 is committed, scanned and remotely backed up in
+  draft #212. All 19 dependency post-merge checks now pass at 260aec5; its four
+  local VMs are cleaned. Record those exact checks and enroll only owned #212
+  for the existing pinned worker. The controller is stopped before cutover.
+- Main checkout is fast-forwarded to dev 260aec5 with a clean tracked tree and
+  frozen UI dependencies synchronized. Our earlier tracking edits are verified
+  in committed 5ccfd5a and preserved in .artifacts/pr-merge-20261021/root-tracking-backup.
+  The three private untracked entries remain; no operator sibling checkout moved.

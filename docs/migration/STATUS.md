@@ -21,10 +21,11 @@ after 23 head checks; all 19 post-merge checks pass. #188 is superseded by the
 accepted migration ADRs. Combined dependency #211 merged at
 `260aec5067d37247b240a8641829bc520ae74bf3` after all 23 checks and artifact
 verification, incorporating #199/#198/#197/#195/#190/#165, which are now closed.
+All 19 checks also pass on the merged dependency commit.
 The combined UI audit reports zero findings. Read the
 [integration review and evidence](evidence/pr-merge-20261021/README.md).
 The original backlog has zero open PRs in both repositories. This subsequent
-tracking checkpoint records those results; its own CI is visible in its PR.
+tracking checkpoint records those results; its own CI is visible in #212.
 
 ## Authorization and scope
 
