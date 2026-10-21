@@ -1,0 +1,22 @@
+{
+  "base": "f07218c4d4bbc12bef056a7058c3dd49dfe41abe",
+  "candidateHead": "1f37eea4bf71f95ed9a4e62674949de3a9feb8b0",
+  "includesWorkingTree": true,
+  "patches": 7,
+  "distinctPaths": 25,
+  "changedLines": 2090,
+  "perPatch": {
+    "psmfd-patch-010": 392,
+    "psmfd-patch-011": 439,
+    "psmfd-patch-012": 277,
+    "psmfd-patch-013": 80,
+    "psmfd-patch-018": 151,
+    "psmfd-patch-019": 78,
+    "psmfd-patch-020": 673
+  },
+  "ceiling": {
+    "patches": 7,
+    "distinctPaths": 25,
+    "changedLines": 2200
+  }
+}

@@ -1,0 +1,66 @@
+feead1611287c82dcaa19d852b8bb879036253fb
+100644 04fc9f476a5965b330d28552014d6d7445b3f357 1	README.md
+100644 6ac52e6f3d1d42ec44d3044a8f41847aefe6bec7 2	README.md
+100644 93184c10ff45b8b4ecc8c2e0f8e239501f3880e6 3	README.md
+100644 586100e262ff4d4b32d87197c15b3f8b13aa36f5 1	packages/agent/src/harness/pico3/harness.ts
+100644 e1a988878cdd49ccc63f912b9f0dee1e5a198a99 2	packages/agent/src/harness/pico3/harness.ts
+100644 fbd8479c5f049129796df6801cb6578e6c9eb1be 1	packages/agent/src/harness/pico3/kinds/tool.ts
+100644 8ed27f6c88d9af353323e905103e114ed0abaea5 2	packages/agent/src/harness/pico3/kinds/tool.ts
+100644 9057b481c3ed65dc9f96f060fa1311b07771249c 1	packages/agent/src/harness/pico3/session.ts
+100644 3b5925f14b4dd6c172409969ab4af967d1a0320c 2	packages/agent/src/harness/pico3/session.ts
+100644 c1eb948ba1f6660d0c960daa85e5b4d751ff5ee5 1	packages/agent/src/harness/skills.ts
+100644 2ab0aa86ab037c13a8ccc2ec8bb01043413298e6 2	packages/agent/src/harness/skills.ts
+100644 7cac8db295b2d64110e60c5c3d494fa96e8897fe 1	packages/chord/src/delta/index.ts
+100644 df3e950af0d5039fc7aee9a8a0768702412eb0be 2	packages/chord/src/delta/index.ts
+100644 ad4ed57d621039cf45e58b84882386a32ea25969 3	packages/chord/src/delta/index.ts
+100644 ef4653cfd5c8f16bb0e747357437fcd9442b0e32 1	packages/chord/test/delta.test.ts
+100644 8add10c2f85f98e826c9f34cb943603cf98f6fe3 2	packages/chord/test/delta.test.ts
+100644 93cf95de6acd04a61490998743164c3bb2ae4252 3	packages/chord/test/delta.test.ts
+100644 a358798078d74a6de2bbf272f3c1a5041f479c03 1	packages/coding-agent/src/cli/args.ts
+100644 8b653c717728e8bef6ae00ba7c5b7e9a2ad8fff6 2	packages/coding-agent/src/cli/args.ts
+100644 38d268a9fcf462ae02255c9f0cac035e9dc8b2cf 3	packages/coding-agent/src/cli/args.ts
+100644 195a1127e457994566cb8f4e77949e2586dd226d 1	packages/coding-agent/src/main.ts
+100644 9f938867e8e5c5242d6f4ee88e8eff1c5414ed96 2	packages/coding-agent/src/main.ts
+100644 51df447c540ecb34a0c7ab9bf1edef1d337225a1 3	packages/coding-agent/src/main.ts
+100644 b5cf06b481263402d0348655fe1034a81d5f3f9b 1	packages/coding-agent/src/modes/interactive/theme/theme-controller.ts
+100644 a2d0e3b55a0d599704b97cadf54da95ab093e99a 2	packages/coding-agent/src/modes/interactive/theme/theme-controller.ts
+100644 3e2a78646d6d0c5bf0463409739dd831a2c0efcb 3	packages/coding-agent/src/modes/interactive/theme/theme-controller.ts
+100644 6f4f6b4fab3eb2ba6fa312890d3aa391ef15e186 1	packages/coding-agent/test/package-manager.test.ts
+100644 ae07a3410ceca69195fa99b0f4aa6663bb78bbad 2	packages/coding-agent/test/package-manager.test.ts
+100644 8aedd93c45fac8f77880434a247cc98cff04fe88 3	packages/coding-agent/test/package-manager.test.ts
+100644 648b29d5897c13303372dd5572f91d02d233758b 2	packages/durable/test/pico3/tool-slot.test.ts
+100644 81893be66e8af1c7ebe9344cde6942bf7843cb0f 2	packages/durable/test/skills-performance.test.ts
+
+Auto-merging README.md
+CONFLICT (content): Merge conflict in README.md
+CONFLICT (modify/delete): packages/agent/src/harness/pico3/harness.ts deleted in 71023aec1546d6d677a65669c5665c0927ce0dd0 and modified in HEAD.  Version HEAD of packages/agent/src/harness/pico3/harness.ts left in tree.
+CONFLICT (modify/delete): packages/agent/src/harness/pico3/kinds/tool.ts deleted in 71023aec1546d6d677a65669c5665c0927ce0dd0 and modified in HEAD.  Version HEAD of packages/agent/src/harness/pico3/kinds/tool.ts left in tree.
+CONFLICT (modify/delete): packages/agent/src/harness/pico3/session.ts deleted in 71023aec1546d6d677a65669c5665c0927ce0dd0 and modified in HEAD.  Version HEAD of packages/agent/src/harness/pico3/session.ts left in tree.
+CONFLICT (modify/delete): packages/agent/src/harness/skills.ts deleted in 71023aec1546d6d677a65669c5665c0927ce0dd0 and modified in HEAD.  Version HEAD of packages/agent/src/harness/skills.ts left in tree.
+Auto-merging packages/ai/src/utils/overflow.ts
+Auto-merging packages/chord/src/delta/index.ts
+CONFLICT (content): Merge conflict in packages/chord/src/delta/index.ts
+Auto-merging packages/chord/test/delta.test.ts
+CONFLICT (content): Merge conflict in packages/chord/test/delta.test.ts
+Auto-merging packages/coding-agent/docs/cli-integration.md
+Auto-merging packages/coding-agent/examples/extensions/sandbox/package-lock.json
+Auto-merging packages/coding-agent/src/cli/args.ts
+CONFLICT (content): Merge conflict in packages/coding-agent/src/cli/args.ts
+Auto-merging packages/coding-agent/src/core/agent-session-runtime.ts
+Auto-merging packages/coding-agent/src/core/agent-session-services.ts
+Auto-merging packages/coding-agent/src/core/auth-storage.ts
+Auto-merging packages/coding-agent/src/core/package-manager.ts
+Auto-merging packages/coding-agent/src/main.ts
+CONFLICT (content): Merge conflict in packages/coding-agent/src/main.ts
+Auto-merging packages/coding-agent/src/modes/interactive/interactive-mode.ts
+Auto-merging packages/coding-agent/src/modes/interactive/theme/theme-controller.ts
+CONFLICT (content): Merge conflict in packages/coding-agent/src/modes/interactive/theme/theme-controller.ts
+Auto-merging packages/coding-agent/src/modes/rpc/rpc-client.ts
+Auto-merging packages/coding-agent/src/modes/rpc/rpc-mode.ts
+Auto-merging packages/coding-agent/src/modes/rpc/rpc-types.ts
+Auto-merging packages/coding-agent/test/auth-storage.test.ts
+Auto-merging packages/coding-agent/test/package-manager.test.ts
+CONFLICT (content): Merge conflict in packages/coding-agent/test/package-manager.test.ts
+Auto-merging packages/coding-agent/test/theme-controller.test.ts
+CONFLICT (file location): packages/agent/test/harness/pico3/tool-slot.test.ts added in HEAD inside a directory that was renamed in 71023aec1546d6d677a65669c5665c0927ce0dd0, suggesting it should perhaps be moved to packages/durable/test/pico3/tool-slot.test.ts.
+CONFLICT (file location): packages/agent/test/harness/skills-performance.test.ts added in HEAD inside a directory that was renamed in 71023aec1546d6d677a65669c5665c0927ce0dd0, suggesting it should perhaps be moved to packages/durable/test/skills-performance.test.ts.

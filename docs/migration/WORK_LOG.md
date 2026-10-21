@@ -1035,3 +1035,53 @@ The compact [status board](STATUS.md) is the starting point for a new session.
 - Handoff finalization: validate documents, commit/push this scoped update,
   and link its actual commit in the companion PR and #210 handoff notes.
   The session's final response reports the observed backup result.
+
+## 2026-10-21 — Resume after patching; companion review correction S3-G7
+
+- Read the approved plan, status/handoff, latest log, ADR-0034/0039 and
+  provenance. Local/fetched FingerTrap branch is exactly `7f99454`; remote
+  #209/#82 remain drafts at `7f99454` / `1f37eea`, with unchanged bases.
+- Patching removed `/private/tmp/ft-pi-maintained`; recovered saved branch
+  into independent `/private/tmp/ft-pi-resume`. Sibling Pi and private local
+  FingerTrap files are preserved. Sandbox DNS blocked clone and credential
+  lookup; explicit escalated retry succeeded without changing global account.
+- Tart check passes (group 5); all VMs stopped. Host default Node 24.17.0,
+  pnpm 10.34.5, .NET 10.0.301; Bun is absent from PATH. Restore reviewed
+  release-major tools before source validation.
+- Review discovered unresolved CodeQL alert 87 on Pi `1f37eea`, generated
+  extension fixture path interpolation. Prior green check reports did not
+  establish that no alerts remained. Intended correction: static module-relative
+  fixture path; validate affected tests, full static checks and cap recount,
+  then checkpoint/push and verify remote analysis. No production code change
+  is intended and previous exact artifact qualification remains separately bound.
+- Latest release API readback identifies upstream `v1.3.0` (2026-10-15) and
+  fork `v0.87.1-psmfd.1`. After G7 review disposition, #210 begins with exact
+  provenance, release/dependency review and full retained-patch reconciliation.
+  Existing ceilings and exact-pin/release/activation gates persist.
+
+## 2026-10-21 — G7 corrected and backed up; Pi-next N1 begins
+
+- Test-only Pi correction `95e95f0eca5dd6638f4e8c308932134a6d071798` is
+  committed/pushed in #82. Full `npm run check` and 23 policy tests pass on
+  Node 22.23.0. Missing ignored model JSON initially blocked both checks;
+  hydration from the preserved SHA-256-verified 0.87.1 archive fixed that
+  environment prerequisite. First sandbox npm attempt failed DNS; network
+  retry installed exact locked dependencies with scripts disabled.
+- No runtime source changed relative to `1f37eea`; prior artifact evidence
+  remains bound to its original source and digest. C accounting unchanged:
+  7 patches / 25 paths / 2,090 changed lines. Remote allowlist/gitleaks pass;
+  CodeQL is still running, so alert resolution is not yet claimed.
+- Verified all 426 preserved artifact entries and inventory digest. Current
+  maintained candidate is retained as reference; promotion remains deferred
+  for dependency findings. No merge/pin/activation decision was inferred.
+- N1 selects upstream latest stable `v1.3.0`, exact commit
+  `71023aec1546d6d677a65669c5665c0927ce0dd0`; fork latest remains 0.87.1.
+  Independent source worktree `/private/tmp/ft-pi-latest`, branch
+  `feat/fingertrap-pi-1.3`, starts at that tag. Release metadata is retained.
+- Intended N1 work: reconcile all fourteen live/pending patches, prepare
+  source port preserving upstream behavior, retain conflict/retirement evidence,
+  and recount before any build. Static preview uses explicit v0.87.1 content
+  baseline, avoiding the recorded squash-ancestry trap. Upstream removed
+  pico3/skills implementations and replaced Chord tracking; do not restore
+  obsolete files to make old patches apply. Validate replacement behavior or
+  removed reachability before proposing retirement. Ceilings stay binding.

@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-21 UTC, session stopped at maintainer request for patching.
+Updated: 2026-10-21 UTC, resumed after system patching; companion review in progress.
 
 ## Authorization and scope
 
@@ -94,6 +94,53 @@ Suggested restart text:
 > upgrade and validation tracked in #210. Keep status and evidence durable.
 
 ## Resume here
+
+**Active slice S3-G7: companion disposition and review correction.** Local and
+fetched FingerTrap head matches handoff `7f99454`; remote #209/#82 remain open
+drafts at `7f99454` / `1f37eea`, with unchanged bases. Recovered Pi into isolated
+clone `/private/tmp/ft-pi-resume` after patching removed the old worktree.
+Do not use the sibling operator checkout. Tart readiness check passes and all
+VMs are stopped. Default Node is now 24.17.0; recover the reviewed Node 22/Bun
+toolchain before Pi checks. No completed artifact tests need repeating yet.
+
+Review found unresolved Pi CodeQL alert 87 in test fixture code construction
+at `managed-startup-policy.test.ts:108`; successful CI reports did not establish
+zero security findings. Replace generated path interpolation with a static
+module-relative fixture, run affected tests and full `npm run check`, recount
+patch 020, checkpoint and verify remote analysis. Production promotion stays
+deferred for dependency disposition. Keep both qualified drafts as integration
+candidates until their separately gated merge/pin decisions. Once this review
+correction is settled, proceed with #210 in an isolated candidate branch.
+
+Pi-next discovery readback: upstream latest stable is `v1.3.0`, published
+2026-10-15; fork latest remains `v0.87.1-psmfd.1`. Resolve exact tag commits,
+review release/security changes and reconcile every patch before porting.
+Recount against the new upstream base and stop on an ADR-0039 ceiling breach.
+Next validation: fixture regression, static checks, patch accounting and
+CodeQL readback; then latest-release source/provenance review.
+
+G7 correction `95e95f0eca5dd6638f4e8c308932134a6d071798` is committed and
+pushed to Pi #82. All 23 policy tests and full `npm run check` pass on Node
+22.23.0 after hydrating 42 JSON files from the preserved, digest-verified
+0.87.1 model-data archive. Initial unhydrated checks failed on missing data;
+they are not policy regressions. Production runtime source is identical to
+`1f37eea`; the previously qualified binary retains that original source identity.
+Accounting is unchanged at 7 / 25 / 2,090. Remote allowlist and secret checks
+pass; CodeQL is running. No completed artifact qualification was repeated.
+
+**Pi-next N1: latest-release reconciliation and isolated port preview.**
+Selected upstream `v1.3.0` resolves to
+`71023aec1546d6d677a65669c5665c0927ce0dd0`. Its source is in independent
+worktree `/private/tmp/ft-pi-latest`, branch `feat/fingertrap-pi-1.3`.
+This is a preparation candidate; do not infer fork integration from it.
+Retain G6 as a qualified reference, defer its production promotion for the
+recorded dependencies, and carry the managed policy into this next campaign.
+N1 validation: compare against verified v0.87.1 content baseline (the fork's
+squash ancestry is stale), reconcile every live patch, preserve new upstream
+behavior, record every conflict and recount before any candidate build.
+Never restore upstream-deleted implementations solely to preserve old patches.
+Patch retirement requires equivalent-behavior or removed-reachability evidence.
+No ceiling increase, merge, release or activation is authorized by this preview.
 
 **S3-G6 implementation and qualification are complete; production promotion
 remains unapproved.** Read the

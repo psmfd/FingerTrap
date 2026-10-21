@@ -1,0 +1,288 @@
+{
+  "baseline": "f07218c4d4bbc12bef056a7058c3dd49dfe41abe",
+  "upstreamLatest": "71023aec1546d6d677a65669c5665c0927ce0dd0",
+  "patches": [
+    {
+      "id": "psmfd-patch-001",
+      "class": "security",
+      "status": "active",
+      "description": "A git ref parsed from a package URL (source.ref) flowed unvalidated into `git fetch origin <ref>` and `git checkout <ref>`. A ref beginning with \"-\" (e.g. \"--upload-pack=...\", \"-oProxyCommand=...\") would be parsed by git as a command-line option, turning ref input into argument injection. Fix: reject unsafe refs at parse time in buildGitSource (git.ts) and pass `--end-of-options` before the ref at the fetch/checkout sinks (package-manager.ts).",
+      "paths": [
+        "packages/coding-agent/src/utils/git.ts",
+        "packages/coding-agent/src/core/package-manager.ts",
+        "packages/coding-agent/test/git-ssh-url.test.ts",
+        "packages/coding-agent/test/git-update.test.ts",
+        "packages/coding-agent/test/package-manager.test.ts"
+      ],
+      "currentChangedLines": 350,
+      "upstreamChangedPaths": [
+        "packages/coding-agent/src/core/package-manager.ts",
+        "packages/coding-agent/test/package-manager.test.ts"
+      ],
+      "upstreamMissingPaths": [],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    },
+    {
+      "id": "psmfd-patch-003",
+      "class": "security",
+      "status": "active",
+      "description": "shell-quote <= 1.8.3 fails to escape newlines in object-token `.op` values, enabling command injection. Present as a transitive runtime dependency of the sandbox example extension via @anthropic-ai/sandbox-runtime. Upstream fixed only the root lockfile (commit a7f9fe68, picked up by the v0.79.2 sync); the sandbox example lockfile still carries 1.8.3 as of v0.83.0. Fix: pin shell-quote 1.8.4 in the sandbox lockfile. REFRESHED post-v0.81.1 sync: GHSA-395f-4hp3-45gv (published 2026-07-20) widens the vulnerable range to <= 1.8.4 (patched 1.9.0), so the pin is raised to 1.10.0 (still satisfies the parent ^1.8.3 range).",
+      "paths": [
+        "packages/coding-agent/examples/extensions/sandbox/package-lock.json"
+      ],
+      "currentChangedLines": 6,
+      "upstreamChangedPaths": [
+        "packages/coding-agent/examples/extensions/sandbox/package-lock.json"
+      ],
+      "upstreamMissingPaths": [],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    },
+    {
+      "id": "psmfd-patch-005",
+      "class": "security",
+      "status": "active",
+      "description": "parseGitUrl/buildGitSource build git repo/ref strings from a package source URL that flow into `git clone`/`fetch`/`checkout`. psmfd-patch-001 guarded the ref; this completes the hardening of the same surface: (a) pass `--end-of-options` before source.repo at the clone sink so a repo string can never be parsed as a git option; (b) reject option-like (leading \"-\"), control-character and whitespace host/path components in hasUnsafeGitInstallPart, matching the existing ref guard; (c) reject git transport helpers (ext::/fd::), the \"<transport>::<address>\" remote-helper syntax, and file:// local-clone transports in parseGitUrl even under the git: prefix that relaxes the protocol allowlist. No shell is used at the sinks (argv spawn), so this closes the residual git-argument/transport surface rather than a shell-injection one.",
+      "paths": [
+        "packages/coding-agent/src/utils/git.ts",
+        "packages/coding-agent/src/core/package-manager.ts",
+        "packages/coding-agent/test/git-ssh-url.test.ts",
+        "packages/coding-agent/test/package-manager.test.ts"
+      ],
+      "currentChangedLines": 138,
+      "upstreamChangedPaths": [
+        "packages/coding-agent/src/core/package-manager.ts",
+        "packages/coding-agent/test/package-manager.test.ts"
+      ],
+      "upstreamMissingPaths": [],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    },
+    {
+      "id": "psmfd-patch-010",
+      "class": "capability",
+      "status": "active",
+      "description": "RPC hello line (fork gap psmfd/pi#56, admitted by pi_config ADR-0145): RPC mode's first stdout write is {\"type\":\"hello\",\"piVersion\":...,\"protocol\":1,\"capabilities\":[...]}, emitted before extension binding and before the stdin reader attaches. Hosts gate readiness on it instead of sleep-and-probe; capability additions are advertised, never probed, and never bump `protocol`. The reference client (rpc-client.ts) uses hello as its ready gate with a grace-window legacy fallback for pre-hello pins and a typed refusal naming both versions when `protocol` exceeds what it supports.",
+      "paths": [
+        "packages/coding-agent/src/modes/rpc/rpc-mode.ts",
+        "packages/coding-agent/src/modes/rpc/rpc-types.ts",
+        "packages/coding-agent/src/modes/rpc/rpc-client.ts",
+        "packages/coding-agent/test/rpc-hello.test.ts"
+      ],
+      "currentChangedLines": 392,
+      "upstreamChangedPaths": [
+        "packages/coding-agent/src/modes/rpc/rpc-client.ts",
+        "packages/coding-agent/src/modes/rpc/rpc-mode.ts",
+        "packages/coding-agent/src/modes/rpc/rpc-types.ts"
+      ],
+      "upstreamMissingPaths": [
+        "packages/coding-agent/test/rpc-hello.test.ts"
+      ],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    },
+    {
+      "id": "psmfd-patch-011",
+      "class": "capability",
+      "status": "active",
+      "description": "list_sessions RPC command (fork gap psmfd/pi#54, admitted by pi_config ADR-0145): exposes SessionManager.list()/.listAll() over RPC as list_sessions { cwd?, all? } -> { sessions: [...] }, header fields only (path, id, cwd, name, parentSessionPath, created, modified, messageCount, firstMessage). allMessagesText is deliberately kept off the wire - it scales with transcript size. Advertised in the hello capabilities array (psmfd-patch-010). Reference client gains a typed listSessions() method.",
+      "paths": [
+        "packages/coding-agent/src/modes/rpc/rpc-mode.ts",
+        "packages/coding-agent/src/modes/rpc/rpc-types.ts",
+        "packages/coding-agent/src/modes/rpc/rpc-client.ts",
+        "packages/coding-agent/test/rpc-list-sessions.test.ts"
+      ],
+      "currentChangedLines": 439,
+      "upstreamChangedPaths": [
+        "packages/coding-agent/src/modes/rpc/rpc-client.ts",
+        "packages/coding-agent/src/modes/rpc/rpc-mode.ts",
+        "packages/coding-agent/src/modes/rpc/rpc-types.ts"
+      ],
+      "upstreamMissingPaths": [
+        "packages/coding-agent/test/rpc-list-sessions.test.ts"
+      ],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    },
+    {
+      "id": "psmfd-patch-012",
+      "class": "capability",
+      "status": "active",
+      "description": "session_start dialog fix (fork gap psmfd/pi#57, admitted by pi_config ADR-0145): RPC mode attached its stdin reader only after session_start hooks completed, so a dialog awaited there was unanswerable - the hook deadlocked and pi exited 0 silently once the event loop drained. The stdin reader now attaches before extensions bind: pre-ready extension_ui_response lines resolve immediately, all other input and any EOF is buffered and replayed in arrival order once the command loop is ready, and open stdin keeps the event loop alive.",
+      "paths": [
+        "packages/coding-agent/src/modes/rpc/rpc-mode.ts",
+        "packages/coding-agent/test/rpc-session-start-dialog.test.ts"
+      ],
+      "currentChangedLines": 277,
+      "upstreamChangedPaths": [
+        "packages/coding-agent/src/modes/rpc/rpc-mode.ts"
+      ],
+      "upstreamMissingPaths": [
+        "packages/coding-agent/test/rpc-session-start-dialog.test.ts"
+      ],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    },
+    {
+      "id": "psmfd-patch-013",
+      "class": "capability",
+      "status": "active",
+      "description": "Cache-warmer failure recovery (psmfd/pi#74): a failed refresh scheduled another attempt a full delay later despite not renewing the cache TTL. For a five-minute cache, failures at 4m30s caused a replay at 9m, potentially paying for a cache miss. Stop warming on error/aborted results or exceptions until a new real request starts a run. A stale failure must not stop a replacement run. Explicitly admitted by the maintainer for PR #74; see the narrow exception in security-baseline.md. This changes the core timer lifecycle, which an extension decision hook cannot reliably repair because it does not receive refresh results.",
+      "paths": [
+        "packages/coding-agent/src/core/cache-warmer.ts",
+        "packages/coding-agent/test/cache-warmer.test.ts"
+      ],
+      "currentChangedLines": 80,
+      "upstreamChangedPaths": [],
+      "upstreamMissingPaths": [],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    },
+    {
+      "id": "psmfd-patch-014",
+      "class": "security",
+      "status": "active",
+      "description": "Cerebras bodyless-overflow regex (PR 74). Move whitespace after the optional status-code text inside that optional group, removing overlapping whitespace repetitions while preserving provider scoping and accepted messages. A one-million-tab nonmatch hits the child-process deadline before the fix and completes after it. No upstream fix or open fix PR found on 2026-09-28.",
+      "paths": [
+        "packages/ai/src/utils/overflow.ts",
+        "packages/ai/test/overflow-performance.test.ts"
+      ],
+      "currentChangedLines": 35,
+      "upstreamChangedPaths": [
+        "packages/ai/src/utils/overflow.ts"
+      ],
+      "upstreamMissingPaths": [
+        "packages/ai/test/overflow-performance.test.ts"
+      ],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    },
+    {
+      "id": "psmfd-patch-015",
+      "class": "security",
+      "status": "active",
+      "description": "LaTeX script whitespace normalization (PR 74). Consume each whitespace run once and remove it only beside script operators. A 200,000-space script supplied through renderLatex hits the child-process deadline before the fix and completes after it; formatting tests preserve unrelated spaces. No upstream fix or open fix PR found on 2026-09-28.",
+      "paths": [
+        "packages/tui/src/latex.ts",
+        "packages/tui/test/latex-performance.test.ts"
+      ],
+      "currentChangedLines": 38,
+      "upstreamChangedPaths": [],
+      "upstreamMissingPaths": [
+        "packages/tui/test/latex-performance.test.ts"
+      ],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    },
+    {
+      "id": "psmfd-patch-016",
+      "class": "security",
+      "status": "active",
+      "description": "Skill path trailing-separator normalization (PR 74). Replace unanchored trailing-separator regexes with a backward scan for skill recognition, parent paths, and relative paths. One-million-separator nonmatches time out before the fix and complete afterward; tests retain root and Windows path behavior. No upstream fix or open fix PR found on 2026-09-28.",
+      "paths": [
+        "packages/agent/src/harness/skills.ts",
+        "packages/agent/test/harness/skills-performance.test.ts"
+      ],
+      "currentChangedLines": 61,
+      "upstreamChangedPaths": [
+        "packages/agent/src/harness/skills.ts"
+      ],
+      "upstreamMissingPaths": [
+        "packages/agent/src/harness/skills.ts",
+        "packages/agent/test/harness/skills-performance.test.ts"
+      ],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    },
+    {
+      "id": "psmfd-patch-017",
+      "class": "security",
+      "status": "active",
+      "description": "Owned numeric tool-slot validation (PR 74). Require nonnegative safe-integer indices and owned array slots for execution, abort, and suspension. Real transaction regressions reject string indices and let abort/suspend skip invalid slots. Chord already blocks __proto__ in production; the earlier plain-object probe did not demonstrate production prototype pollution. Tests also cover inherited numeric slots, holes, and valid indices. No upstream fix or open fix PR found on 2026-09-28.",
+      "paths": [
+        "packages/agent/src/harness/pico3/tool-slot.ts",
+        "packages/agent/src/harness/pico3/kinds/tool.ts",
+        "packages/agent/src/harness/pico3/session.ts",
+        "packages/agent/src/harness/pico3/harness.ts",
+        "packages/agent/test/harness/pico3/tool-slot.test.ts"
+      ],
+      "currentChangedLines": 132,
+      "upstreamChangedPaths": [
+        "packages/agent/src/harness/pico3/harness.ts",
+        "packages/agent/src/harness/pico3/kinds/tool.ts",
+        "packages/agent/src/harness/pico3/session.ts"
+      ],
+      "upstreamMissingPaths": [
+        "packages/agent/src/harness/pico3/tool-slot.ts",
+        "packages/agent/src/harness/pico3/kinds/tool.ts",
+        "packages/agent/src/harness/pico3/session.ts",
+        "packages/agent/src/harness/pico3/harness.ts",
+        "packages/agent/test/harness/pico3/tool-slot.test.ts"
+      ],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    },
+    {
+      "id": "psmfd-patch-018",
+      "class": "capability",
+      "status": "active",
+      "description": "Auth cache freshness after same-metadata edits. Hash transient file content with SHA-256 instead of trusting a stat revision, and bind the digest to the same locked snapshot that is parsed. Preserve shared reloads, cancellation, mutation invalidation and error fallback. Every file-backed cache hit reads and hashes the file; no extra raw credentials are retained. An extension cannot repair the private cache used by credential reads. Explicit narrow maintainer admission on 2026-09-29 without a generation ADR or consumer soak; see security-baseline.md.",
+      "paths": [
+        "packages/coding-agent/src/core/auth-storage.ts",
+        "packages/coding-agent/test/auth-storage.test.ts"
+      ],
+      "currentChangedLines": 151,
+      "upstreamChangedPaths": [
+        "packages/coding-agent/src/core/auth-storage.ts",
+        "packages/coding-agent/test/auth-storage.test.ts"
+      ],
+      "upstreamMissingPaths": [],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    },
+    {
+      "id": "psmfd-patch-019",
+      "class": "capability",
+      "status": "active",
+      "description": "Stack-safe tracked array insertion. Replace internal variadic insertion with one backward tail shift and indexed writes; retain native removal, sparse tail slots, proxy renumbering and operation replay. An extension cannot replace Chord's private mutation/coalescing helper. Explicit narrow maintainer admission on 2026-09-29 without a generation ADR or consumer soak; see security-baseline.md.",
+      "paths": [
+        "packages/chord/src/delta/index.ts",
+        "packages/chord/test/delta.test.ts"
+      ],
+      "currentChangedLines": 78,
+      "upstreamChangedPaths": [
+        "packages/chord/src/delta/index.ts",
+        "packages/chord/test/delta.test.ts"
+      ],
+      "upstreamMissingPaths": [],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    },
+    {
+      "id": "psmfd-patch-020",
+      "class": "capability",
+      "status": "pending",
+      "description": "Explicit managed-v1 startup policy (psmfd/pi#80): validate immutable launch inputs before migrations/command dispatch, construct in-memory configuration, load only selected extensions with a literal prompt, and retain that policy through reload and supported new-session flows. Disable implicit crash discovery/recording and cache warming; reject unsupported config/auth/session/bug-report operations. Extensions cannot prevent discovery before they load. This is not an OS sandbox. Pending means not merged or approved for a production pin.",
+      "paths": [
+        "packages/coding-agent/docs/cli-integration.md",
+        "packages/coding-agent/src/cli/args.ts",
+        "packages/coding-agent/src/core/agent-session-runtime.ts",
+        "packages/coding-agent/src/core/agent-session-services.ts",
+        "packages/coding-agent/src/core/managed-resource-loader.ts",
+        "packages/coding-agent/src/core/startup-policy.ts",
+        "packages/coding-agent/src/main.ts",
+        "packages/coding-agent/src/modes/interactive/interactive-mode.ts",
+        "packages/coding-agent/src/modes/interactive/theme/theme-controller.ts",
+        "packages/coding-agent/test/interactive-mode-clone-command.test.ts",
+        "packages/coding-agent/test/interactive-mode-import-command.test.ts",
+        "packages/coding-agent/test/managed-startup-policy.test.ts",
+        "packages/coding-agent/test/theme-controller.test.ts"
+      ],
+      "currentChangedLines": 673,
+      "upstreamChangedPaths": [
+        "packages/coding-agent/docs/cli-integration.md",
+        "packages/coding-agent/src/cli/args.ts",
+        "packages/coding-agent/src/core/agent-session-runtime.ts",
+        "packages/coding-agent/src/core/agent-session-services.ts",
+        "packages/coding-agent/src/main.ts",
+        "packages/coding-agent/src/modes/interactive/interactive-mode.ts",
+        "packages/coding-agent/src/modes/interactive/theme/theme-controller.ts",
+        "packages/coding-agent/test/theme-controller.test.ts"
+      ],
+      "upstreamMissingPaths": [
+        "packages/coding-agent/src/core/managed-resource-loader.ts",
+        "packages/coding-agent/src/core/startup-policy.ts",
+        "packages/coding-agent/test/managed-startup-policy.test.ts"
+      ],
+      "disposition": "Review required; changed paths alone do not prove equivalent behavior"
+    }
+  ]
+}

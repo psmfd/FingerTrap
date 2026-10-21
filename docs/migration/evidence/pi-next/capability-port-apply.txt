@@ -1,0 +1,26 @@
+Applied patch to 'packages/coding-agent/docs/cli-integration.md' cleanly.
+Applied patch to 'packages/coding-agent/src/cli/args.ts' with conflicts.
+Applied patch to 'packages/coding-agent/src/core/agent-session-runtime.ts' cleanly.
+Applied patch to 'packages/coding-agent/src/core/agent-session-services.ts' cleanly.
+Applied patch to 'packages/coding-agent/src/core/auth-storage.ts' cleanly.
+Applied patch to 'packages/coding-agent/src/core/cache-warmer.ts' cleanly.
+Falling back to direct application...
+Falling back to direct application...
+Applied patch to 'packages/coding-agent/src/main.ts' with conflicts.
+Applied patch to 'packages/coding-agent/src/modes/interactive/interactive-mode.ts' cleanly.
+Applied patch to 'packages/coding-agent/src/modes/interactive/theme/theme-controller.ts' with conflicts.
+Applied patch to 'packages/coding-agent/src/modes/rpc/rpc-client.ts' cleanly.
+Applied patch to 'packages/coding-agent/src/modes/rpc/rpc-mode.ts' cleanly.
+Applied patch to 'packages/coding-agent/src/modes/rpc/rpc-types.ts' cleanly.
+Applied patch to 'packages/coding-agent/test/auth-storage.test.ts' cleanly.
+Applied patch to 'packages/coding-agent/test/cache-warmer.test.ts' cleanly.
+Applied patch to 'packages/coding-agent/test/interactive-mode-clone-command.test.ts' cleanly.
+Applied patch to 'packages/coding-agent/test/interactive-mode-import-command.test.ts' cleanly.
+Falling back to direct application...
+Falling back to direct application...
+Falling back to direct application...
+Falling back to direct application...
+Applied patch to 'packages/coding-agent/test/theme-controller.test.ts' cleanly.
+U packages/coding-agent/src/cli/args.ts
+U packages/coding-agent/src/main.ts
+U packages/coding-agent/src/modes/interactive/theme/theme-controller.ts
