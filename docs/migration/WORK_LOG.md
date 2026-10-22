@@ -1569,3 +1569,9 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   Checkpoint the scope refinement in a draft documentation PR while the rest of
   the plan is under discussion. Full protected CI/routing enrollment is pending
   that review and must complete before merge; no required check is waived.
+- Scope checkpoint 674805a8dc4a26a36edc5adb6d74b266934b01b5 is committed,
+  secret-scanned (zero findings) and remotely backed up in draft #220 against
+  dev. No harness, acceptance case, comparison, CI controller or activation was
+  started. Continue the remaining CF-1 harness/GUI/provider plan discussion;
+  after that review, enroll only owned #220 in existing Tart routing and push
+  without CI skipping so all protected checks complete before any merge.

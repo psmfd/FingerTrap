@@ -6,10 +6,13 @@ Updated: 2026-10-22 UTC. Client foundation tracking; item 1 plan awaits discussi
 production runtime baseline only for CF-1/#217: `v0.85.1-psmfd.1`. Pi 1.3.0
 comparison is separately tracked in deferred
 [#219](https://github.com/psmfd/FingerTrap/issues/219), outside CF-1. The live
-Issues #216/#217/#210 are updated and independently read back. Verify the
-focused plan/evidence changes, then commit and remotely back them up for
-continued plan discussion. This scope
-answer does not claim approval/execution of the entire implementation plan.
+Issues #216/#217/#210 are updated and independently read back. Scope checkpoint
+`674805a8dc4a26a36edc5adb6d74b266934b01b5` is committed, secret-scanned and
+remotely backed up in draft [#220](https://github.com/psmfd/FingerTrap/pull/220).
+Focused documentation checks pass; full protected CI and owned-PR Tart enrollment
+remain pending the rest of the plan review and are required before merge.
+Continue the CF-1 harness/GUI/provider discussion below. This scope answer does
+not claim approval/execution of the entire implementation plan.
 
 **CF-0 — client foundation tracking, prepared.** The maintainer selected
 client acceptance, complete profile isolation and a supervised JavaScript/Pi SDK
