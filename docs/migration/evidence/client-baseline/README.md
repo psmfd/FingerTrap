@@ -30,6 +30,9 @@ It bypasses the Tauri bridge and passes no GUI/provider row.
 The [guard red/green proof](guard-red-green.txt) removes archive traversal and
 GUI-observation guards in isolated module copies, proves failures, and then
 passes all 15 kept tests with the unchanged harness.
+The [protected source CI snapshot](source-ci.json) records all 22 successful
+checks on f86413f and four cleaned local macOS CI guests. Final documentation
+head/merge checks are recorded in #220/#217; none passes a blocked GUI row.
 
 ## Inputs and prior evidence
 

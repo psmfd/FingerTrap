@@ -24,9 +24,12 @@ or Pi 1.3.0 comparison is authorized by this slice.
 
 Checkpoint `11f92741c0ee6f1779c8028e297301a7e62e81d8` is committed,
 secret-scanned and remotely backed up in #220; #217 is independently read back.
-Runner group 5 and pinned worker verify. Enroll only owned #220 in existing
-Tart routing, mark ready and push the final routing checkpoint without CI skip.
-All required checks must pass before merge; CI is not baseline acceptance.
+Protected source head `f86413f7e7bf31a69e874e9bf88367d7d7b8c56d` passes all
+22 checks; its four local macOS CI guests are cleaned. Review has zero unresolved
+threads. Read the [source CI snapshot](evidence/client-baseline/source-ci.json).
+The subsequent documentation checkpoint must also pass protected checks before
+normal merge; final head/merge readback is recorded in #220 and #217. CI is not
+baseline acceptance.
 
 **CF-0S — baseline scope decision.** The maintainer selected the current
 production runtime baseline only for CF-1/#217: `v0.85.1-psmfd.1`. Pi 1.3.0
@@ -215,15 +218,16 @@ Suggested restart text:
 
 ## Resume here
 
-**Next action: finish protected verification of the CF-1 harness/evidence PR.** Read
+**Next action: arrange an observable interactive guest session for blocked CF-1 cases.** Read
 [the implementation proposal](client-foundation-plan.html#cf1-plan),
 [the worksheet](evidence/client-baseline/README.md) and #217. The runtime scope
 is settled: production `v0.85.1-psmfd.1` only; comparison belongs to #219.
 The maintainer approved execution after the production-only scope decision.
-Inputs and harness checks pass; GUI/provider acceptance remains blocked. Finish
-the owned PR's CI, then arrange an observable interactive guest session, test
-login and exact previous app before rerunning blocked cases. Use the worksheet's
-reproduction commands. CF-2 through CF-10 remain planned.
+Inputs and harness/source CI checks pass; GUI/provider acceptance remains
+blocked. Verify the final #220 documentation/merge readback, then arrange an
+observable interactive guest session, supported test login and exact previous
+app before rerunning blocked cases. Use the worksheet's reproduction commands.
+CF-2 through CF-10 remain planned; #217 stays open until maintainer acceptance.
 
 The prior Pi source review and exact-artifact qualification are complete. #210
 remains open in parallel for the separate runtime release/pin decision: review

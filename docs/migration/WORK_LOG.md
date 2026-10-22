@@ -1658,3 +1658,15 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   owned #220 to the trusted list, apply existing restricted server routing,
   mark ready and push the final source without CI skipping. No standalone
   guest remains active before CI; runtime/package/GUI acceptance is unchanged.
+- Protected head f86413f7e7bf31a69e874e9bf88367d7d7b8c56d passes all 22
+  distinct checks, including repo-check's kept harness suite and every hosted
+  Linux/Windows/local macOS lane. CodeQL's transient missing-configuration
+  notice clears as all analyses complete; its final conclusion is success.
+  All four local CI clones are cleaned. PR review has zero unresolved threads
+  and normal clean merge state. Retain source-ci.json with exact check URLs.
+- Final documentation checkpoint records the source result and the concrete
+  resume action: arrange an observable guest session, supported test login and
+  exact previous-app bytes, then repeat eleven blocked rows. It must pass its
+  own protected checks before merging #220 normally. Final head/merge identities
+  and post-merge readback belong in #220/#217 without fabricating a self hash.
+  #217 remains open, baseline not accepted, CF-2 unstarted, #219 deferred.
