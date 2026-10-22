@@ -1494,7 +1494,7 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   before the full CI push, then run all required checks and merge normally.
   This documentation slice introduces no production or test behavior change.
 
-## 2026-10-21 — CF-0 client foundation tracking
+## 2026-10-22 UTC / 2026-10-21 ET — CF-0 client foundation tracking
 
 - Maintainer selected the foundation-first sequence: packaged-client acceptance,
   completed profile isolation and a supervised JavaScript/Pi SDK worker before
@@ -1535,3 +1535,10 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   unchanged tables. No browser-render, GUI, provider or CF-1 runtime pass is claimed.
   Next commit/scan/back up a draft, enroll only its owned PR in the existing Tart
   routing, and finish protected tracking verification before the plan discussion.
+- Tracking checkpoint 7f75c700bc268bfad7e66dd7d7bda716f1ab4c4d is committed,
+  secret-scanned and remotely backed up in draft #218. Current runner group 5
+  and immutable worker policy verify. Enroll only this owned PR, keep the
+  restricted repository/workflow boundary, mark it ready before the final source
+  push, and run protected CI with four local macOS jobs. CF-1 remains unstarted.
+  UTC crossed midnight during tracking; current timestamps explicitly distinguish
+  2026-10-22 UTC from the maintainer's 2026-10-21 ET date.

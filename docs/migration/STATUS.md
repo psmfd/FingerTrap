@@ -1,6 +1,6 @@
 # Runtime migration: current status
 
-Updated: 2026-10-21 UTC. Client foundation tracking; item 1 plan awaits discussion.
+Updated: 2026-10-22 UTC. Client foundation tracking; item 1 plan awaits discussion.
 
 **CF-0 — client foundation tracking, prepared.** The maintainer selected
 client acceptance, complete profile isolation and a supervised JavaScript/Pi SDK
@@ -11,8 +11,11 @@ are created and independently read back. The
 [ordered foundation and item-1 plan](client-foundation-plan.html) and
 [baseline evidence contract](evidence/client-baseline/README.md) are prepared.
 Current source baseline is `6fe2627d040b385fa96fdd91f7341c39214a112f`, with all
-19 post-merge checks passed. Validate/checkpoint the tracking slice, then discuss
-item 1 with the maintainer before execution. Tracking preparation does not imply
+19 post-merge checks passed. Tracking checkpoint `7f75c70` is committed,
+secret-scanned and remotely backed up in [#218](https://github.com/psmfd/FingerTrap/pull/218).
+Its protected verification and merge state are recorded there; complete it if
+still open, then discuss item 1 with the maintainer before execution.
+Tracking preparation does not imply
 baseline execution, a production SDK switch or runtime activation. No new
 extension catalog import/review starts before the foundation exit.
 
