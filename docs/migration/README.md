@@ -1,5 +1,13 @@
 # Agent runtime migration inventory
 
+**Active sequence: client foundation before further extension catalog import/review.**
+The maintainer selected [foundation #216](https://github.com/psmfd/FingerTrap/issues/216)
+and [packaged-client baseline #217](https://github.com/psmfd/FingerTrap/issues/217).
+Read the [foundation and proposed item-1 plan](client-foundation-plan.html), then
+[current status](STATUS.md). Item-1 execution awaits plan discussion. The inventory
+below remains the dated M0 source snapshot; current qualification/activation facts
+are recorded in STATUS, not inferred from these historical candidate rows.
+
 **M0 inventory recorded on 2026-10-20.** FingerTrap owns new product planning
 under [ADR-0034](../../adrs/0034-own-agent-runtime-and-retire-pi-config.md).
 **M1a source import completed locally:** the token and cache meters now live
@@ -15,6 +23,9 @@ This directory contains:
   the next action. Start here when continuing work.
 - [Approved implementation plan (HTML)](implementation-plan-200-profile.html):
   maintainer-approved sequence for #200 and #201, recorded 2026-10-20.
+- [Client foundation and proposed baseline plan (HTML)](client-foundation-plan.html):
+  current ten-area order, existing issue ownership, item-1 implementation scope,
+  acceptance and explicit decision gates; [baseline worksheet](evidence/client-baseline/README.md).
 - [S1 profile foundation](profile-foundation.md): settings compatibility,
   common contract fixtures, local verification and remaining launch gates.
 - [S2 import/test manifests](import-manifests.md): complete package accounting,

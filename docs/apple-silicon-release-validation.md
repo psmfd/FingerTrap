@@ -96,6 +96,13 @@ pi version and any failures to the release review. Keep release promotion on
 hold until the required acceptance checks pass. Intel Macs remain unsupported;
 Linux and Windows CI provides regression coverage for this release cycle.
 
-The jsdom major upgrade remains deferred in #165. Dependency alerts on the
-default branch must be rechecked after the reviewed `dev` changes reach `main`;
-merging fixes into `dev` alone does not close default-branch alerts.
+Dependency reconciliation #211 includes the jsdom update formerly tracked in
+issue #165. Dependency alerts on the default branch must be rechecked after the
+reviewed `dev` changes reach `main`; merging fixes into `dev` alone does not
+close default-branch alerts.
+
+The current client-foundation campaign is tracked in #216, with its first
+packaged-client baseline in #217. Read the
+[proposed implementation plan](migration/client-foundation-plan.html#cf1-plan)
+and [evidence worksheet](migration/evidence/client-baseline/README.md) before
+execution. That plan supplements this checklist; it does not claim acceptance.

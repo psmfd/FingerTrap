@@ -1493,3 +1493,45 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   Tart policy, keep the immutable worker and restricted runner group, mark ready
   before the full CI push, then run all required checks and merge normally.
   This documentation slice introduces no production or test behavior change.
+
+## 2026-10-21 — CF-0 client foundation tracking
+
+- Maintainer selected the foundation-first sequence: packaged-client acceptance,
+  completed profile isolation and a supervised JavaScript/Pi SDK worker before
+  further extension catalog import/review. Prepare durable trackers using the
+  established status/log/plan/evidence pattern, then discuss item 1 before
+  execution. This is authorization for tracking and plan preparation only.
+- Before the slice, dev/origin/dev match 6fe2627d040b385fa96fdd91f7341c39214a112f;
+  #215 is merged, all 22 head and 19 post-merge checks passed, and both source
+  PR backlogs are empty. Private untracked evidence is preserved. The global
+  Stop-hook output bug is tracked independently in agent-framework-codex #19;
+  it does not replace or block explicit validation.
+- CF-0 intended result: umbrella/baseline issues linked to #201/#202/#210,
+  ordered foundation plan, proposed baseline execution/acceptance/evidence
+  contract, current resume action and scoped backed-up documentation commit.
+  Validate Markdown/HTML/JSON/local links, structural checks and secret scan;
+  preserve separate production release/pin, SDK adoption and activation gates.
+- CF-0 remote result: foundation umbrella #216 and item-1 baseline #217 are
+  created and independently read back; #216 links #217 in its ordered checklist.
+  No baseline case, client fix or worker implementation has started. Existing
+  #201/#202 retain profile/SDK ownership; #200 catalog work is deferred by the
+  maintainer's current sequencing, with only existing meter integration in CF-3.
+- Prepared client-foundation-plan.html with all ten areas and the proposed
+  CF-1A–F execution/file/acceptance plan. Added a twelve-case NOT RUN worksheet
+  and explicit prior-artifact reference. It names #213's actual artifact source
+  and synthetic build merge; it does not attribute those bytes to current dev.
+  Baseline captured is distinguished from baseline accepted; GUI/provider skips
+  never pass. Next validate the tracking slice and reconcile issue cross-links,
+  then checkpoint/back it up before discussing CF-1 execution with the maintainer.
+- CF-0 issue reconciliation: #200/#201/#202/#210 now link #216/#217 and preserve
+  their open acceptance/activation gates. #202's superseded 0.87.1 candidate
+  sentence now names the qualified Pi 1.3.0 CLI source while requiring a separate
+  same-source SDK closure. All four updates were independently read back.
+- Local tracking verification passes: six Markdown files, new HTML/evidence
+  formatting, all 85 direct local links and eight unique HTML IDs, twelve NOT RUN
+  worksheet rows, prior-reference metadata consistency, whitespace and structural
+  checks. First Markdown lint caught two issue-number lines parsed as headings;
+  corrected those and reran green. Preserved original formatting of nine
+  unchanged tables. No browser-render, GUI, provider or CF-1 runtime pass is claimed.
+  Next commit/scan/back up a draft, enroll only its owned PR in the existing Tart
+  routing, and finish protected tracking verification before the plan discussion.
