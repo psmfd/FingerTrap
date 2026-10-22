@@ -1651,3 +1651,10 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   finding. No product source changed and no blocker is waived. Checkpoint this
   reviewed slice, secret-scan/back it up in #220, then enroll that owned PR for
   the existing full CI matrix, preserving its pinned worker and runner group.
+- Checkpoint 11f92741c0ee6f1779c8028e297301a7e62e81d8 is committed,
+  secret-scanned (zero findings) and remotely backed up in #220. PR title/body
+  now describe the implementation and blockers; #217 records approval/capture
+  and is independently read back. Existing runner group 5 verifies. Add only
+  owned #220 to the trusted list, apply existing restricted server routing,
+  mark ready and push the final source without CI skipping. No standalone
+  guest remains active before CI; runtime/package/GUI acceptance is unchanged.

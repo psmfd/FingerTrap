@@ -22,6 +22,12 @@ protected PR verification, then arrange an observable guest session and repeat
 blocked rows. No CF-2 advance, production pin, SDK adoption, managed activation
 or Pi 1.3.0 comparison is authorized by this slice.
 
+Checkpoint `11f92741c0ee6f1779c8028e297301a7e62e81d8` is committed,
+secret-scanned and remotely backed up in #220; #217 is independently read back.
+Runner group 5 and pinned worker verify. Enroll only owned #220 in existing
+Tart routing, mark ready and push the final routing checkpoint without CI skip.
+All required checks must pass before merge; CI is not baseline acceptance.
+
 **CF-0S — baseline scope decision.** The maintainer selected the current
 production runtime baseline only for CF-1/#217: `v0.85.1-psmfd.1`. Pi 1.3.0
 comparison is separately tracked in deferred

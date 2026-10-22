@@ -3,8 +3,9 @@
 **Active sequence: client foundation before further extension catalog import/review.**
 The maintainer selected [foundation #216](https://github.com/psmfd/FingerTrap/issues/216)
 and [packaged-client baseline #217](https://github.com/psmfd/FingerTrap/issues/217).
-Read the [foundation and proposed item-1 plan](client-foundation-plan.html), then
-[current status](STATUS.md). Item-1 execution awaits plan discussion. The inventory
+Read the [foundation and approved item-1 plan](client-foundation-plan.html), then
+[current status](STATUS.md). The production baseline is captured with GUI/provider
+blockers and is not accepted. The inventory
 below remains the dated M0 source snapshot; current qualification/activation facts
 are recorded in STATUS, not inferred from these historical candidate rows.
 
@@ -23,7 +24,7 @@ This directory contains:
   the next action. Start here when continuing work.
 - [Approved implementation plan (HTML)](implementation-plan-200-profile.html):
   maintainer-approved sequence for #200 and #201, recorded 2026-10-20.
-- [Client foundation and proposed baseline plan (HTML)](client-foundation-plan.html):
+- [Client foundation and approved baseline plan (HTML)](client-foundation-plan.html):
   current ten-area order, existing issue ownership, item-1 implementation scope,
   acceptance and explicit decision gates; [baseline worksheet](evidence/client-baseline/README.md).
 - [S1 profile foundation](profile-foundation.md): settings compatibility,
@@ -52,15 +53,15 @@ milestones in [milestones.md](../milestones.md). Stable work IDs such as
 
 ## Source ownership and immutable inputs
 
-| Input | Identity | Ownership/disposition |
-| --- | --- | --- |
-| FingerTrap base | `8ffeae809f7b4579d6b4f006c3f6e8414df60620` | Destination and new product planning owner |
-| pi_config source | `9862f35a50f5f0d0770d90665cac1a4b8d3f0947` | Immutable import baseline; 944 tracked files partitioned into 61 inventory groups |
-| Current Pi fork | `v0.85.1-psmfd.1`, `e7d09c9dc5fca409f46a5476669e3c0404054d69` | Existing consumer contract; keep during first import |
-| Candidate Pi fork | `v0.87.1-psmfd.1`, `42429b94e4aca33fdbb8d094de29758b36411ba1` | Published fork release; consumer qualification remains incomplete |
-| pi-workflow | `fd78b8e89a0ce571d72a22fe0204c334019f1f3e` | Separate canonical package; FingerTrap owns consumption |
-| agent-expertise-api | External API contracts/issues | Separate canonical service; provider/bootstrap dependencies remain explicit |
-| Public pi-config and 12 extension mirrors | Per-repository commits and provenance blobs in manifest | Generated distribution destinations; transition publisher or retire explicitly |
+| Input                                     | Identity                                                      | Ownership/disposition                                                             |
+| ----------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| FingerTrap base                           | `8ffeae809f7b4579d6b4f006c3f6e8414df60620`                    | Destination and new product planning owner                                        |
+| pi_config source                          | `9862f35a50f5f0d0770d90665cac1a4b8d3f0947`                    | Immutable import baseline; 944 tracked files partitioned into 61 inventory groups |
+| Current Pi fork                           | `v0.85.1-psmfd.1`, `e7d09c9dc5fca409f46a5476669e3c0404054d69` | Existing consumer contract; keep during first import                              |
+| Candidate Pi fork                         | `v0.87.1-psmfd.1`, `42429b94e4aca33fdbb8d094de29758b36411ba1` | Published fork release; consumer qualification remains incomplete                 |
+| pi-workflow                               | `fd78b8e89a0ce571d72a22fe0204c334019f1f3e`                    | Separate canonical package; FingerTrap owns consumption                           |
+| agent-expertise-api                       | External API contracts/issues                                 | Separate canonical service; provider/bootstrap dependencies remain explicit       |
+| Public pi-config and 12 extension mirrors | Per-repository commits and provenance blobs in manifest       | Generated distribution destinations; transition publisher or retire explicitly    |
 
 The source manifest partitions the entire tracked source tree, including
 infrastructure and excluded material. It does **not** authorize copying every
@@ -81,44 +82,44 @@ Counts below identify migration units, not readiness or test results.
 All retained extension source targets `packages/agent-runtime/extensions/`;
 each import must bring its actual shared/vendor dependency and test closure.
 
-| Component paths under `agent/extensions/` | Files | Destination and gate |
-| --- | --- | --- |
-| `token-meter`, `cache-meter` | 11 + 8 | IMPORT M1a complete, inactive. Recorder schemas and six test files retained; 41 tests pass. PROFILE replaces default home paths before managed use. |
-| `prefill-meter` | 8 | Later IMPORT. It calls the Pi SDK prompt formatter at runtime; qualify that dependency and the managed storage path. |
-| `shared` | 62 | Import only each slice's dependency closure, eventually the retained common library. Includes state, routing, GitHub, expertise, secret scanning, and package-agent contracts; do not flatten distinct trust boundaries into one bridge. |
-| `secrets-guard`, `bash-destructive-guard`, `gh-identity-guard` | 5 + 12 + 16 | IMPORT preserves enforcement, adversarial tests, shell parsing, and identity behavior. AUTHORITY owns stronger controls; these guards are not an OS sandbox. |
-| `bash-confinement` | 4 | Preserve source/evidence; AUTHORITY qualifies platform enforcement. Linux-specific guarantees cannot be enabled by a macOS path change. |
-| `package-agent-broker` | 42 | Preserve proposal/grant/digest contracts and adversarial tests. AUTHORITY blocks native approval and credential-bearing dispatch until the trusted design passes. |
-| `subagent` | 20 | Preserve upstream/patch provenance and serial execution contracts. Resolve malformed tool declarations, project-agent confirmation, child invocation, isolation, and crash cleanup before enabling migrated dispatch. |
-| `worktree` | 16 | IMPORT retains mechanics and tests; PROFILE aligns session/manifest roots with the sidecar. Carry host-local PID and porcelain-parser defects. |
-| `auto-router` | 28 | Retain routing behavior and tests. BACKEND verifies workaround retirement and fork compatibility; model/quality tuning is separate deferred work. |
-| `compaction-optimizer`, `context-manager`, `payload-tuner` | 25 + 10 + 12 | Preserve hooks, settings precedence, abort behavior, schemas, and dependency closure. Do not change tuning defaults as part of relocation. |
-| `artifact-handoff`, `web-fetch` | 4 + 5 | Curate portable source/tests and explicit filesystem/network policy; do not import operator allowlists. |
-| `git-read`, `github-read` | 4 + 6 | Retain bounded typed operations, shared parsers, identity and output sanitation. FT-3 is not a generic sidecar-method bridge. |
-| `hashline-edit` | 51 | Retain the builtin `edit` ownership contract, upstream patch manifest, and `LICENSE.upstream` from RimuruW/pi-hashline-edit. |
-| `indexing` | 20 | Preserve typed search and shared state; qualify cocoindex/model dependencies, integrity pins, and supported-platform availability. |
-| `repo-dash` | 15 | Preserve TUI behavior and data contracts; correct RPC-incompatible custom UI calls before activation. Existing native dashboards remain #157. |
-| `plain-english` | 7 | Curate the output/style mechanism and tests; workflow mutation enforcement is separate future work. |
-| `expertise-client`, `expertise-fanout-gate`, `expertise-indexer`, `expertise-mutation-boundary` | 15 + 8 + 17 + 3 | EXPERTISE preserves contracts/tests and selects a supported provider. Local mutation remains gated; RPC UI does not authorize protected changes. |
-| Extension-root `README.md`, `package.json` | 2 | Replace with FingerTrap package documentation and real dependency metadata. The source package is only an ESM marker; it is not a reproducible dependency manifest. |
+| Component paths under `agent/extensions/`                                                       | Files           | Destination and gate                                                                                                                                                                                                                     |
+| ----------------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `token-meter`, `cache-meter`                                                                    | 11 + 8          | IMPORT M1a complete, inactive. Recorder schemas and six test files retained; 41 tests pass. PROFILE replaces default home paths before managed use.                                                                                      |
+| `prefill-meter`                                                                                 | 8               | Later IMPORT. It calls the Pi SDK prompt formatter at runtime; qualify that dependency and the managed storage path.                                                                                                                     |
+| `shared`                                                                                        | 62              | Import only each slice's dependency closure, eventually the retained common library. Includes state, routing, GitHub, expertise, secret scanning, and package-agent contracts; do not flatten distinct trust boundaries into one bridge. |
+| `secrets-guard`, `bash-destructive-guard`, `gh-identity-guard`                                  | 5 + 12 + 16     | IMPORT preserves enforcement, adversarial tests, shell parsing, and identity behavior. AUTHORITY owns stronger controls; these guards are not an OS sandbox.                                                                             |
+| `bash-confinement`                                                                              | 4               | Preserve source/evidence; AUTHORITY qualifies platform enforcement. Linux-specific guarantees cannot be enabled by a macOS path change.                                                                                                  |
+| `package-agent-broker`                                                                          | 42              | Preserve proposal/grant/digest contracts and adversarial tests. AUTHORITY blocks native approval and credential-bearing dispatch until the trusted design passes.                                                                        |
+| `subagent`                                                                                      | 20              | Preserve upstream/patch provenance and serial execution contracts. Resolve malformed tool declarations, project-agent confirmation, child invocation, isolation, and crash cleanup before enabling migrated dispatch.                    |
+| `worktree`                                                                                      | 16              | IMPORT retains mechanics and tests; PROFILE aligns session/manifest roots with the sidecar. Carry host-local PID and porcelain-parser defects.                                                                                           |
+| `auto-router`                                                                                   | 28              | Retain routing behavior and tests. BACKEND verifies workaround retirement and fork compatibility; model/quality tuning is separate deferred work.                                                                                        |
+| `compaction-optimizer`, `context-manager`, `payload-tuner`                                      | 25 + 10 + 12    | Preserve hooks, settings precedence, abort behavior, schemas, and dependency closure. Do not change tuning defaults as part of relocation.                                                                                               |
+| `artifact-handoff`, `web-fetch`                                                                 | 4 + 5           | Curate portable source/tests and explicit filesystem/network policy; do not import operator allowlists.                                                                                                                                  |
+| `git-read`, `github-read`                                                                       | 4 + 6           | Retain bounded typed operations, shared parsers, identity and output sanitation. FT-3 is not a generic sidecar-method bridge.                                                                                                            |
+| `hashline-edit`                                                                                 | 51              | Retain the builtin `edit` ownership contract, upstream patch manifest, and `LICENSE.upstream` from RimuruW/pi-hashline-edit.                                                                                                             |
+| `indexing`                                                                                      | 20              | Preserve typed search and shared state; qualify cocoindex/model dependencies, integrity pins, and supported-platform availability.                                                                                                       |
+| `repo-dash`                                                                                     | 15              | Preserve TUI behavior and data contracts; correct RPC-incompatible custom UI calls before activation. Existing native dashboards remain #157.                                                                                            |
+| `plain-english`                                                                                 | 7               | Curate the output/style mechanism and tests; workflow mutation enforcement is separate future work.                                                                                                                                      |
+| `expertise-client`, `expertise-fanout-gate`, `expertise-indexer`, `expertise-mutation-boundary` | 15 + 8 + 17 + 3 | EXPERTISE preserves contracts/tests and selects a supported provider. Local mutation remains gated; RPC UI does not authorize protected changes.                                                                                         |
+| Extension-root `README.md`, `package.json`                                                      | 2               | Replace with FingerTrap package documentation and real dependency metadata. The source package is only an ESM marker; it is not a reproducible dependency manifest.                                                                      |
 
 ## Defaults, tooling, plans, and exclusions
 
-| Source | Inventory | Disposition |
-| --- | --- | --- |
-| `agent/agents` | 21 wrappers | Curate useful defaults under the runtime package. Positive tools, model selection, project trust, and relevant evaluation results are activation gates. |
-| `agent/skills` | 68 files across 21 skill directories | Select applicable skills and review content rights/provenance. Do not copy or activate the entire catalog merely because it is tracked. |
-| `agent/rules` | 26 files | Carry requirements into FingerTrap runtime policy with supersession review. Historical parallel/serial and orchestration rules must be reconciled; these are not instructions for the migration agent. |
-| `agent/prompts` | 8 prompts | Curate useful templates; review-class prompts remain compatibility candidates until pi-workflow is ready. |
-| `agent/AGENTS.md`, settings/model examples | 3 files | Rewrite the runtime catalog and safe examples for managed profiles. Never use a source example as a live operator configuration. |
-| `agent/vendor`, `agent/npm` | Exact trees in manifest | Select actual dependency closure: Pi, parser, scanning/indexing tools, expertise helpers and other retained consumers. Preserve versions/checksums/notices; independently qualify platform assets. |
-| `scripts`, `tests` | 101 + 5 files | Bring relevant fixtures and behavioral tests with each slice. Replace home-cache installs, network-on-test runners, and source-repo discovery assumptions with package-local locked tooling. |
-| `hooks` | 3 scripts | Reassess repository/developer hooks separately from runtime enforcement. Do not auto-install global hooks or change shell configuration. |
-| `LICENSE` | MIT source notice | Preserve the original notice in imported code/package; retain additional vendored notices independently. |
-| `adrs`, `notes`, `docs`, `security` | Exact trees in manifest | Reference evidence privately; write selected public contracts in FingerTrap. No wholesale ADR renumbering or private plan/log publication. |
-| `mirror`, `.github`, installers, root setup/update/config files | Exact trees/blobs in manifest | RETIRE or INSTALL replaces ownership and automation. Import useful validation cases, not a second active updater or publisher. |
-| `.pi`, `.review`, `setup.local.env.example` | Tracked templates | Exclude from runtime import; tracked status is not a public-content review. |
-| Live auth/settings/model stores, sessions, caches, trust/grants, ignored logs/artifacts | Outside tracked-source selection | Excluded. No automatic copying from the operator's installation. |
+| Source                                                                                  | Inventory                            | Disposition                                                                                                                                                                                            |
+| --------------------------------------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `agent/agents`                                                                          | 21 wrappers                          | Curate useful defaults under the runtime package. Positive tools, model selection, project trust, and relevant evaluation results are activation gates.                                                |
+| `agent/skills`                                                                          | 68 files across 21 skill directories | Select applicable skills and review content rights/provenance. Do not copy or activate the entire catalog merely because it is tracked.                                                                |
+| `agent/rules`                                                                           | 26 files                             | Carry requirements into FingerTrap runtime policy with supersession review. Historical parallel/serial and orchestration rules must be reconciled; these are not instructions for the migration agent. |
+| `agent/prompts`                                                                         | 8 prompts                            | Curate useful templates; review-class prompts remain compatibility candidates until pi-workflow is ready.                                                                                              |
+| `agent/AGENTS.md`, settings/model examples                                              | 3 files                              | Rewrite the runtime catalog and safe examples for managed profiles. Never use a source example as a live operator configuration.                                                                       |
+| `agent/vendor`, `agent/npm`                                                             | Exact trees in manifest              | Select actual dependency closure: Pi, parser, scanning/indexing tools, expertise helpers and other retained consumers. Preserve versions/checksums/notices; independently qualify platform assets.     |
+| `scripts`, `tests`                                                                      | 101 + 5 files                        | Bring relevant fixtures and behavioral tests with each slice. Replace home-cache installs, network-on-test runners, and source-repo discovery assumptions with package-local locked tooling.           |
+| `hooks`                                                                                 | 3 scripts                            | Reassess repository/developer hooks separately from runtime enforcement. Do not auto-install global hooks or change shell configuration.                                                               |
+| `LICENSE`                                                                               | MIT source notice                    | Preserve the original notice in imported code/package; retain additional vendored notices independently.                                                                                               |
+| `adrs`, `notes`, `docs`, `security`                                                     | Exact trees in manifest              | Reference evidence privately; write selected public contracts in FingerTrap. No wholesale ADR renumbering or private plan/log publication.                                                             |
+| `mirror`, `.github`, installers, root setup/update/config files                         | Exact trees/blobs in manifest        | RETIRE or INSTALL replaces ownership and automation. Import useful validation cases, not a second active updater or publisher.                                                                         |
+| `.pi`, `.review`, `setup.local.env.example`                                             | Tracked templates                    | Exclude from runtime import; tracked status is not a public-content review.                                                                                                                            |
+| Live auth/settings/model stores, sessions, caches, trust/grants, ignored logs/artifacts | Outside tracked-source selection     | Excluded. No automatic copying from the operator's installation.                                                                                                                                       |
 
 The dirty source `notes/session-handoff.md` and FingerTrap's existing local
 handoffs, testing directory, and legacy patch remain untouched. The manifest
@@ -163,14 +164,14 @@ No claim of managed installation or production runtime readiness follows.
 
 ## Sequence after M1a
 
-| Next work | Dependency and outcome |
-| --- | --- |
-| Remaining M1 imports | IMPORT defines a file/test/dependency closure for each group. Preserve pending security/correctness fixes before activating affected components; do not wait for every deferred feature. |
-| M2 managed profile | PROFILE establishes one app-owned root contract across launch, resume, resource discovery, session browsing, worktree manifests, meters, child processes, and credential resolution. No `~/.pi`, global npm, or shell-rc mutations; no ambient credential import. |
-| M3 backend comparison | BACKEND first selects one qualified fork revision for both candidates, then runs the ADR-0034 gate with real migrated extensions. Use one SDK worker per native session; retain CLI children/PTY until separately migrated. Record a go/no-go ADR. |
-| M4 install/onboarding | Reconcile #186/#187 and draft #188 with this ownership decision. Verify the full artifact closure, login, atomic activation and rollback on a clean Apple Silicon guest without global Node/npm. |
-| M5 product capabilities | #157 consumes stable recorder schemas; #158 remains display/intent. AUTHORITY, EXPERTISE, and WORKFLOW each satisfy their own gates. Transcript rendering remains separately scoped UI work. |
-| M6 retirement | RETIRE records a publisher or explicit retirement path for every mirror, independent FingerTrap builds/tests/releases/recovery, and old-user migration. Only then archive pi_config. |
+| Next work               | Dependency and outcome                                                                                                                                                                                                                                            |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Remaining M1 imports    | IMPORT defines a file/test/dependency closure for each group. Preserve pending security/correctness fixes before activating affected components; do not wait for every deferred feature.                                                                          |
+| M2 managed profile      | PROFILE establishes one app-owned root contract across launch, resume, resource discovery, session browsing, worktree manifests, meters, child processes, and credential resolution. No `~/.pi`, global npm, or shell-rc mutations; no ambient credential import. |
+| M3 backend comparison   | BACKEND first selects one qualified fork revision for both candidates, then runs the ADR-0034 gate with real migrated extensions. Use one SDK worker per native session; retain CLI children/PTY until separately migrated. Record a go/no-go ADR.                |
+| M4 install/onboarding   | Reconcile #186/#187 and draft #188 with this ownership decision. Verify the full artifact closure, login, atomic activation and rollback on a clean Apple Silicon guest without global Node/npm.                                                                  |
+| M5 product capabilities | #157 consumes stable recorder schemas; #158 remains display/intent. AUTHORITY, EXPERTISE, and WORKFLOW each satisfy their own gates. Transcript rendering remains separately scoped UI work.                                                                      |
+| M6 retirement           | RETIRE records a publisher or explicit retirement path for every mirror, independent FingerTrap builds/tests/releases/recovery, and old-user migration. Only then archive pi_config.                                                                              |
 
 The strongest SDK case is explicit control of resources, tools, settings,
 sessions, and lifecycle. It still requires a supervised JavaScript process
