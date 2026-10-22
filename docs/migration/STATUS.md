@@ -2,6 +2,15 @@
 
 Updated: 2026-10-22 UTC. Client foundation tracking; item 1 plan awaits discussion.
 
+**CF-0S — baseline scope decision.** The maintainer selected the current
+production runtime baseline only for CF-1/#217: `v0.85.1-psmfd.1`. Pi 1.3.0
+comparison is separately tracked in deferred
+[#219](https://github.com/psmfd/FingerTrap/issues/219), outside CF-1. The live
+Issues #216/#217/#210 are updated and independently read back. Verify the
+focused plan/evidence changes, then commit and remotely back them up for
+continued plan discussion. This scope
+answer does not claim approval/execution of the entire implementation plan.
+
 **CF-0 — client foundation tracking, prepared.** The maintainer selected
 client acceptance, complete profile isolation and a supervised JavaScript/Pi SDK
 worker as the next campaign, with extension catalog imports/review deferred until
@@ -13,8 +22,8 @@ are created and independently read back. The
 Current source baseline is `6fe2627d040b385fa96fdd91f7341c39214a112f`, with all
 19 post-merge checks passed. Tracking checkpoint `7f75c70` is committed,
 secret-scanned and remotely backed up in [#218](https://github.com/psmfd/FingerTrap/pull/218).
-Its protected verification and merge state are recorded there; complete it if
-still open, then discuss item 1 with the maintainer before execution.
+It merged at `538ff32df0759c2237ea685997d519df3501dd8b` after all 22 head and
+19 post-merge checks passed. Continue item-1 plan discussion before execution.
 Tracking preparation does not imply
 baseline execution, a production SDK switch or runtime activation. No new
 extension catalog import/review starts before the foundation exit.
@@ -177,8 +186,9 @@ Suggested restart text:
 
 **Next action: discuss the proposed CF-1 packaged-client baseline plan.** Read
 [the implementation proposal](client-foundation-plan.html#cf1-plan),
-[the worksheet](evidence/client-baseline/README.md) and #217. Confirm/revise the
-baseline runtime, proposed harness scope and observable GUI/provider participation
+[the worksheet](evidence/client-baseline/README.md) and #217. The runtime scope
+is settled: production `v0.85.1-psmfd.1` only; comparison belongs to #219.
+Discuss the proposed harness scope and observable GUI/provider participation
 before recording the decision and executing. No CF-1 acceptance case or harness
 implementation has started. CF-2 through CF-10 remain planned.
 

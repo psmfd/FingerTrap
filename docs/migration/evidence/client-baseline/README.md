@@ -13,6 +13,9 @@ The starting integration checkpoint is
 Production runtime selection remains `v0.85.1-psmfd.1`. Resolve and independently
 verify that exact supported executable before the real-Pi cases. Do not substitute
 the 0.87.1 comparison artifact or silently promote the 1.3.0 candidate.
+The maintainer selected this production baseline only for CF-1. Pi 1.3.0
+comparison is outside this item and deferred in
+[#219](https://github.com/psmfd/FingerTrap/issues/219).
 
 [artifact-reference.json](artifact-reference.json) records the prior #213 app
 artifact's identities. Its archive/architectures/shell smoke were checked during
@@ -73,8 +76,9 @@ selected bytes, blocking defects to have bounded fix/regression/retest evidence,
 independent cleanup and recorded maintainer acceptance. Do not close #217 or
 claim acceptance merely because a report exists.
 
-A changed artifact receives new identities and affected retests. An optional
-Pi 1.3.0 comparison is a separate named run, not a production pin change.
+A changed artifact receives new identities and affected retests. CF-1 includes
+no Pi 1.3.0 comparison run; #219 requires its own plan after the production
+baseline is established.
 Signing/notarization, runtime release/pin, SDK adoption and managed activation
 retain their existing gates.
 

@@ -1542,3 +1542,30 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   push, and run protected CI with four local macOS jobs. CF-1 remains unstarted.
   UTC crossed midnight during tracking; current timestamps explicitly distinguish
   2026-10-22 UTC from the maintainer's 2026-10-21 ET date.
+
+## 2026-10-22 — CF-0S production-baseline-only decision
+
+- Maintainer answered the item-1 scope question: establish the current production
+  baseline only; handle Pi 1.3.0 comparison as a separate item. CF-1 runtime is
+  v0.85.1-psmfd.1. This is a scope decision during plan discussion, not a claim
+  that baseline execution or the complete implementation plan is approved.
+- Before this documentation slice, dev/origin/dev match
+  538ff32df0759c2237ea685997d519df3501dd8b. Tracking #218 passed all 22 head and
+  19 post-merge checks; #216/#217 contain verified checkpoint links. Private
+  untracked evidence remains preserved, with no CI controller or baseline run
+  left active by that checkpoint.
+- Intended result: a separate deferred comparison issue linked to #216/#217/#210,
+  consistent production-only scope in STATUS/plan/worksheet and live issues,
+  focused Markdown/HTML/link validation, scoped commit and remote backup.
+  Continue item-1 plan discussion; do not run CF-1 or the comparison from this
+  clarification alone.
+- Separate comparison #219 is created, linked from #216/#217/#210 and
+  independently read back. It is deferred pending the accepted production
+  baseline and its own plan. Replaced optional-comparison wording in the local
+  plan/worksheet and recorded production-only scope in the current resume action.
+  No baseline harness, acceptance case or candidate comparison has started.
+- Focused verification: corrected issue-number/Markdown table lint findings;
+  Markdown, HTML/local links and reference/worksheet consistency checks pass.
+  Checkpoint the scope refinement in a draft documentation PR while the rest of
+  the plan is under discussion. Full protected CI/routing enrollment is pending
+  that review and must complete before merge; no required check is waived.
