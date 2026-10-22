@@ -1,6 +1,26 @@
 # Runtime migration: current status
 
-Updated: 2026-10-22 UTC. Client foundation tracking; item 1 plan awaits discussion.
+Updated: 2026-10-22 UTC. CF-1 production-client baseline execution approved.
+
+**CF-1A/B — captured with GUI/provider blockers; acceptance open.** The
+maintainer's "Proceed" approves the recorded CF-1A–F plan against production
+Pi `v0.85.1-psmfd.1` only. Implemented `scripts/qualify-client-baseline.py` and
+15 meaningful guard regressions in `scripts/tests/test_qualify_client_baseline.py`;
+verified exact package/runtime provenance and inventoried Tart inputs, staged
+only owned guests, and preserved sanitized evidence here. Wrong bytes, unsafe
+archive paths, unowned cleanup and incomplete acceptance are rejected. Failure
+history is retained. Continue from draft #220, preserving private state.
+The second run `20261022T175149Z-c22f92748f50` records one input-verification
+PASS and eleven BLOCKED cases. Exact production Pi works in the supplementary
+packaged-sidecar smoke (shell echo, real Pi output and Pi termination), which
+does not pass GUI rows. Finder/UI automation did not establish a usable app
+window, supported test login is unavailable, and prior-app upgrade bytes are
+not selected. Both owned guests are removed and original VMs preserved.
+Read [inputs/results and reproduction](evidence/client-baseline/README.md).
+Fifteen harness guards pass, with two red-first mutations retained. Complete
+protected PR verification, then arrange an observable guest session and repeat
+blocked rows. No CF-2 advance, production pin, SDK adoption, managed activation
+or Pi 1.3.0 comparison is authorized by this slice.
 
 **CF-0S — baseline scope decision.** The maintainer selected the current
 production runtime baseline only for CF-1/#217: `v0.85.1-psmfd.1`. Pi 1.3.0
@@ -11,8 +31,8 @@ Issues #216/#217/#210 are updated and independently read back. Scope checkpoint
 remotely backed up in draft [#220](https://github.com/psmfd/FingerTrap/pull/220).
 Focused documentation checks pass; full protected CI and owned-PR Tart enrollment
 remain pending the rest of the plan review and are required before merge.
-Continue the CF-1 harness/GUI/provider discussion below. This scope answer does
-not claim approval/execution of the entire implementation plan.
+The subsequent CF-1 execution approval is recorded above; this earlier scope
+checkpoint alone did not authorize the entire implementation plan.
 
 **CF-0 — client foundation tracking, prepared.** The maintainer selected
 client acceptance, complete profile isolation and a supervised JavaScript/Pi SDK
@@ -26,7 +46,7 @@ Current source baseline is `6fe2627d040b385fa96fdd91f7341c39214a112f`, with all
 19 post-merge checks passed. Tracking checkpoint `7f75c70` is committed,
 secret-scanned and remotely backed up in [#218](https://github.com/psmfd/FingerTrap/pull/218).
 It merged at `538ff32df0759c2237ea685997d519df3501dd8b` after all 22 head and
-19 post-merge checks passed. Continue item-1 plan discussion before execution.
+19 post-merge checks passed. The subsequent CF-1 approval is recorded above.
 Tracking preparation does not imply
 baseline execution, a production SDK switch or runtime activation. No new
 extension catalog import/review starts before the foundation exit.
@@ -122,8 +142,10 @@ issue #216: client baseline, shared contracts, completed profiles/credentials, a
 supervised JavaScript/Pi SDK worker, lifecycle integration, failure/isolation
 proof, complete packaging, final qualification and foundation review. Further
 extension catalog import/review is deferred until that exit. The current request
-authorizes durable trackers and proposed item-1 plan preparation, followed by
-discussion before execution. Later implementation plans and existing production
+authorized durable trackers and proposed item-1 plan preparation, followed by
+discussion before execution. The maintainer subsequently said "Proceed" after
+the production-only plan discussion, authorizing CF-1A–F execution. Later
+implementation plans and existing production
 release/pin, SDK adoption, native authority and managed activation gates remain
 explicit; this roadmap does not mark any of them passed.
 
@@ -187,13 +209,15 @@ Suggested restart text:
 
 ## Resume here
 
-**Next action: discuss the proposed CF-1 packaged-client baseline plan.** Read
+**Next action: finish protected verification of the CF-1 harness/evidence PR.** Read
 [the implementation proposal](client-foundation-plan.html#cf1-plan),
 [the worksheet](evidence/client-baseline/README.md) and #217. The runtime scope
 is settled: production `v0.85.1-psmfd.1` only; comparison belongs to #219.
-Discuss the proposed harness scope and observable GUI/provider participation
-before recording the decision and executing. No CF-1 acceptance case or harness
-implementation has started. CF-2 through CF-10 remain planned.
+The maintainer approved execution after the production-only scope decision.
+Inputs and harness checks pass; GUI/provider acceptance remains blocked. Finish
+the owned PR's CI, then arrange an observable interactive guest session, test
+login and exact previous app before rerunning blocked cases. Use the worksheet's
+reproduction commands. CF-2 through CF-10 remain planned.
 
 The prior Pi source review and exact-artifact qualification are complete. #210
 remains open in parallel for the separate runtime release/pin decision: review
@@ -274,7 +298,7 @@ or an outstanding concern. See the [runner runbook](../local-github-runner.md).
 | -------- | -------------------------------------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | M0       | Ownership ADR, inventory and successors                                    | Committed and backed up                                        | `6a999c9`; ADR-0034 accepted; inventory and #200–#206 exist                                                                                                               |
 | CF-0     | Durable client foundation tracking                                         | Prepared; checkpoint/verification recorded below               | #216 umbrella, #217 baseline, [plan](client-foundation-plan.html); tracking only                                                                                          |
-| CF-1     | Packaged-client baseline                                                   | Proposed plan; execution not started                           | [Plan for discussion](client-foundation-plan.html#cf1-plan), [worksheet](evidence/client-baseline/README.md); actual GUI/provider acceptance remains open                 |
+| CF-1     | Packaged-client baseline                                                   | Captured with blockers; not accepted                           | [Approved plan](client-foundation-plan.html#cf1-plan), [worksheet](evidence/client-baseline/README.md); actual GUI/provider acceptance remains open                       |
 | CF-2–10  | Contracts, isolated profiles, JS worker and final foundation qualification | Planned                                                        | #201/#202/#186/#187 retain implementation ownership; SDK go/no-go and foundation exit precede more catalog import/review                                                  |
 | M1a      | Token/cache-meter source package                                           | Verified, backed up, inactive                                  | [Report](m1a-import.md); runtime package CI passed on all three platforms at `6a999c9`                                                                                    |
 | S1       | Profile schema, compatibility and baseline                                 | Verified locally and in CI; backed up                          | `52fc6bc`; [foundation report](profile-foundation.md); complete CI and Apple Silicon package/smoke passed                                                                 |

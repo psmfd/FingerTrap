@@ -1,0 +1,7 @@
+Supplementary host packaged-sidecar smoke; temporary keyless HOME and explicit production Pi. Tauri GUI/provider acceptance remains blocked.
+OK    [spawn] pid=8626
+OK    [write] response=None
+OK    [echo] shell output contains marker
+OK    [pi-spawn] pid=8632
+OK    [pi-output] pi pane produced output
+OK    [pi-kill] pi pane killed; pty/exit received

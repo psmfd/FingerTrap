@@ -1,10 +1,35 @@
 # CF-1 packaged-client baseline evidence
 
-Status: **plan proposed; execution not started**. Foundation [#216](https://github.com/psmfd/FingerTrap/issues/216), baseline [#217](https://github.com/psmfd/FingerTrap/issues/217).
+Status: **baseline captured with blockers; not accepted**. Foundation [#216](https://github.com/psmfd/FingerTrap/issues/216), baseline [#217](https://github.com/psmfd/FingerTrap/issues/217).
 
 Read the [implementation plan](../../client-foundation-plan.html#cf1-plan) and
 [product acceptance checklist](../../../apple-silicon-release-validation.md).
-Discuss the CF-1 plan before implementing its harness or running acceptance.
+The maintainer approved execution after selecting the production-only scope.
+Individual acceptance results remain separate from harness implementation.
+
+## Current result — 2026-10-22
+
+[Verified inputs](inputs.json) and [case results](results.json) record run
+`20261022T175149Z-c22f92748f50`: **one PASS, eleven BLOCKED**. Both disposable
+guests were removed and all original VMs preserved, independently rechecked.
+The stock macOS 15.7.7 base contains developer tools; its guest-only Homebrew
+and Command Line Tools trees were moved aside before the Finder attempt.
+This is not evidence of an untouched toolchain-free image.
+
+Finder AppleEvents timed out before installation in both headless and visible
+console attempts. A separate LaunchServices probe started the app and sidecar,
+but screenshots did not establish a usable window. UI automation also timed out.
+This remains a test-substrate blocker, without an established app defect.
+The final GUI-context follow-up reached the already-cleaned guest and did not run.
+Supported provider credentials and exact prior-app upgrade bytes are also missing.
+
+[Supplementary packaged smoke](packaged-smoke.json) passes shell echo, real
+production Pi PTY output and Pi child termination through the packaged sidecar
+with a temporary, keyless HOME. See the [sanitized excerpts](packaged-smoke.txt).
+It bypasses the Tauri bridge and passes no GUI/provider row.
+The [guard red/green proof](guard-red-green.txt) removes archive traversal and
+GUI-observation guards in isolated module copies, proves failures, and then
+passes all 15 kept tests with the unchanged harness.
 
 ## Inputs and prior evidence
 
@@ -29,20 +54,20 @@ All rows are required for baseline acceptance. A blocked/not-run/skipped case is
 never a pass. Record source/package/runtime identities for every row and retain
 distinct results after any fix or artifact change.
 
-| ID     | Case                                 | Required observation                                                                                                                                           | Initial status |
+| ID     | Case                                 | Required observation                                                                                                                                           | Current status |
 | ------ | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| CF1-01 | Artifact and guest inputs            | Archive/app/DMG/native architectures, exact supported Pi executable, source/build identities and clean guest/tool inventory verify.                            | NOT RUN        |
-| CF1-02 | Clean installation and Finder launch | Usable app/pane before optional test tools are installed; record Gatekeeper prompts without disabling it globally.                                             | NOT RUN        |
-| CF1-03 | Shell transport and panes            | Commands/output/resize work; split/close preserves sibling panes.                                                                                              | NOT RUN        |
-| CF1-04 | Explicit Pi failures                 | Missing or invalid explicit Pi requests remain actionable; no silent fallback or misleading shell success.                                                     | NOT RUN        |
-| CF1-05 | Real Pi PTY                          | Named runtime starts, renders, accepts input/resizes and closes; record its exact identity.                                                                    | NOT RUN        |
-| CF1-06 | Native Pi RPC                        | Actual client prompt/stream/abort/dialog/resume behavior works; distinguish fixtures from real provider turns.                                                 | NOT RUN        |
-| CF1-07 | Supported provider login             | Test credential entered through the supported guest path enables an authenticated minimal turn; no credential is copied from the host or recorded.             | NOT RUN        |
-| CF1-08 | Keychain lifecycle                   | Test credential save/relaunch/read/clear/relaunch behaves correctly; test values never enter evidence.                                                         | NOT RUN        |
-| CF1-09 | Repeat/startup/quit launch           | Existing window/session survives repeat launch, minimized/hidden states and startup races; one app/sidecar; launch during quit preserves shutdown.             | NOT RUN        |
-| CF1-10 | Normal shutdown                      | App, sidecar and recorded owned shell/Pi descendants terminate; siblings/unrelated processes remain unaffected.                                                | NOT RUN        |
-| CF1-11 | Hung-sidecar watchdog                | Stop only the recorded owned sidecar; app exits within its twenty-second watchdog plus recorded scheduling allowance; independently inspect/clean descendants. | NOT RUN        |
-| CF1-12 | Crash, recovery and upgrade          | Guest-created sessions/settings survive supported recovery/prior-app upgrade; exact prior/new bytes and final owned process/VM cleanup are recorded.           | NOT RUN        |
+| CF1-01 | Artifact and guest inputs            | Archive/app/DMG/native architectures, exact supported Pi executable, source/build identities and clean guest/tool inventory verify.                            | PASS           |
+| CF1-02 | Clean installation and Finder launch | Usable app/pane before optional test tools are installed; record Gatekeeper prompts without disabling it globally.                                             | BLOCKED        |
+| CF1-03 | Shell transport and panes            | Commands/output/resize work; split/close preserves sibling panes.                                                                                              | BLOCKED        |
+| CF1-04 | Explicit Pi failures                 | Missing or invalid explicit Pi requests remain actionable; no silent fallback or misleading shell success.                                                     | BLOCKED        |
+| CF1-05 | Real Pi PTY                          | Named runtime starts, renders, accepts input/resizes and closes; record its exact identity.                                                                    | BLOCKED        |
+| CF1-06 | Native Pi RPC                        | Actual client prompt/stream/abort/dialog/resume behavior works; distinguish fixtures from real provider turns.                                                 | BLOCKED        |
+| CF1-07 | Supported provider login             | Test credential entered through the supported guest path enables an authenticated minimal turn; no credential is copied from the host or recorded.             | BLOCKED        |
+| CF1-08 | Keychain lifecycle                   | Test credential save/relaunch/read/clear/relaunch behaves correctly; test values never enter evidence.                                                         | BLOCKED        |
+| CF1-09 | Repeat/startup/quit launch           | Existing window/session survives repeat launch, minimized/hidden states and startup races; one app/sidecar; launch during quit preserves shutdown.             | BLOCKED        |
+| CF1-10 | Normal shutdown                      | App, sidecar and recorded owned shell/Pi descendants terminate; siblings/unrelated processes remain unaffected.                                                | BLOCKED        |
+| CF1-11 | Hung-sidecar watchdog                | Stop only the recorded owned sidecar; app exits within its twenty-second watchdog plus recorded scheduling allowance; independently inspect/clean descendants. | BLOCKED        |
+| CF1-12 | Crash, recovery and upgrade          | Guest-created sessions/settings survive supported recovery/prior-app upgrade; exact prior/new bytes and final owned process/VM cleanup are recorded.           | BLOCKED        |
 
 A sidecar-only smoke bypasses the Tauri bridge. It supplements these observations.
 Run the existing packaged smoke with `--require-pi` after the guest has the named
@@ -84,5 +109,48 @@ retain their existing gates.
 
 ## Resume
 
-Discuss the proposed [CF-1 plan](../../client-foundation-plan.html#cf1-plan).
-No CF-1 run, harness implementation, client correction or activation has occurred.
+Arrange an observable interactive guest session and supported test login, and
+select exact prior-app bytes for upgrade. Repeat the blocked rows on the
+verified production runtime. Do not advance to CF-2 or close #217 yet.
+
+The harness can prepare a fresh run from preserved verified archives:
+
+```bash
+python3 scripts/qualify-client-baseline.py prepare \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz
+python3 scripts/qualify-client-baseline.py guest --run <printed-run-directory> \
+  --graphics --hold-seconds 1800
+```
+
+The second command owns the CI controller lock until it removes its unique
+clone. It refuses another running VM. Only verified QA inputs are shared
+read-only under `/Volumes/My Shared Files/qa`; host home and clipboard are not
+shared, and this clean-launch session has offline networking. Entering a
+provider credential requires a separately recorded supported guest/network
+setup; this offline session cannot establish authenticated acceptance.
+
+In the guest, before optional test tools, open the verified DMG in Finder,
+copy the app to Applications and launch it. Inventory preinstalled tools; if
+repeating the prior tool-disabled condition, move only the guest's
+`/opt/homebrew` and `/Library/Developer/CommandLineTools` to the recorded
+`ft-qa-held-*` sibling paths and recheck availability. Never run these guest
+preparation actions on the host. Record the actual preparation and prompts.
+
+Keep private observations inside the printed run directory, then use `record`
+with its `--case`, `--status`, `--observation`, `--evidence`, `--observer` and
+`--mode` options. GUI passes require `--mode observed-gui`. `summary --run`
+reports capture/readiness and always leaves maintainer acceptance explicit.
+Create `finish-session` in the run directory to end observations early. The
+guest is also bounded by its hold deadline and normal interruption cleanup;
+`cleanup --run` recovers a recorded owned clone after an abnormal interruption.
+
+Reproduce harness verification with:
+
+```bash
+python3 -m unittest discover -s scripts/tests -p 'test_qualify_client_baseline.py' -v
+ruff check scripts/qualify-client-baseline.py scripts/tests/test_qualify_client_baseline.py
+```
+
+No baseline acceptance, production pin change or activation is claimed. See
+STATUS and the latest WORK_LOG entry for the PR/CI checkpoint.

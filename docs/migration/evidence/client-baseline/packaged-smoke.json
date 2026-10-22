@@ -1,0 +1,10 @@
+{
+  "runtimeVersion": "0.85.1",
+  "runtimeBinarySha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5",
+  "sidecarSha256": "f49fe18ec1fff13ee745648ee103b9779bfa987accb4812f38f7c3722802f465",
+  "exitCode": 0,
+  "hermeticHome": true,
+  "ambientProviderEnvironment": false,
+  "guiAcceptance": false,
+  "providerAcceptance": false
+}

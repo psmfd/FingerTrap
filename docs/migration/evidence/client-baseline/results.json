@@ -1,0 +1,352 @@
+{
+  "runId": "20261022T175149Z-c22f92748f50",
+  "cases": [
+    {
+      "case": "CF1-01",
+      "status": "PASS",
+      "observation": "App/archive/DMG/build/native ARM64 and exact production Pi release bytes/source verify. Guest OS/tool inventory and pinned base recorded.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex independent input verification",
+      "mode": "artifact-verification",
+      "utc": "2026-10-22T19:27:23.347577+00:00"
+    },
+    {
+      "case": "CF1-02",
+      "status": "BLOCKED",
+      "observation": "Finder automation timed out before installation in both guest modes. A separate LaunchServices probe starts app/sidecar but provides no usable-window observation; no product failure or clean Finder pass is inferred.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.347978+00:00"
+    },
+    {
+      "case": "CF1-03",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.348244+00:00"
+    },
+    {
+      "case": "CF1-04",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.348476+00:00"
+    },
+    {
+      "case": "CF1-05",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.348698+00:00"
+    },
+    {
+      "case": "CF1-06",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.348921+00:00"
+    },
+    {
+      "case": "CF1-07",
+      "status": "BLOCKED",
+      "observation": "Supported guest UI interaction and a test credential supplied through that UI are unavailable. No host credential was imported and no authenticated turn or keychain lifecycle was attempted.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.349161+00:00"
+    },
+    {
+      "case": "CF1-08",
+      "status": "BLOCKED",
+      "observation": "Supported guest UI interaction and a test credential supplied through that UI are unavailable. No host credential was imported and no authenticated turn or keychain lifecycle was attempted.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.349399+00:00"
+    },
+    {
+      "case": "CF1-09",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.349641+00:00"
+    },
+    {
+      "case": "CF1-10",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.349872+00:00"
+    },
+    {
+      "case": "CF1-11",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.350113+00:00"
+    },
+    {
+      "case": "CF1-12",
+      "status": "BLOCKED",
+      "observation": "Observed GUI/session recovery is unavailable; no exact prior-app upgrade candidate has been selected. These inputs are required before recovery/upgrade acceptance.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.350348+00:00"
+    }
+  ],
+  "baselineCaptured": true,
+  "readyForMaintainerAcceptance": false,
+  "baselineAccepted": false,
+  "cleanupVerified": true,
+  "attempts": [
+    {
+      "case": "CF1-01",
+      "status": "PASS",
+      "observation": "App/archive/DMG/build/native ARM64 and exact production Pi release bytes/source verify. Guest OS/tool inventory and pinned base recorded.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex independent input verification",
+      "mode": "artifact-verification",
+      "utc": "2026-10-22T19:27:23.347577+00:00"
+    },
+    {
+      "case": "CF1-02",
+      "status": "BLOCKED",
+      "observation": "Finder automation timed out before installation in both guest modes. A separate LaunchServices probe starts app/sidecar but provides no usable-window observation; no product failure or clean Finder pass is inferred.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.347978+00:00"
+    },
+    {
+      "case": "CF1-03",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.348244+00:00"
+    },
+    {
+      "case": "CF1-04",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.348476+00:00"
+    },
+    {
+      "case": "CF1-05",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.348698+00:00"
+    },
+    {
+      "case": "CF1-06",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.348921+00:00"
+    },
+    {
+      "case": "CF1-07",
+      "status": "BLOCKED",
+      "observation": "Supported guest UI interaction and a test credential supplied through that UI are unavailable. No host credential was imported and no authenticated turn or keychain lifecycle was attempted.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.349161+00:00"
+    },
+    {
+      "case": "CF1-08",
+      "status": "BLOCKED",
+      "observation": "Supported guest UI interaction and a test credential supplied through that UI are unavailable. No host credential was imported and no authenticated turn or keychain lifecycle was attempted.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.349399+00:00"
+    },
+    {
+      "case": "CF1-09",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.349641+00:00"
+    },
+    {
+      "case": "CF1-10",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.349872+00:00"
+    },
+    {
+      "case": "CF1-11",
+      "status": "BLOCKED",
+      "observation": "Actual packaged-client GUI interaction is unavailable after the Finder substrate attempts. Sidecar-only smoke supplements the baseline but cannot pass this GUI-dependent case.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.350113+00:00"
+    },
+    {
+      "case": "CF1-12",
+      "status": "BLOCKED",
+      "observation": "Observed GUI/session recovery is unavailable; no exact prior-app upgrade candidate has been selected. These inputs are required before recovery/upgrade acceptance.",
+      "evidence": [
+        {
+          "path": "inputs.json",
+          "sha256": "e64b13b1b8bbd297db9abb4c4d8f5eed1a05ef03626f1062c189498ddedcd2e6"
+        }
+      ],
+      "observer": "Codex QA attempt",
+      "mode": "blocked",
+      "utc": "2026-10-22T19:27:23.350348+00:00"
+    }
+  ],
+  "events": [],
+  "kind": "cf1-captured-not-accepted",
+  "inputs": "inputs.json",
+  "nextAction": "Arrange an observable interactive Tart guest session and supported test login; select exact previous app bytes, then repeat blocked rows against the verified production runtime.",
+  "sourceQualificationDoesNotImplyGuiAcceptance": true
+}
