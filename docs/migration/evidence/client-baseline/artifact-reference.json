@@ -1,0 +1,28 @@
+{
+  "kind": "prior-evidence-reference",
+  "campaign": "CF-1",
+  "baselineExecutionStatus": "not-started",
+  "reverificationRequired": true,
+  "integrationCheckpoint": "6fe2627d040b385fa96fdd91f7341c39214a112f",
+  "productionRuntimeSelection": "v0.85.1-psmfd.1",
+  "artifactId": 12385811971,
+  "run": "https://github.com/psmfd/FingerTrap/actions/runs/39684836315",
+  "sourceHead": "0a287c4eb6769ee810330de6d625861f241f65ce",
+  "buildCommit": "e5fa3cf0adea1aed06bb1601753d22d6fa3b6393",
+  "sourceTree": "9e227a6ce8f535357005519e99f026d6b762d630",
+  "archiveDigest": "sha256:e9cf6f7b10957f35de1ddae431abdc17bed17002f93d5e196ebbeddb81688990",
+  "appArchiveDigest": "sha256:135a8fb020236079c7af70a0577e2d5601cab4e7df77e3c628a3519043a4b137",
+  "dmgDigest": "sha256:427766aecb508360a7f98cfc14e51ea5c0009b6d8f74a3b2be5c1dcd5f63127b",
+  "appVersion": "0.1.0",
+  "target": "aarch64-apple-darwin",
+  "priorLocalReview": ".artifacts/pr-merge-20261021/golden-fix-apple/review.json",
+  "priorLocalArchive": ".artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip",
+  "distribution": "unsigned, unnotarized candidate; not a published release",
+  "priorEvidence": [
+    "archive checksum and source tree verified",
+    "three native binaries arm64",
+    "packaged shell smoke passed",
+    "Pi smoke explicitly skipped without installed Pi"
+  ],
+  "cf1Results": null
+}

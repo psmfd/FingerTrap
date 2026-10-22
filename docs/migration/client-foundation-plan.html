@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <title>FingerTrap · Client foundation and item-1 baseline plan</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #1c2932;
+        --muted: #53636c;
+        --paper: #fffefa;
+        --canvas: #f2f2ec;
+        --line: #d9dfd8;
+        --green: #205b49;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 24px;
+      }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--canvas);
+        font:
+          17px/1.65 -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+      }
+      a {
+        color: var(--green);
+        text-underline-offset: 3px;
+      }
+      a:focus-visible,
+      summary:focus-visible {
+        outline: 3px solid #92722b;
+        outline-offset: 4px;
+      }
+      .skip {
+        position: fixed;
+        left: 16px;
+        top: -90px;
+        background: white;
+        padding: 10px;
+      }
+      .skip:focus {
+        top: 12px;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 220px minmax(0, 1fr);
+        gap: 30px;
+        max-width: 1320px;
+        margin: auto;
+        padding: 32px 32px 72px;
+      }
+      aside {
+        position: sticky;
+        top: 28px;
+        align-self: start;
+      }
+      aside strong {
+        color: var(--green);
+        font-size: 14px;
+        letter-spacing: 0.07em;
+      }
+      nav ol {
+        padding-left: 22px;
+        font-size: 14px;
+      }
+      nav li {
+        margin: 12px 0;
+      }
+      main {
+        min-width: 0;
+        background: var(--paper);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      header,
+      section {
+        padding: 34px 42px;
+        border-bottom: 1px solid var(--line);
+      }
+      header {
+        background: linear-gradient(125deg, #edf4eb, #fffefa);
+      }
+      section:last-child {
+        border-bottom: 0;
+      }
+      h1 {
+        font:
+          500 clamp(32px, 4vw, 48px)/1.15 Georgia,
+          serif;
+        letter-spacing: -0.025em;
+      }
+      h2 {
+        font-size: 27px;
+        line-height: 1.25;
+      }
+      h3 {
+        font-size: 20px;
+        line-height: 1.4;
+      }
+      p,
+      li {
+        overflow-wrap: anywhere;
+      }
+      li {
+        margin: 8px 0;
+      }
+      .eyebrow,
+      .status {
+        color: var(--green);
+        font-size: 12px;
+        font-weight: 750;
+        letter-spacing: 0.06em;
+      }
+      .notice {
+        border-left: 4px solid #ac7927;
+        background: #fff4d9;
+        padding: 16px 20px;
+        margin: 20px 0;
+      }
+      .exit {
+        border-left: 4px solid var(--green);
+        background: #eaf2ec;
+        padding: 14px 20px;
+      }
+      .muted {
+        color: var(--muted);
+        font-size: 14px;
+      }
+      code {
+        font:
+          0.88em/1.5 ui-monospace,
+          SFMono-Regular,
+          Consolas,
+          monospace;
+        background: #eef0eb;
+        border-radius: 3px;
+        padding: 2px 4px;
+        overflow-wrap: anywhere;
+      }
+      .table-wrap {
+        overflow-x: auto;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        margin: 20px 0;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        text-align: left;
+      }
+      caption {
+        text-align: left;
+        padding: 12px 15px;
+        font-weight: 700;
+        background: #f4f6f0;
+      }
+      th,
+      td {
+        vertical-align: top;
+        padding: 12px 15px;
+        border-bottom: 1px solid var(--line);
+      }
+      thead {
+        background: #eef2ea;
+      }
+      details {
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 16px 20px;
+        margin: 18px 0;
+      }
+      summary {
+        cursor: pointer;
+        font-weight: 700;
+      }
+      @media (max-width: 850px) {
+        .layout {
+          grid-template-columns: 1fr;
+          padding: 15px;
+          gap: 14px;
+        }
+        aside {
+          position: static;
+        }
+        nav ol {
+          display: flex;
+          flex-wrap: wrap;
+          list-style: none;
+          padding: 0;
+          gap: 6px 16px;
+        }
+        nav li {
+          margin: 3px 0;
+        }
+        header,
+        section {
+          padding: 25px 21px;
+        }
+      }
+      @media print {
+        body {
+          background: white;
+          font-size: 11pt;
+        }
+        .layout {
+          display: block;
+          max-width: none;
+          padding: 0;
+        }
+        aside,
+        .skip {
+          display: none;
+        }
+        main {
+          border: 0;
+        }
+        header,
+        section {
+          padding: 15px 0;
+        }
+        .table-wrap {
+          overflow: visible;
+        }
+        details {
+          break-inside: avoid;
+        }
+        a {
+          color: inherit;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip" href="#content">Skip to plan</a>
+    <div class="layout">
+      <aside>
+        <strong>FINGERTRAP / CLIENT FOUNDATION</strong>
+        <nav aria-label="Plan sections">
+          <ol>
+            <li><a href="#scope">Scope and decisions</a></li>
+            <li><a href="#sequence">Execution order</a></li>
+            <li><a href="#baseline">Named baseline</a></li>
+            <li><a href="#cf1-plan">Item 1 implementation plan</a></li>
+            <li><a href="#changes">Proposed files</a></li>
+            <li><a href="#acceptance">Acceptance and evidence</a></li>
+            <li><a href="#gates">Gates and next action</a></li>
+          </ol>
+        </nav>
+        <p class="muted">
+          <a href="STATUS.md">Current status</a><br /><a href="WORK_LOG.md"
+            >Activity log</a
+          ><br /><a href="https://github.com/psmfd/FingerTrap/issues/216"
+            >Foundation #216</a
+          ><br /><a href="https://github.com/psmfd/FingerTrap/issues/217"
+            >Baseline #217</a
+          >
+        </p>
+      </aside>
+      <main id="content">
+        <header>
+          <p class="eyebrow">
+            2026-10-22 UTC / 2026-10-21 ET · CF-0 tracking preparation
+          </p>
+          <h1>Make the client foundation solid.</h1>
+          <p>
+            Validate the packaged client, complete profile isolation, and
+            implement/evaluate a supervised JavaScript/Pi SDK worker before
+            further extension catalog import and review.
+          </p>
+          <p class="status">
+            SEQUENCE ENDORSED · ITEM 1 PLAN PROPOSED · BASELINE NOT STARTED
+          </p>
+        </header>
+        <section id="scope">
+          <h2>Scope and decisions</h2>
+          <p>
+            The maintainer requested durable trackers and discussion of item 1
+            before execution. CF-0 prepares those records. The ten-area roadmap
+            below is the agreed order; each later implementation slice receives
+            its concrete plan when reached. This document records no baseline
+            pass, worker implementation or production adoption.
+          </p>
+          <p>
+            The JavaScript sidecar means one supervised JavaScript/Pi SDK worker
+            per native session behind the existing .NET sidecar. Rust retains
+            its established application/credential responsibilities.
+            Executable/RPC provides the comparator and remains available for PTY
+            and user-managed sessions.
+          </p>
+          <p>
+            Existing authorities:
+            <a
+              href="../../adrs/0033-apple-silicon-candidate-and-tart-validation.md"
+              >ADR-0033 packaged acceptance</a
+            >,
+            <a href="../../adrs/0034-own-agent-runtime-and-retire-pi-config.md"
+              >ADR-0034 ownership/backend gates</a
+            >, and
+            <a href="implementation-plan-200-profile.html"
+              >the approved profile/import plan</a
+            >. This campaign changes sequencing, not their authority boundaries.
+          </p>
+          <div class="notice">
+            Further catalog import/review under #200 waits for the foundation
+            exit. Adapting the two already imported inactive meters to the
+            profile contract belongs to CF-3. Native protected-operation
+            authorization, expertise/workflow enablement and pi_config
+            retirement keep their separate workstreams.
+          </div>
+        </section>
+        <section id="sequence">
+          <h2>Execution order and ownership</h2>
+          <div class="table-wrap">
+            <table>
+              <caption>
+                All implementation areas are planned, not started by CF-0
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">ID / area</th>
+                  <th scope="col">Result and exit evidence</th>
+                  <th scope="col">Owner / dependency</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">CF-1 · Current client baseline</th>
+                  <td>
+                    Exact packaged artifact and real-client acceptance record,
+                    concrete defects, bounded fixes/retests and explicit
+                    baseline acceptance.
+                  </td>
+                  <td>
+                    <a href="https://github.com/psmfd/FingerTrap/issues/217"
+                      >#217</a
+                    >; plan discussion first.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">CF-2 · Foundation contracts</th>
+                  <td>
+                    Shell/.NET/JS responsibilities, versioned command/event
+                    contract, profile/session identity and exact fork/runtime
+                    inputs.
+                  </td>
+                  <td>
+                    #216 with
+                    <a href="https://github.com/psmfd/FingerTrap/issues/201"
+                      >#201</a
+                    >/<a href="https://github.com/psmfd/FingerTrap/issues/202"
+                      >#202</a
+                    >; use the reviewed baseline.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">CF-3 · Profile integration</th>
+                  <td>
+                    Sessions/browser/resume, worktree records, existing meters,
+                    resources and every child use the common profile contract;
+                    user-managed mode remains covered.
+                  </td>
+                  <td>#201 / S4; contract before integration.</td>
+                </tr>
+                <tr>
+                  <th scope="row">CF-4 · Credentials and login</th>
+                  <td>
+                    Profile-scoped references, supported provider login,
+                    persistence/clear/failure behavior and no ambient credential
+                    import.
+                  </td>
+                  <td>
+                    #201/#187/#107; existing credential boundary, #203
+                    restrictions intact.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">CF-5 · JavaScript worker</th>
+                  <td>
+                    One worker per native session, explicit
+                    resources/settings/sessions/tools, handshake, errors,
+                    streaming, cancellation and disposal.
+                  </td>
+                  <td>#202; profile/credential contract is an input.</td>
+                </tr>
+                <tr>
+                  <th scope="row">CF-6 · Client lifecycle</th>
+                  <td>
+                    Prompt/steer/follow-up/abort,
+                    model/compaction/new/resume/fork, replacement/rebinding,
+                    crash recovery and accurate pane/dialog state.
+                  </td>
+                  <td>#216/#202; working worker and client seam.</td>
+                </tr>
+                <tr>
+                  <th scope="row">CF-7 · Isolation and failure proof</th>
+                  <td>
+                    Concurrent profiles/panes, restart/corruption/child failure,
+                    bounded output/deadlines/backpressure and sibling-safe
+                    cleanup, compared on identical fork source.
+                  </td>
+                  <td>#201/#202; exercise assembled implementation.</td>
+                </tr>
+                <tr>
+                  <th scope="row">CF-8 · Complete packaging</th>
+                  <td>
+                    JS runtime/dependency closure, no developer-toolchain
+                    reliance, offline startup and session-safe upgrade/rollback.
+                  </td>
+                  <td>
+                    <a href="https://github.com/psmfd/FingerTrap/issues/186"
+                      >#186</a
+                    >/<a href="https://github.com/psmfd/FingerTrap/issues/187"
+                      >#187</a
+                    >; candidate preparation is distinct from activation.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">CF-9 · Final qualification</th>
+                  <td>
+                    Repeat clean Apple Silicon GUI/provider acceptance on final
+                    bytes, platform CI, artifact provenance and independent
+                    cleanup.
+                  </td>
+                  <td>#216; macOS local Tart, Windows/Linux hosted.</td>
+                </tr>
+                <tr>
+                  <th scope="row">CF-10 · Foundation exit</th>
+                  <td>
+                    Reviewed evidence, SDK go/no-go and successor ADR if
+                    adopting, reconciled trackers and explicit production
+                    decisions before catalog work resumes.
+                  </td>
+                  <td>
+                    #216/#202; SDK adoption, release/pin and managed activation
+                    retain their gates.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section id="baseline">
+          <h2>Named baseline and prior evidence</h2>
+          <p>
+            Integration checkpoint:
+            <code>6fe2627d040b385fa96fdd91f7341c39214a112f</code>; all 19
+            post-merge checks passed. Production runtime selection remains
+            <code>v0.85.1-psmfd.1</code>. Resolve and verify the exact supported
+            baseline executable in CF-1; the 0.87.1 comparison artifact must not
+            be substituted silently.
+          </p>
+          <p>
+            Prior Apple artifact <strong>12385811971</strong>,
+            <a
+              href="https://github.com/psmfd/FingerTrap/actions/runs/39684836315"
+              >run 39684836315</a
+            >, is the proposed reuse candidate. Its reviewed source is
+            <code>0a287c4eb6769ee810330de6d625861f241f65ce</code> and synthetic
+            build merge is
+            <code>e5fa3cf0adea1aed06bb1601753d22d6fa3b6393</code>. It is an
+            unsigned, unnotarized app/DMG with prior architecture and
+            packaged-shell evidence; real Pi/GUI/provider acceptance remains
+            open.
+          </p>
+          <p>
+            CF-1 must independently reverify the named bytes and compare
+            package-relevant inputs with the integration checkpoint before
+            reuse. A different source identity must be reported accurately; do
+            not label the old artifact as a build of current dev. If relevant
+            inputs differ or the artifact is unusable, prepare a new candidate
+            through the existing local Apple workflow and give it new
+            identities.
+          </p>
+          <p>
+            <a href="evidence/client-baseline/artifact-reference.json"
+              >Prior artifact reference</a
+            >
+            and
+            <a href="evidence/pr-merge-20261021/final-ci-readback.json"
+              >prior source-check snapshot</a
+            >
+            are references, not new CF-1 results. Pi 1.3.0 qualification remains
+            in <a href="evidence/pi-next/README.md">its own evidence record</a>;
+            an optional named QA comparison must not replace or promote the
+            production baseline.
+          </p>
+        </section>
+        <section id="cf1-plan">
+          <h2>Item 1 implementation plan for discussion</h2>
+          <p class="status">
+            PROPOSED · EXECUTION AWAITS MAINTAINER DISCUSSION
+          </p>
+          <h3>CF-1A · Freeze inputs and the worksheet</h3>
+          <p>
+            Verify the app archive/DMG, build commit, source/merge parents,
+            checksums and ARM64 binaries. Resolve the supported
+            production-baseline Pi executable and record its source/tag/digest.
+            Record host/Tart and guest/base identities, installed tooling and
+            intended provider/model. Prepare the mandatory worksheet before
+            launching anything.
+          </p>
+          <h3>CF-1B · Prepare one owned clean guest</h3>
+          <p>
+            Use an inventoried clean macOS 15 base and a unique disposable VM
+            name. Do not reuse an operator VM or the developer-toolchain CI base
+            as evidence of a clean consumer environment. Record any preinstalled
+            tools; do not claim a toolchain-free test if the guest contains
+            them. CI drains and standalone acceptance must not overlap. Share
+            only verified QA inputs read-only, then copy the candidate into the
+            guest.
+          </p>
+          <p>
+            Run clean Finder installation/launch before adding optional testing
+            tools. Record unsigned/Gatekeeper behavior without globally
+            disabling Gatekeeper. No host operator settings, sessions,
+            credentials, global npm tree or shell initialization are modified.
+          </p>
+          <h3>CF-1C · Exercise the actual client</h3>
+          <p>
+            Run shell transport/resize/split/close and missing/invalid explicit
+            Pi requests. After clean launch is observed, install only the named
+            QA baseline runtime and optional test tools in the guest. Exercise
+            real Pi PTY and native RPC prompt/stream/abort/dialog/resume. Reuse
+            owned synthetic fixtures where appropriate, but distinguish them
+            from real supported-provider login and authenticated turn
+            acceptance.
+          </p>
+          <p>
+            Observe the actual window/Tauri bridge. A sidecar-only script or an
+            RPC response is not GUI acceptance. Real provider credentials must
+            be supplied through the supported path in the disposable guest; none
+            are copied from the host or placed in reports/screenshots.
+          </p>
+          <h3>CF-1D · Exercise persistence, lifetime and failure</h3>
+          <p>
+            Use guest-created test state for keychain save/relaunch/clear,
+            repeated launch while normal/minimized/hidden, rapid startup launch
+            and launch during quit. Record process identities before testing
+            normal quit, a deliberately stopped owned sidecar and its
+            twenty-second watchdog, controlled crash/recovery and prior-app
+            upgrade. Observe descendants and cleanup; do not infer it from a
+            self-reported success.
+          </p>
+          <h3>CF-1E · Triage and bounded corrections</h3>
+          <p>
+            Keep the first failure and exact artifact/process identities. Relate
+            it to #102/#106/#107/#112/#175/#186/#187 where applicable, or file a
+            concrete defect. Name and scope the affected files before corrective
+            implementation. Preserve a failing regression where appropriate,
+            make the bounded fix, then rerun affected acceptance on the
+            replacement artifact. Passing an unrelated case does not repair a
+            failed row.
+          </p>
+          <h3>CF-1F · Review and cleanup</h3>
+          <p>
+            Record pass/fail/blocked/not-run for every required case, redacted
+            supporting observations, artifact transitions and open defects.
+            Independently verify owned process/VM cleanup and preserved operator
+            state. Review baseline captured versus baseline accepted with the
+            maintainer, then record the exact next action for CF-2.
+          </p>
+          <div class="exit">
+            <strong>Capture exit:</strong> every mandatory case has an observed
+            result or an explicit blocker, exact inputs and supporting evidence.
+            <strong>Acceptance exit:</strong> mandatory checks pass on the
+            selected bytes, blocking defects have fix/retest evidence, cleanup
+            verifies and the maintainer records acceptance. A blocked or skipped
+            real-Pi/provider row is not accepted.
+          </div>
+        </section>
+        <section id="changes">
+          <h2>Proposed implementation files and responsibilities</h2>
+          <p>
+            CF-0 changes documentation/tracking only. The following are proposed
+            for CF-1 after plan review; no harness or client code is implemented
+            here.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Path</th>
+                  <th scope="col">Planned change and purpose</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th scope="row">
+                    <code>scripts/qualify-client-baseline.py</code>
+                  </th>
+                  <td>
+                    Small QA harness for input verification, uniquely owned
+                    guest staging, metadata/results/process collection and
+                    bounded cleanup. Reuse existing smoke tools; manual
+                    GUI/provider observations remain explicit.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    <code>scripts/tests/test_qualify_client_baseline.py</code>
+                  </th>
+                  <td>
+                    Meaningful regression cases for artifact/path rejection,
+                    refusal to clean an unowned VM, failure retention and
+                    preventing blocked/skipped/manual-unobserved cases from
+                    becoming passes.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    <code>docs/migration/evidence/client-baseline/</code>
+                  </th>
+                  <td>
+                    Sanitized manifest, acceptance results, defect links,
+                    required excerpts and independent cleanup record. Private
+                    raw logs/screenshots and candidate binaries stay in ignored
+                    local storage.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    <code>docs/apple-silicon-release-validation.md</code>
+                  </th>
+                  <td>
+                    Keep the product checklist aligned with the baseline
+                    worksheet and actual artifact/runtime conditions.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">
+                    <code>STATUS.md</code>, <code>WORK_LOG.md</code>, #216/#217
+                  </th>
+                  <td>
+                    Record per-slice scope, results/failures,
+                    approval/acceptance, commits/PRs and reproducible next
+                    action throughout the work.
+                  </td>
+                </tr>
+                <tr>
+                  <th scope="row">Concrete client defect files</th>
+                  <td>
+                    Determined by reproductions. They are separate bounded
+                    corrections with named files and regression/acceptance
+                    evidence, not assumed changes to every client component.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section id="acceptance">
+          <h2>Acceptance and evidence contract</h2>
+          <p>
+            The
+            <a href="evidence/client-baseline/README.md">CF-1 worksheet</a>
+            defines twelve mandatory cases and required identity/evidence
+            fields. No case has been run for CF-1 yet. Keep source/CLI
+            qualification, package verification, GUI/provider acceptance, CI and
+            production activation as distinct facts.
+          </p>
+          <details>
+            <summary>Evidence to preserve for every run</summary>
+            <ul>
+              <li>
+                UTC run ID; exact app source/build/package digests; Pi
+                tag/source/executable digest; previous-app identity for upgrade
+                checks.
+              </li>
+              <li>
+                Base-image identity, guest macOS/build, architecture,
+                preinstalled tool inventory and Tart version.
+              </li>
+              <li>
+                Per-case expected behavior, status, actual observation,
+                sanitized evidence references and defect links.
+              </li>
+              <li>
+                Fixture versus real provider distinction; provider/model/login
+                path without credentials, tokens, request content or sensitive
+                logs.
+              </li>
+              <li>
+                Before/after process ownership, guest/host observations, cleanup
+                confirmation and remaining blockers.
+              </li>
+            </ul>
+          </details>
+          <p>
+            Candidate binaries and private raw evidence belong under an ignored
+            <code>.artifacts/client-baseline/&lt;run-id&gt;/</code> directory.
+            Durable sanitized summaries and essential fixtures belong in the
+            repository. Rebuilds receive new byte identities; earlier acceptance
+            does not transfer automatically.
+          </p>
+        </section>
+        <section id="gates">
+          <h2>Gates and the concrete next action</h2>
+          <p>
+            <strong>Next action:</strong> discuss and approve/revise CF-1's
+            implementation scope, baseline runtime and real GUI/provider
+            participation. Then record the decision in STATUS/WORK_LOG and #217
+            before execution. A report that credentials or observable GUI access
+            are unavailable remains a blocker; elapsed time is not approval.
+          </p>
+          <p>
+            #210 remains open for example dependency disposition and exact
+            runtime release/tag/pin promotion. CF-0/CF-1 do not approve that
+            transaction. SDK adoption requires #202's comparison and a successor
+            decision; managed activation, new native authorization and release
+            signing/notarization remain separately gated. The foundation roadmap
+            is not a declaration that these gates have passed.
+          </p>
+          <p>
+            The independent Codex completion-hook defect is tracked in
+            <a href="https://github.com/psmfd/agent-framework-codex/issues/19"
+              >agent-framework-codex #19</a
+            >. It has not blocked the client campaign; explicit tests/reviews
+            and durable records remain required.
+          </p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
