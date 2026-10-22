@@ -280,17 +280,18 @@
             further extension catalog import and review.
           </p>
           <p class="status">
-            SEQUENCE ENDORSED · ITEM 1 PLAN PROPOSED · BASELINE NOT STARTED
+            ITEM 1 APPROVED · BASELINE CAPTURED WITH BLOCKERS · NOT ACCEPTED
           </p>
         </header>
         <section id="scope">
           <h2>Scope and decisions</h2>
           <p>
-            The maintainer requested durable trackers and discussion of item 1
-            before execution. CF-0 prepares those records. The ten-area roadmap
-            below is the agreed order; each later implementation slice receives
-            its concrete plan when reached. This document records no baseline
-            pass, worker implementation or production adoption.
+            The maintainer approved item 1 after the production-only scope
+            discussion. CF-0 prepared its records. The ten-area roadmap below is
+            the agreed order; each later implementation slice receives its
+            concrete plan when reached. Input verification passes and eleven
+            GUI/provider cases remain blocked; the baseline is not accepted. No
+            worker implementation or production adoption is claimed.
           </p>
           <p>
             The JavaScript sidecar means one supervised JavaScript/Pi SDK worker
@@ -345,7 +346,7 @@
                   <td>
                     <a href="https://github.com/psmfd/FingerTrap/issues/217"
                       >#217</a
-                    >; plan discussion first.
+                    >; execution approved, acceptance remains open.
                   </td>
                 </tr>
                 <tr>
@@ -492,15 +493,17 @@
               >prior source-check snapshot</a
             >
             are references, not new CF-1 results. Pi 1.3.0 qualification remains
-            in <a href="evidence/pi-next/README.md">its own evidence record</a>;
-            an optional named QA comparison must not replace or promote the
-            production baseline.
+            in <a href="evidence/pi-next/README.md">its own evidence record</a>.
+            The maintainer selected production runtime
+            <code>v0.85.1-psmfd.1</code> only for CF-1. Pi 1.3.0 comparison is
+            outside this item, separately tracked in deferred
+            <a href="https://github.com/psmfd/FingerTrap/issues/219">#219</a>.
           </p>
         </section>
         <section id="cf1-plan">
-          <h2>Item 1 implementation plan for discussion</h2>
+          <h2>Item 1 implementation plan</h2>
           <p class="status">
-            PROPOSED · EXECUTION AWAITS MAINTAINER DISCUSSION
+            APPROVED · PRODUCTION BASELINE EXECUTION IN PROGRESS
           </p>
           <h3>CF-1A · Freeze inputs and the worksheet</h3>
           <p>
@@ -583,9 +586,10 @@
         <section id="changes">
           <h2>Proposed implementation files and responsibilities</h2>
           <p>
-            CF-0 changes documentation/tracking only. The following are proposed
-            for CF-1 after plan review; no harness or client code is implemented
-            here.
+            CF-0 changes documentation/tracking only. The maintainer has now
+            approved CF-1 execution. The qualification harness and its guard
+            tests are implemented; client corrections require concrete
+            reproductions and bounded slices.
           </p>
           <div class="table-wrap">
             <table>
@@ -666,7 +670,8 @@
             The
             <a href="evidence/client-baseline/README.md">CF-1 worksheet</a>
             defines twelve mandatory cases and required identity/evidence
-            fields. No case has been run for CF-1 yet. Keep source/CLI
+            fields. CF-1 input verification and harness work have started; see
+            the worksheet for actual case results. Keep source/CLI
             qualification, package verification, GUI/provider acceptance, CI and
             production activation as distinct facts.
           </p>
@@ -708,11 +713,13 @@
         <section id="gates">
           <h2>Gates and the concrete next action</h2>
           <p>
-            <strong>Next action:</strong> discuss and approve/revise CF-1's
-            implementation scope, baseline runtime and real GUI/provider
-            participation. Then record the decision in STATUS/WORK_LOG and #217
-            before execution. A report that credentials or observable GUI access
-            are unavailable remains a blocker; elapsed time is not approval.
+            <strong>Next action:</strong> execute approved CF-1A/B input
+            verification, harness guards and owned clean-guest staging, followed
+            by observed client cases. Runtime scope is production
+            v0.85.1-psmfd.1 only; comparison belongs to #219. Record outcomes in
+            STATUS/WORK_LOG and #217 throughout execution. A report that
+            credentials or observable GUI access are unavailable remains a
+            blocker; elapsed time is not approval.
           </p>
           <p>
             #210 remains open for example dependency disposition and exact

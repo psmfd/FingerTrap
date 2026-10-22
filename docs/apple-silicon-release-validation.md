@@ -103,6 +103,6 @@ close default-branch alerts.
 
 The current client-foundation campaign is tracked in #216, with its first
 packaged-client baseline in #217. Read the
-[proposed implementation plan](migration/client-foundation-plan.html#cf1-plan)
+[approved implementation plan](migration/client-foundation-plan.html#cf1-plan)
 and [evidence worksheet](migration/evidence/client-baseline/README.md) before
 execution. That plan supplements this checklist; it does not claim acceptance.

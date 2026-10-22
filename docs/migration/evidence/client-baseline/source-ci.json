@@ -1,0 +1,174 @@
+{
+  "kind": "cf1-source-head-protected-verification",
+  "sourceHead": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+  "pullRequest": 220,
+  "checks": [
+    {
+      "name": "CodeQL",
+      "id": 120068960239,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/runs/120068960239"
+    },
+    {
+      "name": "agent-runtime (windows-2025)",
+      "id": 120068698391,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068698391"
+    },
+    {
+      "name": "sidecar (macos-15) / validate",
+      "id": 120068698274,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068698274"
+    },
+    {
+      "name": "tauri (macos-15) / validate",
+      "id": 120068698059,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068698059"
+    },
+    {
+      "name": "ui (macos-15) / validate",
+      "id": 120068697936,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068697936"
+    },
+    {
+      "name": "lint-actions",
+      "id": 120068697906,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068697906"
+    },
+    {
+      "name": "tauri (ubuntu-24.04)",
+      "id": 120068697827,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068697827"
+    },
+    {
+      "name": "sidecar (ubuntu-24.04)",
+      "id": 120068697801,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068697801"
+    },
+    {
+      "name": "ui (windows-2025)",
+      "id": 120068697788,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068697788"
+    },
+    {
+      "name": "tauri (windows-2025)",
+      "id": 120068697785,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068697785"
+    },
+    {
+      "name": "agent-runtime (ubuntu-24.04)",
+      "id": 120068697721,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068697721"
+    },
+    {
+      "name": "sidecar (windows-2025)",
+      "id": 120068697683,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068697683"
+    },
+    {
+      "name": "agent-runtime (macos-15) / validate",
+      "id": 120068697604,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068697604"
+    },
+    {
+      "name": "ui (ubuntu-24.04)",
+      "id": 120068697549,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068697549"
+    },
+    {
+      "name": "repo-check",
+      "id": 120068697173,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677993/job/120068697173"
+    },
+    {
+      "name": "enforce-gitflow",
+      "id": 120068694477,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677212/job/120068694477"
+    },
+    {
+      "name": "lint",
+      "id": 120068694362,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848677276/job/120068694362"
+    },
+    {
+      "name": "Analyze (actions)",
+      "id": 120068674140,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848668969/job/120068674140"
+    },
+    {
+      "name": "Analyze (csharp)",
+      "id": 120068673946,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848668969/job/120068673946"
+    },
+    {
+      "name": "Analyze (javascript-typescript)",
+      "id": 120068673859,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848668969/job/120068673859"
+    },
+    {
+      "name": "Analyze (rust)",
+      "id": 120068673842,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848668969/job/120068673842"
+    },
+    {
+      "name": "Analyze (python)",
+      "id": 120068673655,
+      "sha": "f86413f7e7bf31a69e874e9bf88367d7d7b8c56d",
+      "conclusion": "success",
+      "url": "https://github.com/psmfd/FingerTrap/actions/runs/39848668969/job/120068673655"
+    }
+  ],
+  "review": {
+    "unresolvedThreads": 0,
+    "mergeable": true
+  },
+  "localMacosGuests": [
+    "ft-actions-job-20261022t202551z-5d0c20c2",
+    "ft-actions-job-20261022t202653z-738f72af",
+    "ft-actions-job-20261022t202822z-c58311bc",
+    "ft-actions-job-20261022t202922z-060952bc"
+  ],
+  "allFourGuestsCleaned": true,
+  "baselineAccepted": false,
+  "note": "This snapshot qualifies the source/guard checkpoint. Later documentation head and merge checks are recorded in PR #220 and issue #217; no GUI/provider acceptance is inferred."
+}

@@ -1542,3 +1542,131 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   push, and run protected CI with four local macOS jobs. CF-1 remains unstarted.
   UTC crossed midnight during tracking; current timestamps explicitly distinguish
   2026-10-22 UTC from the maintainer's 2026-10-21 ET date.
+
+## 2026-10-22 — CF-0S production-baseline-only decision
+
+- Maintainer answered the item-1 scope question: establish the current production
+  baseline only; handle Pi 1.3.0 comparison as a separate item. CF-1 runtime is
+  v0.85.1-psmfd.1. This is a scope decision during plan discussion, not a claim
+  that baseline execution or the complete implementation plan is approved.
+- Before this documentation slice, dev/origin/dev match
+  538ff32df0759c2237ea685997d519df3501dd8b. Tracking #218 passed all 22 head and
+  19 post-merge checks; #216/#217 contain verified checkpoint links. Private
+  untracked evidence remains preserved, with no CI controller or baseline run
+  left active by that checkpoint.
+- Intended result: a separate deferred comparison issue linked to #216/#217/#210,
+  consistent production-only scope in STATUS/plan/worksheet and live issues,
+  focused Markdown/HTML/link validation, scoped commit and remote backup.
+  Continue item-1 plan discussion; do not run CF-1 or the comparison from this
+  clarification alone.
+- Separate comparison #219 is created, linked from #216/#217/#210 and
+  independently read back. It is deferred pending the accepted production
+  baseline and its own plan. Replaced optional-comparison wording in the local
+  plan/worksheet and recorded production-only scope in the current resume action.
+  No baseline harness, acceptance case or candidate comparison has started.
+- Focused verification: corrected issue-number/Markdown table lint findings;
+  Markdown, HTML/local links and reference/worksheet consistency checks pass.
+  Checkpoint the scope refinement in a draft documentation PR while the rest of
+  the plan is under discussion. Full protected CI/routing enrollment is pending
+  that review and must complete before merge; no required check is waived.
+- Scope checkpoint 674805a8dc4a26a36edc5adb6d74b266934b01b5 is committed,
+  secret-scanned (zero findings) and remotely backed up in draft #220 against
+  dev. No harness, acceptance case, comparison, CI controller or activation was
+  started. Continue the remaining CF-1 harness/GUI/provider plan discussion;
+  after that review, enroll only owned #220 in existing Tart routing and push
+  without CI skipping so all protected checks complete before any merge.
+
+## 2026-10-22 — CF-1A/B production-client baseline execution
+
+- Maintainer says "Proceed" after the production-only CF-1 scope and harness/
+  observed-GUI division are recorded. Execute the CF-1A–F plan using production
+  Pi v0.85.1-psmfd.1; #219 comparison and all activation/SDK/release gates remain
+  separate. Baseline acceptance still requires observed mandatory cases and
+  recorded maintainer acceptance.
+- Starting branch docs/client-baseline-scope at
+  1e2a7507d04f799e31d5356bd1f656bfcec595e1 is backed up in draft #220 against
+  dev. Preserve three private untracked entries, artifact evidence and sibling
+  checkouts. Intended first slice: input/provenance verification, bounded owned
+  Tart staging/results/cleanup harness and guard regressions. Record first
+  failures, real GUI/provider blockers and exact next action durably; enroll
+  only the owned PR for full protected CI before merge.
+- Validation planned: wrong package/runtime digest and unsafe archive rejection,
+  refusal of unowned VM cleanup, failure retention and rejection of incomplete
+  acceptance, with a red-first guard mutation. Reverify existing candidate bytes
+  and package-relevant source inputs before reuse. Inspect clean macOS base and
+  running CI before any standalone guest launch.
+- Implemented initial harness and 15 passing guard tests; add their kept lane
+  to the existing repo-check job in .github/workflows/ci.yml. Exact production
+  release asset 553290482 verifies SHA-256 e0e0331d478af7724fa24d780a8d4abc0033c6f5ee7c0d45dddae6f922e5c4cb;
+  tagged source is e7d09c9dc5fca409f46a5476669e3c0404054d69 and the archive's Pi
+  executable is 811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5.
+  Remote Git commit data independently confirms the app's historical synthetic
+  build tree and both parents; the absent local merge object is not a blocker.
+- First prepare attempt 20261022T160004Z-2c7099cfa211 retained its failure:
+  the conservative source guard classified the newly added repo-check Python
+  lane as a package change. Narrow the check to application/runtime package
+  inputs and the actual apple-silicon-candidate build workflow. No package
+  source changed. Tart get does not support cached OCI names; inspect the fixed
+  cache config/manifest and clone by pinned OCI digest instead. No VM started.
+- Package preparation now passes, including all three ARM64 binaries and both
+  nested package digests. Initial guest preflight found a local OCI cache path
+  mismatch before cloning: Tart stores image/digest as separate directories.
+  Correct that fixed path and retain preflight failures in the run's event log.
+  Next retry the owned clean guest; no existing VM or host settings changed.
+- Owned guest runs macOS 15.7.7/24G720 ARM64. The stock pinned image includes
+  Homebrew, Node/npm and Command Line Tools. Moved only those guest tool trees
+  aside before first launch and verified Node/npm/brew unavailable; no host
+  tools moved. Finder AppleEvents timed out before installation. A separately
+  recorded ditto/LaunchServices attempt starts app PID 826 and sidecar PID 834,
+  but the headless screenshot does not show a usable app window. This is not
+  GUI acceptance or an established product defect. Retain the failed substrate
+  attempts and try a visible Tart console before declaring a GUI blocker.
+- Correct cleanup ownership to use the persisted clone hardware/MAC config;
+  Tart get includes mutable running state and allocated size. Preserve the
+  current unique clone receipt during the transition, remove only that guest,
+  then verify the corrected harness on a fresh visible-console guest. Screenshot
+  retrieval also needs bounded chunks; oversized guest-agent output disconnects.
+- Corrected-harness visible run 20261022T175149Z-c22f92748f50 stages the same
+  verified app/production runtime. Finder again times out before installation;
+  no usable app window is established. The last GUI-context follow-up reaches
+  the already-cleaned bounded session and does not execute. Both guests are
+  independently absent, no VM is running, and every original VM is preserved.
+- Captured twelve mandatory results: CF1-01 PASS, CF1-02 through CF1-12 BLOCKED.
+  GUI participation/test login and selected exact prior-app bytes remain missing
+  inputs. This is captured with blockers, never baseline accepted. Supplementary
+  packaged-sidecar smoke on the host passes shell echo, real Pi PTY output and
+  Pi termination using the exact 0.85.1 executable, temporary HOME and explicit
+  agent directory with no inherited provider environment. It bypasses Tauri.
+  Preserve only sanitized summaries/excerpts publicly; raw screenshots/logs stay
+  ignored. Runtime pin, operator home, SDK and managed activation remain intact.
+- All 15 kept harness guards pass. Isolated removal of archive traversal and
+  GUI-observation guards proves red failures before the unchanged source passes;
+  retain guard-red-green.txt. Ruff checks pass; formatting was corrected after
+  its first check. Next validate documentation/evidence/CI workflow, checkpoint
+  and enroll only owned #220 in the existing Tart routing for protected CI.
+- Local verification now passes: 15 harness regressions, both red-first guard
+  probes, Ruff lint/format, actionlint, Markdown, HTML/JSON formatting, 90 local
+  links, eight HTML IDs, every case evidence digest and structural/lock-shape/RPC
+  checks (zero errors/warnings). Corrected one table-alignment and HTML-format
+  finding. No product source changed and no blocker is waived. Checkpoint this
+  reviewed slice, secret-scan/back it up in #220, then enroll that owned PR for
+  the existing full CI matrix, preserving its pinned worker and runner group.
+- Checkpoint 11f92741c0ee6f1779c8028e297301a7e62e81d8 is committed,
+  secret-scanned (zero findings) and remotely backed up in #220. PR title/body
+  now describe the implementation and blockers; #217 records approval/capture
+  and is independently read back. Existing runner group 5 verifies. Add only
+  owned #220 to the trusted list, apply existing restricted server routing,
+  mark ready and push the final source without CI skipping. No standalone
+  guest remains active before CI; runtime/package/GUI acceptance is unchanged.
+- Protected head f86413f7e7bf31a69e874e9bf88367d7d7b8c56d passes all 22
+  distinct checks, including repo-check's kept harness suite and every hosted
+  Linux/Windows/local macOS lane. CodeQL's transient missing-configuration
+  notice clears as all analyses complete; its final conclusion is success.
+  All four local CI clones are cleaned. PR review has zero unresolved threads
+  and normal clean merge state. Retain source-ci.json with exact check URLs.
+- Final documentation checkpoint records the source result and the concrete
+  resume action: arrange an observable guest session, supported test login and
+  exact previous-app bytes, then repeat eleven blocked rows. It must pass its
+  own protected checks before merging #220 normally. Final head/merge identities
+  and post-merge readback belong in #220/#217 without fabricating a self hash.
+  #217 remains open, baseline not accepted, CF-2 unstarted, #219 deferred.

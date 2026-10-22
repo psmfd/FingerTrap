@@ -1,0 +1,77 @@
+{
+  "runId": "20261022T175149Z-c22f92748f50",
+  "runtimeTag": "v0.85.1-psmfd.1",
+  "runtimeSource": "e7d09c9dc5fca409f46a5476669e3c0404054d69",
+  "runtimeArchiveSha256": "e0e0331d478af7724fa24d780a8d4abc0033c6f5ee7c0d45dddae6f922e5c4cb",
+  "runtimeBinarySha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5",
+  "artifactId": 12385811971,
+  "sourceHead": "0a287c4eb6769ee810330de6d625861f241f65ce",
+  "buildCommit": "e5fa3cf0adea1aed06bb1601753d22d6fa3b6393",
+  "sourceTree": "9e227a6ce8f535357005519e99f026d6b762d630",
+  "archiveSha256": "e9cf6f7b10957f35de1ddae431abdc17bed17002f93d5e196ebbeddb81688990",
+  "appArchiveSha256": "135a8fb020236079c7af70a0577e2d5601cab4e7df77e3c628a3519043a4b137",
+  "dmgSha256": "427766aecb508360a7f98cfc14e51ea5c0009b6d8f74a3b2be5c1dcd5f63127b",
+  "binaries": [
+    {
+      "name": "fingertrap",
+      "sha256": "d105ba441b1f07924245421d0b65bfdb2c759fee7c69232d29c6c6165eeadd55",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "fingertrap-sidecar",
+      "sha256": "f49fe18ec1fff13ee745648ee103b9779bfa987accb4812f38f7c3722802f465",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "libporta_pty.dylib",
+      "sha256": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3",
+      "architecture": "Mach-O 64-bit dynamically linked shared library arm64"
+    }
+  ],
+  "sourceDifferencesFromCheckout": [
+    ".github/tart-policy.json",
+    "docs/apple-silicon-release-validation.md",
+    "docs/migration/README.md",
+    "docs/migration/STATUS.md",
+    "docs/migration/WORK_LOG.md",
+    "docs/migration/client-foundation-plan.html",
+    "docs/migration/evidence/client-baseline/README.md",
+    "docs/migration/evidence/client-baseline/artifact-reference.json",
+    "docs/migration/evidence/pr-merge-20261021/README.md",
+    "docs/migration/evidence/pr-merge-20261021/final-ci-readback.json",
+    "docs/migration/issue-ledger.md"
+  ],
+  "base": "ghcr.io/cirruslabs/macos-sequoia-base@sha256:3f4d14a5ffb9efd3bda2ae0184fd4bc2773d924ff8b7565f958761420ec41a0c",
+  "baseManifestSha256": "3f4d14a5ffb9efd3bda2ae0184fd4bc2773d924ff8b7565f958761420ec41a0c",
+  "tartVersion": "2.32.1",
+  "hostOs": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434",
+  "guestOs": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.7\nBuildVersion:\t\t24G720",
+  "guestToolInventory": "arm64\n/Library/Developer/CommandLineTools\n/opt/homebrew/bin/node\n/opt/homebrew/bin/npm\n/usr/bin/python3\n/opt/homebrew/bin/brew\n/Library/Developer/CommandLineTools",
+  "graphicsWindow": true,
+  "cleanupVerified": true,
+  "originalVmsPreserved": true,
+  "kind": "verified-cf1-inputs",
+  "artifactMetadata": {
+    "id": 12385811971,
+    "name": "apple-silicon-candidate-e5fa3cf0adea1aed06bb1601753d22d6fa3b6393",
+    "digest": "sha256:e9cf6f7b10957f35de1ddae431abdc17bed17002f93d5e196ebbeddb81688990",
+    "expired": false,
+    "workflow_run": {
+      "id": 39684836315,
+      "repository_id": 1221327956,
+      "head_repository_id": 1221327956,
+      "head_branch": "test/stabilize-golden-handshake",
+      "head_sha": "0a287c4eb6769ee810330de6d625861f241f65ce"
+    }
+  },
+  "mergeParents": [
+    "9d8b892b1569fa5b75d360a663c54c0063a8f6ed",
+    "0a287c4eb6769ee810330de6d625861f241f65ce"
+  ],
+  "productionReleaseAssetId": 553290482,
+  "productionTagObject": "a4f6adb50e0a03cf072150009cb540eeaa24229f",
+  "guestPreparation": "Guest-only Homebrew and CommandLineTools trees moved aside before first Finder attempt; node/npm/brew unavailable and xcode-select reports no active developer directory. The stock image is not claimed toolchain-free.",
+  "operatorGui": "No successful Finder or UI input observation. Finder AppleEvents time out in both headless and visible-console guests. Last follow-up ran after bounded guest cleanup and did not execute.",
+  "cleanupObservation": "Independent tart list: no baseline clone or running VM; every original VM name preserved.",
+  "noProductionActivation": true
+}
