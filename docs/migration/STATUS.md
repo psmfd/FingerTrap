@@ -1,8 +1,44 @@
 # Runtime migration: current status
 
-Updated: 2026-10-28. Paused at the maintainer's request for a machine reboot.
+Updated: 2026-10-28. CF-1C resumed after the reboot handoff.
 
-## Reboot handoff — start here
+## CF-1C live continuation — lifetime verified, keyboard blocked
+
+Saved branch/draft #224 match `c8abce5dd346634387f8ff01616856f8ed3a86b3`;
+remote dev remains `8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8`. #217 and #219
+remain open. Six CodeQL checks pass on the saved head; full protected CI remains
+pending. All 23 local guards and Ruff pass. Preserved input/Softnet digests match.
+
+Post-reboot run `20261028T183947Z-e59ca2bacfab` captured its first frame then
+recorded BrokenPipeError. Its code sequence points to the following flushed
+stdout status print; the exact origin is inferred because the exec session
+vanished. Cleanup was verified. The prior sandboxed attempt created no VM.
+
+**Live retest:** redirected-driver run `20261028T184851Z-755e4f85b29e` stayed
+alive for more than fifteen minutes with repeated requests and normal cleanup.
+Desktop pixels and pointer-driven Finder View/Go menus were observed. Original,
+Super, uppercase and paced diagnostic chords did not establish Go To Folder;
+several follow-up captures timed out. The guest agent/OS stayed responsive and
+an independent guest screenshot also showed the desktop. Keyboard input and
+frame freshness remain unqualified. No app case was attempted; eleven app rows
+remain BLOCKED. See [sanitized run evidence](evidence/client-baseline/gui-continuation/live-retest.json).
+
+All original VMs are stopped/preserved, the owned clone is absent, and process
+inspection confirms no QA controller/driver/Tart/Softnet process remains.
+Private frames/logs/queue files are preserved. The active-console pointer now
+references the cleaned retest; never send another request to it.
+
+**One resume action:** compare input from a known RFB client against the kept
+driver in one fresh owned offline guest, checking pointer press/release pacing,
+keysym/modifier handling and fresh frames against guest clock/screenshot. No
+alternate client was found on PATH; record the isolated probe's exact source
+and dependency identity before use. Continue app installation only after
+observable keyboard input works. Preserve the redirected-output launch pattern
+in [the handoff](HANDOFF-client-baseline-gui.md). Production Pi remains
+`v0.85.1-psmfd.1`, #219 comparison and all activation/backend gates stay deferred.
+These observations are locally verified, not yet committed/backed up or CI-verified.
+
+## Historical reboot handoff — superseded by live continuation above
 
 Reboot backup checkpoint `977c128ed63e8bacf57dfce41af8022d745f1c27` is committed, secret-scanned and remotely
 backed up in draft [#224](https://github.com/psmfd/FingerTrap/pull/224). The following

@@ -1755,3 +1755,71 @@ The compact [status board](STATUS.md) is the starting point for a new session.
 - Reboot backup 977c128ed63e8bacf57dfce41af8022d745f1c27 is committed, secret-scanned and remotely
   backed up in draft #224. A subsequent status-only checkpoint records
   this identity; its own hash is read from git. No guest or CI was launched.
+
+## 2026-10-28 — CF-1C post-reboot persistent-console retest
+
+- Resumed at maintainer request. Saved branch/draft #224 match c8abce5; remote
+  dev is unchanged at 8e5fd0c. #217/#219 remain open; six CodeQL checks pass,
+  full protected CI pending. No runtime or dependency integration.
+- Intended slice: live retest of dedicated input pipe/persistent native VNC,
+  first frame then one guest Go To Folder chord; continue Finder/keyless cases
+  only if the console survives. Preserve private evidence and production Pi
+  v0.85.1-psmfd.1; Pi 1.3.0 comparison and activation stay deferred.
+- Preflight passes: 23 guards, Ruff, all four reboot inventory hashes, Softnet
+  digest/permissions, available controller lock, Tart 2.32.1/cryptography 49.0.0.
+  All original VMs stopped, no disposable clone. GitHub readback required access
+  outside the sandbox; per-command TheSemicolon identity succeeds unchanged.
+- Next: launch kept atomic driver, inspect first frame and chord response, then
+  record lifetime/input result before any app acceptance attempt.
+
+- Live attempt 20261028T183917Z-4e765150c1e2 failed before creating a clone in
+  the filesystem sandbox; retained failure. Approved outside-sandbox retry
+  20261028T183947Z-e59ca2bacfab booted macOS 15.7.7/24G720, authenticated
+  VNC and wrote a first framebuffer at 18:40:04 UTC plus active-console.json.
+  It then recorded BrokenPipeError and immediately requested normal cleanup.
+- Diagnosis: after capture and active-pointer save, the next operation is a
+  flushed stdout print. No input requests exist, and the owned controller log
+  has no boot/lifetime error. Strong evidence identifies a closed tool-output
+  pipe at that status print, rather than an app crash; no traceback survives
+  the vanished exec session, so the exact origin is inferred. No new relevant
+  Tart/Python crash report was found. Persistent input is still unverified.
+- Independently verified cleanup: cleanupVerified=true, clone absent, original
+  VMs stopped/preserved, no QA controller/driver/Tart/Softnet process. Raw logs,
+  frame and state remain private. Active pointer is stale again; do not reuse.
+- Concrete resume: redirect atomic-driver stdout/stderr to a unique private
+  .artifacts/client-baseline log and run with required Tart filesystem access;
+  inspect fresh first pixels and send the handoff's single Go To Folder chord.
+  Record live lifetime/input before app validation. No runtime/acceptance change.
+
+- Maintainer says Proceed. Retest started with stdout/stderr redirected to private
+  driver-20261028-retest.log, avoiding the vanished tool-output pipe. New owned
+  run 20261028T184851Z-755e4f85b29e; planned observation remains fresh first frame
+  plus one Go To Folder chord before any app acceptance.
+
+- Redirected run 20261028T184851Z-755e4f85b29e remains guest-ready across
+  repeated requests; first desktop is 2048x1536 (viewer renders it scaled).
+  No output-pipe failure. Pointer input visibly opens Finder View/Go menus.
+  Original Meta+Shift+G chord and Super variant return frame timeouts; a paced
+  diagnostic Meta chord still does not show Go To Folder. Independent shared
+  connection captures a real desktop; later original-connection captures can
+  succeed. Thus lifetime is live-verified, keyboard/usable console still blocked.
+  No app case attempted/passed. Preserve all queue responses/screenshots,
+  including failed requests. Investigate bounded input/protocol correction
+  before continuing installation; do not confuse viewer coordinates with PNG.
+
+- Finished bounded diagnostic session normally. Run phase cleaned, events=[],
+  cleanupVerified=true; external Tart listing and filtered process inspection
+  verify original VMs stopped/preserved, owned clone absent and no QA processes.
+  No app/source/runtime changes or acceptance claims. Canonical evidence:
+  evidence/client-baseline/gui-continuation/live-retest.json (sanitized metadata,
+  queue outcomes and private-image hashes). All screenshots remain ignored.
+- Independent guest screenshot retrieval first hit the existing large-output
+  transport limit; the smaller 320px copy retrieved successfully. The guest
+  date/process readback works and the independent screen still shows desktop.
+  Avoid attributing this to a GPU freeze or a product defect without evidence.
+- Next bounded slice: compare a known RFB client's keyboard/pointer events and
+  fresh frames against this minimal driver in a fresh owned offline guest.
+  No mtell/vncdotool/vncviewer on PATH. Record exact isolated probe provenance
+  before use, validate actual input/frame freshness, then continue Finder app
+  installation. Do not churn through app rows until the console is usable.
+  Keep stdout/stderr redirected privately; no Pi 1.3.0/#219 or activation change.

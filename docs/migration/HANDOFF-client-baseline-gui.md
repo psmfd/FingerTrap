@@ -1,5 +1,11 @@
 # CF-1C reboot handoff — 2026-10-28
 
+**Post-reboot update:** read the latest [STATUS](STATUS.md) first. The redirected
+live retest verifies lifetime and pointer-driven menus, but keyboard input and
+frame freshness remain blocked. See [sanitized live results](evidence/client-baseline/gui-continuation/live-retest.json).
+All guests are cleaned; the active-console pointer is stale. The original
+reboot handoff below is retained as history; its first retest has now run.
+
 The maintainer requested an immediate session end for reboot. Resume this WIP
 after reading [STATUS](STATUS.md), the latest [WORK_LOG](WORK_LOG.md) entry,
 [approved CF-1 plan](client-foundation-plan.html#cf1-plan), CONTRIBUTING and
@@ -98,11 +104,17 @@ Python/cryptography, the reviewed Softnet helper and the shared controller lock.
 Run only the kept atomic driver, which rechecks input digests and owns cleanup:
 
 ```bash
+driver_log=".artifacts/client-baseline/driver-$(date -u +%Y%m%dT%H%M%SZ).log"
 python3 scripts/client_baseline_vnc.py \
   --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
   --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
-  --hold-seconds 1800
+  --hold-seconds 1800 > "$driver_log" 2>&1
 ```
+
+Keep driver output in that private file: evidence points to a closed tool-output
+pipe aborting the first post-reboot run at its status print. Launch through the tool with Tart
+filesystem access outside the sandbox. Read the log for the new run/first frame;
+never print the private vm.log because it contains the connection secret.
 
 It prepares a new run, obtains first pixels, writes the private
 `.artifacts/client-baseline/active-console.json`, and accepts bounded request
