@@ -7,6 +7,10 @@ ADR-0034. Existing execution approvals persist.
 
 ## Saved state and boundaries
 
+Saved implementation checkpoint: `977c128ed63e8bacf57dfce41af8022d745f1c27`, remotely backed up in
+draft [#224](https://github.com/psmfd/FingerTrap/pull/224). The final status-only commit follows it;
+read the branch head and latest tracker comment for the exact final SHA.
+
 - Branch: `test/client-baseline-gui`; base/remote dev:
   `8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8`.
 - #220 is merged: 22 final-head and 19 post-merge checks passed. Those results

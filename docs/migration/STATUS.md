@@ -4,6 +4,11 @@ Updated: 2026-10-28. Paused at the maintainer's request for a machine reboot.
 
 ## Reboot handoff — start here
 
+Reboot backup checkpoint `977c128ed63e8bacf57dfce41af8022d745f1c27` is committed, secret-scanned and remotely
+backed up in draft [#224](https://github.com/psmfd/FingerTrap/pull/224). The following
+status-only checkpoint records that identity; read `git log -1` for its own
+hash. Neither this WIP nor the final input-lifetime fix is CI/live verified.
+
 Read the [exact GUI continuation handoff](HANDOFF-client-baseline-gui.md) and
 the latest WORK_LOG entry. Branch `test/client-baseline-gui` is based on verified
 dev `8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8` (#220: 22 head/19 merged

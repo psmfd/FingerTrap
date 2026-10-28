@@ -1751,3 +1751,7 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   active-console pointer. Full protected CI/enrollment/merge and all real client
   cases remain pending after this WIP checkpoint. Exact commands and prompt:
   HANDOFF-client-baseline-gui.md. No new guest or CI run starts before reboot.
+
+- Reboot backup 977c128ed63e8bacf57dfce41af8022d745f1c27 is committed, secret-scanned and remotely
+  backed up in draft #224. A subsequent status-only checkpoint records
+  this identity; its own hash is read from git. No guest or CI was launched.
