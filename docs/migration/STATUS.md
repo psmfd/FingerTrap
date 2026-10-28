@@ -36,7 +36,11 @@ and dependency identity before use. Continue app installation only after
 observable keyboard input works. Preserve the redirected-output launch pattern
 in [the handoff](HANDOFF-client-baseline-gui.md). Production Pi remains
 `v0.85.1-psmfd.1`, #219 comparison and all activation/backend gates stay deferred.
-These observations are locally verified, not yet committed/backed up or CI-verified.
+Evidence checkpoint `b9db2fe81e02c491b6775b70592374300ac5dc98` is committed,
+secret-scanned (zero findings) and remotely backed up in draft #224. This
+subsequent status checkpoint records its identity; read git for its own hash.
+Documentation formatting/links/evidence digests and repo checks pass. Full
+protected CI, usable keyboard input and all app acceptance remain pending.
 
 ## Historical reboot handoff — superseded by live continuation above
 

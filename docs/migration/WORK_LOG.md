@@ -1823,3 +1823,10 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   before use, validate actual input/frame freshness, then continue Finder app
   installation. Do not churn through app rows until the console is usable.
   Keep stdout/stderr redirected privately; no Pi 1.3.0/#219 or activation change.
+
+- Sanitized evidence checkpoint b9db2fe81e02c491b6775b70592374300ac5dc98
+  committed, secret-scanned (zero findings), pushed to existing draft #224.
+  Markdown/Prettier, all retained image digests/local links, diff whitespace and
+  repository structure/lock/RPC checks pass. Only original three private entries
+  remain untracked. This subsequent status-only checkpoint records that identity;
+  its own hash must be read from git. Protected CI/review remain pending, no merge.
