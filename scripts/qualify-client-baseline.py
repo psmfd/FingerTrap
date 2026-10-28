@@ -283,7 +283,10 @@ def cleanup(run, state):
     if state["vm"] in names:
         if vm_config(state["vm"]) != state["ownedConfig"]:
             raise ValueError("Refusing cleanup: clone identity changed")
-        command(["tart", "stop", state["vm"]])
+        if next(vm for vm in listing if vm["Name"] == state["vm"]).get(
+            "Running", False
+        ):
+            command(["tart", "stop", state["vm"]])
         command(["tart", "delete", state["vm"]])
     after = json.loads(command(["tart", "list", "--format", "json"]))
     after_names = {v["Name"] for v in after}
@@ -296,7 +299,16 @@ def cleanup(run, state):
         raise RuntimeError("Owned cleanup/original VM preservation failed")
 
 
-def guest_session(run, hold_seconds, graphics=False):
+def console_arguments(graphics=False, vnc=False):
+    if graphics and vnc:
+        raise ValueError("Choose one console mode")
+    if vnc:
+        return ["--no-graphics", "--vnc-experimental"]
+    return [] if graphics else ["--no-graphics"]
+
+
+def guest_session(run, hold_seconds, graphics=False, vnc=False):
+    console = console_arguments(graphics, vnc)
     run, state = load(run)
     if state["phase"] != "inputs-verified" or state["created"]:
         raise ValueError("Guest requires a fresh input-verified run")
@@ -353,24 +365,36 @@ def guest_session(run, hold_seconds, graphics=False):
                     + ":/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
                     TART_NO_AUTO_PRUNE="1",
                 )
+                argv = [
+                    "tart",
+                    "run",
+                    *console,
+                    "--no-audio",
+                    "--no-clipboard",
+                    "--net-softnet",
+                    "--net-softnet-block=0.0.0.0/0",
+                    "--dir=qa:" + str(run / "share") + ":ro",
+                    state["vm"],
+                ]
+                if vnc:
+                    # A PTY makes Tart's generated URL available immediately;
+                    # its normal redirected stdout may otherwise stay buffered.
+                    argv = ["/usr/bin/script", "-q", "/dev/null", *argv]
+                    (run / "vm.log").chmod(0o600)
                 process = subprocess.Popen(
-                    [
-                        "tart",
-                        "run",
-                        *([] if graphics else ["--no-graphics"]),
-                        "--no-audio",
-                        "--no-clipboard",
-                        "--net-softnet",
-                        "--net-softnet-block=0.0.0.0/0",
-                        "--dir=qa:" + str(run / "share") + ":ro",
-                        state["vm"],
-                    ],
+                    argv,
                     env=env,
+                    # Keep script's input open without attaching host input.
+                    # EOF on /dev/null can end its PTY and hang up Tart.
+                    stdin=subprocess.PIPE if vnc else subprocess.DEVNULL,
                     stdout=log,
                     stderr=subprocess.STDOUT,
                 )
                 state["phase"] = "booting"
                 state["graphicsWindow"] = graphics
+                state["consoleMode"] = (
+                    "native-vnc" if vnc else "window" if graphics else "headless"
+                )
                 save(run / "state.json", state)
                 deadline = time.monotonic() + 150
                 while time.monotonic() < deadline:
@@ -419,7 +443,10 @@ def guest_session(run, hold_seconds, graphics=False):
                 deadline = time.monotonic() + hold_seconds
                 while time.monotonic() < deadline:
                     if process.poll() is not None:
-                        raise RuntimeError("Guest stopped during observation")
+                        raise RuntimeError(
+                            "Guest process stopped during observation: "
+                            + str(process.returncode)
+                        )
                     if (run / "finish-session").exists():
                         break
                     time.sleep(1)
@@ -443,6 +470,8 @@ def guest_session(run, hold_seconds, graphics=False):
                 finally:
                     if process:
                         process.wait(timeout=30)
+                        if process.stdin:
+                            process.stdin.close()
 
 
 def main():
@@ -460,10 +489,16 @@ def main():
         choices=range(0, 1801),
         metavar="0..1800",
     )
-    guest.add_argument(
+    display = guest.add_mutually_exclusive_group()
+    display.add_argument(
         "--graphics",
         action="store_true",
         help="Show the owned Tart window for observed GUI acceptance",
+    )
+    display.add_argument(
+        "--vnc",
+        action="store_true",
+        help="Use the owned VM's native VNC console; generated URL stays in private vm.log",
     )
     rec = subs.add_parser("record")
     rec.add_argument("--run", type=Path, required=True)
@@ -492,7 +527,7 @@ def main():
         prepare(args.archive, args.runtime_archive)
     elif args.action == "guest":
         try:
-            guest_session(args.run, args.hold_seconds, args.graphics)
+            guest_session(args.run, args.hold_seconds, args.graphics, args.vnc)
         except Exception as error:
             run, state = load(args.run)
             state["events"].append(

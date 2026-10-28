@@ -1,6 +1,34 @@
 # Runtime migration: current status
 
-Updated: 2026-10-22 UTC. CF-1 production-client baseline execution approved.
+Updated: 2026-10-28. Paused at the maintainer's request for a machine reboot.
+
+## Reboot handoff — start here
+
+Read the [exact GUI continuation handoff](HANDOFF-client-baseline-gui.md) and
+the latest WORK_LOG entry. Branch `test/client-baseline-gui` is based on verified
+dev `8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8` (#220: 22 head/19 merged
+checks passed). The continuation is a work-in-progress checkpoint, not CI-verified
+or accepted. All 23 current local guards and Ruff checks pass. All VMs are
+stopped, no disposable clone or QA/CI controller remains, and private inputs
+are preserved. The last interrupted launch did not create a new run.
+
+**One resume action:** after rechecking the saved branch/remote state and host
+readiness, run the atomic VNC driver, then confirm that its desktop remains
+alive and responds to one guest-only Go To Folder chord. The dedicated input
+pipe/persistent VNC fix is implemented but has not had this live retest.
+Keep all eleven app acceptance rows BLOCKED until actually observed. Pi remains
+`v0.85.1-psmfd.1`; #219 comparison stays deferred. New Dependabot #221/#222/#223
+were inventoried for the next session, not reviewed or merged during shutdown.
+
+**CF-1C — observable guest GUI, paused for reboot.** The maintainer says "Proceed"
+after #220 integration. Reconcile its final 22 head/19 post-merge checks and
+saved inputs, then establish observable input/frame capture in one owned clean
+Tart guest. Investigate Tart's native VNC console as an alternative to the
+timed-out guest AppleEvents path; preserve normal macOS privacy/Gatekeeper
+behavior. Name any harness changes and their validation before implementation.
+Continue keyless client cases, select and verify a prior QA app artifact, and
+record provider-login inputs still needed. Production Pi remains
+`v0.85.1-psmfd.1`; #219 comparison and all production activation gates stay separate.
 
 **CF-1A/B — captured with GUI/provider blockers; acceptance open.** The
 maintainer's "Proceed" approves the recorded CF-1A–F plan against production
@@ -218,7 +246,8 @@ Suggested restart text:
 
 ## Resume here
 
-**Next action: arrange an observable interactive guest session for blocked CF-1 cases.** Read
+**Next action: resume the saved native-VNC live-input retest after reboot.** Read
+[the reboot handoff](HANDOFF-client-baseline-gui.md),
 [the implementation proposal](client-foundation-plan.html#cf1-plan),
 [the worksheet](evidence/client-baseline/README.md) and #217. The runtime scope
 is settled: production `v0.85.1-psmfd.1` only; comparison belongs to #219.

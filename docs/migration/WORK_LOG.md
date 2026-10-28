@@ -1670,3 +1670,84 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   own protected checks before merging #220 normally. Final head/merge identities
   and post-merge readback belong in #220/#217 without fabricating a self hash.
   #217 remains open, baseline not accepted, CF-2 unstarted, #219 deferred.
+
+## 2026-10-23 UTC — CF-1C observable GUI continuation
+
+- Maintainer says "Proceed" after #220 merged at
+  8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8 with 22 head and 19 post-merge
+  checks passed. Main checkout matches origin/dev with only the three preserved
+  private entries untracked. All original VMs are stopped; no disposable
+  baseline/CI VM remains. Recheck remote state and exact input digests before use.
+- Intended slice: establish guest GUI input/frame observation through Tart's
+  native console/VNC path, since guest AppleEvents timed out. Inspect installed
+  CLI and primary source behavior first; use only a loopback connection to our
+  uniquely owned guest, with no host-home/credential/clipboard sharing. Preserve
+  first failures. Continue keyless actual-client cases and identify verified
+  previous QA app bytes; supported real-provider login remains a separate input.
+- Proposed harness change, if needed: add a bounded native-VNC console option
+  to scripts/qualify-client-baseline.py, preserving ownership, shared CI lock,
+  guest lifetime and cleanup guards. Validate mutually exclusive console modes,
+  private connection metadata and actual owned-guest cleanup. Add only meaningful
+  guard regressions for changed behavior. No client fix is assumed before a
+  concrete reproduction; no Pi 1.3.0 comparison or SDK/backend activation.
+- Installed Tart 2.32.1 primary source confirms native Virtualization VNC with a
+  generated per-session password and 127.0.0.1 URL. Add mutually exclusive
+  --vnc/--graphics modes; VNC runs with --no-graphics so no host viewer opens.
+  Preserve connection data only in the private run's vm.log. A bounded QA VNC
+  probe may be kept as scripts/client_baseline_vnc.py if it proves useful;
+  restrict it to the owned active run/loopback endpoint and retain meaningful
+  ownership/frame-size/input guards. No privacy database changes are authorized
+  or needed for this virtual keyboard/frame path.
+- Native-VNC run 20261023T004000Z-26339eea6cb5 reached guest-ready and wrote its
+  private connection URL. Its thirty-minute deadline cleaned it before the
+  separately launched framebuffer probe executed; that probe correctly refused
+  the cleaned run. No GUI result is claimed. Consolidate boot/first capture and
+  a bounded guest-only input queue in scripts/client_baseline_vnc.py, so the
+  initial observation is atomic and subsequent virtual input stays inside the
+  approved owned session. Preserve the same deadline, ownership, offline network,
+  clipboard/share and cleanup restrictions; validate the queue/path/frame guards.
+- Atomic run 20261023T132854Z-e69e67da8c60 authenticates to native VNC but the
+  host framework aborts after its pseudo-encoding warning on the first pixel
+  request. No app/UI case ran. Add DesktopSize capability negotiation and
+  resize bounds, retaining real pixel updates as a capture requirement.
+- The resulting stopped clone exposes a harness cleanup defect: tart stop on
+  an already-stopped owned VM returns 2 and prevents deletion. A new regression
+  fails before the fix, then all 17 baseline guards pass after checking Running
+  before stop. The exact stopped clone is removed with receipt/config validation;
+  prior failure history stays in its private state. Add six console bounds/
+  ownership/replay guards to repo-check's scripts/tests discovery before retry.
+- Run 20261023T133506Z-b727c20f4c58 captures a real 1824x1368 desktop frame
+  after DesktopSize negotiation, but Tart's script wrapper exits before the
+  first input and the controller cleans its guest. The wrapper had /dev/null
+  input, sending EOF to its PTY. Keep a dedicated unwritten pipe open instead,
+  close it after process exit, and retain one authenticated VNC connection for
+  the observation session. Record process exit codes. No app case passes yet.
+
+## 2026-10-28 — maintainer-requested reboot handoff
+
+- Stop acceptance work now and preserve a scoped checkpoint on
+  test/client-baseline-gui. Dev/origin/dev remain
+  8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8; #220 is merged with the already
+  recorded 22 head/19 merged checks. Remote new Dependabot #221/#222/#223 are
+  inventoried only; no dependency/runtime input changed for this handoff.
+- Last aborted call left its edits in place but created no new run. The final
+  input-pipe/persistent-connection change is implemented and Ruff-clean; fresh
+  verification passes all 23 current local guard tests. It is not live-verified
+  and has no new protected CI result. Baseline remains one mandatory input PASS
+  and eleven BLOCKED cases; no app acceptance, production pin or activation.
+- Independent shutdown check: all Tart VMs stopped, no disposable clone remains,
+  and process inspection finds no QA driver, baseline controller or CI drain.
+  All recorded created runs report cleanupVerified=true. The historical failed
+  preparation created no VM. Original VM names and private files are preserved.
+- Rehashed current app archive, production Pi archive, previous QA app archive
+  and first native framebuffer; all expected digests match. Essential references
+  and sanitized red/green cleanup evidence are saved with the handoff. Private
+  binaries, raw logs/connection URLs, screenshots and run states remain ignored
+  under .artifacts; retain that directory through reboot. No temporary helper
+  under /private/tmp is required to resume the kept driver.
+- Next concrete action: verify the checkpoint/remote and host tools, start the
+  atomic VNC driver and confirm first frame plus one Go To Folder key chord on
+  the live owned guest. Do not repeat the old separate probe against the stale
+  active-console pointer. Full protected CI/enrollment/merge and all real client
+  cases remain pending after this WIP checkpoint. Exact commands and prompt:
+  HANDOFF-client-baseline-gui.md. No new guest or CI run starts before reboot.
