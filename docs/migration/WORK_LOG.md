@@ -1875,3 +1875,9 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   source changed. Full protected CI/review remain pending. Downloading the pinned
   comparison dependency initially hit sandbox DNS; approved isolated download
   succeeded, then its build used GOPROXY=off. No host tool installation.
+
+- Handoff evidence checkpoint 2cdf67406416f4d0cce3a5023af4bde7be66fd8b committed, secret-scanned
+  (zero findings) and remotely backed up in draft #224. Repository structural/
+  lock/RPC checks pass with zero errors/warnings. This subsequent status-only
+  checkpoint records that identity; read git for its own hash. The PR body and
+  #217 tracker receive the final source/branch identities and exact resume action.

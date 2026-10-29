@@ -8,8 +8,9 @@ Execution approval persists for CF-1 against production Pi only.
 ## Saved branch and scope
 
 - Branch `test/client-baseline-gui`, draft [#224](https://github.com/psmfd/FingerTrap/pull/224)
-  against `dev`. Read local/remote head for the final handoff SHA; the previous
-  backed-up status checkpoint was `41c80e65e2bdc4736acde2b34d0607bd65fa0a13`.
+  against `dev`. Handoff evidence checkpoint `2cdf67406416f4d0cce3a5023af4bde7be66fd8b`
+  is committed, secret-scanned and backed up. A status-only commit follows it;
+  read local/remote head for the final handoff SHA.
 - Remote dev last verified `8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8` (#220).
   Use per-command `TheSemicolon` GitHub credentials; do not switch global auth.
 - Production Pi remains `v0.85.1-psmfd.1`. Pi 1.3.0 comparison stays deferred in

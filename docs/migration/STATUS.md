@@ -4,7 +4,10 @@ Updated: 2026-10-29. Paused at the maintainer's request for session wrap-up.
 
 ## CF-1C handoff — independent client reproduces frame timeout
 
-Branch `test/client-baseline-gui`, draft #224, prior saved head `41c80e6`.
+Branch `test/client-baseline-gui`, draft #224. Handoff evidence checkpoint
+`2cdf67406416f4d0cce3a5023af4bde7be66fd8b` is committed, secret-scanned and remotely backed up.
+A subsequent status-only commit records this identity; read git/draft head for
+its own SHA. No protected CI or acceptance is claimed for this checkpoint.
 The independent comparison is recorded in
 [rfb-comparison.json](evidence/client-baseline/gui-continuation/rfb-comparison.json),
 with exact probe-source text fixtures and module sums beside it. No application
