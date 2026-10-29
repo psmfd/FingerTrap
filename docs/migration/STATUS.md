@@ -1,8 +1,46 @@
 # Runtime migration: current status
 
-Updated: 2026-10-28. CF-1C resumed after the reboot handoff.
+Updated: 2026-10-29. Paused at the maintainer's request for session wrap-up.
 
-## CF-1C live continuation — lifetime verified, keyboard blocked
+## CF-1C handoff — independent client reproduces frame timeout
+
+Branch `test/client-baseline-gui`, draft #224, prior saved head `41c80e6`.
+The independent comparison is recorded in
+[rfb-comparison.json](evidence/client-baseline/gui-continuation/rfb-comparison.json),
+with exact probe-source text fixtures and module sums beside it. No application
+or runtime source/dependency changed. Local comparison files/caches/binary and
+raw evidence remain private under `.artifacts/client-baseline/`.
+
+Run `20261028T194636Z-ceb986018619`: pinned independent go-vnc authenticated
+and captured a 2048x1536 desktop. Follow-up frames after Escape and paced
+Meta+Shift+g/G all timed out, matching the kept client's symptom. This does not
+establish whether input arrived or identify the root cause. The guest deadline
+cleaned it normally before the independent guest-screen step; next-day readback
+correctly refused the cleaned run. No app case attempted or passed.
+
+**Shutdown verified 2026-10-29:** all original VMs stopped/preserved, no disposable
+clone, no QA driver/controller/comparison/Tart/Softnet process. Latest run state
+is cleaned with cleanupVerified=true and no controller events. Active-console
+points to that cleaned run; do not reuse it. Private evidence is preserved.
+
+**One resume action:** implement and name a bounded atomic comparison wrapper
+around the saved driver and independent probes: boot/new first frame, paced
+pointer/keyboard, immediate guest screen/clock readback, then owned cleanup in
+one approved tool execution. Do not repeat separated calls across approval or
+session delays. Validate ownership/stale-pointer/deadline behavior before live
+use. This wrapper is the next change; it has not been implemented. Exact existing
+commands, private paths and probe limitations are in
+[HANDOFF-client-baseline-gui.md](HANDOFF-client-baseline-gui.md).
+
+Baseline remains one input PASS and eleven app BLOCKED rows; #217 stays open.
+Keep production Pi `v0.85.1-psmfd.1`, #219 comparison deferred, and all activation,
+backend, release and CF-2 gates intact. Provider login/network setup and actual
+prior-app upgrade acceptance remain outstanding. Full protected CI/review and
+merge of #224 remain pending. All 23 kept guards and Ruff were rerun successfully at wrap-up, along with
+Markdown/Prettier, local links, fixture/provenance/frame hashes and whitespace.
+No new protected CI success is claimed.
+
+### Prior live result — lifetime verified, keyboard blocked
 
 Saved branch/draft #224 match `c8abce5dd346634387f8ff01616856f8ed3a86b3`;
 remote dev remains `8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8`. #217 and #219

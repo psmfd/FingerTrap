@@ -1,107 +1,102 @@
-# CF-1C reboot handoff — 2026-10-28
+# CF-1C session handoff — 2026-10-29
 
-**Post-reboot update:** read the latest [STATUS](STATUS.md) first. The redirected
-live retest verifies lifetime and pointer-driven menus, but keyboard input and
-frame freshness remain blocked. See [sanitized live results](evidence/client-baseline/gui-continuation/live-retest.json).
-All guests are cleaned; the active-console pointer is stale. The original
-reboot handoff below is retained as history; its first retest has now run.
+The maintainer requested session wrap-up. Read [STATUS](STATUS.md), the latest
+[WORK_LOG](WORK_LOG.md) entry, CONTRIBUTING, the
+[approved CF-1 plan](client-foundation-plan.html#cf1-plan) and ADR-0034.
+Execution approval persists for CF-1 against production Pi only.
 
-The maintainer requested an immediate session end for reboot. Resume this WIP
-after reading [STATUS](STATUS.md), the latest [WORK_LOG](WORK_LOG.md) entry,
-[approved CF-1 plan](client-foundation-plan.html#cf1-plan), CONTRIBUTING and
-ADR-0034. Existing execution approvals persist.
+## Saved branch and scope
 
-## Saved state and boundaries
+- Branch `test/client-baseline-gui`, draft [#224](https://github.com/psmfd/FingerTrap/pull/224)
+  against `dev`. Read local/remote head for the final handoff SHA; the previous
+  backed-up status checkpoint was `41c80e65e2bdc4736acde2b34d0607bd65fa0a13`.
+- Remote dev last verified `8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8` (#220).
+  Use per-command `TheSemicolon` GitHub credentials; do not switch global auth.
+- Production Pi remains `v0.85.1-psmfd.1`. Pi 1.3.0 comparison stays deferred in
+  [#219](https://github.com/psmfd/FingerTrap/issues/219). No CF-2, managed activation,
+  SDK/backend change, runtime pin/release, or acceptance gate is waived.
+- [#217](https://github.com/psmfd/FingerTrap/issues/217) remains open: one mandatory
+  artifact/input PASS, eleven app rows BLOCKED. No app case ran in this session.
+  Supported provider login/network setup and prior-app upgrade acceptance remain
+  outstanding. A possible prior QA app was verified but never exercised.
+- Twenty-three existing guards and Ruff passed before the isolated comparison.
+  No product/runtime source or dependency changed. Full protected CI, review,
+  enrollment and merge of this WIP remain pending; do not infer them from #220.
 
-Saved implementation checkpoint: `977c128ed63e8bacf57dfce41af8022d745f1c27`, remotely backed up in
-draft [#224](https://github.com/psmfd/FingerTrap/pull/224). The final status-only commit follows it;
-read the branch head and latest tracker comment for the exact final SHA.
+## Actual results and blocker
 
-- Branch: `test/client-baseline-gui`; base/remote dev:
-  `8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8`.
-- #220 is merged: 22 final-head and 19 post-merge checks passed. Those results
-  qualify its committed baseline harness, not this new WIP continuation.
-- Current continuation: 23 local guard tests and Ruff pass. Native VNC obtains
-  a real desktop frame; the final lifetime/input fix is **not live verified**.
-  Full protected CI, review/enrollment and merge are pending.
-- Baseline #217 still has one mandatory input PASS and eleven BLOCKED rows.
-  No actual app case passed during this continuation. No CF-2 advancement.
-- Production runtime stays `v0.85.1-psmfd.1`. Pi 1.3.0 comparison is deferred in
-  #219. SDK adoption, managed activation, release/pin and native authority gates
-  remain intact. Further extension catalog work remains deferred.
-- New open Dependabot #221 (Cargo), #222 (Actions), #223 (UI npm) were read only.
-  Reconcile their current state before any future integration; don't silently
-  change the frozen app/runtime baseline.
+1. Run `20261028T183947Z-e59ca2bacfab` captured a first frame then recorded
+   BrokenPipeError. The sequence points to the next flushed status print to
+   a closed tool-output pipe; the exact stack is unavailable. Redirect driver
+   stdout/stderr to a private log in every future launch.
+2. Redirected run `20261028T184851Z-755e4f85b29e` stayed alive over fifteen
+   minutes. Desktop and pointer-driven Finder menus were observed. Original,
+   Super, uppercase and paced keyboard chords never established Go To Folder;
+   some frame requests timed out. An independent guest screenshot showed desktop.
+   See [sanitized live retest](evidence/client-baseline/gui-continuation/live-retest.json).
+3. Independent run `20261028T194636Z-ceb986018619`, probe
+   `independent-8e000f6c323c`, used `github.com/mitchellh/go-vnc` pinned to
+   `v0.0.0-20150629162542-723ed9867aed`. It authenticated/captured a real
+   2048x1536 desktop, then timed out on every frame after Escape and paced
+   Meta+Shift+g/G. Its exit code 0 does **not** mean input passed.
+   See [comparison results and source hashes](evidence/client-baseline/gui-continuation/rfb-comparison.json).
+4. The bounded guest deadline cleaned it before a separately approved guest
+   screenshot step executed. Next-day readback correctly rejected the cleaned
+   run. No post-input independent observation exists for that comparison.
 
-At shutdown all original VMs are stopped; no disposable baseline/CI VM and no
-QA driver/CI controller remains. Do not resume an old runner drain just because
-the machine rebooted. `active-console.json` points to a **cleaned** old run;
-the next successful driver session replaces it.
+The root cause remains unknown. A second implementation reproduces the timeout;
+there is no established app defect, GPU failure, or proven keyboard delivery.
+The console lifetime fix is verified; usable input and frame freshness are not.
+Do not churn through app acceptance cases until those observations work.
+
+## Shutdown and private evidence
+
+Verified 2026-10-29: all original VMs stopped/preserved; no disposable clone or
+QA driver/controller/comparison/Tart/Softnet process remains. Latest state is
+`cleaned`, `cleanupVerified=true`, with no controller events. The active-console
+pointer refers to the cleaned latest run and must not receive another request.
+No guest was launched after the wrap-up request.
 
 Preserve `.local-testing/`, `LEGACY_pi_config_3579dc1.patch`,
-`NEXT_SESSION_pi-fold-reassessment.md`, all ignored `.artifacts/` evidence and
-the operator's sibling repositories. Don't reset, stash or remove these to
-make the worktree appear clean. Private data stays out of commits.
+`NEXT_SESSION_pi-fold-reassessment.md`, all ignored `.artifacts/`, and sibling
+repositories. Do not reset, stash, or delete them. Raw frames, logs, queue files,
+connection secrets and run states remain private. Never print `vm.log` or VNC URLs.
 
-## What changed and what failed
-
-- `scripts/qualify-client-baseline.py`: mutually exclusive native `--vnc` and
-  window `--graphics`; private per-run console log; owned stopped-VM cleanup
-  now skips an invalid stop operation before deletion. The stopped-VM regression
-  failed before the fix and passes after it.
-- `scripts/client_baseline_vnc.py`: bounded, authenticated loopback console,
-  pixel/resize limits, virtual input queue and atomic boot/first-frame capture.
-  Existing host `cryptography` is loaded only for VNC authentication; it is
-  not an application/runtime dependency or CI guard prerequisite.
-- Six console guards plus 17 baseline guards run through `scripts/tests/`;
-  repo-check discovers all `test_*.py` there.
-
-Relevant private runs:
-
-| Run                             | Actual outcome                                                                                                                             |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `20261023T004000Z-26339eea6cb5` | Guest ready; deadline cleaned it before the separate probe.                                                                                |
-| `20261023T132854Z-e69e67da8c60` | VNC authenticated, then framework warning/reset on missing DesktopSize capability; stopped-VM cleanup bug reproduced, fixed and recovered. |
-| `20261023T133506Z-b727c20f4c58` | DesktopSize negotiation produced a real 1824×1368 PNG; wrapper exited before first input; cleanup verified.                                |
-
-The final patch keeps a dedicated unwritten input pipe open for the `script`
-PTY wrapper, closes it after exit, and keeps one authenticated VNC connection
-for the observation session. `/dev/null` previously sent EOF to the PTY.
-**That diagnosis/fix still needs the live lifetime/input retest.** The last
-aborted launch did not create another run. Preserve the failed attempts; don't
-rewrite them as app failures or passes.
-
-Primary console behavior was checked against installed Tart 2.32.1 and its
-[native VNC implementation](https://raw.githubusercontent.com/cirruslabs/tart/2.32.1/Sources/tart/VNC/FullFledgedVNC.swift).
-No macOS privacy database or Gatekeeper setting was changed.
-
-## Preserve and reverify these exact local inputs
+Private comparison resources remain in `.artifacts/client-baseline/rfb-compare/`:
+`main.go`, `probe.py`, `go.mod`, `go.sum`, `rfb-probe`, `provenance.json`,
+`modcache/` and `buildcache/`. Exact sanitized source/module text fixtures live
+beside `rfb-comparison.json` as `rfb-probe.*.txt`; restore only missing files,
+never overwrite private changes. The Python wrapper expects that exact private
+comparison directory and validates active run/loopback/ownership before input.
 
 The [reboot input inventory](evidence/client-baseline/gui-continuation/reboot-inputs.json)
-records relative paths, sizes and SHA-256 digests, rechecked at handoff. These
-binary copies are local only; keep `.artifacts/` across reboot.
+records exact original archive sizes/hashes; they were reverified this session:
 
-- Current app: `.artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip`;
+- Current QA app `.artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip`,
   artifact 12385811971, source `0a287c4eb6769ee810330de6d625861f241f65ce`.
-- Production Pi: `.artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz`;
+- Production runtime `.artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz`,
   asset 553290482, source `e7d09c9dc5fca409f46a5476669e3c0404054d69`.
-- Possible previous QA app: `.artifacts/pr-merge-20261021/apple/candidate.zip`;
+- Possible prior QA app `.artifacts/pr-merge-20261021/apple/candidate.zip`,
   artifact 12382323858, source `42bb1b2a210acf30e17de1744257a60988398ecc`.
-  Its published artifact digest was independently read and its cached archive
-  rehashed, but it has **not been selected/exercised as upgrade acceptance**.
   Both candidates say app 0.1.0; this is not a published-release upgrade claim.
-- Desktop PNG and all raw run logs/states remain private under their run IDs.
-  VNC URLs include generated connection secrets; never print/commit them.
 
 ## One concrete resume action
 
-First verify local/remote saved heads and current #217/PR state using the
-repository-authorized `TheSemicolon` identity per command; don't switch global
-GitHub authentication. Fetch/reconcile intervening changes without overwriting
-private state. Check `tart --version`, `tart list --format json`, required host
-Python/cryptography, the reviewed Softnet helper and the shared controller lock.
+Reverify branch/draft, tools, input hashes, original stopped VMs, Softnet
+permissions/digest and controller lock. Then **name and implement a bounded
+atomic comparison wrapper** around the existing driver/probe commands below:
+boot a fresh owned guest, identify its new first frame, send paced pointer and
+keyboard input, immediately capture guest screen and clock independently,
+retain observations, and finish/verify owned cleanup in `finally`.
 
-Run only the kept atomic driver, which rechecks input digests and owns cleanup:
+The wrapper has **not** been implemented. Validate fresh-run versus stale-pointer
+selection, ownership refusal, observation deadline and cleanup before its live
+run. Keep host home/credentials/clipboard unshared and the guest offline.
+Do not spread boot and observation across separate approval/session delays.
+
+The existing commands to compose are shown for reproduction; this is not yet
+an atomic runner. The driver must run with Tart filesystem access outside the
+sandbox and its output redirected privately:
 
 ```bash
 driver_log=".artifacts/client-baseline/driver-$(date -u +%Y%m%dT%H%M%SZ).log"
@@ -111,71 +106,48 @@ python3 scripts/client_baseline_vnc.py \
   --hold-seconds 1800 > "$driver_log" 2>&1
 ```
 
-Keep driver output in that private file: evidence points to a closed tool-output
-pipe aborting the first post-reboot run at its status print. Launch through the tool with Tart
-filesystem access outside the sandbox. Read the log for the new run/first frame;
-never print the private vm.log because it contains the connection secret.
+The isolated Go probe is already compiled. Rebuild offline if needed from its
+private directory using the verified module/build cache:
 
-It prepares a new run, obtains first pixels, writes the private
-`.artifacts/client-baseline/active-console.json`, and accepts bounded request
-files inside that run. Wait for the first-frame result and inspect its image;
-do not infer success from a startup log. It is offline, with only verified QA
-inputs shared read-only and clipboard sharing disabled.
-
-Then send **one** guest Go To Folder chord and inspect the response image. This
-uses only workspace writes; the already-approved driver supplies virtual input
-to that owned guest. No helper from `/private/tmp` is needed:
-
-```python
-import json, time, uuid
-from pathlib import Path
-
-active = json.loads(Path('.artifacts/client-baseline/active-console.json').read_text())
-run = Path(active['run'])
-state = json.loads((run / 'state.json').read_text())
-assert state['phase'] == 'guest-ready' and state['consoleMode'] == 'native-vnc'
-identifier = uuid.uuid4().hex[:12]
-request = run / f'request-{identifier}.json'
-temporary = request.with_suffix('.tmp')
-temporary.write_text(json.dumps({'action': 'chord', 'keys': [65511, 65505, 103], 'delay': 1}))
-temporary.replace(request)
-response = run / f'response-{identifier}.json'
-deadline = time.monotonic() + 25
-while not response.exists():
-    assert time.monotonic() < deadline, 'Console response deadline'
-    time.sleep(0.2)
-print(response.read_text())  # Contains image path/result, never the VNC URL.
+```bash
+cd .artifacts/client-baseline/rfb-compare
+GOMODCACHE="$PWD/modcache" GOCACHE="$PWD/buildcache" GOPROXY=off \
+  go build -o rfb-probe .
 ```
 
-If first frame plus input remain alive, continue clean Finder installation
-before optional guest test tools, then observed keyless client cases. If they
-fail, retain the new result and name the next bounded substrate correction;
-don't churn through app tests on a dead console. Real supported-provider login
-requires operator input through the supported guest UI and appropriate recorded
-network setup; don't copy host credentials. The current driver is offline.
+From repository root, these existing probes require the fresh active owned run:
 
-Create `finish-session` inside the run to stop early; the deadline also cleans
-the owned guest. Inspect actual process/VM absence afterwards. Recover only
-recorded owned leftovers with `qualify-client-baseline.py cleanup --run ...`.
+```bash
+python3 .artifacts/client-baseline/rfb-compare/probe.py probe \
+  '[{"Name":"escape","Keys":[65307]},{"Name":"lowerg","Keys":[65511,65505,103]},{"Name":"upperg","Keys":[65511,65505,71]}]'
+python3 .artifacts/client-baseline/rfb-compare/probe.py screen
+```
 
-Reproduce the completed local checks without launching a guest:
+`probe.py screen` captures through the guest agent, transfers the JPEG in 64 KiB
+chunks and saves a guest clock readback. The old large-output disconnect is
+avoided. Both probes save under a new private `independent-*` subdirectory.
+The screenshot probe itself has not yet completed live in the latest run.
+Use actual PNG dimensions for pointer coordinates: the image viewer scales them.
+Create `finish-session` in the owned run to end early; inspect actual process/VM
+absence afterwards. Recover only recorded owned leftovers with
+`qualify-client-baseline.py cleanup --run ...`.
+
+Reproduce kept guards without a guest:
 
 ```bash
 python3 -m unittest discover -s scripts/tests -p 'test_*.py' -v
 ruff check scripts/qualify-client-baseline.py scripts/client_baseline_vnc.py scripts/tests
 ```
 
-Before merging this WIP, finish review and the full protected matrix. Enroll
-only the owned PR in existing Tart routing; preserve the pinned worker and
-restricted group. No CI check or acceptance blocker was waived for reboot.
+## Next-session prompt
 
-## Suggested next-session prompt
-
-> Resume FingerTrap in /Users/pdavis/projects/_personal/FingerTrap from
-> docs/migration/STATUS.md, docs/migration/HANDOFF-client-baseline-gui.md and the
-> latest WORK_LOG.md entry. Verify the saved checkpoint, remote PR state and
-> stopped guests, then retest the persistent native-VNC input path and continue
-> approved CF-1 production-baseline validation. Keep Pi v0.85.1-psmfd.1, defer
-> #219's Pi 1.3.0 comparison, preserve private evidence and all activation gates,
-> and keep status/results durable. Do not treat the existing desktop frame or
-> passing unit tests as app acceptance.
+> Resume FingerTrap in /Users/pdavis/projects/_personal/FingerTrap. Read
+> CONTRIBUTING.md, docs/migration/STATUS.md,
+> docs/migration/HANDOFF-client-baseline-gui.md and the latest WORK_LOG entry.
+> Verify test/client-baseline-gui and draft #224. Continue CF-1C by implementing
+> the bounded atomic boot/RFB-probe/immediate guest-screen-and-clock/cleanup
+> wrapper described in the handoff; the independent pinned go-vnc client has
+> reproduced follow-up frame timeouts, and its post-input screen check expired.
+> Preserve private evidence and don't reuse the cleaned active-console pointer.
+> Continue app validation only after observed input/frame freshness work. Keep
+> production Pi v0.85.1-psmfd.1 and defer Pi 1.3.0 comparison in #219.

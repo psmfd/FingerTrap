@@ -1830,3 +1830,48 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   repository structure/lock/RPC checks pass. Only original three private entries
   remain untracked. This subsequent status-only checkpoint records that identity;
   its own hash must be read from git. Protected CI/review remain pending, no merge.
+
+## 2026-10-28 — CF-1C independent RFB input comparison
+
+- Maintainer says proceed. Start from backed-up draft #224 head 41c80e6 with
+  original private entries preserved. Intended slice: compare an independent
+  go-vnc client, pin v0.0.0-20150629162542-723ed9867aed (Cirrus Labs mtell's
+  published go.mod uses this exact version), with the kept driver in one owned
+  offline clean guest. Probe remains isolated under ignored artifacts; retain
+  exact source/module hashes, loopback/ownership validation, bounded lifetime,
+  read-only QA share, no host credentials/clipboard. Validate fresh frames and
+  actual keyboard/pointer response before installation. Any harness correction
+  requires named scope and meaningful regression/live verification.
+
+## 2026-10-29 — maintainer-requested session wrap-up
+
+- Independent run 20261028T194636Z-ceb986018619 / probe independent-8e000f6c323c
+  authenticated and captured a 2048x1536 desktop using pinned go-vnc. Escape,
+  paced Meta+Shift+g and paced Meta+Shift+G each had capture-timeout results.
+  Probe process exited 0, which is not an input success claim. No post-input
+  screenshot was captured before the 1800-second owned guest deadline.
+- Next-day independent screenshot request safely refused the already-cleaned
+  run. Keep the failed/expired attempt; no keyboard success, app case or root
+  cause is established. The comparison reproduces frame timeout using a second
+  implementation, so do not assume changing our wire encoder fixes it.
+- Shutdown verified: state cleaned, cleanupVerified=true, events empty, original
+  VMs stopped/preserved, owned clone absent, no QA controller/driver/comparison/
+  Tart/Softnet process. Active-console pointer is stale. No new guest starts
+  after the maintainer's wrap-up request. Preserve all ignored/private evidence.
+- Durable sanitized rfb-comparison.json and exact probe source/module text
+  fixtures retain provenance and reproduction. Private rfb-compare directory
+  retains its module/build caches, original source/binary/provenance manifest;
+  raw frame and probe logs stay in the run. No app/runtime dependency added.
+- Concrete resume action: name/implement a bounded atomic boot/probe/immediate
+  independent guest-screen+clock/cleanup wrapper, validating stale-run ownership
+  and deadline cleanup. Run these within one approved execution rather than
+  letting a separate approval consume the guest observation window. Existing
+  helper's screenshot transfer uses bounded chunks. Do not start app cases
+  until observed input and frame freshness work. #217 open, #219 deferred,
+  production Pi v0.85.1-psmfd.1 and all existing gates unchanged.
+
+- Wrap-up checks rerun: all 23 kept guards, Ruff, Markdown/Prettier, local links,
+  exact probe/module/source/frame hashes and whitespace pass. No app/runtime
+  source changed. Full protected CI/review remain pending. Downloading the pinned
+  comparison dependency initially hit sandbox DNS; approved isolated download
+  succeeded, then its build used GOPROXY=off. No host tool installation.
