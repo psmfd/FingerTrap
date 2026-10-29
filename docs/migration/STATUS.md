@@ -1,6 +1,120 @@
 # Runtime migration: current status
 
-Updated: 2026-10-22 UTC. CF-1 production-client baseline execution approved.
+Updated: 2026-10-29. Paused at the maintainer's request for session wrap-up.
+
+## CF-1C handoff — independent client reproduces frame timeout
+
+Branch `test/client-baseline-gui`, draft #224. Handoff evidence checkpoint
+`2cdf67406416f4d0cce3a5023af4bde7be66fd8b` is committed, secret-scanned and remotely backed up.
+A subsequent status-only commit records this identity; read git/draft head for
+its own SHA. No protected CI or acceptance is claimed for this checkpoint.
+The independent comparison is recorded in
+[rfb-comparison.json](evidence/client-baseline/gui-continuation/rfb-comparison.json),
+with exact probe-source text fixtures and module sums beside it. No application
+or runtime source/dependency changed. Local comparison files/caches/binary and
+raw evidence remain private under `.artifacts/client-baseline/`.
+
+Run `20261028T194636Z-ceb986018619`: pinned independent go-vnc authenticated
+and captured a 2048x1536 desktop. Follow-up frames after Escape and paced
+Meta+Shift+g/G all timed out, matching the kept client's symptom. This does not
+establish whether input arrived or identify the root cause. The guest deadline
+cleaned it normally before the independent guest-screen step; next-day readback
+correctly refused the cleaned run. No app case attempted or passed.
+
+**Shutdown verified 2026-10-29:** all original VMs stopped/preserved, no disposable
+clone, no QA driver/controller/comparison/Tart/Softnet process. Latest run state
+is cleaned with cleanupVerified=true and no controller events. Active-console
+points to that cleaned run; do not reuse it. Private evidence is preserved.
+
+**One resume action:** implement and name a bounded atomic comparison wrapper
+around the saved driver and independent probes: boot/new first frame, paced
+pointer/keyboard, immediate guest screen/clock readback, then owned cleanup in
+one approved tool execution. Do not repeat separated calls across approval or
+session delays. Validate ownership/stale-pointer/deadline behavior before live
+use. This wrapper is the next change; it has not been implemented. Exact existing
+commands, private paths and probe limitations are in
+[HANDOFF-client-baseline-gui.md](HANDOFF-client-baseline-gui.md).
+
+Baseline remains one input PASS and eleven app BLOCKED rows; #217 stays open.
+Keep production Pi `v0.85.1-psmfd.1`, #219 comparison deferred, and all activation,
+backend, release and CF-2 gates intact. Provider login/network setup and actual
+prior-app upgrade acceptance remain outstanding. Full protected CI/review and
+merge of #224 remain pending. All 23 kept guards and Ruff were rerun successfully at wrap-up, along with
+Markdown/Prettier, local links, fixture/provenance/frame hashes and whitespace.
+No new protected CI success is claimed.
+
+### Prior live result — lifetime verified, keyboard blocked
+
+Saved branch/draft #224 match `c8abce5dd346634387f8ff01616856f8ed3a86b3`;
+remote dev remains `8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8`. #217 and #219
+remain open. Six CodeQL checks pass on the saved head; full protected CI remains
+pending. All 23 local guards and Ruff pass. Preserved input/Softnet digests match.
+
+Post-reboot run `20261028T183947Z-e59ca2bacfab` captured its first frame then
+recorded BrokenPipeError. Its code sequence points to the following flushed
+stdout status print; the exact origin is inferred because the exec session
+vanished. Cleanup was verified. The prior sandboxed attempt created no VM.
+
+**Live retest:** redirected-driver run `20261028T184851Z-755e4f85b29e` stayed
+alive for more than fifteen minutes with repeated requests and normal cleanup.
+Desktop pixels and pointer-driven Finder View/Go menus were observed. Original,
+Super, uppercase and paced diagnostic chords did not establish Go To Folder;
+several follow-up captures timed out. The guest agent/OS stayed responsive and
+an independent guest screenshot also showed the desktop. Keyboard input and
+frame freshness remain unqualified. No app case was attempted; eleven app rows
+remain BLOCKED. See [sanitized run evidence](evidence/client-baseline/gui-continuation/live-retest.json).
+
+All original VMs are stopped/preserved, the owned clone is absent, and process
+inspection confirms no QA controller/driver/Tart/Softnet process remains.
+Private frames/logs/queue files are preserved. The active-console pointer now
+references the cleaned retest; never send another request to it.
+
+**One resume action:** compare input from a known RFB client against the kept
+driver in one fresh owned offline guest, checking pointer press/release pacing,
+keysym/modifier handling and fresh frames against guest clock/screenshot. No
+alternate client was found on PATH; record the isolated probe's exact source
+and dependency identity before use. Continue app installation only after
+observable keyboard input works. Preserve the redirected-output launch pattern
+in [the handoff](HANDOFF-client-baseline-gui.md). Production Pi remains
+`v0.85.1-psmfd.1`, #219 comparison and all activation/backend gates stay deferred.
+Evidence checkpoint `b9db2fe81e02c491b6775b70592374300ac5dc98` is committed,
+secret-scanned (zero findings) and remotely backed up in draft #224. This
+subsequent status checkpoint records its identity; read git for its own hash.
+Documentation formatting/links/evidence digests and repo checks pass. Full
+protected CI, usable keyboard input and all app acceptance remain pending.
+
+## Historical reboot handoff — superseded by live continuation above
+
+Reboot backup checkpoint `977c128ed63e8bacf57dfce41af8022d745f1c27` is committed, secret-scanned and remotely
+backed up in draft [#224](https://github.com/psmfd/FingerTrap/pull/224). The following
+status-only checkpoint records that identity; read `git log -1` for its own
+hash. Neither this WIP nor the final input-lifetime fix is CI/live verified.
+
+Read the [exact GUI continuation handoff](HANDOFF-client-baseline-gui.md) and
+the latest WORK_LOG entry. Branch `test/client-baseline-gui` is based on verified
+dev `8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8` (#220: 22 head/19 merged
+checks passed). The continuation is a work-in-progress checkpoint, not CI-verified
+or accepted. All 23 current local guards and Ruff checks pass. All VMs are
+stopped, no disposable clone or QA/CI controller remains, and private inputs
+are preserved. The last interrupted launch did not create a new run.
+
+**One resume action:** after rechecking the saved branch/remote state and host
+readiness, run the atomic VNC driver, then confirm that its desktop remains
+alive and responds to one guest-only Go To Folder chord. The dedicated input
+pipe/persistent VNC fix is implemented but has not had this live retest.
+Keep all eleven app acceptance rows BLOCKED until actually observed. Pi remains
+`v0.85.1-psmfd.1`; #219 comparison stays deferred. New Dependabot #221/#222/#223
+were inventoried for the next session, not reviewed or merged during shutdown.
+
+**CF-1C — observable guest GUI, paused for reboot.** The maintainer says "Proceed"
+after #220 integration. Reconcile its final 22 head/19 post-merge checks and
+saved inputs, then establish observable input/frame capture in one owned clean
+Tart guest. Investigate Tart's native VNC console as an alternative to the
+timed-out guest AppleEvents path; preserve normal macOS privacy/Gatekeeper
+behavior. Name any harness changes and their validation before implementation.
+Continue keyless client cases, select and verify a prior QA app artifact, and
+record provider-login inputs still needed. Production Pi remains
+`v0.85.1-psmfd.1`; #219 comparison and all production activation gates stay separate.
 
 **CF-1A/B — captured with GUI/provider blockers; acceptance open.** The
 maintainer's "Proceed" approves the recorded CF-1A–F plan against production
@@ -218,7 +332,8 @@ Suggested restart text:
 
 ## Resume here
 
-**Next action: arrange an observable interactive guest session for blocked CF-1 cases.** Read
+**Next action: resume the saved native-VNC live-input retest after reboot.** Read
+[the reboot handoff](HANDOFF-client-baseline-gui.md),
 [the implementation proposal](client-foundation-plan.html#cf1-plan),
 [the worksheet](evidence/client-baseline/README.md) and #217. The runtime scope
 is settled: production `v0.85.1-psmfd.1` only; comparison belongs to #219.

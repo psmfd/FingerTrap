@@ -1,0 +1,175 @@
+{
+  "slice": "CF-1C",
+  "runId": "20261028T184851Z-755e4f85b29e",
+  "runtimeTag": "v0.85.1-psmfd.1",
+  "runtimeSource": "e7d09c9dc5fca409f46a5476669e3c0404054d69",
+  "runtimeBinarySha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5",
+  "appArchiveSha256": "135a8fb020236079c7af70a0577e2d5601cab4e7df77e3c628a3519043a4b137",
+  "tartVersion": "2.32.1",
+  "guestOs": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.7\nBuildVersion:\t\t24G720",
+  "consoleMode": "native-vnc",
+  "driverOutput": "redirected to ignored private log",
+  "lifetime": "guest-ready across requests for more than fifteen minutes; normal finish and owned cleanup",
+  "observed": "Desktop and Finder View/Go menus visible after pointer input. No Go To Folder dialog after Meta/Super/uppercase and paced chord probes. Independent guest screenshot also shows desktop. Frame timeouts retained. Keyboard and frame freshness remain unqualified.",
+  "appCases": "not attempted; eleven existing app rows remain BLOCKED",
+  "requests": [
+    {
+      "request": "662bcfe85a11",
+      "action": {
+        "action": "chord",
+        "keys": [65511, 65505, 103],
+        "delay": 1
+      },
+      "ok": false,
+      "error": "TimeoutError: timed out"
+    },
+    {
+      "request": "2ac3f513ad70",
+      "action": {
+        "action": "capture",
+        "delay": 0
+      },
+      "ok": true,
+      "error": null
+    },
+    {
+      "request": "1cac29e5cc0c",
+      "action": {
+        "action": "chord",
+        "keys": [65515, 65505, 103],
+        "delay": 1
+      },
+      "ok": false,
+      "error": "TimeoutError: timed out"
+    },
+    {
+      "request": "da64f4245a55",
+      "action": {
+        "action": "click",
+        "x": 461,
+        "y": 20,
+        "delay": 1
+      },
+      "ok": true,
+      "error": null
+    },
+    {
+      "request": "b56bf03c2a0b",
+      "action": {
+        "action": "click",
+        "x": 550,
+        "y": 20,
+        "delay": 1
+      },
+      "ok": true,
+      "error": null
+    },
+    {
+      "request": "df306039f0ca",
+      "action": {
+        "action": "click",
+        "x": 660,
+        "y": 916,
+        "delay": 1
+      },
+      "ok": true,
+      "error": null
+    },
+    {
+      "request": "66966ea375ce",
+      "action": {
+        "action": "text",
+        "text": "/Volumes/My Shared Files/qa",
+        "delay": 1
+      },
+      "ok": true,
+      "error": null
+    },
+    {
+      "request": "cf51bd0d9b07",
+      "action": {
+        "action": "capture",
+        "delay": 1
+      },
+      "ok": false,
+      "error": "TimeoutError: timed out"
+    },
+    {
+      "request": "6ab162e27f9d",
+      "action": {
+        "action": "click",
+        "x": 520,
+        "y": 20,
+        "delay": 1
+      },
+      "ok": true,
+      "error": null
+    },
+    {
+      "request": "5f497713e7b9",
+      "action": {
+        "action": "click",
+        "x": 660,
+        "y": 858,
+        "delay": 1
+      },
+      "ok": true,
+      "error": null
+    },
+    {
+      "request": "b5a441aaf7c3",
+      "action": {
+        "action": "text",
+        "text": "/Volumes/My Shared Files/qa",
+        "delay": 1
+      },
+      "ok": false,
+      "error": "TimeoutError: timed out"
+    },
+    {
+      "request": "5eca5771f747",
+      "action": {
+        "action": "chord",
+        "keys": [65511, 65505, 71],
+        "delay": 1
+      },
+      "ok": true,
+      "error": null
+    }
+  ],
+  "evidence": [
+    {
+      "privateFile": "console-first-frame.png",
+      "sha256": "9c3dfb34f12b59a9009e6d0a2710cb83f91dac7138f6cfee6b9e16d49ca998ea",
+      "size": 7579965
+    },
+    {
+      "privateFile": "console-b56bf03c2a0b.png",
+      "sha256": "bdc6b0fa62aa0f005efcfe66f75d6e91303c3b8f60336580360786ab3f516a06",
+      "size": 6619670
+    },
+    {
+      "privateFile": "diagnostic-paced-chord.png",
+      "sha256": "c4040eb28391e4b916d0e767fb79088fd21759a7aa94ab3e633826c65e159531",
+      "size": 7373820
+    },
+    {
+      "privateFile": "console-5eca5771f747.png",
+      "sha256": "412c1b3d733f5d9ef97a457700ac79401e206aaf41e7e1b8d4538a845d7ee602",
+      "size": 7373885
+    },
+    {
+      "privateFile": "guest-screen-small.png",
+      "sha256": "57aedc64d455d2193ea725e4fc319ad182d5d3cd8d49f099885c19a98b368952",
+      "size": 192033
+    }
+  ],
+  "cleanupVerified": true,
+  "nextAction": "Compare a known RFB client with the kept driver in one owned offline guest; inspect input pacing and keysym handling, and frame freshness before app installation. No compatible alternate client currently found on PATH.",
+  "deferred": [
+    "Pi 1.3.0 comparison #219",
+    "provider-login input and network setup",
+    "CF-2",
+    "runtime activation/backend changes"
+  ]
+}

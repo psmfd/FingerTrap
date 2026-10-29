@@ -4,6 +4,7 @@ import importlib.util
 import json
 from pathlib import Path
 import stat
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -18,6 +19,15 @@ SPEC.loader.exec_module(qa)
 
 
 class BaselineGuards(unittest.TestCase):
+    def test_console_modes_keep_vnc_headless_and_reject_conflicting_modes(self):
+        self.assertEqual(
+            qa.console_arguments(vnc=True), ["--no-graphics", "--vnc-experimental"]
+        )
+        self.assertEqual(qa.console_arguments(graphics=True), [])
+        self.assertEqual(qa.console_arguments(), ["--no-graphics"])
+        with self.assertRaises(ValueError):
+            qa.console_arguments(graphics=True, vnc=True)
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
@@ -182,7 +192,10 @@ class BaselineGuards(unittest.TestCase):
             originalVms=[qa.BASE, "operator-vm"],
         )
         before = json.dumps(
-            [{"Name": n} for n in [self.state["vm"], qa.BASE, "operator-vm"]]
+            [
+                {"Name": n, "Running": n == self.state["vm"]}
+                for n in [self.state["vm"], qa.BASE, "operator-vm"]
+            ]
         ).encode()
         after = json.dumps([{"Name": n} for n in [qa.BASE, "operator-vm"]]).encode()
         with (
@@ -197,6 +210,34 @@ class BaselineGuards(unittest.TestCase):
             ["tart", "delete", self.state["vm"]],
             [c.args[0] for c in command.call_args_list],
         )
+
+    def test_stopped_owned_clone_is_deleted_when_tart_stop_would_fail(self):
+        self.state.update(
+            created=True, ownedConfig={"MAC": "owned"}, originalVms=[qa.BASE]
+        )
+        existing = {self.state["vm"], qa.BASE}
+
+        def command(argv):
+            if argv == ["tart", "list", "--format", "json"]:
+                return json.dumps(
+                    [{"Name": name, "Running": False} for name in existing]
+                ).encode()
+            if argv == ["tart", "stop", self.state["vm"]]:
+                raise subprocess.CalledProcessError(
+                    2, argv, stderr=b"VM is not running"
+                )
+            if argv == ["tart", "delete", self.state["vm"]]:
+                existing.remove(self.state["vm"])
+                return b""
+            raise AssertionError(argv)
+
+        with (
+            patch.object(qa, "command", side_effect=command),
+            patch.object(qa, "vm_config", return_value={"MAC": "owned"}),
+        ):
+            qa.cleanup(self.run, self.state)
+        self.assertEqual(existing, {qa.BASE})
+        self.assertTrue(self.state["cleanupVerified"])
 
 
 if __name__ == "__main__":

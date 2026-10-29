@@ -1,0 +1,151 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	vnc "github.com/mitchellh/go-vnc"
+	"image"
+	"image/color"
+	"image/png"
+	"io"
+	"net"
+	"os"
+	"path/filepath"
+	"time"
+)
+
+type Resize struct{}
+
+func (*Resize) Type() int32 { return -223 }
+func (*Resize) Read(c *vnc.ClientConn, r *vnc.Rectangle, _ io.Reader) (vnc.Encoding, error) {
+	if r.Width == 0 || r.Height == 0 || r.Width > 4096 || r.Height > 4096 {
+		return nil, fmt.Errorf("resize budget")
+	}
+	c.FrameBufferWidth = r.Width
+	c.FrameBufferHeight = r.Height
+	return &Resize{}, nil
+}
+
+type Step struct {
+	Name  string
+	Keys  []uint32
+	Text  string
+	X, Y  int
+	Click bool
+}
+type Config struct {
+	Address, Password, Run string
+	Steps                  []Step
+}
+
+func main() {
+	var cfg Config
+	if err := json.NewDecoder(io.LimitReader(os.Stdin, 16384)).Decode(&cfg); err != nil {
+		panic("invalid bounded config")
+	}
+	host, _, err := net.SplitHostPort(cfg.Address)
+	if err != nil || host != "127.0.0.1" {
+		panic("loopback required")
+	}
+	sock, err := net.DialTimeout("tcp", cfg.Address, 5*time.Second)
+	if err != nil {
+		panic("dial failed")
+	}
+	defer sock.Close()
+	sock.SetDeadline(time.Now().Add(90 * time.Second))
+	messages := make(chan vnc.ServerMessage, 16)
+	c, err := vnc.Client(sock, &vnc.ClientConfig{Auth: []vnc.ClientAuth{&vnc.PasswordAuth{Password: cfg.Password}}, ServerMessageCh: messages})
+	if err != nil {
+		panic("authentication failed")
+	}
+	defer c.Close()
+	if c.FrameBufferWidth > 4096 || c.FrameBufferHeight > 4096 {
+		panic("frame budget")
+	}
+	if err = c.SetEncodings([]vnc.Encoding{&vnc.RawEncoding{}, &Resize{}}); err != nil {
+		panic(err)
+	}
+	frame := image.NewRGBA(image.Rect(0, 0, int(c.FrameBufferWidth), int(c.FrameBufferHeight)))
+	capture := func(name string) {
+		if filepath.Base(name) != name {
+			panic("invalid output name")
+		}
+		if err := c.FramebufferUpdateRequest(false, 0, 0, c.FrameBufferWidth, c.FrameBufferHeight); err != nil {
+			panic(err)
+		}
+		timeout := time.NewTimer(15 * time.Second)
+		defer timeout.Stop()
+		for {
+			select {
+			case msg := <-messages:
+				u, ok := msg.(*vnc.FramebufferUpdateMessage)
+				if !ok {
+					continue
+				}
+				pixels := false
+				for _, rect := range u.Rectangles {
+					switch enc := rect.Enc.(type) {
+					case *Resize:
+						frame = image.NewRGBA(image.Rect(0, 0, int(c.FrameBufferWidth), int(c.FrameBufferHeight)))
+					case *vnc.RawEncoding:
+						if int(rect.X)+int(rect.Width) > frame.Bounds().Dx() || int(rect.Y)+int(rect.Height) > frame.Bounds().Dy() {
+							panic("rectangle budget")
+						}
+						for i, col := range enc.Colors {
+							frame.SetRGBA(int(rect.X)+i%int(rect.Width), int(rect.Y)+i/int(rect.Width), color.RGBA{uint8(col.R), uint8(col.G), uint8(col.B), 255})
+						}
+						pixels = true
+					}
+				}
+				if !pixels {
+					c.FramebufferUpdateRequest(false, 0, 0, c.FrameBufferWidth, c.FrameBufferHeight)
+					continue
+				}
+				f, err := os.Create(filepath.Join(cfg.Run, "govnc-"+name+".png"))
+				if err != nil {
+					panic(err)
+				}
+				err = png.Encode(f, frame)
+				f.Close()
+				if err != nil {
+					panic(err)
+				}
+				fmt.Println("captured", name, frame.Bounds())
+				return
+			case <-timeout.C:
+				fmt.Println("capture-timeout", name)
+				return
+			}
+		}
+	}
+	capture("before")
+	key := func(k uint32, down bool) {
+		if err := c.KeyEvent(k, down); err != nil {
+			panic(err)
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
+	for _, s := range cfg.Steps {
+		for _, k := range s.Keys {
+			key(k, true)
+		}
+		for i := len(s.Keys) - 1; i >= 0; i-- {
+			key(s.Keys[i], false)
+		}
+		for _, ch := range s.Text {
+			key(uint32(ch), true)
+			key(uint32(ch), false)
+		}
+		if s.Click {
+			if s.X < 0 || s.Y < 0 || s.X >= int(c.FrameBufferWidth) || s.Y >= int(c.FrameBufferHeight) {
+				panic("pointer budget")
+			}
+			c.PointerEvent(vnc.ButtonLeft, uint16(s.X), uint16(s.Y))
+			time.Sleep(100 * time.Millisecond)
+			c.PointerEvent(0, uint16(s.X), uint16(s.Y))
+			time.Sleep(100 * time.Millisecond)
+		}
+		time.Sleep(time.Second)
+		capture(s.Name)
+	}
+}

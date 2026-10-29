@@ -1670,3 +1670,214 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   own protected checks before merging #220 normally. Final head/merge identities
   and post-merge readback belong in #220/#217 without fabricating a self hash.
   #217 remains open, baseline not accepted, CF-2 unstarted, #219 deferred.
+
+## 2026-10-23 UTC — CF-1C observable GUI continuation
+
+- Maintainer says "Proceed" after #220 merged at
+  8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8 with 22 head and 19 post-merge
+  checks passed. Main checkout matches origin/dev with only the three preserved
+  private entries untracked. All original VMs are stopped; no disposable
+  baseline/CI VM remains. Recheck remote state and exact input digests before use.
+- Intended slice: establish guest GUI input/frame observation through Tart's
+  native console/VNC path, since guest AppleEvents timed out. Inspect installed
+  CLI and primary source behavior first; use only a loopback connection to our
+  uniquely owned guest, with no host-home/credential/clipboard sharing. Preserve
+  first failures. Continue keyless actual-client cases and identify verified
+  previous QA app bytes; supported real-provider login remains a separate input.
+- Proposed harness change, if needed: add a bounded native-VNC console option
+  to scripts/qualify-client-baseline.py, preserving ownership, shared CI lock,
+  guest lifetime and cleanup guards. Validate mutually exclusive console modes,
+  private connection metadata and actual owned-guest cleanup. Add only meaningful
+  guard regressions for changed behavior. No client fix is assumed before a
+  concrete reproduction; no Pi 1.3.0 comparison or SDK/backend activation.
+- Installed Tart 2.32.1 primary source confirms native Virtualization VNC with a
+  generated per-session password and 127.0.0.1 URL. Add mutually exclusive
+  --vnc/--graphics modes; VNC runs with --no-graphics so no host viewer opens.
+  Preserve connection data only in the private run's vm.log. A bounded QA VNC
+  probe may be kept as scripts/client_baseline_vnc.py if it proves useful;
+  restrict it to the owned active run/loopback endpoint and retain meaningful
+  ownership/frame-size/input guards. No privacy database changes are authorized
+  or needed for this virtual keyboard/frame path.
+- Native-VNC run 20261023T004000Z-26339eea6cb5 reached guest-ready and wrote its
+  private connection URL. Its thirty-minute deadline cleaned it before the
+  separately launched framebuffer probe executed; that probe correctly refused
+  the cleaned run. No GUI result is claimed. Consolidate boot/first capture and
+  a bounded guest-only input queue in scripts/client_baseline_vnc.py, so the
+  initial observation is atomic and subsequent virtual input stays inside the
+  approved owned session. Preserve the same deadline, ownership, offline network,
+  clipboard/share and cleanup restrictions; validate the queue/path/frame guards.
+- Atomic run 20261023T132854Z-e69e67da8c60 authenticates to native VNC but the
+  host framework aborts after its pseudo-encoding warning on the first pixel
+  request. No app/UI case ran. Add DesktopSize capability negotiation and
+  resize bounds, retaining real pixel updates as a capture requirement.
+- The resulting stopped clone exposes a harness cleanup defect: tart stop on
+  an already-stopped owned VM returns 2 and prevents deletion. A new regression
+  fails before the fix, then all 17 baseline guards pass after checking Running
+  before stop. The exact stopped clone is removed with receipt/config validation;
+  prior failure history stays in its private state. Add six console bounds/
+  ownership/replay guards to repo-check's scripts/tests discovery before retry.
+- Run 20261023T133506Z-b727c20f4c58 captures a real 1824x1368 desktop frame
+  after DesktopSize negotiation, but Tart's script wrapper exits before the
+  first input and the controller cleans its guest. The wrapper had /dev/null
+  input, sending EOF to its PTY. Keep a dedicated unwritten pipe open instead,
+  close it after process exit, and retain one authenticated VNC connection for
+  the observation session. Record process exit codes. No app case passes yet.
+
+## 2026-10-28 — maintainer-requested reboot handoff
+
+- Stop acceptance work now and preserve a scoped checkpoint on
+  test/client-baseline-gui. Dev/origin/dev remain
+  8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8; #220 is merged with the already
+  recorded 22 head/19 merged checks. Remote new Dependabot #221/#222/#223 are
+  inventoried only; no dependency/runtime input changed for this handoff.
+- Last aborted call left its edits in place but created no new run. The final
+  input-pipe/persistent-connection change is implemented and Ruff-clean; fresh
+  verification passes all 23 current local guard tests. It is not live-verified
+  and has no new protected CI result. Baseline remains one mandatory input PASS
+  and eleven BLOCKED cases; no app acceptance, production pin or activation.
+- Independent shutdown check: all Tart VMs stopped, no disposable clone remains,
+  and process inspection finds no QA driver, baseline controller or CI drain.
+  All recorded created runs report cleanupVerified=true. The historical failed
+  preparation created no VM. Original VM names and private files are preserved.
+- Rehashed current app archive, production Pi archive, previous QA app archive
+  and first native framebuffer; all expected digests match. Essential references
+  and sanitized red/green cleanup evidence are saved with the handoff. Private
+  binaries, raw logs/connection URLs, screenshots and run states remain ignored
+  under .artifacts; retain that directory through reboot. No temporary helper
+  under /private/tmp is required to resume the kept driver.
+- Next concrete action: verify the checkpoint/remote and host tools, start the
+  atomic VNC driver and confirm first frame plus one Go To Folder key chord on
+  the live owned guest. Do not repeat the old separate probe against the stale
+  active-console pointer. Full protected CI/enrollment/merge and all real client
+  cases remain pending after this WIP checkpoint. Exact commands and prompt:
+  HANDOFF-client-baseline-gui.md. No new guest or CI run starts before reboot.
+
+- Reboot backup 977c128ed63e8bacf57dfce41af8022d745f1c27 is committed, secret-scanned and remotely
+  backed up in draft #224. A subsequent status-only checkpoint records
+  this identity; its own hash is read from git. No guest or CI was launched.
+
+## 2026-10-28 — CF-1C post-reboot persistent-console retest
+
+- Resumed at maintainer request. Saved branch/draft #224 match c8abce5; remote
+  dev is unchanged at 8e5fd0c. #217/#219 remain open; six CodeQL checks pass,
+  full protected CI pending. No runtime or dependency integration.
+- Intended slice: live retest of dedicated input pipe/persistent native VNC,
+  first frame then one guest Go To Folder chord; continue Finder/keyless cases
+  only if the console survives. Preserve private evidence and production Pi
+  v0.85.1-psmfd.1; Pi 1.3.0 comparison and activation stay deferred.
+- Preflight passes: 23 guards, Ruff, all four reboot inventory hashes, Softnet
+  digest/permissions, available controller lock, Tart 2.32.1/cryptography 49.0.0.
+  All original VMs stopped, no disposable clone. GitHub readback required access
+  outside the sandbox; per-command TheSemicolon identity succeeds unchanged.
+- Next: launch kept atomic driver, inspect first frame and chord response, then
+  record lifetime/input result before any app acceptance attempt.
+
+- Live attempt 20261028T183917Z-4e765150c1e2 failed before creating a clone in
+  the filesystem sandbox; retained failure. Approved outside-sandbox retry
+  20261028T183947Z-e59ca2bacfab booted macOS 15.7.7/24G720, authenticated
+  VNC and wrote a first framebuffer at 18:40:04 UTC plus active-console.json.
+  It then recorded BrokenPipeError and immediately requested normal cleanup.
+- Diagnosis: after capture and active-pointer save, the next operation is a
+  flushed stdout print. No input requests exist, and the owned controller log
+  has no boot/lifetime error. Strong evidence identifies a closed tool-output
+  pipe at that status print, rather than an app crash; no traceback survives
+  the vanished exec session, so the exact origin is inferred. No new relevant
+  Tart/Python crash report was found. Persistent input is still unverified.
+- Independently verified cleanup: cleanupVerified=true, clone absent, original
+  VMs stopped/preserved, no QA controller/driver/Tart/Softnet process. Raw logs,
+  frame and state remain private. Active pointer is stale again; do not reuse.
+- Concrete resume: redirect atomic-driver stdout/stderr to a unique private
+  .artifacts/client-baseline log and run with required Tart filesystem access;
+  inspect fresh first pixels and send the handoff's single Go To Folder chord.
+  Record live lifetime/input before app validation. No runtime/acceptance change.
+
+- Maintainer says Proceed. Retest started with stdout/stderr redirected to private
+  driver-20261028-retest.log, avoiding the vanished tool-output pipe. New owned
+  run 20261028T184851Z-755e4f85b29e; planned observation remains fresh first frame
+  plus one Go To Folder chord before any app acceptance.
+
+- Redirected run 20261028T184851Z-755e4f85b29e remains guest-ready across
+  repeated requests; first desktop is 2048x1536 (viewer renders it scaled).
+  No output-pipe failure. Pointer input visibly opens Finder View/Go menus.
+  Original Meta+Shift+G chord and Super variant return frame timeouts; a paced
+  diagnostic Meta chord still does not show Go To Folder. Independent shared
+  connection captures a real desktop; later original-connection captures can
+  succeed. Thus lifetime is live-verified, keyboard/usable console still blocked.
+  No app case attempted/passed. Preserve all queue responses/screenshots,
+  including failed requests. Investigate bounded input/protocol correction
+  before continuing installation; do not confuse viewer coordinates with PNG.
+
+- Finished bounded diagnostic session normally. Run phase cleaned, events=[],
+  cleanupVerified=true; external Tart listing and filtered process inspection
+  verify original VMs stopped/preserved, owned clone absent and no QA processes.
+  No app/source/runtime changes or acceptance claims. Canonical evidence:
+  evidence/client-baseline/gui-continuation/live-retest.json (sanitized metadata,
+  queue outcomes and private-image hashes). All screenshots remain ignored.
+- Independent guest screenshot retrieval first hit the existing large-output
+  transport limit; the smaller 320px copy retrieved successfully. The guest
+  date/process readback works and the independent screen still shows desktop.
+  Avoid attributing this to a GPU freeze or a product defect without evidence.
+- Next bounded slice: compare a known RFB client's keyboard/pointer events and
+  fresh frames against this minimal driver in a fresh owned offline guest.
+  No mtell/vncdotool/vncviewer on PATH. Record exact isolated probe provenance
+  before use, validate actual input/frame freshness, then continue Finder app
+  installation. Do not churn through app rows until the console is usable.
+  Keep stdout/stderr redirected privately; no Pi 1.3.0/#219 or activation change.
+
+- Sanitized evidence checkpoint b9db2fe81e02c491b6775b70592374300ac5dc98
+  committed, secret-scanned (zero findings), pushed to existing draft #224.
+  Markdown/Prettier, all retained image digests/local links, diff whitespace and
+  repository structure/lock/RPC checks pass. Only original three private entries
+  remain untracked. This subsequent status-only checkpoint records that identity;
+  its own hash must be read from git. Protected CI/review remain pending, no merge.
+
+## 2026-10-28 — CF-1C independent RFB input comparison
+
+- Maintainer says proceed. Start from backed-up draft #224 head 41c80e6 with
+  original private entries preserved. Intended slice: compare an independent
+  go-vnc client, pin v0.0.0-20150629162542-723ed9867aed (Cirrus Labs mtell's
+  published go.mod uses this exact version), with the kept driver in one owned
+  offline clean guest. Probe remains isolated under ignored artifacts; retain
+  exact source/module hashes, loopback/ownership validation, bounded lifetime,
+  read-only QA share, no host credentials/clipboard. Validate fresh frames and
+  actual keyboard/pointer response before installation. Any harness correction
+  requires named scope and meaningful regression/live verification.
+
+## 2026-10-29 — maintainer-requested session wrap-up
+
+- Independent run 20261028T194636Z-ceb986018619 / probe independent-8e000f6c323c
+  authenticated and captured a 2048x1536 desktop using pinned go-vnc. Escape,
+  paced Meta+Shift+g and paced Meta+Shift+G each had capture-timeout results.
+  Probe process exited 0, which is not an input success claim. No post-input
+  screenshot was captured before the 1800-second owned guest deadline.
+- Next-day independent screenshot request safely refused the already-cleaned
+  run. Keep the failed/expired attempt; no keyboard success, app case or root
+  cause is established. The comparison reproduces frame timeout using a second
+  implementation, so do not assume changing our wire encoder fixes it.
+- Shutdown verified: state cleaned, cleanupVerified=true, events empty, original
+  VMs stopped/preserved, owned clone absent, no QA controller/driver/comparison/
+  Tart/Softnet process. Active-console pointer is stale. No new guest starts
+  after the maintainer's wrap-up request. Preserve all ignored/private evidence.
+- Durable sanitized rfb-comparison.json and exact probe source/module text
+  fixtures retain provenance and reproduction. Private rfb-compare directory
+  retains its module/build caches, original source/binary/provenance manifest;
+  raw frame and probe logs stay in the run. No app/runtime dependency added.
+- Concrete resume action: name/implement a bounded atomic boot/probe/immediate
+  independent guest-screen+clock/cleanup wrapper, validating stale-run ownership
+  and deadline cleanup. Run these within one approved execution rather than
+  letting a separate approval consume the guest observation window. Existing
+  helper's screenshot transfer uses bounded chunks. Do not start app cases
+  until observed input and frame freshness work. #217 open, #219 deferred,
+  production Pi v0.85.1-psmfd.1 and all existing gates unchanged.
+
+- Wrap-up checks rerun: all 23 kept guards, Ruff, Markdown/Prettier, local links,
+  exact probe/module/source/frame hashes and whitespace pass. No app/runtime
+  source changed. Full protected CI/review remain pending. Downloading the pinned
+  comparison dependency initially hit sandbox DNS; approved isolated download
+  succeeded, then its build used GOPROXY=off. No host tool installation.
+
+- Handoff evidence checkpoint 2cdf67406416f4d0cce3a5023af4bde7be66fd8b committed, secret-scanned
+  (zero findings) and remotely backed up in draft #224. Repository structural/
+  lock/RPC checks pass with zero errors/warnings. This subsequent status-only
+  checkpoint records that identity; read git for its own hash. The PR body and
+  #217 tracker receive the final source/branch identities and exact resume action.
