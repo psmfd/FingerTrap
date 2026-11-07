@@ -2,7 +2,114 @@
 
 Updated: 2026-11-07. Resumed CF-1C under the existing execution approval.
 
-Latest steering: paced shell input/output committed/backed up; all fourteen CI jobs pass, default-cadence failure retained.
+Latest steering: layout/sibling-close observed under shell fixture; timeout retained, checkpoint/CI next.
+
+## CF-1C-AUTOMATION-4/4B — resize/split/sibling-close observed
+
+Pinned candidate and Peekaboo GUI Bridge unchanged. Disclosed guest-only supported
+ADR-0014 fixture sets version 1 pane.defaultKind=shell before the single app launch;
+this makes the app's normal split action create a shell sibling rather than Pi.
+No host/product/Pi/profile/provider/keychain/activation/backend/release changes.
+
+**Original failure preserved:** run `20261107T200710Z-adb15f1b0c25` verifies fixture
+and live admission, but its 254-character first proof at 50ms cadence returns
+INTERACTION_FAILED/indeterminate/response_lost with a native timeout. Independent
+frames show partial input; no first proof verifies. It stops before resize/split/
+close without blind replay, and owned cleanup verifies. The outer 30s cap did not
+predict the Bridge response budget. Do not claim the application failed layout.
+
+**Bounded positive comparison:** fresh run `20261107T203154Z-15a8da01a49a` retains
+50ms cadence and all checks but uses compact 144/127/127/127-character proofs,
+bound to the run nonce, phase and four absent-before-input guest files. One UI
+command/Return per phase; proof bytes and native/Bridge pixels independently agree.
+
+| Phase                    | Shell PID | PTY rows × columns | Original sentinel         |
+| ------------------------ | --------- | ------------------ | ------------------------- |
+| Before resize            | 1044      | 39 × 126           | retained                  |
+| 900×600 logical window   | 1044      | 34 × 108           | retained                  |
+| New right sibling        | 1328      | 34 × 53            | absent, independent shell |
+| After sibling-only close | 1044      | 34 × 108           | retained                  |
+
+Fresh AX confirms exact 900×600 main window, two visible Terminal input areas
+after Cmd+Shift+D, then one after Cmd+Shift+W. Process reads prove app PID 987 ->
+sidecar 994 -> both shells before close; afterward only original 1044 remains,
+sibling 1328 absent. Original PID/unexported sentinel and PTY dimensions survive;
+no external kill or whole-tab/window close. Independent images retain decoded
+markers, split geometry and final original prompt. Explicit finish after 21 queue
+actions. Both guests cleaned; five originals stopped, no clone/QA/tool processes.
+
+[Comparison and 1,031 private-file hashes](evidence/client-baseline/shell-layout-comparison.json)
+retain failure, fixture, exact proofs, images/process review and cleanup. All 62
+kept guards/Ruff/repo checks pass. Intentional unproven-sibling close, replacement/
+sentinel/geometry acceptance and overlong-command regressions fail kept guards;
+restored source passes. Implemented and locally/live verified; scoped commit,
+remote backup and current-source CI are next. Private evidence/unrelated files/
+cleaned pointer preserved. No baseline row promoted pending review: one input
+PASS/eleven BLOCKED. These are shell-configured, paced, bounded observations;
+default-cadence delimiter loss and longer-input response budget remain limitations.
+Pi v0.85.1-psmfd.1, comparison #219 deferred and every existing gate unchanged.
+
+**Next concrete slice: CF-1C-AUTOMATION-5.** Record a bounded normal GUI quit check
+before a fresh boot: capture exact app/sidecar/shell descendants and an independent
+unrelated guest fixture process, invoke supported GUI Quit once, observe only
+owned descendants terminate while unrelated fixture stays. No external kill
+accepted as normal shutdown proof. Preserve all existing acceptance gates.
+
+```sh
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+python3 scripts/client_baseline_layout_probe.py \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/layout-probe-NEW-UNIQUE.log 2>&1
+```
+
+Use restrictive umask/no-clobber, fresh printed run, normal Bridge permission
+enrollment, fixed layout-probe queue action and explicit finish. Bounds 1500s
+observer/1800s hold/40 bootstrap actions, finite four-proof/one-resize/one-split/
+one-close scenario, 30s guest/60s install/45s native probe. Never select cleaned
+active-console.json. No automatic row promotion, runtime adoption or publishing.
+
+## CF-1C-AUTOMATION-4 — approved bounded resize/split/sibling-close
+
+Start 0cb0be6ef2d0748ff89b0cae790424bc2b39219d, branch test/client-baseline-gui,
+open draft #224 against dev. Prior source ea433e6 CI fourteen jobs green. Before
+implementation: dedicated fixed layout scenario reuses current atomic owner,
+pinned candidate/runtime/Peekaboo GUI Bridge, supported permission enrollment,
+corrected live window admission and proven 50ms input cadence. No product edits.
+
+Source inspection shows split uses configured default kind rather than inheriting
+shell. Explicit guest-only supported ADR-0014 settings fixture before first app
+launch: {version:1,pane:{defaultKind:"shell"}} at ~/Library/Application Support/
+fingertrap/settings.json. Require absent file/no overwrite. This is a disclosed
+shell-configured test condition, not a pristine default-Pi installation. No Pi
+executable/profile/provider/keychain or activation/backend/release setting changes.
+
+One initial shell; four fixed paced UI command/Return deliveries generate distinct
+run-bound guest proof files only through the interactive shell. Each proof records
+decoded marker, $$ PID and /bin/stty size. Check absence before input and exact
+marker/parseable positive PID/rows/columns after, with independent native RFB and
+Bridge pixels/clock after every probe. No blind retry of a mutation.
+
+Predeclared sequence/assertions: original proof; resize exact main window to
+900x600 logical pixels, fresh AX confirms geometry and same shell PID with smaller
+rows/columns; Cmd+Shift+D once splits right; fresh AX exposes two terminal input
+areas and sibling proof has distinct shell PID/narrower columns. Independently
+verify app->sidecar->both shells ancestry. Cmd+Shift+W once closes focused sibling
+only; fresh AX returns to one terminal, sibling PID disappears, original stays.
+Final original proof has same PID and restored post-resize PTY dimensions. At most
+three read-only process observations for asynchronous sibling exit. No external
+kill, no closing whole tab/window or unrelated processes. Clean entire owned guest
+at explicit finish; never use cleaned active-console pointer.
+
+Bounds reviewed before boot: 1500s observer/1800s guest hold (extra fixed layout
+probes), 40 bootstrap queue actions, finite four-proof/one-resize/one-split/one-close
+scenario, 30s guest commands/60s install verification/45s native probes. stdout/
+stderr redirected privately. Validate target/PID/geometry/proof regression guards,
+kept suite/Ruff/repo/docs/hash/secrets, then one live owned run and cleanup.
+Baseline stays one input PASS/eleven BLOCKED pending review of complete evidence;
+default-cadence loss remains unresolved. Pi v0.85.1-psmfd.1, #219 deferred and all
+acceptance/activation/backend/release/provider gates intact. Next: implement and
+validate fixed scenario before fresh boot.
 
 ## CF-1C-AUTOMATION-3/3B — bounded shell input/output verified
 
@@ -1394,3 +1501,37 @@ foreground typing cadence to 50ms per character (under existing 30s command cap)
 One delivery/Return, observe proof and pixels, never retry input in the same guest.
 Retain original failed run as real red proof of false-success prevention. Existing
 CF-1/shell approval persists; no product/runtime/provider/gate changes.
+
+AUTOMATION-4 identity refinement before implementation: first shell command also
+sets an unexported run-bound FT_CF1_SURVIVOR variable in that interactive shell.
+Each proof adds its sentinel value. Original proofs must retain the value; newly
+spawned sibling must not inherit it. PID+ancestry+sentinel checks prevent treating
+a replacement shell as the surviving original. This is guest shell state only.
+
+AUTOMATION-4 preflight: fixed guest-shell-default fixture, four run-bound
+PID/stty/sentinel proofs, exact resize and guarded split/sibling-close implemented.
+All 62 kept guards/Ruff pass; guest fixture Python/JSON syntax verified. Intentional
+bypass of sibling identity admission fails the kept mutation-path guard; production
+restored. Commands fit 30s cap at 50ms cadence. Next: one bounded live owned run,
+normal Bridge permissions, proof/image/process review and explicit finish/cleanup.
+
+AUTOMATION-4 failed run 20261107T200710Z-adb15f1b0c25: supported shell-default
+fixture and live window admission verify. First 254-character proof at 50ms
+cadence returns INTERACTION_FAILED/indeterminate/response_lost, NSPOSIX timeout;
+independent pixels show partial line, no proof file exists. It stops before resize,
+split or close, no blind input replay, owned cleanup verified. The outer 30s cap
+was insufficient to predict the Bridge response budget; preserve actual failure.
+
+Next bounded CF-1C-AUTOMATION-4B: fresh guest, same fixture/input artifacts/50ms
+cadence and assertions. Compact each proof to at most 150 characters, using the
+run's existing 12-hex nonce in marker/unexported FT4 sentinel and short owned
+/tmp/ft4-{b,r,s,a} paths. Preserve absolute tool paths, PID/stty/sentinel fields,
+one command/Return per phase, absent-file guard and exact marker binding. No
+chunked or repeated input; all other bounds/cleanup/gates unchanged. Add a kept
+command-length guard that rejects the original longer pattern before boot.
+
+AUTOMATION-4B preflight: compact proof lengths 144/127/127/127 characters; 50ms
+cadence unchanged. All 62 guards/Ruff pass, including 150-character maximum;
+intentional long-command regression fails. Fresh run 20261107T203154Z-15a8da01a49a
+has all three canonical GUI Bridge grants and is executing the fixed scenario.
+Original 254-character timeout attempt remains private and independently cleaned.

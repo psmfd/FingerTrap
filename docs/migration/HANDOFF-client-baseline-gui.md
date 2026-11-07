@@ -1,5 +1,70 @@
 # CF-1C session handoff — 2026-11-07
 
+## CF-1C-AUTOMATION-4/4B — resize/split/sibling-close observed
+
+Pinned candidate and Peekaboo GUI Bridge unchanged. Disclosed guest-only supported
+ADR-0014 fixture sets version 1 pane.defaultKind=shell before the single app launch;
+this makes the app's normal split action create a shell sibling rather than Pi.
+No host/product/Pi/profile/provider/keychain/activation/backend/release changes.
+
+**Original failure preserved:** run `20261107T200710Z-adb15f1b0c25` verifies fixture
+and live admission, but its 254-character first proof at 50ms cadence returns
+INTERACTION_FAILED/indeterminate/response_lost with a native timeout. Independent
+frames show partial input; no first proof verifies. It stops before resize/split/
+close without blind replay, and owned cleanup verifies. The outer 30s cap did not
+predict the Bridge response budget. Do not claim the application failed layout.
+
+**Bounded positive comparison:** fresh run `20261107T203154Z-15a8da01a49a` retains
+50ms cadence and all checks but uses compact 144/127/127/127-character proofs,
+bound to the run nonce, phase and four absent-before-input guest files. One UI
+command/Return per phase; proof bytes and native/Bridge pixels independently agree.
+
+| Phase                    | Shell PID | PTY rows × columns | Original sentinel         |
+| ------------------------ | --------- | ------------------ | ------------------------- |
+| Before resize            | 1044      | 39 × 126           | retained                  |
+| 900×600 logical window   | 1044      | 34 × 108           | retained                  |
+| New right sibling        | 1328      | 34 × 53            | absent, independent shell |
+| After sibling-only close | 1044      | 34 × 108           | retained                  |
+
+Fresh AX confirms exact 900×600 main window, two visible Terminal input areas
+after Cmd+Shift+D, then one after Cmd+Shift+W. Process reads prove app PID 987 ->
+sidecar 994 -> both shells before close; afterward only original 1044 remains,
+sibling 1328 absent. Original PID/unexported sentinel and PTY dimensions survive;
+no external kill or whole-tab/window close. Independent images retain decoded
+markers, split geometry and final original prompt. Explicit finish after 21 queue
+actions. Both guests cleaned; five originals stopped, no clone/QA/tool processes.
+
+[Comparison and 1,031 private-file hashes](evidence/client-baseline/shell-layout-comparison.json)
+retain failure, fixture, exact proofs, images/process review and cleanup. All 62
+kept guards/Ruff/repo checks pass. Intentional unproven-sibling close, replacement/
+sentinel/geometry acceptance and overlong-command regressions fail kept guards;
+restored source passes. Implemented and locally/live verified; scoped commit,
+remote backup and current-source CI are next. Private evidence/unrelated files/
+cleaned pointer preserved. No baseline row promoted pending review: one input
+PASS/eleven BLOCKED. These are shell-configured, paced, bounded observations;
+default-cadence delimiter loss and longer-input response budget remain limitations.
+Pi v0.85.1-psmfd.1, comparison #219 deferred and every existing gate unchanged.
+
+**Next concrete slice: CF-1C-AUTOMATION-5.** Record a bounded normal GUI quit check
+before a fresh boot: capture exact app/sidecar/shell descendants and an independent
+unrelated guest fixture process, invoke supported GUI Quit once, observe only
+owned descendants terminate while unrelated fixture stays. No external kill
+accepted as normal shutdown proof. Preserve all existing acceptance gates.
+
+```sh
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+python3 scripts/client_baseline_layout_probe.py \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/layout-probe-NEW-UNIQUE.log 2>&1
+```
+
+Use restrictive umask/no-clobber, fresh printed run, normal Bridge permission
+enrollment, fixed layout-probe queue action and explicit finish. Bounds 1500s
+observer/1800s hold/40 bootstrap actions, finite four-proof/one-resize/one-split/
+one-close scenario, 30s guest/60s install/45s native probe. Never select cleaned
+active-console.json. No automatic row promotion, runtime adoption or publishing.
+
 ## CF-1C-AUTOMATION-3/3B — bounded shell input/output verified
 
 Two fresh owned runs used the same pinned candidate, production runtime inputs

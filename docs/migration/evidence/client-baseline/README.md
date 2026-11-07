@@ -1,5 +1,12 @@
 # CF-1 packaged-client baseline evidence
 
+Latest CF-1C-AUTOMATION-4/4B observes shell resize, right split and sibling-only
+close under a disclosed supported guest shell-default fixture and 50ms cadence.
+Original PID/sentinel and PTY dimensions survive; sibling termination independently
+verified. A longer typing-timeout attempt is retained alongside compact-command
+success in [layout comparison](shell-layout-comparison.json). Baseline remains
+one input PASS/eleven BLOCKED pending review; all existing gates remain intact.
+
 Latest CF-1C-AUTOMATION-3/3B verifies one shell command/output at 50ms typing
 cadence with exact independent guest-file proof and decoded output in native/Bridge
 frames. Default cadence lost at least one delimiter and correctly failed the proof
