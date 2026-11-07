@@ -2,7 +2,102 @@
 
 Updated: 2026-11-07. Resumed CF-1C under the existing execution approval.
 
-Latest steering: approved Peekaboo pilot committed/backed up; all fourteen CI jobs pass.
+Latest steering: packaged-client window observed; corrected classification replay verified, checkpoint/CI next.
+
+## CF-1C-AUTOMATION-2 — packaged-client window observed
+
+Run `20261107T175616Z-5064033904d3` installed the pinned candidate inside a fresh
+owned guest, verified bundle ID dev.fingertrap.app and all three native binary
+hashes, then launched exactly once through normal LaunchServices. No Gatekeeper
+bypass, quarantine removal, re-signing or host/global install. Peekaboo GUI Bridge
+grants came through the same normal guest UI enrollment/relaunch as the pilot.
+
+**Observed:** native RFB and independent Bridge screenshots show FingerTrap's
+visible window and controls. Three distinct uncached AX snapshots, each at least
+five seconds apart, expose Toggle session browser and Toggle status panel in
+window 80 (1024x686 logical bounds). Process readback independently records app
+PID 933 and child sidecar PID 940 at the verified /Applications bundle paths.
+The default Pi pane visibly reports an actionable missing-executable error. This
+slice did not install/configure Pi or send app command/provider/keychain input;
+do not claim terminal transport, provider acceptance or clean Finder installation.
+
+**Guard correction preserved:** original live result is blocked because its
+window guard counted an unnamed off-screen helper (85) as well as the visible
+FingerTrap main window (80). The actual inventory is partial and keeps its warnings.
+Corrected classification binds exactly one observed visible titled main window
+to fresh AX; it does not assert a complete global window count. The original
+blocked result remains untouched. Corrected guard passes offline replay of all
+three retained live observations/screens/clocks after cleanup; no second launch,
+no fabricated live callback success. Acquisition commands unchanged; final
+corrected live callback was not re-executed. A kept sanitized real-inventory
+fixture rejects restoration of the old count-all-windows guard. An intentional
+cached/empty/wrong-app UI acceptance regression also fails the kept guard.
+
+[Sanitized result and 350 private-file hashes](evidence/client-baseline/client-launch-observation.json)
+retain exact identities, original failure, classification mode, process/image
+review and cleanup. All 51 kept guards and Ruff pass. Implemented/locally verified;
+scoped commit, remote backup and current-source CI are next. Raw images/JSON/logs
+remain private; unrelated files and cleaned active-console pointer preserved.
+Explicit finish after 21 queue actions; independent cleanup shows five original
+stopped VMs, no clone/QA/Peekaboo/Tart/Softnet processes. Baseline unchanged:
+one input PASS/eleven BLOCKED, Pi v0.85.1-psmfd.1, comparison #219 deferred,
+all provider/activation/backend/release and maintainer acceptance gates intact.
+
+**Next concrete slice: CF-1C-AUTOMATION-3.** Record a bounded first shell-pane
+input/output observation before boot: reuse corrected main-window admission in
+a fresh guest, select New shell tab through observed AX, deliver one synthetic
+printf probe, then observe exact output independently. No provider/runtime setup,
+no baseline row promotion without its full case evidence. This next slice also
+exercises the corrected classifier in the live callback. First checkpoint and
+refresh current-source CI. Reproduce current acquisition with:
+
+```sh
+python3 scripts/client_baseline_client_observe.py \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/client-observe-NEW-UNIQUE.log 2>&1
+python3 scripts/client_baseline_client_observe.py \
+  --review-run .artifacts/client-baseline/20261107T175616Z-5064033904d3
+```
+
+Use restrictive umask/no-clobber and a fresh explicit run for acquisition. Existing
+1200s observer/1500s guest hold/40-action/30s guest-command/45s native-probe bounds
+remain; fixed install verification cap 60s. Queue client-observe only after Bridge
+permission enrollment; finish explicitly. Review mode only reads a cleaned owned
+run, verifies retained image digest and timestamps, and never starts a guest.
+
+## CF-1C-AUTOMATION-2 — approved packaged-client launch/observation
+
+Proceed authorized from f27dcd9, branch test/client-baseline-gui, open draft #224
+against dev; prior source 5fa59ff CI fourteen jobs green. Before implementation:
+add one dedicated fixed client-observe queue action around the existing Peekaboo
+pilot lifetime. Fresh guest, same pinned app/runtime/tool artifacts and normal
+GUI Bridge permission enrollment. No custom RFB/lifetime reimplementation.
+
+Install the already verified candidate zip into guest /Applications via ditto;
+verify installed bundle ID dev.fingertrap.app and all three native binary hashes
+against the prepared run before one normal LaunchServices open. Record actual
+Gatekeeper/prompts without disabling, re-signing or stripping quarantine. This
+is tool-assisted launch observation, not a pristine Finder installation pass.
+No runtime/profile/provider/keychain changes or app command input in this slice.
+
+Predeclared observed-ready criterion: exactly one positive-size FingerTrap window,
+uncached complete AX observation targeting FingerTrap with session-browser and
+status-panel controls visible, two fresh observations five seconds apart, plus
+private independent native RFB and Bridge screen/clock after each step. Record
+app/sidecar PIDs and installed paths independently; process existence alone is
+not UI readiness. At most three read-only observation attempts; launch never
+replayed. If webview AX is unavailable, preserve pixels/processes and mark the
+criterion blocked rather than weakening it to CLI success. Preserve all failures.
+
+Bounds unchanged: 1200s observer, 1500s guest hold, 40 queue actions, command cap
+30s (installation 60s), native probe 45s. Boot, enrollment, launch, observations,
+explicit finish and verified owned cleanup in one process, stdout/stderr private.
+Do not reuse cleaned pointer. Validate new guards with intentional regression,
+existing suite/Ruff/repo/docs/hash/secret checks, then one bounded live run.
+Baseline stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred,
+all activation/backend/release/provider acceptance gates intact. Next: implement
+fixed installed-identity and fresh-window assertions, then run the owned slice.
 
 ## CF-1C-AUTOMATION-1/1B — Peekaboo pilot verified
 
@@ -1133,3 +1228,25 @@ then resolve once with mandatory fresh Finder AX value plus independent images;
 never repeat typing. Continue Escape and keyboard shortcut only if the exact
 field is observed. Strengthen dialog/freshness/readback checks and guards before
 one fresh pilot with identical pinned artifacts, deadlines and owned cleanup.
+
+AUTOMATION-2 implementation prepared locally: dedicated fixed client-observe
+module reuses pinned Peekaboo staging/enrollment and existing atomic owner;
+installed ID/three binary hashes checked before single LaunchServices open.
+Mandatory native/Bridge screen+clock follows every install/launch/window/AX/
+process probe. Fifty kept guards/Ruff pass. Intentional cached/empty/wrong-app
+UI acceptance regression fails kept guard; restored code passes. Prior source
+CI remains green and draft/head verified. Next: bounded live run with normal
+permissions, at most three read-only observations, explicit finish and cleanup.
+
+AUTOMATION-2 run 20261107T175616Z-5064033904d3 completed three uncached AX and
+native/Bridge readbacks, installed identity proof and independent process inventory;
+explicit finish after 21 queue actions. App PID 933 and child sidecar 940 use the
+verified installed paths. Visible window 80 exposes both required controls and
+an actionable missing-Pi default pane. No Pi/profile/provider setup performed.
+Original live guard blocked because it counted unnamed off-screen helper 85.
+Before correction: classify exactly one observed visible titled FingerTrap main
+window, bind its ID to the fresh AX target and retain partial-inventory warnings.
+Do not claim complete global window inventory. Preserve original blocked result;
+validate corrected classification by replay of the retained independently acquired
+snapshots/screens/clocks after cleanup, not by relaunching or fabricating live
+callback success. Add kept real-inventory regression fixture. Baseline unchanged.

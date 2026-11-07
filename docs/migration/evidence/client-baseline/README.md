@@ -1,5 +1,12 @@
 # CF-1 packaged-client baseline evidence
 
+Latest CF-1C-AUTOMATION-2 observes a real packaged-client window through the
+signed GUI Bridge, with three uncached AX snapshots and independent native/Bridge
+frames. Original window-count guard blocked on an off-screen helper; corrected
+classification is verified by retained-evidence replay, not a repeated launch.
+See [launch observation](client-launch-observation.json). No baseline row promoted;
+Pi v0.85.1-psmfd.1 and all acceptance gates remain unchanged.
+
 Status: **baseline captured with blockers; not accepted**. Foundation [#216](https://github.com/psmfd/FingerTrap/issues/216), baseline [#217](https://github.com/psmfd/FingerTrap/issues/217).
 
 Read the [implementation plan](../../client-foundation-plan.html#cf1-plan) and

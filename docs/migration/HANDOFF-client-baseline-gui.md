@@ -1,5 +1,67 @@
 # CF-1C session handoff — 2026-11-07
 
+## CF-1C-AUTOMATION-2 — packaged-client window observed
+
+Run `20261107T175616Z-5064033904d3` installed the pinned candidate inside a fresh
+owned guest, verified bundle ID dev.fingertrap.app and all three native binary
+hashes, then launched exactly once through normal LaunchServices. No Gatekeeper
+bypass, quarantine removal, re-signing or host/global install. Peekaboo GUI Bridge
+grants came through the same normal guest UI enrollment/relaunch as the pilot.
+
+**Observed:** native RFB and independent Bridge screenshots show FingerTrap's
+visible window and controls. Three distinct uncached AX snapshots, each at least
+five seconds apart, expose Toggle session browser and Toggle status panel in
+window 80 (1024x686 logical bounds). Process readback independently records app
+PID 933 and child sidecar PID 940 at the verified /Applications bundle paths.
+The default Pi pane visibly reports an actionable missing-executable error. This
+slice did not install/configure Pi or send app command/provider/keychain input;
+do not claim terminal transport, provider acceptance or clean Finder installation.
+
+**Guard correction preserved:** original live result is blocked because its
+window guard counted an unnamed off-screen helper (85) as well as the visible
+FingerTrap main window (80). The actual inventory is partial and keeps its warnings.
+Corrected classification binds exactly one observed visible titled main window
+to fresh AX; it does not assert a complete global window count. The original
+blocked result remains untouched. Corrected guard passes offline replay of all
+three retained live observations/screens/clocks after cleanup; no second launch,
+no fabricated live callback success. Acquisition commands unchanged; final
+corrected live callback was not re-executed. A kept sanitized real-inventory
+fixture rejects restoration of the old count-all-windows guard. An intentional
+cached/empty/wrong-app UI acceptance regression also fails the kept guard.
+
+[Sanitized result and 350 private-file hashes](evidence/client-baseline/client-launch-observation.json)
+retain exact identities, original failure, classification mode, process/image
+review and cleanup. All 51 kept guards and Ruff pass. Implemented/locally verified;
+scoped commit, remote backup and current-source CI are next. Raw images/JSON/logs
+remain private; unrelated files and cleaned active-console pointer preserved.
+Explicit finish after 21 queue actions; independent cleanup shows five original
+stopped VMs, no clone/QA/Peekaboo/Tart/Softnet processes. Baseline unchanged:
+one input PASS/eleven BLOCKED, Pi v0.85.1-psmfd.1, comparison #219 deferred,
+all provider/activation/backend/release and maintainer acceptance gates intact.
+
+**Next concrete slice: CF-1C-AUTOMATION-3.** Record a bounded first shell-pane
+input/output observation before boot: reuse corrected main-window admission in
+a fresh guest, select New shell tab through observed AX, deliver one synthetic
+printf probe, then observe exact output independently. No provider/runtime setup,
+no baseline row promotion without its full case evidence. This next slice also
+exercises the corrected classifier in the live callback. First checkpoint and
+refresh current-source CI. Reproduce current acquisition with:
+
+```sh
+python3 scripts/client_baseline_client_observe.py \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/client-observe-NEW-UNIQUE.log 2>&1
+python3 scripts/client_baseline_client_observe.py \
+  --review-run .artifacts/client-baseline/20261107T175616Z-5064033904d3
+```
+
+Use restrictive umask/no-clobber and a fresh explicit run for acquisition. Existing
+1200s observer/1500s guest hold/40-action/30s guest-command/45s native-probe bounds
+remain; fixed install verification cap 60s. Queue client-observe only after Bridge
+permission enrollment; finish explicitly. Review mode only reads a cleaned owned
+run, verifies retained image digest and timestamps, and never starts a guest.
+
 ## CF-1C-AUTOMATION-1/1B — Peekaboo pilot completed locally
 
 Pinned Peekaboo v4.9.8, source `70dbc4183f390a5a72d5dc01d8a77eb672217070`,
