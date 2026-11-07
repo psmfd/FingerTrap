@@ -11,14 +11,15 @@ accounted for separately. A disposition does not assert a bug is fixed.
 
 ## Successor work
 
-CF-1C-GO-1, 2026-11-07: draft #224 retains the atomic wrapper. Native-coordinate
-pointer opens Finder Go, Escape closes it, and all post-input RFB captures succeed.
-Meta+Shift+g produces no Go To Folder. RFB reveals a guest Screen Recording prompt
-that independent screenshots omit along with menu windows. Usable chord/text input
-and independent window capture remain blocked. #217 stays one input PASS/eleven
-app BLOCKED; #219 deferred. Next: CF-1C-CAPTURE-1 guest permission/focus observation.
-[Evidence](evidence/client-baseline/gui-continuation/go-menu-comparison.json) and
-[current resume action](HANDOFF-client-baseline-gui.md).
+CF-1C-CAPTURE-1, 2026-11-07: supported guest UI/authentication enabled the
+executable agent recording toggle, but the prompt recurred and independent
+screenshots still omit windows. Sixteen probes/readbacks completed; observer
+deadline expired and cleanup verified. New bounded permission-session mode
+passes 31 guards; no app case ran. #217 remains one input PASS/eleven BLOCKED;
+comparison #219 deferred. Next: CF-1C-CAPTURE-2 active guest-agent inventory and normal
+service restart after UI grant, then reliable full-window capture verification.
+[Evidence](evidence/client-baseline/gui-continuation/permission-comparison.json)
+and [current resume action](HANDOFF-client-baseline-gui.md).
 
 | ID                                                                            | FingerTrap owner                                                            | Start condition                                                                                                                                                                                                                     |
 | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

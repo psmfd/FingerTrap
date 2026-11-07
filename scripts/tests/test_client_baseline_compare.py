@@ -21,6 +21,84 @@ vnc = compare.vnc
 
 
 class AtomicGuards(unittest.TestCase):
+    def test_permission_requests_reject_unknown_actions_and_arbitrary_text(self):
+        for request in (
+            {"action": "shell", "command": "id"},
+            {"action": "text", "text": "private credential"},
+            {"action": "click", "x": 1, "y": 2, "delay": 15},
+        ):
+            with self.subTest(request=request), self.assertRaises(ValueError):
+                compare.permission_step(request, 0)
+        self.assertEqual(
+            compare.permission_step(
+                {"action": "text", "text": "/tmp/ft-input-probe"}, 1
+            ),
+            {"Name": "step-01", "Text": "/tmp/ft-input-probe"},
+        )
+
+    def test_permission_queue_ownership_symlink_size_and_deadline_block_input(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            request = root / "request-00.json"
+            target = root / "private.json"
+            target.write_text('{"action":"click","x":520,"y":24}')
+            request.symlink_to(target)
+            with (
+                patch.object(vnc, "connection"),
+                patch.object(compare, "probe_step") as probe,
+                self.assertRaises(ValueError),
+            ):
+                compare.permission_session(root, root, compare.time.monotonic() + 2)
+            probe.assert_not_called()
+            request.unlink()
+            request.write_text(" " * 2049)
+            with (
+                patch.object(vnc, "connection"),
+                patch.object(compare, "probe_step") as probe,
+                self.assertRaises(ValueError),
+            ):
+                compare.permission_session(root, root, compare.time.monotonic() + 2)
+            probe.assert_not_called()
+            request.write_text(target.read_text())
+            with (
+                patch.object(vnc, "connection", side_effect=ValueError("unowned")),
+                patch.object(compare, "probe_step") as probe,
+                self.assertRaises(ValueError),
+            ):
+                compare.permission_session(root, root, compare.time.monotonic() + 2)
+            probe.assert_not_called()
+            with (
+                patch.object(vnc, "connection"),
+                patch.object(compare, "probe_step") as probe,
+                self.assertRaises(TimeoutError),
+            ):
+                compare.permission_session(root, root, 0)
+            probe.assert_not_called()
+
+    def test_permission_queue_limits_actions_and_finishes_without_acceptance(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for index in range(40):
+                (root / f"request-{index:02d}.json").write_text('{"action":"capture"}')
+            with (
+                patch.object(vnc, "connection"),
+                patch.object(compare, "probe_step") as probe,
+                self.assertRaises(TimeoutError),
+            ):
+                compare.permission_session(root, root, compare.time.monotonic() + 2)
+            self.assertEqual(probe.call_count, 40)
+            (root / "request-01.json").write_text('{"action":"finish"}')
+            with (
+                patch.object(vnc, "connection"),
+                patch.object(compare, "probe_step") as probe,
+            ):
+                compare.permission_session(root, root, compare.time.monotonic() + 2)
+            self.assertEqual(probe.call_count, 1)
+            self.assertEqual(
+                json.loads((root / "session.json").read_text()),
+                {"phase": "finished", "actions": 1},
+            )
+
     def test_expired_deadline_starts_no_command_and_timeout_is_enforced(self):
         with self.assertRaises(TimeoutError):
             compare.remaining(0)
@@ -81,9 +159,9 @@ class AtomicGuards(unittest.TestCase):
             )
             self.assertEqual(pointer.read_text(), '{"run":"cleaned-old-run"}')
             self.assertTrue(
-                json.loads(
-                    (run / "atomic-comparison/gomenu/process.json").read_text()
-                )["timedOut"]
+                json.loads((run / "atomic-comparison/gomenu/process.json").read_text())[
+                    "timedOut"
+                ]
             )
 
     def test_driver_observer_failure_finishes_exact_fresh_run_without_pointer(self):

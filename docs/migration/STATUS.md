@@ -2,7 +2,80 @@
 
 Updated: 2026-11-07. Resumed CF-1C under the existing execution approval.
 
-## CF-1C-GO-1 — native-coordinate Go menu versus keyboard
+## CF-1C-CAPTURE-1 — approved guest permission and focus remediation
+
+Maintainer approved the presented plan. Start at `6a1ae46f76dff2b0a84b814e6768fd0bb70f4179`
+on `test/client-baseline-gui`, draft #224 against dev. Reuse the atomic driver,
+pinned independent probe, immediate guest screen/clock and owned cleanup.
+Affected implementation: `scripts/client_baseline_compare.py` and its kept guards.
+Add an explicit permission-session option: a fresh-run-only bounded guest-input
+queue permits inspecting native RFB images between UI actions while the same
+boot/observer/cleanup execution stays alive. No active-console pointer access.
+Each action still executes the pinned probe and immediate independent readback.
+
+Budget reviewed before changing code: permission session gets 720s observation,
+960s guest hold, at most 40 actions; retain 45s probe and 30s guest-command caps.
+The default three-step comparison keeps 240s/480s. Unknown/oversized/symlinked
+requests fail closed; timeout or interruption invokes owned cleanup. UI actions
+only, no host commands/clipboard, TCC database writes, permission bypass or host
+permission changes. Raw screenshots, request files and logs remain private.
+
+Live sequence: trigger/read the guest-agent recording prompt, use native RFB
+coordinates to open supported guest Privacy & Security settings, enable the
+actual guest-agent Screen Recording entry and follow any restart requirement.
+Then compare a visible window/menu between RFB and guest capture, pointer-selected
+Go To Folder versus focused Finder keyboard chord, and harmless synthetic text.
+Do not infer success from screenshot existence, clock progress or process exit.
+Stop with a preserved blocker if the guest UI cannot be resolved within bounds.
+
+Validation: existing guards plus meaningful queue ownership/limits/failure-readback
+regressions and red-first proof, Ruff, repository/docs checks, then one private
+redirected bounded live execution. Record exact observations and cleanup. No app
+validation until usable input and reliable window capture are observed. Keep
+one input PASS/eleven BLOCKED, Pi v0.85.1-psmfd.1, deferred #219 and all gates.
+CF-1C-CAPTURE-1 implemented: explicit 720s/40-action fresh-run queue, 960s guest
+hold; default comparison unchanged. All 31 guards, Ruff and repository checks
+pass. Red proof: isolated removal of symlink rejection makes the new guard fail;
+production source unchanged and full restored suite passes. Pinned private probe
+verified; preflight had five originals stopped and no QA/Tart/Softnet/drain
+process. The bounded live result and current next action follow below.
+
+Run `20261107T143813Z-90064f4d9802` completed sixteen probes with immediate
+independent screen/clock readbacks. The supported guest privacy panel showed two
+guest-agent entries: executable disabled, another entry enabled. Normal guest
+administrator authentication using the documented public base-image fixture
+account enabled the executable toggle. No host/operator credential was used.
+Native RFB proves the toggle change and captures Settings/Finder windows; no
+restart instruction was shown. The recording prompt later recurred, and all
+independent guest screenshots continued to omit windows. Permission activation
+or duplicate identity remains unresolved; enabling the toggle alone is not a fix.
+
+Pointer Go To Folder attempts did not establish a visible dialog. Focused chord
+comparison and synthetic path verification were not completed; no app case ran.
+Capture-only probes 07/12 timed out after their initial RFB frame; every probe
+still received its immediate independent readback. Observer hit its 720s deadline
+while waiting for the next action, exited 1 and recorded TimeoutError. Owned
+cleanup succeeded and independently verified five original stopped VMs, no clone
+or QA/probe/Tart/Softnet/drain process. A supporting service inventory command
+failed on an absent optional directory; stdout was not retained, so no active
+service identity is claimed. Follow-up validation safely refused the cleaned run.
+
+[Sanitized permission evidence](evidence/client-baseline/gui-continuation/permission-comparison.json)
+records sixteen probes, 148 private-file hashes and exact timeout/cleanup outcome.
+All 31 guards, Ruff and repository checks pass. Isolated removal of symlink
+rejection makes the new guard fail; unchanged production source passes. Source
+and evidence are locally verified; commit/remote/CI identities will follow.
+
+**Next bounded action: CF-1C-CAPTURE-2.** Before triggering capture in a fresh
+owned guest, inventory the active guest-agent executable and launch service.
+After the supported UI grant, restart that identified guest service normally,
+within the same bounded controller execution; verify reconnection and actual
+window capture. Preserve duplicate-entry evidence. Keep immediate per-input
+readbacks, private output and cleanup. No TCC database edits, host permission
+changes or app validation. Pointer/chord/synthetic text comparison follows only
+a reliable capture result. Pi v0.85.1-psmfd.1, deferred #219 and all gates remain.
+
+## Historical CF-1C-GO-1 — native-coordinate Go menu versus keyboard
 
 Starting checkpoint `219daae53e3e28cd334156c0c776f52737252944` matches local
 `test/client-baseline-gui` and open draft #224 against `dev` (`8e5fd0c`).

@@ -85,54 +85,106 @@ def guest_screen(run, output, deadline):
     )
 
 
-def observe(run, image):
+def probe_step(run, step, root, deadline):
+    output = root / step["Name"]
+    output.mkdir(mode=0o700)
+    endpoint = vnc.connection(run)
+    config = {
+        "Address": f"127.0.0.1:{endpoint.port}",
+        "Password": vnc.unquote(endpoint.password),
+        "Run": str(output),
+        "Steps": [step],
+    }
+    qa.save(output / "step.json", step)
+    try:
+        with (output / "probe.log").open("wb") as log:
+            result = subprocess.run(
+                [str(PROBE / "rfb-probe")],
+                input=json.dumps(config).encode(),
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                timeout=remaining(deadline, 45),
+                check=False,
+            )
+        qa.save(output / "process.json", {"exitCode": result.returncode})
+    except subprocess.TimeoutExpired:
+        qa.save(output / "process.json", {"timedOut": True})
+    finally:
+        # Even a failed/timed-out RFB step gets immediate independent readback.
+        guest_screen(run, output, deadline)
+
+
+def permission_step(request, index):
+    vnc.validate(request)
+    action = request["action"]
+    if (
+        action not in ("capture", "finish", "click", "chord", "text")
+        or "delay" in request
+    ):
+        raise ValueError("Unsupported permission-session action")
+    if action == "text" and request["text"] != "/tmp/ft-input-probe":
+        raise ValueError("Only the synthetic input-verification path is allowed")
+    step = {"Name": f"step-{index:02d}"}
+    if action == "click":
+        step.update(Click=True, X=request["x"], Y=request["y"])
+    elif action == "chord":
+        step["Keys"] = request["keys"]
+    elif action == "text":
+        step["Text"] = request["text"]
+    return None if action == "finish" else step
+
+
+def permission_session(run, root, deadline):
+    # Files are private to this new explicit run, never selected via a pointer.
+    for index in range(40):
+        request = root / f"request-{index:02d}.json"
+        qa.save(root / "session.json", {"phase": "waiting", "nextIndex": index})
+        while True:
+            remaining(deadline)
+            vnc.connection(run)
+            if request.is_symlink():
+                raise ValueError("Symlinked permission request")
+            if request.exists():
+                if not request.is_file() or request.stat().st_size > 2048:
+                    raise ValueError("Permission request exceeds budget")
+                step = permission_step(json.loads(request.read_text()), index)
+                break
+            time.sleep(min(0.5, remaining(deadline)))
+        if step is None:
+            qa.save(root / "session.json", {"phase": "finished", "actions": index})
+            return
+        probe_step(run, step, root, deadline)
+    raise TimeoutError("Permission session action budget exhausted")
+
+
+def observe(run, image, permission=False):
     # Explicit driver-owned run; active-console.json is never read or written.
     vnc.connection(run)
     if image != run / "console-first-frame.png" or not image.is_file():
         raise ValueError("Fresh driver first frame is required")
-    deadline = time.monotonic() + 240
+    deadline = time.monotonic() + (720 if permission else 240)
     root = run / "atomic-comparison"
     root.mkdir(mode=0o700)
     guest_screen(run, root, deadline)
+    if permission:
+        permission_session(run, root, deadline)
+        return
     for step in STEPS:
-        output = root / step["Name"]
-        output.mkdir(mode=0o700)
-        endpoint = vnc.connection(run)
-        config = {
-            "Address": f"127.0.0.1:{endpoint.port}",
-            "Password": vnc.unquote(endpoint.password),
-            "Run": str(output),
-            "Steps": [step],
-        }
-        qa.save(output / "step.json", step)
-        try:
-            with (output / "probe.log").open("wb") as log:
-                result = subprocess.run(
-                    [str(PROBE / "rfb-probe")],
-                    input=json.dumps(config).encode(),
-                    stdout=log,
-                    stderr=subprocess.STDOUT,
-                    timeout=remaining(deadline, 45),
-                    check=False,
-                )
-            qa.save(output / "process.json", {"exitCode": result.returncode})
-        except subprocess.TimeoutExpired:
-            qa.save(output / "process.json", {"timedOut": True})
-        finally:
-            # Even a failed/timed-out RFB step gets immediate independent readback.
-            guest_screen(run, output, deadline)
+        probe_step(run, step, root, deadline)
 
 
-def compare(archive, runtime):
+def compare(archive, runtime, permission=False):
     verify_probe()
     owned = []
 
     def observer(run, image):
         owned.append(run)
-        observe(run, image)
+        observe(run, image, permission=permission)
 
     try:
-        return vnc.serve(archive, runtime, 480, observer=observer)
+        return vnc.serve(
+            archive, runtime, 960 if permission else 480, observer=observer
+        )
     finally:
         # serve finishes the owned controller before this independent readback.
         for run in owned:
@@ -160,13 +212,18 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--archive", type=Path, required=True)
     parser.add_argument("--runtime-archive", type=Path, required=True)
+    parser.add_argument(
+        "--permission-session",
+        action="store_true",
+        help="Bounded fresh-run guest permission/input UI session (720s, 40 actions)",
+    )
     args = parser.parse_args()
 
     def interrupted(_signum, _frame):
         raise InterruptedError("Atomic comparison interrupted")
 
     signal.signal(signal.SIGTERM, interrupted)
-    compare(args.archive, args.runtime_archive)
+    compare(args.archive, args.runtime_archive, permission=args.permission_session)
     print("Atomic comparison finished; inspect private images and logs.")
 
 

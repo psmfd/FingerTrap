@@ -1,6 +1,65 @@
 # CF-1C session handoff — 2026-11-07
 
-## Latest continuation: CF-1C-GO-1
+## Latest continuation: CF-1C-CAPTURE-1
+
+Run `20261107T143813Z-90064f4d9802` completed sixteen probes with immediate
+independent screen/clock readbacks. The supported guest privacy panel showed two
+guest-agent entries: executable disabled, another entry enabled. Normal guest
+administrator authentication using the documented public base-image fixture
+account enabled the executable toggle. No host/operator credential was used.
+Native RFB proves the toggle change and captures Settings/Finder windows; no
+restart instruction was shown. The recording prompt later recurred, and all
+independent guest screenshots continued to omit windows. Permission activation
+or duplicate identity remains unresolved; enabling the toggle alone is not a fix.
+
+Pointer Go To Folder attempts did not establish a visible dialog. Focused chord
+comparison and synthetic path verification were not completed; no app case ran.
+Capture-only probes 07/12 timed out after their initial RFB frame; every probe
+still received its immediate independent readback. Observer hit its 720s deadline
+while waiting for the next action, exited 1 and recorded TimeoutError. Owned
+cleanup succeeded and independently verified five original stopped VMs, no clone
+or QA/probe/Tart/Softnet/drain process. A supporting service inventory command
+failed on an absent optional directory; stdout was not retained, so no active
+service identity is claimed. Follow-up validation safely refused the cleaned run.
+
+[Sanitized permission evidence](evidence/client-baseline/gui-continuation/permission-comparison.json)
+records sixteen probes, 148 private-file hashes and exact timeout/cleanup outcome.
+All 31 guards, Ruff and repository checks pass. Isolated removal of symlink
+rejection makes the new guard fail; unchanged production source passes. Source
+and evidence are locally verified; commit/remote/CI identities will follow.
+
+**Next bounded action: CF-1C-CAPTURE-2.** Before triggering capture in a fresh
+owned guest, inventory the active guest-agent executable and launch service.
+After the supported UI grant, restart that identified guest service normally,
+within the same bounded controller execution; verify reconnection and actual
+window capture. Preserve duplicate-entry evidence. Keep immediate per-input
+readbacks, private output and cleanup. No TCC database edits, host permission
+changes or app validation. Pointer/chord/synthetic text comparison follows only
+a reliable capture result. Pi v0.85.1-psmfd.1, deferred #219 and all gates remain.
+
+Reproduce the bounded permission session with the existing input archives:
+
+```bash
+python3 scripts/client_baseline_compare.py --permission-session \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/capture-UNIQUE.log 2>&1
+```
+
+The observer creates `atomic-comparison/session.json` in the new owned run.
+While `phase=waiting`, atomically create `request-NN.json` for `nextIndex`, with
+only `action=capture`, `click` (integer x/y), `chord` (bounded keys), `text`
+(the fixed synthetic `/tmp/ft-input-probe` string), or `finish`. Inspect native
+`step-NN/govnc-*.png` and `guest-screen.jpg` after the next index appears.
+No command execution or endpoint fields are accepted in queue requests. Key
+input remains trusted guest UI input; it can authenticate the public fixture
+account and is not an authorization or credential-isolation boundary.
+The same execution owns boot, probes, every immediate readback and cleanup.
+720s observation, 960s hold, 40 actions; expiration fails and cleans up. No
+request to the already-cleaned run or old active-console pointer is valid.
+Record CF-1C-CAPTURE-2 before adding the fixed inventory/restart operations.
+
+## Historical continuation: CF-1C-GO-1
 
 Run `20261107T141221Z-dbb92f6fb20e` completed normally. Fresh native first frame
 matches the coordinate reference. RFB shows the Go dropdown opening, then closing
@@ -216,7 +275,7 @@ a real sleeping child. No new protected CI success or app acceptance is claimed.
 > are observed. Keep Pi v0.85.1-psmfd.1, defer #219's Pi 1.3.0 comparison, and
 > preserve all activation/backend/release gates. Execution approval persists.
 
-## Current resume prompt
+## Historical Go-menu resume prompt
 
 > Resume FingerTrap on test/client-baseline-gui, draft #224 against dev. Read
 > STATUS, this handoff and the latest WORK_LOG entry; verify exact local/remote
@@ -233,3 +292,19 @@ a real sleeping child. No new protected CI success or app acceptance is claimed.
 > until usable input and reliable fresh window capture are observed. Preserve
 > private evidence/unrelated files, Pi v0.85.1-psmfd.1, deferred #219 and all gates.
 > Existing CF-1 execution approval persists.
+
+## Current resume prompt
+
+> Resume FingerTrap, branch test/client-baseline-gui and draft #224 against dev.
+> Read STATUS, this handoff and latest WORK_LOG; verify exact head/CI.
+> CF-1C-CAPTURE-1 run 20261107T143813Z-90064f4d9802 enabled the executable
+> guest-agent recording toggle through supported guest UI/authentication, but
+> the prompt recurred and independent screenshots still omit windows. Sixteen
+> probes/readbacks completed; 720s observation deadline expired and cleanup
+> verified five original stopped VMs, no clone/QA processes. Raw evidence private.
+> Next: name/record CF-1C-CAPTURE-2, inventory the actual agent executable/service
+> before capture, then normal guest service restart after UI grant within the
+> same bounded atomic execution; verify reconnection and full-window capture.
+> No TCC bypass, host permission changes or app validation. Preserve private
+> evidence/stale pointer, Pi v0.85.1-psmfd.1, deferred #219, one input PASS/eleven
+> BLOCKED and all activation/backend/release gates. CF-1 approval persists.
