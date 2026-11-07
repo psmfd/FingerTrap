@@ -2804,8 +2804,13 @@ processes. Raw evidence private; unrelated files and cleaned pointer preserved.
 retain both runs, requested commands, exact proof bytes, dispatch outcomes,
 independent image/process review and cleanup. All 56 kept guards/Ruff/repo checks
 pass. Intentional stale/ambiguous-target and echoed-command/foreign-run proof
-regressions fail; restored code passes. Source implemented/locally verified;
-scoped commit, remote backup and current-source CI next. No baseline row promoted:
+regressions fail; restored code passes. Source `ea433e6f8a1792a7e314b2415387269a17a57994` is committed and remotely
+backed up in open draft #224 against dev. Source CI
+[42402534267](https://github.com/psmfd/FingerTrap/actions/runs/42402534267)
+passes all fourteen jobs; title/gitflow pass. Full CodeQL/review and maintainer/
+app acceptance remain pending. All 56 guards and 828 private hashes pass locally;
+secret scan zero. Zero runner registrations, hosted macOS CI/no local drain.
+Following documentation-only checkpoint skips CI and leaves tested source intact. No baseline row promoted:
 one input PASS/eleven BLOCKED. This is partial CF1-03 input/output evidence;
 resize/split/sibling-close remain untested. Pi v0.85.1-psmfd.1, comparison #219
 deferred and all activation/backend/release/provider/maintainer gates unchanged.
@@ -2830,3 +2835,21 @@ permission enrollment. Fixed queue action shell-probe runs one client launch and
 single tab/command/Return with mandatory readbacks; finish explicitly. Bounds
 remain 1200s observer/1500s guest hold/40 queue actions/30s guest commands/60s
 install verification/45s native probes. Never reuse cleaned active-console.json.
+
+## 2026-11-07 — shell input comparison checkpoint and CI
+
+Source ea433e6f8a1792a7e314b2415387269a17a57994 committed and remotely backed up
+on test/client-baseline-gui, open draft #224 against dev. All 56 kept guards,
+Ruff/repo/docs checks, local links and 828 private hashes pass; secret scan zero.
+CI 42402534267 passes all fourteen jobs; title/gitflow pass. Full CodeQL/review/
+maintainer/app acceptance remain pending. Draft and issues #216/#217 preserve the
+default-cadence delimiter loss/empty proof, bounded 50ms positive file+pixel proof
+and corrected live window admission. No product/tool root-cause fix claimed.
+Both owned guests cleaned, five originals stopped, no clone/QA/tool processes,
+zero registrations. Hosted macOS CI/no local drain. Unrelated files/private
+raw evidence/cleaned pointer preserved. Baseline stays one input PASS/eleven
+BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred and all gates intact.
+Next concrete CF-1C-AUTOMATION-4: record bounded resize/split/sibling-close
+assertions before a new owned boot, maintaining proof after every paced input.
+Default-cadence loss remains an open qualification limitation. Following docs-only
+checkpoint records source/CI identity and skips CI; never reuse cleaned pointer.

@@ -2,7 +2,7 @@
 
 Updated: 2026-11-07. Resumed CF-1C under the existing execution approval.
 
-Latest steering: paced shell input/output observed; default-cadence failure retained, checkpoint/CI next.
+Latest steering: paced shell input/output committed/backed up; all fourteen CI jobs pass, default-cadence failure retained.
 
 ## CF-1C-AUTOMATION-3/3B — bounded shell input/output verified
 
@@ -41,8 +41,13 @@ processes. Raw evidence private; unrelated files and cleaned pointer preserved.
 retain both runs, requested commands, exact proof bytes, dispatch outcomes,
 independent image/process review and cleanup. All 56 kept guards/Ruff/repo checks
 pass. Intentional stale/ambiguous-target and echoed-command/foreign-run proof
-regressions fail; restored code passes. Source implemented/locally verified;
-scoped commit, remote backup and current-source CI next. No baseline row promoted:
+regressions fail; restored code passes. Source `ea433e6f8a1792a7e314b2415387269a17a57994` is committed and remotely
+backed up in open draft #224 against dev. Source CI
+[42402534267](https://github.com/psmfd/FingerTrap/actions/runs/42402534267)
+passes all fourteen jobs; title/gitflow pass. Full CodeQL/review and maintainer/
+app acceptance remain pending. All 56 guards and 828 private hashes pass locally;
+secret scan zero. Zero runner registrations, hosted macOS CI/no local drain.
+Following documentation-only checkpoint skips CI and leaves tested source intact. No baseline row promoted:
 one input PASS/eleven BLOCKED. This is partial CF1-03 input/output evidence;
 resize/split/sibling-close remain untested. Pi v0.85.1-psmfd.1, comparison #219
 deferred and all activation/backend/release/provider/maintainer gates unchanged.
