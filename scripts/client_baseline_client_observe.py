@@ -146,7 +146,7 @@ test ! -e /Applications/FingerTrap.app
                 {"error": type(error).__name__, "detail": str(error)},
             )
             observed = []
-        if len(observed) == 2 and observed[0] == observed[1]:
+        if len(observed) >= 2 and observed[-2] == observed[-1]:
             break
         time.sleep(min(5, pilot.atomic.remaining(deadline)))
     try:
@@ -159,7 +159,7 @@ test ! -e /Applications/FingerTrap.app
         root / "result.json",
         {
             "slice": "CF-1C-AUTOMATION-2",
-            "stableObservedWindow": len(observed) == 2 and observed[0] == observed[1],
+            "stableObservedWindow": len(observed) >= 2 and observed[-2] == observed[-1],
             "windowIds": observed,
             "requiresIndependentImageAndProcessReview": True,
             "baselineRowPromoted": False,

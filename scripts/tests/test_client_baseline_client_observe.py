@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import sys
 import unittest
+import tempfile
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -99,3 +100,33 @@ class ClientObservationGuards(unittest.TestCase):
         ):
             with self.assertRaises(ValueError):
                 client.request_step(request, 0)
+
+    def test_latest_two_consecutive_observations_determine_live_status(self):
+        for ids, stable, count in (
+            ([1, 2, 2], True, 3),
+            ([1, 2, 1], False, 3),
+            ([1, 1], True, 2),
+            ([1, ValueError("blocked"), 1], False, 3),
+        ):
+            with (
+                tempfile.TemporaryDirectory() as directory,
+                patch.object(client.pilot, "require_bridge"),
+                patch.object(client.pilot, "cli"),
+                patch.object(client.pilot, "execute", return_value="{}"),
+                patch.object(client.pilot.qa, "load", return_value=(None, {})),
+                patch.object(client, "verify_installed"),
+                patch.object(client, "checkpoint"),
+                patch.object(client, "require_window", side_effect=ids),
+                patch.object(
+                    client,
+                    "require_ui",
+                    side_effect=[v for v in ids if isinstance(v, int)],
+                ),
+                patch.object(client.time, "sleep"),
+                patch.object(client.pilot.atomic, "remaining", return_value=5),
+                patch.object(client.pilot.qa, "save") as save,
+            ):
+                client.client_observe(Path(directory), Path(directory) / "client", 100)
+                result = save.call_args.args[1]
+                self.assertEqual(result["stableObservedWindow"], stable)
+                self.assertEqual(client.require_window.call_count, count)

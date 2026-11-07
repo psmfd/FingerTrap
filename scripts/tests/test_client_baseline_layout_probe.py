@@ -5,6 +5,7 @@ import copy
 import json
 from pathlib import Path
 import sys
+import subprocess
 import unittest
 from unittest.mock import patch
 
@@ -121,3 +122,53 @@ class LayoutGuards(unittest.TestCase):
             [json.loads(v) for v in writes],
             [{"version": 1, "pane": {"defaultKind": "shell"}}],
         )
+
+    def test_readback_retries_only_missing_or_valid_prefixes(self):
+        good = b"marker\nPID=30\n34 109\nSENTINEL=owned\n"
+        missing = subprocess.CalledProcessError(44, "read")
+        for reads, succeeds, attempts in (
+            ([missing, good[:18], good], True, 3),
+            ([b"", b"", b""], False, 3),
+            ([b"wrong"], False, 1),
+            ([b"marker\nPID=0"], False, 1),
+            ([b"marker\nPID=30\n0"], False, 1),
+            ([b"\xff"], False, 1),
+            ([subprocess.CalledProcessError(1, "read")], False, 1),
+        ):
+            with (
+                self.subTest(reads=reads),
+                patch.object(
+                    layout,
+                    "command_for",
+                    return_value=("command", "marker", "/tmp/proof"),
+                ),
+                patch.object(layout, "snapshot"),
+                patch.object(layout.pilot.qa, "save"),
+                patch.object(layout.shell, "cli") as mutate,
+                patch.object(layout.shell, "guest", side_effect=[b"", *reads]) as guest,
+                patch.object(layout.time, "sleep") as sleep,
+                patch.object(layout.pilot.atomic, "remaining", return_value=0.5),
+            ):
+                if succeeds:
+                    self.assertEqual(
+                        layout.proof(
+                            Path("unused"), Path("unused"), "before", 100, 80, 1
+                        )["pid"],
+                        30,
+                    )
+                else:
+                    with self.assertRaises((ValueError, subprocess.CalledProcessError)):
+                        layout.proof(
+                            Path("unused"), Path("unused"), "before", 100, 80, 1
+                        )
+                self.assertEqual(guest.call_count, attempts + 1)
+                mutate.assert_called_once()
+                for call in sleep.call_args_list:
+                    self.assertEqual(call.args, (0.5,))
+
+    def test_every_strict_prefix_can_complete_but_invalid_content_cannot(self):
+        good = b"marker\nPID=30\n 34 109\nSENTINEL=owned\n"
+        for end in range(len(good)):
+            self.assertTrue(layout.incomplete_proof(good[:end], "marker"), end)
+        self.assertFalse(layout.incomplete_proof(good, "marker"))
+        self.assertFalse(layout.incomplete_proof(good + b"extra", "marker"))

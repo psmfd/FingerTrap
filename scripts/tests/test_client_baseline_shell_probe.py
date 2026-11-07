@@ -131,3 +131,39 @@ class ShellGuards(unittest.TestCase):
         ):
             with self.assertRaises(ValueError):
                 shell.request_step(request, 0)
+
+    def test_readback_prefixes_retry_without_redelivering_input(self):
+        marker = b"owned\n"
+        for reads, succeeds, attempts in (
+            ([b"", b"own", marker], True, 3),
+            ([b"own"] * 3, False, 3),
+            ([b"wrong"], False, 1),
+            ([marker + b"extra"], False, 1),
+            ([subprocess.CalledProcessError(1, "read"), marker], True, 2),
+        ):
+            with (
+                tempfile.TemporaryDirectory() as directory,
+                patch.object(shell.pilot, "require_bridge"),
+                patch.object(shell, "button", return_value=("element", "snapshot")),
+                patch.object(shell.client, "require_ui", return_value=80),
+                patch.object(shell, "terminal"),
+                patch.object(shell, "command_for", return_value=("command", marker)),
+                patch.object(shell.pilot.qa, "save"),
+                patch.object(shell, "cli") as cli,
+                patch.object(shell, "guest", side_effect=[b"", *reads, b""]) as guest,
+                patch.object(shell.time, "sleep") as sleep,
+                patch.object(shell.pilot.atomic, "remaining", return_value=0.5),
+            ):
+                if succeeds:
+                    shell.shell_probe(Path(directory), Path(directory) / "shell", 100)
+                else:
+                    with self.assertRaises(ValueError):
+                        shell.shell_probe(
+                            Path(directory), Path(directory) / "shell", 100
+                        )
+                self.assertEqual(guest.call_count, 1 + attempts + int(succeeds))
+                self.assertEqual(
+                    sum(c.args[2] == "type-once" for c in cli.call_args_list), 1
+                )
+                for call in sleep.call_args_list:
+                    self.assertEqual(call.args, (0.5,))

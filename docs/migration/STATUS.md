@@ -1,4 +1,21 @@
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:3efc2f95650102ec7b57380d929d099a933b5df5d5a316fb810c5a721b8e40f5 -->
+
 # Runtime migration: current status
+
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:0d93b6d920a3ac68fd578d86c0d7d53b7e1e5fc78489812ca92b2f68bebafc66 -->
+
+CF-1C-AUTOMATION-4 review follow-up implemented and locally verified: all 66
+Python guards, repository checks and focused Ruff correctness checks pass. New
+guards reject the original implementation. Changes remain uncommitted. Next:
+review this patch; live macOS observation remains outstanding.
+
+<!-- /coderabbit-ai-generated:v1 -->
+
+<!-- /coderabbit-ai-generated:v1 -->
 
 Updated: 2026-11-07. Resumed CF-1C under the existing execution approval.
 

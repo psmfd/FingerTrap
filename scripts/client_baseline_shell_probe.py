@@ -172,11 +172,13 @@ def shell_probe(run, root, deadline):
                 "-c",
                 f"test -f {PROOF} && test ! -L {PROOF} && /usr/bin/head -c 256 {PROOF}",
             )
-            require_proof(actual, marker)
-            verified = True
-            break
+            if actual == marker or not marker.startswith(actual):
+                require_proof(actual, marker)
+                verified = True
+                break
         except subprocess.CalledProcessError:
-            time.sleep(min(2, pilot.atomic.remaining(deadline)))
+            pass
+        time.sleep(min(2, pilot.atomic.remaining(deadline)))
     if not verified:
         raise ValueError("Single UI command did not produce independent shell proof")
     cli(run, root, "after-output", deadline, "see", "--app", client.BUNDLE, "--fresh")

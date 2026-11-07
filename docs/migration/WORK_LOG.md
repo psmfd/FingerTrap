@@ -2992,21 +2992,62 @@ unrelated guest fixture process, invoke supported GUI Quit once, observe only
 owned descendants terminate while unrelated fixture stays. No external kill
 accepted as normal shutdown proof. Preserve all existing acceptance gates.
 
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:fc6346d4d8e81e67651c84c029d17aab04b3e0edd25af55a1d8db649edcd4c94 -->
+
 ```sh
 python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+# Terminal 1: keep the observer running while Terminal 2 queues requests.
+umask 077
+set -C
 python3 scripts/client_baseline_layout_probe.py \
   --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
   --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
   > .artifacts/client-baseline/layout-probe-NEW-UNIQUE.log 2>&1
 ```
 
+
+In Terminal 2, use the fresh run directory printed by the observer. Its request
+directory is `<fresh-run>/layout-observation/`. Read that directory's
+`session.json`; when `phase` is `waiting`, use its `nextIndex` for the filename
+`request-NN.json` (zero-padded to two digits). Complete normal Bridge permission
+enrollment through this queue, then write `{"action":"layout-probe"}` at the
+current index. Wait for `session.json` to advance before writing
+`{"action":"finish"}` at the new index. Use restrictive umask and no-clobber
+in Terminal 2 as well; never overwrite an existing request or reuse an old run.
+
+
+<!-- /coderabbit-ai-generated:v1 -->
 Use restrictive umask/no-clobber, fresh printed run, normal Bridge permission
 enrollment, fixed layout-probe queue action and explicit finish. Bounds 1500s
 observer/1800s hold/40 bootstrap actions, finite four-proof/one-resize/one-split/
 one-close scenario, 30s guest/60s install/45s native probe. Never select cleaned
 active-console.json. No automatic row promotion, runtime adoption or publishing.
 
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:0e85c9fd270da5fd4ad9c9285de8f96939afb6d21f4b83b1e66a6e2594313653 -->
+
+## 2026-11-07 — baseline probe review corrections
+
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:3681788a028869df2b213358b20af71b4e878b35a8d09da83ac9e67d49ab7ef8 -->
+
+CF-1C-AUTOMATION-4 follow-up: latest consecutive window IDs, bounded partial
+proof readback and concurrent operator queue instructions. All 66 Python guards,
+`scripts/check.sh` and focused Ruff correctness checks pass. Each original
+implementation fails its new guards; restored fixes pass. Full Ruff reports
+existing import/style/executable-mode findings. Changes remain uncommitted.
+Next: review this patch. Live guest acceptance and baseline promotion remain
+outstanding; no owned macOS guest is available in this Linux sandbox.
+
+<!-- /coderabbit-ai-generated:v1 -->
+
 ## 2026-11-07 — layout source checkpoint and CI
+
+<!-- /coderabbit-ai-generated:v1 -->
 
 Source `cc86814ce59e54d6816d7b1130427fb3b39e2ae0` is committed and remotely
 backed up on draft #224 (`test/client-baseline-gui` against `dev`).

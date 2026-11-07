@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 import re
 import signal
+import subprocess
 import time
 
 import client_baseline_shell_probe as shell
@@ -187,16 +188,52 @@ def proof(run, root, phase, deadline, window_id, count):
         "--accept-dispatched",
         allow_indeterminate=True,
     )
-    raw = shell.guest(
-        run,
-        root,
-        phase + "-read",
-        deadline,
-        "/bin/sh",
-        "-c",
-        f"test -f {path} && test ! -L {path} && /usr/bin/head -c 512 {path}",
+    for index in range(3):
+        try:
+            raw = shell.guest(
+                run,
+                root,
+                f"{phase}-read-{index:02d}",
+                deadline,
+                "/bin/sh",
+                "-c",
+                f"if test ! -e {path} && test ! -L {path}; then exit 44; fi; "
+                f"test -f {path} && test ! -L {path} && /usr/bin/head -c 512 {path}",
+            )
+            if not incomplete_proof(raw, marker):
+                return parse_proof(raw, marker)
+        except subprocess.CalledProcessError as error:
+            if error.returncode != 44:
+                raise
+        time.sleep(min(2, pilot.atomic.remaining(deadline)))
+    raise ValueError("Single UI command did not produce complete layout proof")
+
+
+def incomplete_proof(raw, marker):
+    """Recognize strict prefixes of the four-line proof grammar only."""
+    lines = raw.decode("ascii").split("\n")
+    complete = (
+        re.escape(marker),
+        r"PID=[1-9][0-9]*",
+        r"[ \t]*[1-9][0-9]*[ \t]+[1-9][0-9]*[ \t]*",
+        r"SENTINEL=[^\r\n]*",
     )
-    return parse_proof(raw, marker)
+    partial = (
+        None,
+        r"(?:P|PI|PID|PID=|PID=[1-9][0-9]*)?",
+        r"[ \t]*(?:[1-9][0-9]*(?:[ \t]+(?:[1-9][0-9]*[ \t]*)?)?)?",
+        r"(?:S|SE|SEN|SENT|SENTI|SENTIN|SENTINE|SENTINEL|SENTINEL=[^\r\n]*)?",
+    )
+    index = len(lines) - 1
+    if index >= 4 or any(
+        re.fullmatch(complete[i], line) is None for i, line in enumerate(lines[:-1])
+    ):
+        return False
+    return (
+        marker.startswith(lines[0])
+        if index == 0
+        else re.fullmatch(partial[index], lines[-1]) is not None
+    )
 
 
 def configure(run, root, deadline):
