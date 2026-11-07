@@ -2,9 +2,9 @@
 
 Updated: 2026-11-07. Resumed CF-1C under the existing execution approval.
 
-Latest steering: approved Peekaboo pilot completed locally; checkpoint/CI next.
+Latest steering: approved Peekaboo pilot committed/backed up; all fourteen CI jobs pass.
 
-## CF-1C-AUTOMATION-1/1B — Peekaboo pilot completed locally
+## CF-1C-AUTOMATION-1/1B — Peekaboo pilot verified
 
 Pinned Peekaboo v4.9.8, source `70dbc4183f390a5a72d5dc01d8a77eb672217070`,
 Developer ID team `FWJYW4S8P8`, app `boo.peekaboo.mac`, matching ARM64 CLI and
@@ -45,7 +45,12 @@ BLOCKED, Pi v0.85.1-psmfd.1, #219 deferred and all existing gates unchanged.
 window capture through the signed GUI Bridge. Production adoption, unattended
 permission enrollment, and broad app reliability are not established. Keep fresh
 AX and image assertions around every mutation, including indeterminate outcomes.
-Source is locally verified, not yet committed/remotely backed up/CI-verified.
+Implementation `5fa59ffe8ae86a117d9a8ce7b8359dd6ae884490` is committed,
+secret-scanned (zero findings), remotely backed up and CI-verified in open
+draft #224 against dev. CI [42397076555](https://github.com/psmfd/FingerTrap/actions/runs/42397076555)
+passes all fourteen jobs; title/gitflow pass. Full CodeQL/review and app acceptance
+remain pending. All macOS jobs hosted, no local drain; zero runner registrations.
+Following documentation checkpoints skip CI and do not change the tested source.
 
 **Concrete next action:** checkpoint/review this pilot, then name CF-1C-AUTOMATION-2
 for a bounded packaged-client launch/observation-only slice using the pinned GUI
