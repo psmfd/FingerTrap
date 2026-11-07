@@ -2640,8 +2640,13 @@ cached/empty/wrong-app UI acceptance regression also fails the kept guard.
 
 [Sanitized result and 350 private-file hashes](evidence/client-baseline/client-launch-observation.json)
 retain exact identities, original failure, classification mode, process/image
-review and cleanup. All 51 kept guards and Ruff pass. Implemented/locally verified;
-scoped commit, remote backup and current-source CI are next. Raw images/JSON/logs
+review and cleanup. All 51 kept guards/Ruff/repo/docs/link/hash checks pass; secret scan zero.
+Source `237afcdc2a5afcebcf3194200e2933be0dc43bac` is committed and remotely backed
+up in open draft #224 against dev. CI
+[42399603531](https://github.com/psmfd/FingerTrap/actions/runs/42399603531)
+passes all fourteen jobs; title/gitflow pass. Full CodeQL/review and maintainer/
+app acceptance remain open. Zero runner registrations, hosted macOS jobs; no local
+drain. Following documentation-only checkpoint skips CI; tested source unchanged. Raw images/JSON/logs
 remain private; unrelated files and cleaned active-console pointer preserved.
 Explicit finish after 21 queue actions; independent cleanup shows five original
 stopped VMs, no clone/QA/Peekaboo/Tart/Softnet processes. Baseline unchanged:
@@ -2670,3 +2675,20 @@ Use restrictive umask/no-clobber and a fresh explicit run for acquisition. Exist
 remain; fixed install verification cap 60s. Queue client-observe only after Bridge
 permission enrollment; finish explicitly. Review mode only reads a cleaned owned
 run, verifies retained image digest and timestamps, and never starts a guest.
+
+## 2026-11-07 — packaged-client observation checkpoint and CI
+
+Source 237afcdc2a5afcebcf3194200e2933be0dc43bac committed and remotely backed up
+on test/client-baseline-gui, draft #224 against dev. All 51 kept guards/Ruff,
+repo/docs checks, migration local links and 350 private hashes pass; secret scan
+zero. Source CI 42399603531 passes all fourteen jobs; title/gitflow pass.
+Draft and issues #216/#217 record the original live guard failure separately
+from corrected offline evidence replay. Full CodeQL/review/app acceptance remain
+pending. Five original stopped VMs, no disposable clone/QA/tool processes, zero
+runner registrations; hosted macOS jobs/no local drain. Private evidence and
+unrelated files preserved. No baseline row promoted: one input PASS/eleven BLOCKED,
+Pi v0.85.1-psmfd.1, #219 deferred and every existing gate unchanged.
+Next concrete action CF-1C-AUTOMATION-3: record bounded first shell-pane synthetic
+input/output assertions before a fresh owned boot, including corrected live
+window admission. Following docs-only checkpoint records this source SHA/CI and
+skips CI. Never reuse a cleaned active-console pointer.

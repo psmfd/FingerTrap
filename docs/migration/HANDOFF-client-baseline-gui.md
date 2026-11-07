@@ -31,8 +31,13 @@ cached/empty/wrong-app UI acceptance regression also fails the kept guard.
 
 [Sanitized result and 350 private-file hashes](evidence/client-baseline/client-launch-observation.json)
 retain exact identities, original failure, classification mode, process/image
-review and cleanup. All 51 kept guards and Ruff pass. Implemented/locally verified;
-scoped commit, remote backup and current-source CI are next. Raw images/JSON/logs
+review and cleanup. All 51 kept guards/Ruff/repo/docs/link/hash checks pass; secret scan zero.
+Source `237afcdc2a5afcebcf3194200e2933be0dc43bac` is committed and remotely backed
+up in open draft #224 against dev. CI
+[42399603531](https://github.com/psmfd/FingerTrap/actions/runs/42399603531)
+passes all fourteen jobs; title/gitflow pass. Full CodeQL/review and maintainer/
+app acceptance remain open. Zero runner registrations, hosted macOS jobs; no local
+drain. Following documentation-only checkpoint skips CI; tested source unchanged. Raw images/JSON/logs
 remain private; unrelated files and cleaned active-console pointer preserved.
 Explicit finish after 21 queue actions; independent cleanup shows five original
 stopped VMs, no clone/QA/Peekaboo/Tart/Softnet processes. Baseline unchanged:
