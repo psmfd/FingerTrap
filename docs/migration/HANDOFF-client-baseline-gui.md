@@ -475,3 +475,20 @@ input/window capture before adoption. No installation/adoption has occurred.
 Keep the existing Tart ownership/deadline/evidence/cleanup wrapper, offline
 operation and all existing gates. See latest STATUS/WORK_LOG for alternatives
 and bounded pilot acceptance. Direct exact-entry re-enrollment remains proposed.
+
+## Attribution checkpoint and automation steering
+
+CF-1C-CAPTURE-3 implementation/evidence checkpoint
+`8876c5839ed6536aec879ccdba11c36163278fd7` is committed, secret-scanned (zero
+findings) and remotely backed up in open draft #224 against dev. All 38 guards,
+Ruff, repository checks, fixed shell syntax, Markdown/Prettier, local file links
+and 33 private-file digests pass. Implementation CI
+[42392072357](https://github.com/psmfd/FingerTrap/actions/runs/42392072357) passes
+all fourteen jobs; title/gitflow pass. Full CodeQL/review remain pending.
+All macOS jobs hosted; no local drain needed, zero runner registrations. Final
+inventory: five original stopped VMs, no disposable clone or QA processes.
+This following documentation-only checkpoint records that source identity with
+CI skipped; read git/draft head for its own SHA. Automation tooling is proposed,
+not installed/adopted. Latest steering: evaluate pinned Peekaboo CLI + GUI Bridge
+before additional custom UI orchestration; retain existing ownership/cleanup and
+all acceptance/activation gates.
