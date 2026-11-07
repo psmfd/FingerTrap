@@ -257,12 +257,14 @@ def perform(run, request, output):
         console.socket.close()
 
 
-def serve(archive, runtime, hold, observer=None):
+def serve(archive, runtime, hold, observer=None, prepare_hook=None):
     run = qa.prepare(archive, runtime)
     child = None
     failure = None
     console = None
     try:
+        if prepare_hook is not None:
+            prepare_hook(run)
         with (run / "controller.log").open("wb") as log:
             child = subprocess.Popen(
                 [

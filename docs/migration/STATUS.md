@@ -2,10 +2,109 @@
 
 Updated: 2026-11-07. Resumed CF-1C under the existing execution approval.
 
-Latest steering: evaluate an open-source scripted UI driver before extending
-custom UI orchestration. Proposed CF-1C-AUTOMATION-1: pinned Peekaboo CLI + signed
-GUI Bridge, guest-only deterministic Finder/input/capture pilot. No installation
-or adoption yet; see the latest automation-evaluation entry below.
+Latest steering: approved Peekaboo pilot completed locally; checkpoint/CI next.
+
+## CF-1C-AUTOMATION-1/1B — Peekaboo pilot completed locally
+
+Pinned Peekaboo v4.9.8, source `70dbc4183f390a5a72d5dc01d8a77eb672217070`,
+Developer ID team `FWJYW4S8P8`, app `boo.peekaboo.mac`, matching ARM64 CLI and
+shipped Swift compatibility library were installed only inside disposable guests.
+[Input provenance](evidence/client-baseline/peekaboo-pilot-inputs.json) and
+[results with 779 private-file hashes](evidence/client-baseline/peekaboo-pilot-result.json)
+retain both attempts. No host/global installation or runtime dependency added.
+
+First run `20261107T171635Z-8d74599c3c32` safely aborted on type exit 1:
+INTERACTION_FAILED, indeterminate/may_have_dispatched, retry unsafe. Independent
+RFB and Bridge frames nevertheless show the exact synthetic path. The correction
+preserves that error and resolves it once with a mandatory fresh Finder AX read;
+no input replay. Guard regressions for accepting local capture and skipping the
+fresh field assertion both fail; restored code passes all 46 kept guards/Ruff.
+
+Continuation `20261107T172734Z-0f7178a10a0d` completed the fixed scenario and
+explicit finish after 21 queue actions. Normal signed app Screen Recording and
+Accessibility enrollment, macOS Quit & Reopen/Allow, then normal app Quit and
+interactive relaunch yield all three canonical GUI Bridge grants. Full-window
+Bridge screenshots agree with independent native RFB frames. Semantic Go menu
+selection opens Finder Go to Folder; fresh AX sees PathTextField. Type returns
+the retained indeterminate error, then uncached AX and both image sources confirm
+`/tmp/ft-input-probe`. Escape visibly closes the dialog; Peekaboo foreground
+`cmd+shift+g` reopens it, with fresh AX and independent frames confirming an empty
+path field. CLI dispatch status alone is never acceptance. Native RFB Meta+q did
+not quit; that older chord path is not claimed fixed. Follow-up RFB timeouts remain
+possible; first native frames plus immediate Bridge screen/clock are retained.
+
+Both owned guests cleaned; independent inventory verifies five original stopped
+VMs and no disposable clone/QA/Peekaboo/Tart/Softnet processes. Initial blocked
+captures and restart gaps retain errors plus independent guest clocks. Raw frames,
+JSON, signing output and logs remain private; unrelated files and cleaned pointer
+preserved. Tool footprint is explicit, not a pristine tool-free consumer claim.
+No FingerTrap app validation occurred. Baseline remains one input PASS/eleven
+BLOCKED, Pi v0.85.1-psmfd.1, #219 deferred and all existing gates unchanged.
+
+**Decision:** this bounded Finder workflow has usable scripted input and real
+window capture through the signed GUI Bridge. Production adoption, unattended
+permission enrollment, and broad app reliability are not established. Keep fresh
+AX and image assertions around every mutation, including indeterminate outcomes.
+Source is locally verified, not yet committed/remotely backed up/CI-verified.
+
+**Concrete next action:** checkpoint/review this pilot, then name CF-1C-AUTOMATION-2
+for a bounded packaged-client launch/observation-only slice using the pinned GUI
+Bridge. Record exact app window/ready-state assertions and private evidence before
+boot; retain existing app acceptance/provider and activation/backend/release gates.
+Do not promote any app row from this Finder pilot. Reproduction:
+
+```sh
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+python3 scripts/client_baseline_peekaboo.py \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/peekaboo-pilot-NEW-UNIQUE.log 2>&1
+```
+
+Use a new private log with restrictive umask/no-clobber. The process owns boot,
+1200s observation, 1500s guest hold, at most 40 bootstrap queue actions, fixed
+scenario, immediate per-step readbacks and cleanup. Select only the newly printed
+explicit run, never active-console.json. Queue fixed actions pilot-status,
+pilot-permissions-ui and pilot-scenario in that run's peekaboo-pilot/request-NN.json;
+normal native click/chord/capture handles supported UI enrollment. Finish explicitly
+with action finish. No arbitrary commands, operator data, models or MCP/cloud.
+
+## CF-1C-AUTOMATION-1 — approved Peekaboo pilot
+
+Maintainer approved the pilot. Start at `a0aa2655a30c220a33481b4f632d1bd4e0841a09`,
+branch test/client-baseline-gui, draft #224 against dev. Select published Peekaboo
+v4.9.8 (release 435831803, 2026-11-05), matching app zip asset 715044161 and
+ARM64 CLI tar asset 715044399. Pin GitHub asset digests, release signing/inventory
+manifests and actual embedded source identities before any guest execution.
+No host/global installation or package manager, no runtime/product dependency.
+
+Scope: a dedicated QA pilot module using the existing Tart/VNC owner and cleanup
+wrapper. Minimal reviewed hooks may stage verified tool inputs into the new
+read-only QA share and select a per-probe independent readback. Do not rebuild
+the atomic lifetime/RFB implementation. Guest-only installation of matching
+prebuilt app/CLI, normal supported Screen Recording/Accessibility permissions to
+the actual signed GUI Bridge, deterministic CLI Finder/menu/dialog/text scenario,
+JSON/AX/window assertions, real screenshots plus independent native RFB evidence.
+No model agent, MCP/cloud credentials, host clipboard, TCC edits/bypass or binary
+re-signing. No fallback capture through a background CLI accepted as a Bridge pass.
+Record test-tool footprint; do not claim a pristine tool-free consumer test.
+
+Reviewed pilot bounds before implementation: 1200s observer, 1500s guest hold,
+40 native bootstrap actions and a fixed finite CLI scenario. Each guest command
+at most 30s (install/verification at most 60s bounded by remaining time), native
+probe cap 45s. One boot/stage/permissions/script/observations/cleanup execution
+with private redirected stdout/stderr. Before Bridge permission works, preserve
+capture failure plus independent guest clock without inferring window contents.
+After grants, require actual full-window capture and input proof. Run identifier
+passed explicitly; never select the cleaned active-console pointer.
+
+Validation: artifact/source/signature/archive provenance, meaningful staging/
+callback/ownership/Bridge-source guards and red proof, existing kept suite/Ruff/
+repo/docs checks, then bounded live pilot and independent cleanup. Preserve all
+private evidence and unrelated files. Pilot go/no-go stays separate from app
+validation: baseline one input PASS/eleven BLOCKED, Pi v0.85.1-psmfd.1, deferred
+comparison #219 and all activation/backend/release gates remain unchanged. Next: acquire and
+review exact artifacts and release command docs, implement minimal QA integration.
 
 ## CF-1C-CAPTURE-3 — bounded read-only privacy-client attribution
 
@@ -984,3 +1083,48 @@ CI skipped; read git/draft head for its own SHA. Automation tooling is proposed,
 not installed/adopted. Latest steering: evaluate pinned Peekaboo CLI + GUI Bridge
 before additional custom UI orchestration; retain existing ownership/cleanup and
 all acceptance/activation gates.
+
+AUTOMATION-1 artifact review: v4.9.8 asset/inventory/signing digests match; source
+70dbc4183f390a5a72d5dc01d8a77eb672217070, Developer ID team FWJYW4S8P8. App zip
+paths and six framework symlinks remain contained. Passive host extraction only,
+no tool launch/installation. App identifier boo.peekaboo.mac, minimum macOS 15.0,
+source stamp matches, stapled ticket observed. App/deep library and ARM64 CLI
+strict signature checks pass outside the sandbox. Initial sandboxed CLI signature
+check reported invalid/authority unavailable; unrestricted read-only verification
+passes, so no corrupt-artifact claim. CLI requires its shipped Swift compatibility
+dylib. Next: stage these pinned inputs and implement Bridge-only QA readback.
+
+AUTOMATION-1 preflight: matching app/CLI/dylib provenance reviewed and pinned in
+peekaboo-pilot-inputs.json. Dedicated guest-only pilot and minimal prepare/readback
+hooks implemented locally; 43 kept guards/Ruff/repository checks pass. Intentional
+Bridge-local fallback regression fails the kept guard; restored code passes.
+Branch/draft head a0aa265 verified; prior implementation 8876c58 CI remains green.
+Five original VMs stopped, no disposable clone. Next: one bounded live boot with
+normal GUI app permission enrollment, fixed Finder scenario, independent frames/
+clock and owned cleanup. Source is not yet committed or CI-verified.
+
+AUTOMATION-1 live run 20261107T171635Z-8d74599c3c32: guest signature/source
+verification succeeds and canonical GUI Bridge responds with source=bridge.
+All three grants initially denied, blocked capture and immediate guest clock
+preserved. Native menu item pointer attempts dismiss menu without opening UI;
+Down then Return visibly selects/opens the permission checklist. This is bounded
+native keyboard evidence, not Peekaboo input qualification. Normal GUI Screen
+Recording Grant produces correctly attributed Peekaboo prompt. Next: finish
+normal guest app permission enrollment then run the fixed Finder scenario.
+
+AUTOMATION-1 result: run 20261107T171635Z-8d74599c3c32 aborted safely on
+Peekaboo type exit 1/INTERACTION_FAILED, outcome indeterminate/may_have_dispatched,
+retry unsafe. Immediate independent RFB and Bridge pixels both visibly show exact
+/tmp/ft-input-probe in Finder Go to Folder. The CLI error is preserved; do not
+blindly replay. GUI app Screen Recording + Accessibility normal enrollment,
+macOS Quit & Reopen, supported Allow prompt, then normal app quit/relaunch yield
+all three Bridge grants. Bridge full-window capture works, unlike prior agent
+capture. Semantic Go menu delivery resolves to fresh AX GoToWindow/PathTextField;
+used_cache=false. Escape/chord not reached. Owned cleanup verified, five originals
+stopped/preserved. No app validation and baseline unchanged.
+
+Next bounded comparison CF-1C-AUTOMATION-1B: preserve indeterminate type failure,
+then resolve once with mandatory fresh Finder AX value plus independent images;
+never repeat typing. Continue Escape and keyboard shortcut only if the exact
+field is observed. Strengthen dialog/freshness/readback checks and guards before
+one fresh pilot with identical pinned artifacts, deadlines and owned cleanup.

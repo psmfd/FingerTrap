@@ -289,13 +289,16 @@ exit "$tcc_exit"
     guest_screen(run, output, deadline)
 
 
-def guest_screen(run, output, deadline):
+def guest_screen(run, output, deadline, capture=None):
     def execute(*args):
         return guest_command(run, deadline, *args)
 
     # Fixed guest-only paths/commands; no host clipboard or operator data.
+    if capture is not None:
+        capture(run, output, deadline)
     command = (
-        "/usr/sbin/screencapture -x /tmp/ft-rfb.png && "
+        "/usr/sbin/screencapture -x /tmp/ft-rfb.png && " if capture is None else ""
+    ) + (
         "/usr/bin/sips -s format jpeg -s formatOptions 60 -Z 1024 "
         "/tmp/ft-rfb.png --out /tmp/ft-rfb.jpg >/dev/null && "
         "/usr/bin/base64 -i /tmp/ft-rfb.jpg > /tmp/ft-rfb.b64 && "
@@ -326,7 +329,7 @@ def guest_screen(run, output, deadline):
     )
 
 
-def probe_step(run, step, root, deadline):
+def probe_step(run, step, root, deadline, readback=None):
     output = root / step["Name"]
     output.mkdir(mode=0o700)
     endpoint = vnc.connection(run)
@@ -352,7 +355,7 @@ def probe_step(run, step, root, deadline):
         qa.save(output / "process.json", {"timedOut": True})
     finally:
         # Even a failed/timed-out RFB step gets immediate independent readback.
-        guest_screen(run, output, deadline)
+        (readback or guest_screen)(run, output, deadline)
 
 
 def permission_step(request, index):
@@ -379,7 +382,9 @@ def permission_step(request, index):
     return None if action == "finish" else step
 
 
-def permission_session(run, root, deadline):
+def permission_session(
+    run, root, deadline, request_step=permission_step, dispatch=None
+):
     # Files are private to this new explicit run, never selected via a pointer.
     for index in range(40):
         request = root / f"request-{index:02d}.json"
@@ -392,13 +397,15 @@ def permission_session(run, root, deadline):
             if request.exists():
                 if not request.is_file() or request.stat().st_size > 2048:
                     raise ValueError("Permission request exceeds budget")
-                step = permission_step(json.loads(request.read_text()), index)
+                step = request_step(json.loads(request.read_text()), index)
                 break
             time.sleep(min(0.5, remaining(deadline)))
         if step is None:
             qa.save(root / "session.json", {"phase": "finished", "actions": index})
             return
-        if step.get("RestartAgent"):
+        if dispatch is not None:
+            dispatch(run, step, root, deadline)
+        elif step.get("RestartAgent"):
             restart_agent(run, root, step, deadline)
         elif step.get("DiagnoseAgent"):
             diagnose_agent(run, root, step, deadline)
@@ -425,17 +432,28 @@ def observe(run, image, permission=False):
         probe_step(run, step, root, deadline)
 
 
-def compare(archive, runtime, permission=False):
+def compare(
+    archive, runtime, permission=False, *, observer=None, prepare_hook=None, hold=None
+):
     verify_probe()
     owned = []
 
-    def observer(run, image):
+    def observe_owned(run, image):
         owned.append(run)
-        observe(run, image, permission=permission)
+        if observer is None:
+            observe(run, image, permission=permission)
+        else:
+            observer(run, image)
 
     try:
+        options = {"observer": observe_owned}
+        if prepare_hook is not None:
+            options["prepare_hook"] = prepare_hook
         return vnc.serve(
-            archive, runtime, 960 if permission else 480, observer=observer
+            archive,
+            runtime,
+            hold if hold is not None else (960 if permission else 480),
+            **options,
         )
     finally:
         # serve finishes the owned controller before this independent readback.

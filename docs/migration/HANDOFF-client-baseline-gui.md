@@ -1,6 +1,71 @@
 # CF-1C session handoff — 2026-11-07
 
-## Latest continuation: CF-1C-CAPTURE-3
+## CF-1C-AUTOMATION-1/1B — Peekaboo pilot completed locally
+
+Pinned Peekaboo v4.9.8, source `70dbc4183f390a5a72d5dc01d8a77eb672217070`,
+Developer ID team `FWJYW4S8P8`, app `boo.peekaboo.mac`, matching ARM64 CLI and
+shipped Swift compatibility library were installed only inside disposable guests.
+[Input provenance](evidence/client-baseline/peekaboo-pilot-inputs.json) and
+[results with 779 private-file hashes](evidence/client-baseline/peekaboo-pilot-result.json)
+retain both attempts. No host/global installation or runtime dependency added.
+
+First run `20261107T171635Z-8d74599c3c32` safely aborted on type exit 1:
+INTERACTION_FAILED, indeterminate/may_have_dispatched, retry unsafe. Independent
+RFB and Bridge frames nevertheless show the exact synthetic path. The correction
+preserves that error and resolves it once with a mandatory fresh Finder AX read;
+no input replay. Guard regressions for accepting local capture and skipping the
+fresh field assertion both fail; restored code passes all 46 kept guards/Ruff.
+
+Continuation `20261107T172734Z-0f7178a10a0d` completed the fixed scenario and
+explicit finish after 21 queue actions. Normal signed app Screen Recording and
+Accessibility enrollment, macOS Quit & Reopen/Allow, then normal app Quit and
+interactive relaunch yield all three canonical GUI Bridge grants. Full-window
+Bridge screenshots agree with independent native RFB frames. Semantic Go menu
+selection opens Finder Go to Folder; fresh AX sees PathTextField. Type returns
+the retained indeterminate error, then uncached AX and both image sources confirm
+`/tmp/ft-input-probe`. Escape visibly closes the dialog; Peekaboo foreground
+`cmd+shift+g` reopens it, with fresh AX and independent frames confirming an empty
+path field. CLI dispatch status alone is never acceptance. Native RFB Meta+q did
+not quit; that older chord path is not claimed fixed. Follow-up RFB timeouts remain
+possible; first native frames plus immediate Bridge screen/clock are retained.
+
+Both owned guests cleaned; independent inventory verifies five original stopped
+VMs and no disposable clone/QA/Peekaboo/Tart/Softnet processes. Initial blocked
+captures and restart gaps retain errors plus independent guest clocks. Raw frames,
+JSON, signing output and logs remain private; unrelated files and cleaned pointer
+preserved. Tool footprint is explicit, not a pristine tool-free consumer claim.
+No FingerTrap app validation occurred. Baseline remains one input PASS/eleven
+BLOCKED, Pi v0.85.1-psmfd.1, #219 deferred and all existing gates unchanged.
+
+**Decision:** this bounded Finder workflow has usable scripted input and real
+window capture through the signed GUI Bridge. Production adoption, unattended
+permission enrollment, and broad app reliability are not established. Keep fresh
+AX and image assertions around every mutation, including indeterminate outcomes.
+Source is locally verified, not yet committed/remotely backed up/CI-verified.
+
+**Concrete next action:** checkpoint/review this pilot, then name CF-1C-AUTOMATION-2
+for a bounded packaged-client launch/observation-only slice using the pinned GUI
+Bridge. Record exact app window/ready-state assertions and private evidence before
+boot; retain existing app acceptance/provider and activation/backend/release gates.
+Do not promote any app row from this Finder pilot. Reproduction:
+
+```sh
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+python3 scripts/client_baseline_peekaboo.py \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/peekaboo-pilot-NEW-UNIQUE.log 2>&1
+```
+
+Use a new private log with restrictive umask/no-clobber. The process owns boot,
+1200s observation, 1500s guest hold, at most 40 bootstrap queue actions, fixed
+scenario, immediate per-step readbacks and cleanup. Select only the newly printed
+explicit run, never active-console.json. Queue fixed actions pilot-status,
+pilot-permissions-ui and pilot-scenario in that run's peekaboo-pilot/request-NN.json;
+normal native click/chord/capture handles supported UI enrollment. Finish explicitly
+with action finish. No arbitrary commands, operator data, models or MCP/cloud.
+
+## Historical continuation: CF-1C-CAPTURE-3
 
 The read-only retry `20261107T160656Z-104c57df8692` completed diagnostic,
 independent readback, an RFB capture and explicit normal finish/cleanup. Original
