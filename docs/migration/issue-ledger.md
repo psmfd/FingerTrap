@@ -11,10 +11,14 @@ accounted for separately. A disposition does not assert a bug is fixed.
 
 ## Successor work
 
-CF-1C session end, 2026-11-07: draft #224 contains the implemented/live-verified
-atomic comparison wrapper. Immediate guest screen/clock now works; usable
-keyboard input remains blocked. #217 stays one input PASS/eleven app BLOCKED;
-Comparison #219 remains deferred. [Current resume action](HANDOFF-client-baseline-gui.md).
+CF-1C-GO-1, 2026-11-07: draft #224 retains the atomic wrapper. Native-coordinate
+pointer opens Finder Go, Escape closes it, and all post-input RFB captures succeed.
+Meta+Shift+g produces no Go To Folder. RFB reveals a guest Screen Recording prompt
+that independent screenshots omit along with menu windows. Usable chord/text input
+and independent window capture remain blocked. #217 stays one input PASS/eleven
+app BLOCKED; #219 deferred. Next: CF-1C-CAPTURE-1 guest permission/focus observation.
+[Evidence](evidence/client-baseline/gui-continuation/go-menu-comparison.json) and
+[current resume action](HANDOFF-client-baseline-gui.md).
 
 | ID                                                                            | FingerTrap owner                                                            | Start condition                                                                                                                                                                                                                     |
 | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

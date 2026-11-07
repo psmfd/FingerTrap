@@ -72,7 +72,7 @@ class AtomicGuards(unittest.TestCase):
                 [
                     "atomic-comparison",
                     "probe",
-                    "applemenu",
+                    "gomenu",
                     "probe",
                     "escape",
                     "probe",
@@ -82,7 +82,7 @@ class AtomicGuards(unittest.TestCase):
             self.assertEqual(pointer.read_text(), '{"run":"cleaned-old-run"}')
             self.assertTrue(
                 json.loads(
-                    (run / "atomic-comparison/applemenu/process.json").read_text()
+                    (run / "atomic-comparison/gomenu/process.json").read_text()
                 )["timedOut"]
             )
 

@@ -20,7 +20,8 @@ import client_baseline_vnc as vnc
 qa = vnc.qa
 PROBE = qa.ROOT / ".artifacts/client-baseline/rfb-compare"
 STEPS = (
-    {"Name": "applemenu", "Click": True, "X": 20, "Y": 12},
+    # CF-1C-GO-1: observed in the preserved 2048x1536 native first frame.
+    {"Name": "gomenu", "Click": True, "X": 520, "Y": 24},
     {"Name": "escape", "Keys": [65307]},
     {"Name": "lowerg", "Keys": [65511, 65505, 103]},
 )

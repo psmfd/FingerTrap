@@ -7,15 +7,23 @@ Read the [implementation plan](../../client-foundation-plan.html#cf1-plan) and
 The maintainer approved execution after selecting the production-only scope.
 Individual acceptance results remain separate from harness implementation.
 
-## GUI continuation — 2026-11-07 session end
+## GUI continuation — CF-1C-GO-1, 2026-11-07
 
-Draft [#224](https://github.com/psmfd/FingerTrap/pull/224) implements the bounded
-atomic diagnostic wrapper. [Latest sanitized evidence](gui-continuation/atomic-comparison.json)
-records successful immediate guest screen/clock readback after every probe;
-Meta+Shift+g still times out and usable keyboard delivery remains unproven.
-No app row changed: one input PASS, eleven BLOCKED. Owned cleanup verified.
-Next action and reproduction commands: [session handoff](../../HANDOFF-client-baseline-gui.md).
-Full protected CI/review and baseline acceptance remain pending.
+Draft [#224](https://github.com/psmfd/FingerTrap/pull/224) retains the implemented
+atomic wrapper. [Latest comparison](gui-continuation/go-menu-comparison.json),
+run `20261107T141221Z-dbb92f6fb20e`: pointer opens Finder Go, Escape closes it,
+and all post-input RFB captures succeed. Meta+Shift+g produces no Go To Folder.
+RFB reveals a tart-guest-agent Screen Recording permission prompt; independent
+guest screenshots omit that prompt and dropdown despite successful readback.
+Usable chord/text input and reliable independent window capture remain unproven.
+No app row changed: one input PASS, eleven BLOCKED. Owned cleanup verified;
+five original VMs stopped/preserved, no clone or QA processes. Raw evidence private.
+
+Saved checkpoint `219daae` has 24 successful checks and CodeRabbit skipped;
+new comparison CI/review and baseline acceptance remain pending. Next:
+CF-1C-CAPTURE-1 guest permission/focus observation before further client cases.
+Exact observations, gates and reproduction commands: [handoff](../../HANDOFF-client-baseline-gui.md).
+[Previous atomic comparison](gui-continuation/atomic-comparison.json) is preserved.
 
 ## Current result — 2026-10-22
 

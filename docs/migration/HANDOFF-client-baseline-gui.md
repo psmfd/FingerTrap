@@ -1,5 +1,45 @@
 # CF-1C session handoff — 2026-11-07
 
+## Latest continuation: CF-1C-GO-1
+
+Run `20261107T141221Z-dbb92f6fb20e` completed normally. Fresh native first frame
+matches the coordinate reference. RFB shows the Go dropdown opening, then closing
+after Escape: pointer response, limited Escape delivery and changed RFB frames
+are observed. All three post-input RFB captures succeeded, including the chord;
+Meta+Shift+g produced no Go To Folder dialog. The earlier timeout did not recur
+in this run; that does not establish a fix or usable chord/text delivery.
+
+RFB also reveals a **Screen Recording permission prompt for tart-guest-agent**,
+behind the dropdown and persisting after Escape/chord. Immediate independent
+guest screen/clock readbacks completed after every step, but those screenshots
+omit both the dropdown and permission prompt. They show only the menu highlight
+change, so they cannot corroborate window contents. Permission/focus interference
+is a hypothesis; no root cause or app defect is established. No app case ran.
+[Sanitized evidence and 29 private-file hashes](evidence/client-baseline/gui-continuation/go-menu-comparison.json)
+retain exact observations; raw frames and logs remain private.
+
+Cleanup verified: controller events empty, five original VMs stopped/preserved,
+owned clone absent, no QA/probe/Tart/Softnet/CI-drain process. The stale active
+pointer was never used. Wrapper source unchanged except the named pointer step
+and existing test expectation; all 28 guards, Ruff and repository checks pass.
+Result is implemented and locally/live verified; commit/backup/CI for this change
+remain pending. Saved-head CI above does not transfer to this change.
+
+**One concrete next action: CF-1C-CAPTURE-1**, a separately recorded bounded atomic
+permission/focus observation in a fresh owned guest. Inspect the guest-only
+Screen Recording prompt using native RFB pixels and supported guest privacy UI,
+then compare pointer-selected Go To Folder with keyboard input. Verify independent
+screens actually include visible windows before app validation. Keep immediate
+per-input screen/clock, private redirected output, explicit ownership and cleanup.
+No host permission changes or TCC bypass. Do not rerun a cleaned guest.
+
+The historical session-end instructions below describe checkpoint 219daae;
+its CI is now refreshed: 24 successful checks, CodeRabbit skipped. Review and
+baseline acceptance remain open. Pi v0.85.1-psmfd.1, deferred #219, one input
+PASS/eleven BLOCKED and all activation/backend/release gates remain intact.
+
+## Historical session end
+
 Session ended at the maintainer's request; no further guest starts. The bounded
 atomic diagnostic wrapper is implemented and live-verified. Read
 [STATUS](STATUS.md), the latest
@@ -143,7 +183,7 @@ All 28 guards, Ruff and repository checks pass locally. Dropping the driver
 observer call fails the new regression; restoring passes. The timeout test kills
 a real sleeping child. No new protected CI success or app acceptance is claimed.
 
-## Next-session prompt
+## Historical next-session prompt
 
 > Resume FingerTrap in /Users/pdavis/projects/_personal/FingerTrap. Read
 > CONTRIBUTING.md, docs/migration/STATUS.md,
@@ -164,3 +204,21 @@ a real sleeping child. No new protected CI success or app acceptance is claimed.
 > or QA processes at shutdown. No app cases until usable input and fresh frames
 > are observed. Keep Pi v0.85.1-psmfd.1, defer #219's Pi 1.3.0 comparison, and
 > preserve all activation/backend/release gates. Execution approval persists.
+
+## Current resume prompt
+
+> Resume FingerTrap on test/client-baseline-gui, draft #224 against dev. Read
+> STATUS, this handoff and the latest WORK_LOG entry; verify exact local/remote
+> head and CI. CF-1C-GO-1 run 20261107T141221Z-dbb92f6fb20e completed with verified
+> cleanup. Pointer (520,24) opened Finder Go, Escape closed it, and all RFB
+> captures succeeded; Meta+Shift+g produced no Go To Folder dialog. RFB shows
+> a tart-guest-agent Screen Recording permission prompt, while independent
+> guest screenshots omit both prompt and dropdown. Do not treat them as full
+> window-content verification. Next: record CF-1C-CAPTURE-1, a bounded fresh
+> atomic guest permission/focus observation through supported guest UI, followed
+> by pointer Go To Folder versus keyboard. Retain immediate screen/clock after
+> every input, private redirected logs and owned cleanup. No TCC bypass or host
+> permission changes. Never use the stale active pointer; no app validation
+> until usable input and reliable fresh window capture are observed. Preserve
+> private evidence/unrelated files, Pi v0.85.1-psmfd.1, deferred #219 and all gates.
+> Existing CF-1 execution approval persists.

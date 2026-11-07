@@ -1948,3 +1948,66 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   pointer-selected Finder Go menu at native PNG coordinates versus keyboard,
   keeping immediate independent screen/clock and cleanup. Do not reimplement
   the wrapper or advance app validation before usable input/fresh frames work.
+
+## 2026-11-07 — CF-1C-GO-1 native-coordinate Go menu comparison
+
+Starting checkpoint and CI refreshed; named scope recorded before diagnostic changes:
+
+Starting checkpoint `219daae53e3e28cd334156c0c776f52737252944` matches local
+`test/client-baseline-gui` and open draft #224 against `dev` (`8e5fd0c`).
+CI run [42377205471](https://github.com/psmfd/FingerTrap/actions/runs/42377205471)
+completed successfully: all fourteen jobs pass. Exact-head checks: 24 successful,
+CodeRabbit skipped, no pending/failing checks. Review and acceptance remain
+separate; these results apply to the saved checkpoint, not upcoming changes.
+
+**Named bounded slice, recorded before changing diagnostics:** CF-1C-GO-1.
+Reuse the implemented atomic wrapper and pinned private probe; change only the
+pointer step from Apple to Finder Go at native PNG `(520, 24)`, then Escape and
+the existing paced Meta+Shift+g comparator. Coordinates were observed in the
+2048x1536 first frame of run `20261107T131951Z-0c27fad0d0fb` (SHA-256
+`6a44b071a7d70e697b089fb563150d5c30557596de3cfe261bbd5f8a8140bcac`).
+Inspect the fresh first frame and each independent guest screen for matching
+layout and actual menu/dialog changes before interpreting input.
+
+Validation: kept Python guards, Ruff and repository checks; one fresh owned
+boot/probes/immediate per-input guest screen+clock/cleanup execution with both
+output streams redirected to a new private log. Retain the existing 240s
+observation/480s guest bounds and independent cleanup check. Never read or write
+the stale active-console pointer. Initial inventory: five original stopped VMs,
+no disposable clone. Raw evidence and unrelated files remain private/preserved.
+Next: update the named pointer step, validate, then run this single comparison.
+No app validation; baseline remains one input PASS/eleven BLOCKED. Keep Pi
+`v0.85.1-psmfd.1`, deferred #219 and all activation/backend/release gates.
+
+CF-1C-GO-1 preflight: named pointer step and existing guard expectation updated; all 28 guards, Ruff and scripts/check.sh pass. Next: one fresh atomic live execution, both output streams redirected privately; no app validation.
+
+Run `20261107T141221Z-dbb92f6fb20e` completed normally. Fresh native first frame
+matches the coordinate reference. RFB shows the Go dropdown opening, then closing
+after Escape: pointer response, limited Escape delivery and changed RFB frames
+are observed. All three post-input RFB captures succeeded, including the chord;
+Meta+Shift+g produced no Go To Folder dialog. The earlier timeout did not recur
+in this run; that does not establish a fix or usable chord/text delivery.
+
+RFB also reveals a **Screen Recording permission prompt for tart-guest-agent**,
+behind the dropdown and persisting after Escape/chord. Immediate independent
+guest screen/clock readbacks completed after every step, but those screenshots
+omit both the dropdown and permission prompt. They show only the menu highlight
+change, so they cannot corroborate window contents. Permission/focus interference
+is a hypothesis; no root cause or app defect is established. No app case ran.
+[Sanitized evidence and 29 private-file hashes](evidence/client-baseline/gui-continuation/go-menu-comparison.json)
+retain exact observations; raw frames and logs remain private.
+
+Cleanup verified: controller events empty, five original VMs stopped/preserved,
+owned clone absent, no QA/probe/Tart/Softnet/CI-drain process. The stale active
+pointer was never used. Wrapper source unchanged except the named pointer step
+and existing test expectation; all 28 guards, Ruff and repository checks pass.
+Result is implemented and locally/live verified; commit/backup/CI for this change
+remain pending. Saved-head CI above does not transfer to this change.
+
+**One concrete next action: CF-1C-CAPTURE-1**, a separately recorded bounded atomic
+permission/focus observation in a fresh owned guest. Inspect the guest-only
+Screen Recording prompt using native RFB pixels and supported guest privacy UI,
+then compare pointer-selected Go To Folder with keyboard input. Verify independent
+screens actually include visible windows before app validation. Keep immediate
+per-input screen/clock, private redirected output, explicit ownership and cleanup.
+No host permission changes or TCC bypass. Do not rerun a cleaned guest.
