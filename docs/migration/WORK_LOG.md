@@ -2692,3 +2692,141 @@ Next concrete action CF-1C-AUTOMATION-3: record bounded first shell-pane synthet
 input/output assertions before a fresh owned boot, including corrected live
 window admission. Following docs-only checkpoint records this source SHA/CI and
 skips CI. Never reuse a cleaned active-console pointer.
+
+## 2026-11-07 — approved bounded shell probe begins
+
+## CF-1C-AUTOMATION-3 — approved bounded shell-pane input/output
+
+Start e8ff56b24ed7ad67a742cbb0f8bd913f56d0b44e, branch test/client-baseline-gui,
+draft #224 against dev. Prior implementation 237afcd CI fourteen jobs green.
+Before changes: add a fixed shell-probe queue action in a dedicated QA module,
+reuse the existing client install/one-launch, corrected live admission, pinned
+Peekaboo GUI Bridge and atomic Tart/VNC lifetime. No product/runtime changes.
+
+Fresh guest and normal permission enrollment. Require corrected live stable
+main-window admission. Select exactly one New shell tab AX button from a fresh
+explicit snapshot, click it once, then observe the newly added shell tab/terminal
+receiver. Deliver one fixed synthetic shell command through Peekaboo UI input.
+The command base64-decodes a run-bound marker and tees it to a single owned guest
+/tmp/ft-cf1-shell-proof file. Verify that file absent before UI input; only the
+interactive shell may create it. Independent guest read must exactly match the
+expected marker; decoded marker must be visible in fresh terminal evidence, not
+merely echoed as part of the typed command. No remote command writes the proof.
+
+Every probe/mutation gets independent native RFB plus Bridge screen/clock. No
+blind replay after an indeterminate input. Observe exact current receiver/value
+before deciding to send Return; otherwise stop with evidence. At most one tab
+creation, one command delivery and one Return; bounded read-only observations
+may repeat. Record app/sidecar/shell ancestry independently. Do not close siblings,
+install/configure Pi, access provider/keychain/host clipboard or use operator data.
+Bounds: 1200s observer, 1500s guest hold, 40 queue actions, 30s guest-command,
+60s fixed install verification, 45s native probe. Private stdout/stderr; explicit
+finish/owned cleanup in the same execution; never use cleaned active pointer.
+
+Validation: real-path guard regressions for stale/ambiguous receiver and forged
+or pre-existing proof, kept suite/Ruff/repo/docs/hash/secrets checks, one bounded
+live run. This is partial CF1-03 evidence, not its full resize/split/sibling case;
+baseline remains one input PASS/eleven BLOCKED. Pi v0.85.1-psmfd.1, comparison
+comparison #219 deferred and all activation/backend/release/provider gates intact. Next:
+implement fixed scenario and evidence assertions before boot.
+
+AUTOMATION-3 delivery refinement before implementation: one compound Peekaboo
+foreground type call carries the fixed printf/base64-decode/tee command plus its
+single trailing Return, using --accept-dispatched only to preserve unverified
+receipts without treating them as success. No separate Return after uncertain
+input. Fresh AX must first identify the shell tab and focused terminal receiver.
+Read-only proof-file bytes plus independent terminal pixels decide execution;
+encoded command echo does not contain the decoded output marker. Never replay.
+
+AUTOMATION-3 preflight: dedicated fixed shell-probe module implemented; reuses
+corrected live client admission and existing atomic owner without reimplementation.
+All 56 kept guards/Ruff pass. Intentional echoed-command/foreign-run proof
+acceptance regression fails; production restored. Fresh AX snapshot/unique button,
+shell tab/focused receiver and absent proof are enforced before delivery. One
+compound input with Return; all subsequent probes read-only. Next: bounded live
+run, independent file/pixel/ancestry review, explicit finish/verified cleanup.
+
+AUTOMATION-3 live run 20261107T181834Z-f41358dcd0f5: corrected main-window
+classifier now passes the actual live callback, two uncached snapshots of window 80. Installed identities and independent readbacks verified; guest proof absent
+before UI mutation. Next fixed step is unique fresh New shell tab action and
+one command/Return, followed only by proof/image/ancestry observations.
+
+AUTOMATION-3 first run 20261107T181834Z-f41358dcd0f5 failed safely: corrected
+live window admission passed, one New shell tab and focused AXTextArea observed.
+Single UI command/Return dispatched unverified. Native/Bridge images show at
+least the first intended delimiter lost: zsh reports command not found printf%s,
+versus requested printf %s. The tee-created proof file is empty; exact-byte guard
+rejects it and owned cleanup verifies. No input replay, no positive shell proof.
+
+Next bounded atomic comparison CF-1C-AUTOMATION-3B: fresh guest, same pinned
+inputs, app admission, tab selection and encoded marker command; change only
+foreground typing cadence to 50ms per character (under existing 30s command cap).
+One delivery/Return, observe proof and pixels, never retry input in the same guest.
+Retain original failed run as real red proof of false-success prevention. Existing
+CF-1/shell approval persists; no product/runtime/provider/gate changes.
+
+## 2026-11-07 — shell input/cadence comparison results
+
+## CF-1C-AUTOMATION-3/3B — bounded shell input/output verified
+
+Two fresh owned runs used the same pinned candidate, production runtime inputs
+and signed Peekaboo v4.9.8 GUI Bridge. Corrected main-window admission now passes
+in both actual live callbacks: two uncached snapshots of the same visible main
+window. A unique fresh New shell tab AX target creates one shell tab; fresh AX
+confirms a focused Terminal input AXTextArea in that exact window before input.
+
+**Original failure retained:** `20261107T181834Z-f41358dcd0f5` at default cadence
+shows `printf%s` and zsh command-not-found in independent native/Bridge frames,
+versus intended `printf %s`. The tee-created proof file is empty. Exact-byte guard
+rejects it despite the CLI's accepted/unverified dispatch. Exception-triggered
+owned cleanup verifies. At least the first delimiter was lost; root cause is
+unassigned between automation delivery and the client input path. No blind replay
+or product-fix claim. This is real failed-world evidence for the proof guard.
+
+**Bounded positive comparison:** `20261107T182716Z-cc826ea8ca2a` changes foreground
+typing cadence to 50ms per character. One fixed encoded-marker printf/decode/tee
+command and its single Return produce exactly the expected run-bound guest file.
+Independent RFB and Bridge images visibly show decoded marker output followed by
+new shell prompt; the marker does not occur in the echoed encoded command. CLI
+still truthfully reports dispatched_unverified; --accept-dispatched is not proof.
+Measured CLI execution 0.912s default versus 8.153s paced; no general throughput
+or arbitrary rapid-typing claim. Per-run markers differ to bind each trial.
+
+Independent process readback confirms app PID 917 -> sidecar 924 -> /bin/zsh 1105
+at the expected installed paths. Original exited pi 1 tab remains present. No
+Pi/profile/provider/keychain/host clipboard configuration or credentials used.
+Both attempts deliver input only once; subsequent checks are read-only. Positive
+run explicitly finishes after 21 queue actions. Both owned guests cleaned;
+independent inventory: five original stopped VMs, no disposable clone/QA/tool
+processes. Raw evidence private; unrelated files and cleaned pointer preserved.
+
+[Sanitized comparison and 828 private-file hashes](evidence/client-baseline/shell-input-comparison.json)
+retain both runs, requested commands, exact proof bytes, dispatch outcomes,
+independent image/process review and cleanup. All 56 kept guards/Ruff/repo checks
+pass. Intentional stale/ambiguous-target and echoed-command/foreign-run proof
+regressions fail; restored code passes. Source implemented/locally verified;
+scoped commit, remote backup and current-source CI next. No baseline row promoted:
+one input PASS/eleven BLOCKED. This is partial CF1-03 input/output evidence;
+resize/split/sibling-close remain untested. Pi v0.85.1-psmfd.1, comparison #219
+deferred and all activation/backend/release/provider/maintainer gates unchanged.
+
+**Next concrete action: CF-1C-AUTOMATION-4.** Record a bounded shell resize/split/
+sibling-close scenario before a fresh boot, including exact dimensions/process
+ancestry and independent marker outputs before/after. Use the observed 50ms
+cadence as a limited QA condition; default-cadence delimiter loss remains open
+in the baseline tracking. Never treat a CLI receipt or encoded command echo as
+execution. Do not promote CF1-03 until its full case is independently observed.
+
+```sh
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+python3 scripts/client_baseline_shell_probe.py \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/shell-probe-NEW-UNIQUE.log 2>&1
+```
+
+Use restrictive umask/no-clobber, fresh explicit printed run and normal guest
+permission enrollment. Fixed queue action shell-probe runs one client launch and
+single tab/command/Return with mandatory readbacks; finish explicitly. Bounds
+remain 1200s observer/1500s guest hold/40 queue actions/30s guest commands/60s
+install verification/45s native probes. Never reuse cleaned active-console.json.

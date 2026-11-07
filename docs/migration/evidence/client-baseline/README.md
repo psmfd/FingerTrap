@@ -1,5 +1,12 @@
 # CF-1 packaged-client baseline evidence
 
+Latest CF-1C-AUTOMATION-3/3B verifies one shell command/output at 50ms typing
+cadence with exact independent guest-file proof and decoded output in native/Bridge
+frames. Default cadence lost at least one delimiter and correctly failed the proof
+guard; both attempts/cleanup retained in [shell comparison](shell-input-comparison.json).
+Corrected main-window admission now passes live. This remains partial CF1-03;
+no baseline row promoted, one input PASS/eleven BLOCKED and all gates unchanged.
+
 Latest CF-1C-AUTOMATION-2 observes a real packaged-client window through the
 signed GUI Bridge, with three uncached AX snapshots and independent native/Bridge
 frames. Original window-count guard blocked on an off-screen helper; corrected
