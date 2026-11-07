@@ -2225,3 +2225,24 @@ exact-entry UI re-enrollment. Do not repeat grant/restart as an assumed fix.
 No TCC database edits, permission bypass, host changes or app validation. Retain
 immediate readbacks, private output and cleanup. Baseline stays one input PASS /
 eleven BLOCKED, Pi v0.85.1-psmfd.1, deferred #219 and all existing gates.
+
+CF-1C-CAPTURE-2 implementation/evidence checkpoint
+`3db39be45bfe320089ca91491d529cd369767782` is committed, secret-scanned (zero
+findings) and remotely backed up in open draft #224 against dev. Independent
+GitHub readback confirms the head. CI run
+[42387709718](https://github.com/psmfd/FingerTrap/actions/runs/42387709718) has
+started; title/gitflow pass. Full platform CI/CodeQL/review remain pending at
+this readback. This subsequent documentation-only checkpoint records the source
+identity with CI skipped; read git/draft head for its own SHA. No activation or
+acceptance. Next remains CF-1C-CAPTURE-3 as described above.
+
+Final verification: 36 guards, Ruff, repository structural/lock/RPC checks,
+Markdown/Prettier, local file links, all 86 private-file hashes and secret scan
+pass. Five original VMs stopped/preserved; no clone or QA processes. Private
+evidence/stale pointer and original unrelated files preserved.
+
+Final implementation CI refresh: all fourteen jobs in 42387709718 pass on
+3db39be45bfe320089ca91491d529cd369767782. Four CodeQL analyses/title/gitflow pass;
+Rust remains in progress, aggregate neutral, CodeRabbit skipped. Full CodeQL/
+review remain pending. All macOS lanes hosted; no local queue/drain; zero runner
+registrations. Next remains CF-1C-CAPTURE-3 privacy-client attribution diagnostic.

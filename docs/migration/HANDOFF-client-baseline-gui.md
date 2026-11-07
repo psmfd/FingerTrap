@@ -27,7 +27,17 @@ retains exact service/PID/digests, nine actions, ten independent readbacks and
 86 private-file hashes. Raw inventory/frames/logs remain private. All 36 kept
 guards, Ruff and repository checks pass. Red proof: isolated removal of the
 pre-restart PID comparison fails the kept guard; unchanged production source
-passes. Result is implemented and locally/live verified; commit/backup/CI follow.
+passes. CF-1C-CAPTURE-2 implementation/evidence checkpoint
+`3db39be45bfe320089ca91491d529cd369767782` is committed, secret-scanned (zero
+findings) and remotely backed up in open draft #224 against dev. Independent
+GitHub readback confirms the head. CI run
+[42387709718](https://github.com/psmfd/FingerTrap/actions/runs/42387709718) passes
+all fourteen platform/repository jobs. Title/gitflow and four CodeQL analyses
+pass; Rust analysis remains in progress, aggregate CodeQL neutral and CodeRabbit
+skipped at readback. Full CodeQL/review remain pending. All four macOS lanes are
+hosted; no local jobs queued or drain started. Runner registrations are zero. This subsequent documentation-only checkpoint records the source
+identity with CI skipped; read git/draft head for its own SHA. No activation or
+acceptance. Next remains CF-1C-CAPTURE-3 as described above.
 
 **Next bounded action: CF-1C-CAPTURE-3.** Collect the identified guest agent's
 code-signing identity and narrowly scoped macOS privacy (TCC) decision logs around
