@@ -1,3 +1,52 @@
+## CF-1C-REVIEW-1 — corrections implemented and locally/live verified
+
+Failed native-console requests now close/discard their socket; the next request
+revalidates ownership and creates a fresh Console. Failure receipts stay intact;
+no input is replayed. New regression uses text input followed by capture, verifies
+old-socket closure before replacement and exactly one text dispatch. Reviewed
+original source fails it (one connection rather than two); corrected source passes.
+All 67 kept guards, baseline Ruff/format, repository and Markdown/Prettier checks
+pass. Secret scanning passes with zero findings after authorized report-directory
+access; the initial sandbox report-write failure is not a passing scan.
+
+Fresh run `20261107T214721Z-76b7d2bd30f0` verifies normal guest-only Bridge
+enrollment, stable main window 82 and all four compact 50ms shell proofs. App 973
+-> sidecar 980 -> original shell 1030; sibling 1311 is independently verified and
+closed. Original PID/sentinel survive 39x126 -> resized 34x108 -> sibling 34x53 ->
+original 34x108. Fresh native/Bridge images show decoded output and final prompt.
+All proof reads completed at attempt 00: partial reads and connection failure
+recovery are regression-tested, not live fault-injected. Supported guest-only
+shell-default fixture and all prior typing limitations remain explicit.
+
+**Execution limitation retained:** layout result completes, then the 1500s observer
+deadline expires awaiting final finish. Owner exits 1 with TimeoutError; the later
+finish helper rejects the already-cleaned run without queuing input. This is not
+an overall successful execution or app Quit proof. Exception-triggered owned
+cleanup and independent atomic cleanup both verify. Five original VMs stopped,
+no disposable clone or QA/tool processes remain; never reuse the cleaned pointer.
+[Evidence summary and 652 private-file hashes](evidence/client-baseline/review-corrections.json)
+preserve the actual result and timeout. Original private evidence is unchanged.
+
+Implemented and locally/live verified; scoped commit, remote backup, current-source
+CI/CodeQL and review-thread closure are next. No merge performed or authorized.
+Baseline stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred,
+and all acceptance/provider/activation/backend/release gates remain intact.
+Next after merge review: CF-1C-AUTOMATION-5 normal GUI Quit/descendant termination
+with unrelated guest process survival control, predeclared before fresh boot.
+
+## CF-1C-REVIEW-1 — approved merge corrections in progress
+
+Starting from reviewed `287caafada5d5851593b79121066a9c78fa90833` on
+`test/client-baseline-gui`, ready PR #224 against dev. Approved scope: discard a
+failed native-console connection, reconnect before the next request with ownership
+revalidation, preserve failure receipts and never replay input. Add a regression
+that fails on the original code. Correct stale checkpoint/queue instructions and
+formatting. Validate all kept guards/Ruff/repo/docs, then one fresh bounded owned
+layout confirmation with immediate independent screens/clocks and private output.
+Boot/probes/cleanup remain one owner execution; never use a cleaned pointer.
+Historical evidence stays historical; baseline one PASS/eleven BLOCKED, pinned
+Pi v0.85.1-psmfd.1, #219 deferred and all gates unchanged. No merge authorized.
+
 <!-- coderabbit-ai-generated:v1 -->
 
 <!-- coderabbit-ai-generated-section:v1:3efc2f95650102ec7b57380d929d099a933b5df5d5a316fb810c5a721b8e40f5 -->
@@ -10,8 +59,9 @@
 
 CF-1C-AUTOMATION-4 review follow-up implemented and locally verified: all 66
 Python guards, repository checks and focused Ruff correctness checks pass. New
-guards reject the original implementation. Changes remain uncommitted. Next:
-review this patch; live macOS observation remains outstanding.
+guards reject the original implementation. Review fixes are committed in
+`287caafada5d5851593b79121066a9c78fa90833`; all fourteen CI jobs and current
+CodeQL checks pass. CF-1C-REVIEW-1 below tracks remaining merge corrections.
 
 <!-- /coderabbit-ai-generated:v1 -->
 
@@ -20,6 +70,14 @@ review this patch; live macOS observation remains outstanding.
 Updated: 2026-11-07. Resumed CF-1C under the existing execution approval.
 
 Latest steering: shell-fixture layout/sibling-close checkpoint backed up; all fourteen CI jobs pass. Timeout retained; normal GUI quit is next.
+
+For a fresh layout reproduction, Terminal 1 runs the observer with stdout/stderr
+redirected privately. Terminal 2 reads the explicit fresh run path from that log,
+then `<fresh-run>/layout-observation/session.json`. Only when `phase=waiting`,
+write a new `request-NN.json` using `nextIndex` (two digits), restrictive umask and
+no-clobber. Complete observed normal permission enrollment, queue the fixed
+`{"action":"layout-probe"}`, wait for the index to advance, then queue
+`{"action":"finish"}`. Never reuse a previous run or cleaned console pointer.
 
 ## CF-1C-AUTOMATION-4/4B — resize/split/sibling-close observed
 

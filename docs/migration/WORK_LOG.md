@@ -3007,8 +3007,8 @@ python3 scripts/client_baseline_layout_probe.py \
   > .artifacts/client-baseline/layout-probe-NEW-UNIQUE.log 2>&1
 ```
 
-
-In Terminal 2, use the fresh run directory printed by the observer. Its request
+In Terminal 2, read the fresh run directory from the private observer log
+(the command above redirects stdout/stderr). Its request
 directory is `<fresh-run>/layout-observation/`. Read that directory's
 `session.json`; when `phase` is `waiting`, use its `nextIndex` for the filename
 `request-NN.json` (zero-padded to two digits). Complete normal Bridge permission
@@ -3017,8 +3017,8 @@ current index. Wait for `session.json` to advance before writing
 `{"action":"finish"}` at the new index. Use restrictive umask and no-clobber
 in Terminal 2 as well; never overwrite an existing request or reuse an old run.
 
-
 <!-- /coderabbit-ai-generated:v1 -->
+
 Use restrictive umask/no-clobber, fresh printed run, normal Bridge permission
 enrollment, fixed layout-probe queue action and explicit finish. Bounds 1500s
 observer/1800s hold/40 bootstrap actions, finite four-proof/one-resize/one-split/
@@ -3039,9 +3039,10 @@ CF-1C-AUTOMATION-4 follow-up: latest consecutive window IDs, bounded partial
 proof readback and concurrent operator queue instructions. All 66 Python guards,
 `scripts/check.sh` and focused Ruff correctness checks pass. Each original
 implementation fails its new guards; restored fixes pass. Full Ruff reports
-existing import/style/executable-mode findings. Changes remain uncommitted.
-Next: review this patch. Live guest acceptance and baseline promotion remain
-outstanding; no owned macOS guest is available in this Linux sandbox.
+existing import/style/executable-mode findings in the review environment. These
+fixes are committed in `287caafada5d5851593b79121066a9c78fa90833`; all fourteen
+CI jobs and current CodeQL checks pass. No live macOS run was performed by that
+review task; historical live evidence and baseline gates remain unchanged.
 
 <!-- /coderabbit-ai-generated:v1 -->
 
@@ -3063,3 +3064,56 @@ with an unrelated guest process as survival control. No baseline promotion:
 one input PASS/eleven BLOCKED; shell fixture, paced compact input and retained
 long-input timeout remain explicit. Pi stays v0.85.1-psmfd.1, #219 comparison
 deferred, and every activation/backend/release/review gate remains intact.
+
+## 2026-11-07 — approved CF-1C-REVIEW-1 corrections
+
+## CF-1C-REVIEW-1 — approved merge corrections in progress
+
+Starting from reviewed `287caafada5d5851593b79121066a9c78fa90833` on
+`test/client-baseline-gui`, ready PR #224 against dev. Approved scope: discard a
+failed native-console connection, reconnect before the next request with ownership
+revalidation, preserve failure receipts and never replay input. Add a regression
+that fails on the original code. Correct stale checkpoint/queue instructions and
+formatting. Validate all kept guards/Ruff/repo/docs, then one fresh bounded owned
+layout confirmation with immediate independent screens/clocks and private output.
+Boot/probes/cleanup remain one owner execution; never use a cleaned pointer.
+Historical evidence stays historical; baseline one PASS/eleven BLOCKED, pinned
+Pi v0.85.1-psmfd.1, #219 deferred and all gates unchanged. No merge authorized.
+
+## 2026-11-07 — CF-1C-REVIEW-1 correction results
+
+## CF-1C-REVIEW-1 — corrections implemented and locally/live verified
+
+Failed native-console requests now close/discard their socket; the next request
+revalidates ownership and creates a fresh Console. Failure receipts stay intact;
+no input is replayed. New regression uses text input followed by capture, verifies
+old-socket closure before replacement and exactly one text dispatch. Reviewed
+original source fails it (one connection rather than two); corrected source passes.
+All 67 kept guards, baseline Ruff/format, repository and Markdown/Prettier checks
+pass. Secret scanning passes with zero findings after authorized report-directory
+access; the initial sandbox report-write failure is not a passing scan.
+
+Fresh run `20261107T214721Z-76b7d2bd30f0` verifies normal guest-only Bridge
+enrollment, stable main window 82 and all four compact 50ms shell proofs. App 973
+-> sidecar 980 -> original shell 1030; sibling 1311 is independently verified and
+closed. Original PID/sentinel survive 39x126 -> resized 34x108 -> sibling 34x53 ->
+original 34x108. Fresh native/Bridge images show decoded output and final prompt.
+All proof reads completed at attempt 00: partial reads and connection failure
+recovery are regression-tested, not live fault-injected. Supported guest-only
+shell-default fixture and all prior typing limitations remain explicit.
+
+**Execution limitation retained:** layout result completes, then the 1500s observer
+deadline expires awaiting final finish. Owner exits 1 with TimeoutError; the later
+finish helper rejects the already-cleaned run without queuing input. This is not
+an overall successful execution or app Quit proof. Exception-triggered owned
+cleanup and independent atomic cleanup both verify. Five original VMs stopped,
+no disposable clone or QA/tool processes remain; never reuse the cleaned pointer.
+[Evidence summary and 652 private-file hashes](evidence/client-baseline/review-corrections.json)
+preserve the actual result and timeout. Original private evidence is unchanged.
+
+Implemented and locally/live verified; scoped commit, remote backup, current-source
+CI/CodeQL and review-thread closure are next. No merge performed or authorized.
+Baseline stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred,
+and all acceptance/provider/activation/backend/release gates remain intact.
+Next after merge review: CF-1C-AUTOMATION-5 normal GUI Quit/descendant termination
+with unrelated guest process survival control, predeclared before fresh boot.

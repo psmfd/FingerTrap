@@ -1,11 +1,12 @@
 """Bounds and replay checks for the guest-only native console QA substrate."""
 
 import importlib.util
+import json
 from pathlib import Path
 import struct
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 SPEC = importlib.util.spec_from_file_location(
     "baseline_vnc", Path(__file__).resolve().parents[1] / "client_baseline_vnc.py"
@@ -123,6 +124,55 @@ class ConsoleGuards(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     console.capture(output)
                 self.assertFalse(output.exists())
+
+    def test_failed_capture_discards_connection_without_replaying_input(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            run = Path(temporary)
+            (run / "state.json").write_text(json.dumps({"phase": "guest-ready"}))
+            for index, request in enumerate(
+                (
+                    {"action": "text", "text": "probe"},
+                    {"action": "capture"},
+                    {"action": "finish"},
+                )
+            ):
+                (run / f"request-{index:012x}.json").write_text(json.dumps(request))
+            old, fresh = MagicMock(), MagicMock()
+            old.capture.side_effect = [None, TimeoutError("partial frame")]
+            consoles = iter((old, fresh))
+
+            def connect(_run):
+                console = next(consoles)
+                if console is fresh:
+                    old.socket.close.assert_called_once()
+                return console
+
+            def save(path, value):
+                # The test never reads or replaces the local active-console pointer.
+                if path.parent == run:
+                    path.write_text(json.dumps(value))
+
+            with (
+                patch.object(vnc.qa, "prepare", return_value=run),
+                patch.object(vnc.qa, "save", side_effect=save),
+                patch.object(vnc.subprocess, "Popen") as process,
+                patch.object(vnc, "Console", side_effect=connect) as factory,
+                patch.object(vnc, "connection") as ownership,
+            ):
+                process.return_value.poll.return_value = None
+                vnc.serve(Path("archive"), Path("runtime"), 60)
+            self.assertEqual(factory.call_count, 2)
+            self.assertEqual(ownership.call_count, 2)
+            old.action.assert_called_once_with({"action": "text", "text": "probe"})
+            fresh.action.assert_called_once_with({"action": "capture"})
+            old.socket.close.assert_called_once()
+            fresh.socket.close.assert_called_once()
+            self.assertFalse(
+                json.loads((run / "response-000000000000.json").read_text())["ok"]
+            )
+            self.assertTrue(
+                json.loads((run / "response-000000000001.json").read_text())["ok"]
+            )
 
     def test_pointer_guard_emits_no_input_outside_frame(self):
         console = self.console(b"")

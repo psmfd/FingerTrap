@@ -1,5 +1,9 @@
 # CF-1 packaged-client baseline evidence
 
+[Review corrections](review-corrections.json) retain the 67-guard recovery fix,
+fresh layout proofs, observer deadline after result completion and verified owned
+cleanup, with 652 private-file hashes. No baseline promotion.
+
 Latest CF-1C-AUTOMATION-4/4B observes shell resize, right split and sibling-only
 close under a disclosed supported guest shell-default fixture and 50ms cadence.
 Original PID/sentinel and PTY dimensions survive; sibling termination independently

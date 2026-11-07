@@ -1,5 +1,60 @@
 # CF-1C session handoff — 2026-11-07
 
+## CF-1C-REVIEW-1 — corrections implemented and locally/live verified
+
+Failed native-console requests now close/discard their socket; the next request
+revalidates ownership and creates a fresh Console. Failure receipts stay intact;
+no input is replayed. New regression uses text input followed by capture, verifies
+old-socket closure before replacement and exactly one text dispatch. Reviewed
+original source fails it (one connection rather than two); corrected source passes.
+All 67 kept guards, baseline Ruff/format, repository and Markdown/Prettier checks
+pass. Secret scanning passes with zero findings after authorized report-directory
+access; the initial sandbox report-write failure is not a passing scan.
+
+Fresh run `20261107T214721Z-76b7d2bd30f0` verifies normal guest-only Bridge
+enrollment, stable main window 82 and all four compact 50ms shell proofs. App 973
+-> sidecar 980 -> original shell 1030; sibling 1311 is independently verified and
+closed. Original PID/sentinel survive 39x126 -> resized 34x108 -> sibling 34x53 ->
+original 34x108. Fresh native/Bridge images show decoded output and final prompt.
+All proof reads completed at attempt 00: partial reads and connection failure
+recovery are regression-tested, not live fault-injected. Supported guest-only
+shell-default fixture and all prior typing limitations remain explicit.
+
+**Execution limitation retained:** layout result completes, then the 1500s observer
+deadline expires awaiting final finish. Owner exits 1 with TimeoutError; the later
+finish helper rejects the already-cleaned run without queuing input. This is not
+an overall successful execution or app Quit proof. Exception-triggered owned
+cleanup and independent atomic cleanup both verify. Five original VMs stopped,
+no disposable clone or QA/tool processes remain; never reuse the cleaned pointer.
+[Evidence summary and 652 private-file hashes](evidence/client-baseline/review-corrections.json)
+preserve the actual result and timeout. Original private evidence is unchanged.
+
+Implemented and locally/live verified; scoped commit, remote backup, current-source
+CI/CodeQL and review-thread closure are next. No merge performed or authorized.
+Baseline stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred,
+and all acceptance/provider/activation/backend/release gates remain intact.
+Next after merge review: CF-1C-AUTOMATION-5 normal GUI Quit/descendant termination
+with unrelated guest process survival control, predeclared before fresh boot.
+
+## CF-1C-REVIEW-1 — approved merge corrections
+
+Review checkpoint `287caafada5d5851593b79121066a9c78fa90833` adds latest-pair
+window admission and bounded missing/partial proof readbacks without input replay.
+All fourteen current CI jobs and CodeQL pass. Remaining correction: discard failed
+native-console connections and reconnect before later requests. New regression
+fails original source (one connection instead of two), then passes the fix; all
+67 kept guards pass locally. Documentation accuracy/formatting and one fresh owned
+layout confirmation are in progress. No historical evidence rewritten or baseline
+promoted; Pi and all existing gates unchanged. Merge is not authorized.
+
+For a fresh layout reproduction, Terminal 1 runs the observer with stdout/stderr
+redirected privately. Terminal 2 reads the explicit fresh run path from that log,
+then `<fresh-run>/layout-observation/session.json`. Only when `phase=waiting`,
+write a new `request-NN.json` using `nextIndex` (two digits), restrictive umask and
+no-clobber. Complete observed normal permission enrollment, queue the fixed
+`{"action":"layout-probe"}`, wait for the index to advance, then queue
+`{"action":"finish"}`. Never reuse a previous run or cleaned console pointer.
+
 ## CF-1C-AUTOMATION-4/4B — resize/split/sibling-close observed
 
 Pinned candidate and Peekaboo GUI Bridge unchanged. Disclosed guest-only supported

@@ -327,6 +327,8 @@ def serve(archive, runtime, hold, observer=None, prepare_hook=None):
                             return run
                         image = run / ("console-" + identifier + ".png")
                         connection(run)  # Revalidate ownership before every input.
+                        if console is None:
+                            console = Console(run)
                         console.action(request)
                         console.capture(image)
                         qa.save(
@@ -338,6 +340,9 @@ def serve(archive, runtime, hold, observer=None, prepare_hook=None):
                             },
                         )
                     except Exception as error:
+                        if console is not None:
+                            console.socket.close()
+                            console = None
                         qa.save(
                             response_path,
                             {
