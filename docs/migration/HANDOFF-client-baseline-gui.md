@@ -1,6 +1,56 @@
 # CF-1C session handoff — 2026-11-07
 
-## Latest continuation: CF-1C-CAPTURE-2
+## Latest continuation: CF-1C-CAPTURE-3
+
+The read-only retry `20261107T160656Z-104c57df8692` completed diagnostic,
+independent readback, an RFB capture and explicit normal finish/cleanup. Original
+failed run `20261107T160333Z-036e67bd3539` is preserved: codesign exit 1 stopped
+the first implementation before logs, without retaining signing output. The kept
+correction now preserves nonzero signing status/output and continues diagnostics;
+all 38 guards pass, including that real-failure regression.
+
+**Observed privacy failure:** TCC attributes capture to resolved executable
+`/opt/homebrew/Cellar/tart-guest-agent/0.10.0/bin/tart-guest-agent` (type 1),
+then explicitly reports failure to match an existing Screen Recording code
+requirement (check status -67050) and returns denied. The 12-second stream
+returned 28,069 bytes, below the 256 KiB cap, with four code-requirement failures.
+The binary digest matches the CAPTURE-2 agent. Signing display shows identifier
+`a.out`, linker-signed ad hoc metadata, no bound Info.plist/team, and exit 1 for
+the designated-requirement readout; do not flatten this into an entirely unsigned
+binary claim. This establishes an actual permission/code-requirement failure
+in the fresh unmodified guest. Why the prior UI grant failed and whether UI
+re-enrollment fixes it remain unproven. No permission/signing/database/logging
+configuration, binary or host setting changed in CAPTURE-3.
+
+RFB still shows the recording prompt; independent guest screenshot omits it.
+The RFB follow-up capture timed out after its initial frame; its independent
+screen/clock completed. No input/app qualification advanced. Both owned guests
+cleaned and independent inventory verified five original stopped VMs, no clone
+or QA/probe/Tart/Softnet/controller process. Raw signing/TCC logs stay private.
+[Sanitized attribution and 33 private-file hashes](evidence/client-baseline/gui-continuation/privacy-attribution.json)
+preserve both attempts, selected identity, short denial excerpts and cleanup.
+No app row changes: one input PASS/eleven BLOCKED. Pi v0.85.1-psmfd.1, deferred
+comparison #219 and all activation/backend/release gates remain intact.
+
+**Next bounded action: CF-1C-CAPTURE-4.** Record a supported exact-entry guest
+permission re-enrollment experiment. Preserve both guest-agent entries and collect
+TCC decisions after the normal UI grant in that same guest. If the requirement
+mismatch persists, remove/re-add only the identified agent entry through normal
+Privacy & Security UI using the exact resolved executable, authenticate with the
+public fixture account, then verify TCC decisions and actual window captures.
+No direct TCC database edits, host changes or binary re-signing. Re-enrollment is
+proposed, not implemented/proven. Keep immediate readbacks, private output and
+owned cleanup; input/app qualification stays gated until reliable capture.
+
+Queue action `{"action":"diagnose-agent"}` accepts no other fields. It
+revalidates the selected service/executable, retains codesign status/output,
+then runs a fixed 12s guest-only TCC stream around one capture. Guest log read
+uses the image's existing noninteractive sudo; no logging configuration changes.
+Returned log data is capped at 256 KiB; raw content remains private. A negative
+signing readout is diagnostic evidence, not permission success. Default atomic
+comparison unchanged; permission-session bounds remain 720s/960s/40 actions.
+
+## Historical continuation: CF-1C-CAPTURE-2
 
 Run `20261107T153328Z-e16d52dd729f` finished explicitly after nine actions:
 eight RFB probes plus the normal RPC-agent restart. Initial and all nine immediate
@@ -379,7 +429,7 @@ a real sleeping child. No new protected CI success or app acceptance is claimed.
 > evidence/stale pointer, Pi v0.85.1-psmfd.1, deferred #219, one input PASS/eleven
 > BLOCKED and all activation/backend/release gates. CF-1 approval persists.
 
-## Current resume prompt
+## Historical restart resume prompt
 
 > Resume FingerTrap, branch test/client-baseline-gui, open draft #224 against dev.
 > Read STATUS, this handoff and latest WORK_LOG; verify exact head/CI.
@@ -396,3 +446,32 @@ a real sleeping child. No new protected CI success or app acceptance is claimed.
 > atomic execution, immediate readbacks, private output and cleanup. Preserve
 > stale active pointer, Pi v0.85.1-psmfd.1, deferred #219, one input PASS/eleven
 > BLOCKED and all activation/backend/release gates. CF-1 approval persists.
+
+## Current resume prompt
+
+> Resume FingerTrap on test/client-baseline-gui, draft #224 against dev. Read
+> STATUS, this handoff and latest WORK_LOG; verify exact head/CI. CAPTURE-2 verified
+> restart PID 423 to 843 but capture stayed blocked. CAPTURE-3 retry
+> 20261107T160656Z-104c57df8692 identifies actual TCC code-requirement mismatch
+> for resolved /opt/homebrew/Cellar/tart-guest-agent/0.10.0/bin/tart-guest-agent,
+> check -67050, denied. Signing readout shows a.out/linker ad hoc metadata and
+> exit 1; do not call it wholly unsigned. Initial failed run preserved; corrected
+> retry and both cleanup receipts retained. Five originals stopped, no clone/QA
+> processes, private logs preserved. Next: record CF-1C-CAPTURE-4 supported
+> exact-entry UI re-enrollment, with post-grant TCC logs and actual window-capture
+> verification in the same bounded owned guest. Proposed, not implemented/proven.
+> No direct TCC edits, host changes, binary re-signing or app validation. Preserve
+> private evidence/stale pointer, Pi v0.85.1-psmfd.1, deferred #219, one input PASS/
+> eleven BLOCKED and all gates. Existing CF-1 execution approval persists.
+
+## Automation evaluation steering
+
+The maintainer asks about an open-source scripted UI driver. Proposed next
+planning action: CF-1C-AUTOMATION-1, evaluate a pinned Peekaboo CLI + signed GUI
+Bridge in the disposable guest using deterministic native commands/JSON outputs.
+Its permission documentation addresses wallpaper-only background captures.
+Verify exact released capabilities, supported permissions and actual Finder
+input/window capture before adoption. No installation/adoption has occurred.
+Keep the existing Tart ownership/deadline/evidence/cleanup wrapper, offline
+operation and all existing gates. See latest STATUS/WORK_LOG for alternatives
+and bounded pilot acceptance. Direct exact-entry re-enrollment remains proposed.

@@ -190,6 +190,88 @@ class AtomicGuards(unittest.TestCase):
             )
         command.assert_not_called()
 
+    def test_privacy_diagnostic_rejects_changed_identity_and_keeps_log_failure(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            baseline = {"uid": 501, "services": [self.agent()]}
+            (root / "agent-inventory.json").write_text(json.dumps(baseline))
+            changed = {
+                "uid": 501,
+                "services": [dict(self.agent(), programSha256="c" * 64)],
+            }
+            with (
+                patch.object(compare, "agent_inventory", return_value=changed),
+                patch.object(compare, "guest_command") as command,
+                self.assertRaises(ValueError),
+            ):
+                compare.diagnose_agent(
+                    root, root, {"Name": "step-00"}, compare.time.monotonic() + 30
+                )
+            command.assert_not_called()
+            with (
+                patch.object(compare, "agent_inventory", return_value=baseline),
+                patch.object(
+                    compare,
+                    "guest_command",
+                    side_effect=[
+                        b"fixture signature",
+                        subprocess.CalledProcessError(
+                            1, "log", output=b"partial decisions", stderr=b"denied"
+                        ),
+                    ],
+                ),
+                self.assertRaises(subprocess.CalledProcessError),
+            ):
+                compare.diagnose_agent(
+                    root, root, {"Name": "step-01"}, compare.time.monotonic() + 30
+                )
+            self.assertEqual(
+                (root / "step-01/tcc-decisions.log").read_bytes(), b"partial decisions"
+            )
+            self.assertEqual((root / "step-01/tcc-error.txt").read_bytes(), b"denied")
+            with self.assertRaises(ValueError):
+                compare.permission_step(
+                    {"action": "diagnose-agent", "command": "id"}, 0
+                )
+
+    def test_nonzero_signing_result_is_preserved_and_does_not_skip_privacy_log(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            baseline = {"uid": 501, "services": [self.agent()]}
+            (root / "agent-inventory.json").write_text(json.dumps(baseline))
+            with (
+                patch.object(compare, "agent_inventory", return_value=baseline),
+                patch.object(
+                    compare,
+                    "guest_command",
+                    side_effect=[
+                        subprocess.CalledProcessError(
+                            1, "codesign", output=b"fixture unsigned binary"
+                        ),
+                        b"fixture TCC decision",
+                    ],
+                ),
+                patch.object(compare, "guest_screen") as screen,
+            ):
+                compare.diagnose_agent(
+                    root, root, {"Name": "step-00"}, compare.time.monotonic() + 30
+                )
+            self.assertEqual(
+                (root / "step-00/code-signing.txt").read_bytes(),
+                b"fixture unsigned binary",
+            )
+            self.assertEqual(
+                json.loads((root / "step-00/code-signing-status.json").read_text())[
+                    "exitCode"
+                ],
+                1,
+            )
+            self.assertEqual(
+                (root / "step-00/tcc-decisions.log").read_bytes(),
+                b"fixture TCC decision",
+            )
+            screen.assert_called_once()
+
     def test_permission_requests_reject_unknown_actions_and_arbitrary_text(self):
         for request in (
             {"action": "shell", "command": "id"},

@@ -11,14 +11,14 @@ accounted for separately. A disposition does not assert a bug is fixed.
 
 ## Successor work
 
-CF-1C-CAPTURE-2, 2026-11-07: actual guest RPC service identified; supported UI
-grant and normal restart PID 423 → 843 verified with matching service/executable
-identity and reconnection. RFB still shows permission prompt/Settings that
-independent screenshots omit. Nine actions/ten readbacks and normal cleanup
-verified. All 36 guards pass. No app case advanced; #217 one input PASS/eleven
-BLOCKED, comparison #219 deferred. Next: CF-1C-CAPTURE-3 signing identity and
-narrow TCC decision logs before any supported exact-entry UI re-enrollment.
-[Evidence](evidence/client-baseline/gui-continuation/agent-restart-comparison.json)
+CF-1C-CAPTURE-3, 2026-11-07: read-only signing/TCC diagnostic identifies actual
+Screen Recording code-requirement mismatch (-67050) for the resolved agent,
+followed by denial. Initial signing-readout failure preserved; corrected retry
+and both cleanup receipts retained. All 38 guards pass. CAPTURE-2 restart was
+verified and insufficient. No app case advanced; #217 one input PASS/eleven
+BLOCKED, comparison #219 deferred. Next: CF-1C-CAPTURE-4 supported exact-entry UI
+re-enrollment with post-grant TCC decisions and actual window-capture checks.
+[Evidence](evidence/client-baseline/gui-continuation/privacy-attribution.json)
 and [current resume action](HANDOFF-client-baseline-gui.md).
 
 | ID                                                                            | FingerTrap owner                                                            | Start condition                                                                                                                                                                                                                     |

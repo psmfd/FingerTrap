@@ -235,6 +235,60 @@ def restart_agent(run, root, step, deadline):
         time.sleep(min(1, remaining(restart_deadline)))
 
 
+def diagnose_agent(run, root, step, deadline):
+    output = root / step["Name"]
+    output.mkdir(mode=0o700)
+    selected = select_agent(json.loads((root / "agent-inventory.json").read_text()))
+    current = select_agent(agent_inventory(run, output / "identity.json", deadline))
+    if not same_service(selected, current):
+        raise ValueError("Guest RPC identity changed before privacy diagnostic")
+    signing_status = {"exitCode": 0}
+    try:
+        signing = guest_command(
+            run,
+            deadline,
+            "/bin/sh",
+            "-c",
+            'exec /usr/bin/codesign -d -r- --verbose=4 "$1" 2>&1',
+            "sh",
+            current["program"],
+        )
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+        signing = (error.stdout or b"") + (error.stderr or b"")
+        signing_status = {
+            "exitCode": getattr(error, "returncode", None),
+            "timedOut": isinstance(error, subprocess.TimeoutExpired),
+        }
+    (output / "code-signing.txt").write_bytes(signing)
+    qa.save(output / "code-signing-status.json", signing_status)
+    # Read only this disposable guest's live TCC decisions. log's own timeout
+    # bounds the guest process even if its RPC client disconnects.
+    command = """
+/usr/bin/sudo -n /usr/bin/log stream --timeout 12 --level debug --style compact \
+--predicate 'subsystem == "com.apple.TCC" AND (eventMessage CONTAINS[c] \
+"tart-guest-agent" OR eventMessage CONTAINS "ScreenCapture" OR eventMessage \
+BEGINSWITH "AttributionChain")' > /tmp/ft-tcc-decisions.log 2>&1 &
+tcc_pid=$!
+trap 'kill "$tcc_pid" 2>/dev/null || true' EXIT
+/bin/sleep 1
+/usr/sbin/screencapture -x /tmp/ft-tcc-probe.png
+/bin/date -u > /tmp/ft-tcc-probe-clock.txt
+wait "$tcc_pid"
+tcc_exit=$?
+trap - EXIT
+/usr/bin/head -c 262144 /tmp/ft-tcc-decisions.log
+exit "$tcc_exit"
+"""
+    try:
+        data = guest_command(run, deadline, "/bin/sh", "-c", command)
+    except subprocess.CalledProcessError as error:
+        (output / "tcc-decisions.log").write_bytes(error.stdout or b"")
+        (output / "tcc-error.txt").write_bytes(error.stderr or b"")
+        raise
+    (output / "tcc-decisions.log").write_bytes(data)
+    guest_screen(run, output, deadline)
+
+
 def guest_screen(run, output, deadline):
     def execute(*args):
         return guest_command(run, deadline, *args)
@@ -304,6 +358,8 @@ def probe_step(run, step, root, deadline):
 def permission_step(request, index):
     if request == {"action": "restart-agent"}:
         return {"Name": f"step-{index:02d}", "RestartAgent": True}
+    if request == {"action": "diagnose-agent"}:
+        return {"Name": f"step-{index:02d}", "DiagnoseAgent": True}
     vnc.validate(request)
     action = request["action"]
     if (
@@ -344,6 +400,8 @@ def permission_session(run, root, deadline):
             return
         if step.get("RestartAgent"):
             restart_agent(run, root, step, deadline)
+        elif step.get("DiagnoseAgent"):
+            diagnose_agent(run, root, step, deadline)
         else:
             probe_step(run, step, root, deadline)
     raise TimeoutError("Permission session action budget exhausted")

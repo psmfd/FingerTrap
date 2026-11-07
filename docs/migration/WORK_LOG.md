@@ -2246,3 +2246,121 @@ Final implementation CI refresh: all fourteen jobs in 42387709718 pass on
 Rust remains in progress, aggregate neutral, CodeRabbit skipped. Full CodeQL/
 review remain pending. All macOS lanes hosted; no local queue/drain; zero runner
 registrations. Next remains CF-1C-CAPTURE-3 privacy-client attribution diagnostic.
+
+## 2026-11-07 — CF-1C-CAPTURE-3 read-only continuation
+
+Continue within persistent CF-1 diagnostic approval after verified restart
+proved insufficient. Starting source 3db39be and documentation
+`a61b2596275a4ed8dc556d19ba04122dedfab43d` are backed up in draft #224.
+Before changing the slice: add a fixed diagnose-agent queue action with no
+caller commands/paths/predicates. Read the selected guest executable's signing
+identity/designated requirement and the last two minutes of narrowly filtered
+macOS TCC decision logs for capture/agent attribution; preserve output privately.
+No permission/config/database mutation, global logging change or host operation.
+
+Affected files: existing atomic comparison script, focused guard test and
+migration records/evidence. Keep guest ownership checks, 720s observation/960s
+hold/40-action budgets and 30s command caps. A guest-local privileged read of
+system privacy logs may use the clean image's existing noninteractive sudo;
+never request or copy host credentials. Failures/redaction are evidence, not an
+excuse to alter TCC or weaken gates. No app or input qualification in this slice.
+One fresh atomic session: inventory, initial capture/clock, fixed diagnostic
+readout, explicit finish and verified cleanup. Validate before boot; review the
+actual requesting client and denial before proposing any exact-entry UI change.
+Next: implement the read-only diagnostic action and kept guard.
+
+CF-1C-CAPTURE-3 logging refinement before implementation: installed Apple log
+help confirms bounded stream --timeout. Use a fixed 12-second debug stream
+around one guest capture rather than relying only on persisted debug history.
+Retain a 30s guest-command cap, 256 KiB returned-log cap and guest-only files.
+This changes no logging configuration, TCC database or permission. No UI grant
+or restart is repeated for this attribution-only run.
+
+CF-1C-CAPTURE-3 implementation/preflight: fixed read-only diagnose-agent action
+added. Initial quoted command failed Python parsing; replaced with a fixed
+multiline shell script, now Python/Ruff and sh -n pass. All 37 guards pass;
+isolated removal of diagnostic identity validation fails the kept guard.
+No production source mutation for red proof. Next: one fresh private redirected
+atomic attribution run, normal finish and owned cleanup; no UI permission change.
+
+CF-1C-CAPTURE-3 first run 20261107T160333Z-036e67bd3539 failed at codesign
+(exit 1) before log collection. Diagnostic did not retain codesign stdout, so no
+unsigned/signature/root-cause claim is established. Cleanup verified; preserve
+this failed run. Bounded correction: retain nonzero signing output/status and
+continue the read-only log collection; add regression, then retry one fresh
+atomic attribution run. No permission change or app validation.
+
+CF-1C-CAPTURE-3 correction implemented: signing exit/stdout/stderr now retained;
+negative signing status does not skip privacy log collection. All 38 guards and
+Ruff pass, including the real-failure regression. Next: fresh bounded read-only
+retry with private output; preserve the original failed run.
+
+The read-only retry `20261107T160656Z-104c57df8692` completed diagnostic,
+independent readback, an RFB capture and explicit normal finish/cleanup. Original
+failed run `20261107T160333Z-036e67bd3539` is preserved: codesign exit 1 stopped
+the first implementation before logs, without retaining signing output. The kept
+correction now preserves nonzero signing status/output and continues diagnostics;
+all 38 guards pass, including that real-failure regression.
+
+**Observed privacy failure:** TCC attributes capture to resolved executable
+`/opt/homebrew/Cellar/tart-guest-agent/0.10.0/bin/tart-guest-agent` (type 1),
+then explicitly reports failure to match an existing Screen Recording code
+requirement (check status -67050) and returns denied. The 12-second stream
+returned 28,069 bytes, below the 256 KiB cap, with four code-requirement failures.
+The binary digest matches the CAPTURE-2 agent. Signing display shows identifier
+`a.out`, linker-signed ad hoc metadata, no bound Info.plist/team, and exit 1 for
+the designated-requirement readout; do not flatten this into an entirely unsigned
+binary claim. This establishes an actual permission/code-requirement failure
+in the fresh unmodified guest. Why the prior UI grant failed and whether UI
+re-enrollment fixes it remain unproven. No permission/signing/database/logging
+configuration, binary or host setting changed in CAPTURE-3.
+
+RFB still shows the recording prompt; independent guest screenshot omits it.
+The RFB follow-up capture timed out after its initial frame; its independent
+screen/clock completed. No input/app qualification advanced. Both owned guests
+cleaned and independent inventory verified five original stopped VMs, no clone
+or QA/probe/Tart/Softnet/controller process. Raw signing/TCC logs stay private.
+[Sanitized attribution and 33 private-file hashes](evidence/client-baseline/gui-continuation/privacy-attribution.json)
+preserve both attempts, selected identity, short denial excerpts and cleanup.
+No app row changes: one input PASS/eleven BLOCKED. Pi v0.85.1-psmfd.1, deferred
+comparison #219 and all activation/backend/release gates remain intact.
+
+**Next bounded action: CF-1C-CAPTURE-4.** Record a supported exact-entry guest
+permission re-enrollment experiment. Preserve both guest-agent entries and collect
+TCC decisions after the normal UI grant in that same guest. If the requirement
+mismatch persists, remove/re-add only the identified agent entry through normal
+Privacy & Security UI using the exact resolved executable, authenticate with the
+public fixture account, then verify TCC decisions and actual window captures.
+No direct TCC database edits, host changes or binary re-signing. Re-enrollment is
+proposed, not implemented/proven. Keep immediate readbacks, private output and
+owned cleanup; input/app qualification stays gated until reliable capture.
+
+Final Markdown check flagged a bare #219 at line start in the new shared result;
+changed to prose. Next: rerun lint, secret scan and scoped checkpoint.
+
+## 2026-11-07 — open-source UI automation evaluation requested
+
+Maintainer approves the interrupted checkpoint command and asks whether an open-
+source automation solution should script interface execution. Resumed checkpoint
+verification shows all CAPTURE-3 changes preserved, not yet staged/committed; no
+new guest start. Research recommendation (not adoption/installation): evaluate
+Peekaboo released CLI plus signed GUI Bridge inside a fresh disposable guest.
+Its documented semantic element/window/menu commands and JSON results can be
+driven deterministically; permissions guidance specifically covers wallpaper-
+only background-session captures and prefers the GUI Bridge for these contexts.
+Primary sources: [Peekaboo](https://github.com/openclaw/Peekaboo), its
+[permissions guide](https://github.com/openclaw/Peekaboo/blob/main/docs/permissions.md)
+and [platform support](https://github.com/openclaw/Peekaboo/blob/main/docs/platform-support.md). Released app/CLI target macOS 15+. Main-branch docs
+are candidate capabilities, not proof that any chosen release/our guest works.
+
+Compare Hammerspoon (Lua/Accessibility/CLI scripting) and Appium Mac2 (native
+XCTest/WebDriver, requires Xcode). Proposed CF-1C-AUTOMATION-1: pin/review one
+matching Peekaboo app+CLI release and signatures/digests; guest-only installation
+and supported permissions; deterministic Finder menu/dialog/text scenario with
+observable window assertions, fresh screenshots and independent RFB comparison;
+owned cleanup and exact artifact/permission provenance. Keep model-agent/MCP/cloud
+features out of this offline deterministic pilot. Retain current Tart ownership/
+budget/evidence wrapper. No automatic adoption, host/global installation, product
+dependency change, TCC bypass or app-case acceptance. Existing direct UI re-
+enrollment remains a separate proposed diagnostic; evaluate tooling before more
+custom UI orchestration. Pi v0.85.1-psmfd.1, deferred #219 and all gates intact.

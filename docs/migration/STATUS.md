@@ -2,7 +2,74 @@
 
 Updated: 2026-11-07. Resumed CF-1C under the existing execution approval.
 
-## CF-1C-CAPTURE-2 — approved active-agent inventory and normal restart
+Latest steering: evaluate an open-source scripted UI driver before extending
+custom UI orchestration. Proposed CF-1C-AUTOMATION-1: pinned Peekaboo CLI + signed
+GUI Bridge, guest-only deterministic Finder/input/capture pilot. No installation
+or adoption yet; see the latest automation-evaluation entry below.
+
+## CF-1C-CAPTURE-3 — bounded read-only privacy-client attribution
+
+Continue within persistent CF-1 diagnostic approval after verified restart
+proved insufficient. Starting source 3db39be and documentation
+`a61b2596275a4ed8dc556d19ba04122dedfab43d` are backed up in draft #224.
+Before changing the slice: add a fixed diagnose-agent queue action with no
+caller commands/paths/predicates. Read the selected guest executable's signing
+identity/designated requirement and a 12-second narrowly filtered live macOS TCC
+stream around a capture request; preserve output privately.
+No permission/config/database mutation, global logging change or host operation.
+
+Affected files: existing atomic comparison script, focused guard test and
+migration records/evidence. Keep guest ownership checks, 720s observation/960s
+hold/40-action budgets and 30s command caps. A guest-local privileged read of
+system privacy logs may use the clean image's existing noninteractive sudo;
+never request or copy host credentials. Failures/redaction are evidence, not an
+excuse to alter TCC or weaken gates. No app or input qualification in this slice.
+One fresh atomic session: inventory, initial capture/clock, fixed diagnostic
+readout, explicit finish and verified cleanup. Validate before boot; review the
+actual requesting client and denial before proposing any exact-entry UI change.
+Next: implement the read-only diagnostic action and kept guard.
+
+The read-only retry `20261107T160656Z-104c57df8692` completed diagnostic,
+independent readback, an RFB capture and explicit normal finish/cleanup. Original
+failed run `20261107T160333Z-036e67bd3539` is preserved: codesign exit 1 stopped
+the first implementation before logs, without retaining signing output. The kept
+correction now preserves nonzero signing status/output and continues diagnostics;
+all 38 guards pass, including that real-failure regression.
+
+**Observed privacy failure:** TCC attributes capture to resolved executable
+`/opt/homebrew/Cellar/tart-guest-agent/0.10.0/bin/tart-guest-agent` (type 1),
+then explicitly reports failure to match an existing Screen Recording code
+requirement (check status -67050) and returns denied. The 12-second stream
+returned 28,069 bytes, below the 256 KiB cap, with four code-requirement failures.
+The binary digest matches the CAPTURE-2 agent. Signing display shows identifier
+`a.out`, linker-signed ad hoc metadata, no bound Info.plist/team, and exit 1 for
+the designated-requirement readout; do not flatten this into an entirely unsigned
+binary claim. This establishes an actual permission/code-requirement failure
+in the fresh unmodified guest. Why the prior UI grant failed and whether UI
+re-enrollment fixes it remain unproven. No permission/signing/database/logging
+configuration, binary or host setting changed in CAPTURE-3.
+
+RFB still shows the recording prompt; independent guest screenshot omits it.
+The RFB follow-up capture timed out after its initial frame; its independent
+screen/clock completed. No input/app qualification advanced. Both owned guests
+cleaned and independent inventory verified five original stopped VMs, no clone
+or QA/probe/Tart/Softnet/controller process. Raw signing/TCC logs stay private.
+[Sanitized attribution and 33 private-file hashes](evidence/client-baseline/gui-continuation/privacy-attribution.json)
+preserve both attempts, selected identity, short denial excerpts and cleanup.
+No app row changes: one input PASS/eleven BLOCKED. Pi v0.85.1-psmfd.1, deferred
+comparison #219 and all activation/backend/release gates remain intact.
+
+**Next bounded action: CF-1C-CAPTURE-4.** Record a supported exact-entry guest
+permission re-enrollment experiment. Preserve both guest-agent entries and collect
+TCC decisions after the normal UI grant in that same guest. If the requirement
+mismatch persists, remove/re-add only the identified agent entry through normal
+Privacy & Security UI using the exact resolved executable, authenticate with the
+public fixture account, then verify TCC decisions and actual window captures.
+No direct TCC database edits, host changes or binary re-signing. Re-enrollment is
+proposed, not implemented/proven. Keep immediate readbacks, private output and
+owned cleanup; input/app qualification stays gated until reliable capture.
+
+## Historical CF-1C-CAPTURE-2 — approved active-agent inventory and normal restart
 
 Maintainer approved this next bounded action. Start at
 `0cf35d21f239c7c65f5d1c82b359913cf86285ee`, branch `test/client-baseline-gui`,
@@ -873,3 +940,30 @@ documentation-only or changed head has CI evidence from a different commit.
 - Final handoff changes documentation only. It is saved with CI skipped on
   `docs/runtime-migration-handoff`; include it in the next implementation PR.
   #208 remains open for later main-promotion mapping and scheduling decisions.
+
+## 2026-11-07 — open-source UI automation evaluation requested
+
+Maintainer approves the interrupted checkpoint command and asks whether an open-
+source automation solution should script interface execution. Resumed checkpoint
+verification shows all CAPTURE-3 changes preserved, not yet staged/committed; no
+new guest start. Research recommendation (not adoption/installation): evaluate
+Peekaboo released CLI plus signed GUI Bridge inside a fresh disposable guest.
+Its documented semantic element/window/menu commands and JSON results can be
+driven deterministically; permissions guidance specifically covers wallpaper-
+only background-session captures and prefers the GUI Bridge for these contexts.
+Primary sources: [Peekaboo](https://github.com/openclaw/Peekaboo), its
+[permissions guide](https://github.com/openclaw/Peekaboo/blob/main/docs/permissions.md)
+and [platform support](https://github.com/openclaw/Peekaboo/blob/main/docs/platform-support.md). Released app/CLI target macOS 15+. Main-branch docs
+are candidate capabilities, not proof that any chosen release/our guest works.
+
+Compare Hammerspoon (Lua/Accessibility/CLI scripting) and Appium Mac2 (native
+XCTest/WebDriver, requires Xcode). Proposed CF-1C-AUTOMATION-1: pin/review one
+matching Peekaboo app+CLI release and signatures/digests; guest-only installation
+and supported permissions; deterministic Finder menu/dialog/text scenario with
+observable window assertions, fresh screenshots and independent RFB comparison;
+owned cleanup and exact artifact/permission provenance. Keep model-agent/MCP/cloud
+features out of this offline deterministic pilot. Retain current Tart ownership/
+budget/evidence wrapper. No automatic adoption, host/global installation, product
+dependency change, TCC bypass or app-case acceptance. Existing direct UI re-
+enrollment remains a separate proposed diagnostic; evaluate tooling before more
+custom UI orchestration. Pi v0.85.1-psmfd.1, deferred #219 and all gates intact.

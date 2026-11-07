@@ -7,24 +7,24 @@ Read the [implementation plan](../../client-foundation-plan.html#cf1-plan) and
 The maintainer approved execution after selecting the production-only scope.
 Individual acceptance results remain separate from harness implementation.
 
-## GUI continuation — CF-1C-CAPTURE-2, 2026-11-07
+## GUI continuation — CF-1C-CAPTURE-3, 2026-11-07
 
-[Agent restart comparison](gui-continuation/agent-restart-comparison.json), run
-`20261107T153328Z-e16d52dd729f`: actual RPC service identified before capture;
-supported guest UI grant plus normal identity-checked restart verified PID
-423 → 843. Reconnection and immediate independent readback succeed. RFB still
-shows the permission prompt/Settings; independent screenshots still omit windows.
-Restart is verified and is not sufficient to fix capture in this run.
+[Privacy attribution](gui-continuation/privacy-attribution.json) preserves a
+failed initial signing-readout run and corrected read-only retry. TCC explicitly
+fails an existing Screen Recording code requirement for the resolved guest-agent
+binary, status -67050, then denies capture. Signing display reports a.out/linker
+ad hoc metadata but exits 1 for designated requirement; do not call it entirely
+unsigned. Same executable digest as the [verified normal restart](gui-continuation/agent-restart-comparison.json).
+This is an observed denial; exact-entry re-enrollment remains proposed/unproven.
 
-Nine actions (eight RFB probes plus restart), ten independent readbacks and
-explicit finish/normal cleanup verified. Five originals stopped/preserved,
-no clone/QA processes; raw evidence private. No app row changed: one input PASS,
-eleven BLOCKED. All 36 guards, Ruff and repository checks pass; stale-PID
-rejection has red-first proof. Current implementation CI/review remains pending.
-Next: CF-1C-CAPTURE-3 signing identity and narrowly scoped TCC decision logs before
-choosing any exact-entry UI re-enrollment. [Handoff](../../HANDOFF-client-baseline-gui.md)
-contains commands, checkpoint and gates. Previous evidence is preserved:
-[permission grant](gui-continuation/permission-comparison.json),
+Both guests cleaned; five originals stopped/preserved, no clone/QA processes.
+No permission, signing, binary or host setting changed in CAPTURE-3. Raw logs
+remain private; sanitized metadata retains 33 file hashes. All 38 guards, Ruff
+and repository checks pass. Current implementation CI/review pending.
+No app row changed: one input PASS, eleven BLOCKED. Next: CF-1C-CAPTURE-4 supported
+exact-entry UI re-enrollment with post-grant TCC and actual window-capture checks.
+[Handoff](../../HANDOFF-client-baseline-gui.md) contains commands and gates.
+Previous evidence is preserved: [grant](gui-continuation/permission-comparison.json),
 [Go-menu](gui-continuation/go-menu-comparison.json),
 [atomic comparison](gui-continuation/atomic-comparison.json).
 
