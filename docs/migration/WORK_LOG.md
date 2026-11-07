@@ -1919,3 +1919,10 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   and stale active pointer preserved. Next: bounded fresh atomic comparison of
   pointer-selected Finder menu at native coordinates versus keyboard input, with
   independent screen after each; app cases remain gated. No production pin change.
+
+- Implementation/evidence checkpoint fe7ec1471cae5751700bcc77a61e8b48fbe977d7 committed and pushed
+  to existing draft #224. Tracked-file secret scan reports zero findings.
+  Markdown/Prettier, 28 guards, Ruff, local links, all atomic evidence hashes,
+  whitespace and repository structural/lock/RPC checks pass. This subsequent
+  status-only checkpoint records the implementation identity; read git/draft head
+  for its own SHA. Full protected CI/review remain pending, no merge/acceptance.

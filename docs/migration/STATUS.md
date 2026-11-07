@@ -24,7 +24,10 @@ and preserved, no disposable clone. Raw screens/logs remain private.
 Finder menu/native PNG coordinates, with immediate guest screen/clock after each
 input. Establish usable input and fresh frames before app validation. Keep Pi
 `v0.85.1-psmfd.1`, defer #219, and retain activation/backend/release gates.
-Implemented and locally/live verified; commit/backup pending below.
+Implementation/evidence checkpoint `fe7ec1471cae5751700bcc77a61e8b48fbe977d7` is committed,
+secret-scanned (zero findings) and remotely backed up in draft #224. A subsequent
+status-only commit records this identity; read git/draft head for its own SHA.
+Full protected CI and review remain pending; no acceptance or merge claimed.
 
 ## CF-1C handoff — independent client reproduces frame timeout
 

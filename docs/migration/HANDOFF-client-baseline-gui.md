@@ -8,6 +8,11 @@ Execution approval persists for CF-1 against production Pi only.
 
 ## Saved branch and scope
 
+Latest implementation/evidence checkpoint `fe7ec1471cae5751700bcc77a61e8b48fbe977d7` is committed,
+secret-scanned and remotely backed up in draft #224. A subsequent status-only
+commit records it; read git/draft head for the current SHA. The older checkpoints
+below describe the starting handoff. No protected CI or acceptance is claimed.
+
 - Branch `test/client-baseline-gui`, draft [#224](https://github.com/psmfd/FingerTrap/pull/224)
   against `dev`. Handoff evidence checkpoint `2cdf67406416f4d0cce3a5023af4bde7be66fd8b`
   is committed, secret-scanned and backed up. A status-only commit follows it;
