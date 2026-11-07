@@ -2011,3 +2011,30 @@ then compare pointer-selected Go To Folder with keyboard input. Verify independe
 screens actually include visible windows before app validation. Keep immediate
 per-input screen/clock, private redirected output, explicit ownership and cleanup.
 No host permission changes or TCC bypass. Do not rerun a cleaned guest.
+
+CF-1C-GO-1 implementation/evidence checkpoint `1ca324f6d85779a1081680e05eed5f5292d2f3a8` is committed,
+secret-scanned (zero findings) and remotely backed up in open draft #224 against
+`dev`. GitHub independently confirms the branch head. All 28 guards, Ruff,
+repository structural/lock/RPC checks, Markdown/Prettier, local links, 29 evidence
+digests and pinned-probe provenance pass. New CI run
+[42381113002](https://github.com/psmfd/FingerTrap/actions/runs/42381113002) has
+started; title/gitflow pass, full platform CI/review remain pending. No activation
+or acceptance. This subsequent status-only checkpoint records that identity;
+read git/draft head for its own SHA. Next remains CF-1C-CAPTURE-1 as described above.
+
+- Implementation CI run 42381113002 now passes all fourteen jobs, including all
+  hosted macOS lanes. Title/gitflow and four CodeQL language analyses pass;
+  Rust remains in progress, aggregate CodeQL neutral, CodeRabbit skipped at
+  readback. Full CodeQL/review remain pending. Documentation-only status
+  checkpoint follows with CI skipped; source CI is specific to 1ca324f.
+- Prescribed local drain started one unused runner because this draft's jobs
+  ran on hosted macOS. Sent SIGTERM to owned drain PID 6993; its finally handler
+  cleaned ft-actions-job-20261107t142044z-4dbc3bf5 with cleanup_errors empty.
+  Drain exits 1 with InterruptedError(signal 15), an intentional cleanup, not
+  a CI test failure. Independent readback: zero GitHub runner registrations,
+  five original stopped VMs, no clone/QA/probe/Tart/Softnet/drain process.
+- Final local checks: 28 guards, Ruff, repository checks, Markdown/Prettier,
+  local links and all 29 private evidence hashes pass; tracked-file secret
+  scan has zero findings. No app result or gate changed. Concrete resume action
+  remains CF-1C-CAPTURE-1, supported guest permission/focus observation before
+  input comparison; see STATUS/handoff for the one-execution reproduction.

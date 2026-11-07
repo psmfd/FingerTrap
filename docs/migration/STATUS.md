@@ -46,8 +46,19 @@ Cleanup verified: controller events empty, five original VMs stopped/preserved,
 owned clone absent, no QA/probe/Tart/Softnet/CI-drain process. The stale active
 pointer was never used. Wrapper source unchanged except the named pointer step
 and existing test expectation; all 28 guards, Ruff and repository checks pass.
-Result is implemented and locally/live verified; commit/backup/CI for this change
-remain pending. Saved-head CI above does not transfer to this change.
+CF-1C-GO-1 implementation/evidence checkpoint `1ca324f6d85779a1081680e05eed5f5292d2f3a8` is committed,
+secret-scanned (zero findings) and remotely backed up in open draft #224 against
+`dev`. GitHub independently confirms the branch head. All 28 guards, Ruff,
+repository structural/lock/RPC checks, Markdown/Prettier, local links, 29 evidence
+digests and pinned-probe provenance pass. New CI run
+[42381113002](https://github.com/psmfd/FingerTrap/actions/runs/42381113002) has
+completed successfully: all fourteen platform/repository jobs pass. Title/gitflow
+and four CodeQL language analyses pass; Rust analysis remains in progress and the
+CodeQL aggregate is neutral at readback. CodeRabbit skipped. Full CodeQL/review
+remain pending; no activation or acceptance. This subsequent documentation-only
+checkpoint records that identity with CI skipped; read git/draft head for its SHA.
+Do not transfer implementation CI to the documentation head. Next remains
+CF-1C-CAPTURE-1 as described above.
 
 **One concrete next action: CF-1C-CAPTURE-1**, a separately recorded bounded atomic
 permission/focus observation in a fresh owned guest. Inspect the guest-only
