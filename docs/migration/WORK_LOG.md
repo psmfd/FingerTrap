@@ -1926,3 +1926,25 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   whitespace and repository structural/lock/RPC checks pass. This subsequent
   status-only checkpoint records the implementation identity; read git/draft head
   for its own SHA. Full protected CI/review remain pending, no merge/acceptance.
+
+## 2026-11-07 — maintainer-requested session end
+
+- End acceptance/diagnostic work at maintainer request; no further guest starts.
+  Implementation fe7ec1471cae5751700bcc77a61e8b48fbe977d7 and status head
+  3a71165aec179d376b91729d1a3c10ca7ed9af4b are committed and backed up in
+  draft #224. Final wrap-up documentation follows; read git/draft for its SHA.
+- Rechecked five original stopped Tart VMs, no disposable clone, no QA driver,
+  controller, independent probe, Tart/Softnet or local CI drain process. Latest
+  atomic receipt remains cleaned/cleanupVerified=true/events empty. Old active
+  pointer untouched; private evidence and original untracked files preserved.
+- Hosted readback at 3a71165 has successful repo-check/lint and several platform
+  jobs; other checks remain in progress. No full protected CI/review, acceptance
+  or merge claimed. Re-read current head checks next session.
+- Reconcile #216/#217 and draft #224 with the completed atomic wrapper and
+  persistent keyboard blocker; retain one input PASS/eleven BLOCKED, production
+  Pi v0.85.1-psmfd.1 and deferred #219. Update worksheet index/ledger references,
+  STATUS and handoff with a copyable next-session prompt.
+- One concrete resume action: name/record the next bounded atomic comparison of
+  pointer-selected Finder Go menu at native PNG coordinates versus keyboard,
+  keeping immediate independent screen/clock and cleanup. Do not reimplement
+  the wrapper or advance app validation before usable input/fresh frames work.

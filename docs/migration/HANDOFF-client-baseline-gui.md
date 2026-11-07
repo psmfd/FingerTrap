@@ -1,12 +1,18 @@
 # CF-1C session handoff — 2026-11-07
 
-Resumed the saved checkpoint and completed the atomic diagnostic wrapper. Read
+Session ended at the maintainer's request; no further guest starts. The bounded
+atomic diagnostic wrapper is implemented and live-verified. Read
 [STATUS](STATUS.md), the latest
 [WORK_LOG](WORK_LOG.md) entry, CONTRIBUTING, the
 [approved CF-1 plan](client-foundation-plan.html#cf1-plan) and ADR-0034.
 Execution approval persists for CF-1 against production Pi only.
 
 ## Saved branch and scope
+
+Pre-wrap status head `3a71165aec179d376b91729d1a3c10ca7ed9af4b` is remotely
+backed up. A final session-end documentation checkpoint follows it; verify local
+and draft #224 head next session. Some hosted checks were still running at
+wrap-up; full CI/review remains pending.
 
 Latest implementation/evidence checkpoint `fe7ec1471cae5751700bcc77a61e8b48fbe977d7` is committed,
 secret-scanned and remotely backed up in draft #224. A subsequent status-only
@@ -58,10 +64,10 @@ Do not churn through app acceptance cases until those observations work.
 
 ## Shutdown and private evidence
 
-Verified 2026-10-29: all original VMs stopped/preserved; no disposable clone or
+Reverified at session end 2026-11-07: five original VMs stopped/preserved; no disposable clone or
 QA driver/controller/comparison/Tart/Softnet process remains. Latest state is
-`cleaned`, `cleanupVerified=true`, with no controller events. The active-console
-pointer refers to the cleaned latest run and must not receive another request.
+`cleaned`, `cleanupVerified=true`, with no controller events. The old active-console
+pointer still refers to a cleaned October run and must not receive another request.
 No guest was launched after the wrap-up request.
 
 Preserve `.local-testing/`, `LEGACY_pi_config_3579dc1.patch`,
@@ -139,11 +145,22 @@ a real sleeping child. No new protected CI success or app acceptance is claimed.
 
 ## Next-session prompt
 
-> Resume FingerTrap on test/client-baseline-gui / draft #224. Read CONTRIBUTING,
-> STATUS, this handoff and the latest WORK_LOG. The bounded atomic wrapper is
-> implemented and live-verified; screen/clock readback now works immediately after
-> input. The independent client still times out after Meta+Shift+g, and keyboard
-> delivery is unproven. Continue with a named bounded atomic pointer-selected
-> Finder menu versus keyboard comparison using native PNG coordinates. Preserve
-> private evidence and the stale active pointer. No app cases before usable input
-> and fresh frames. Keep Pi v0.85.1-psmfd.1 and defer #219's Pi 1.3.0 comparison.
+> Resume FingerTrap in /Users/pdavis/projects/_personal/FingerTrap. Read
+> CONTRIBUTING.md, docs/migration/STATUS.md,
+> docs/migration/HANDOFF-client-baseline-gui.md and the latest WORK_LOG entry.
+> Verify branch test/client-baseline-gui and open draft #224 against dev; the
+> final session-end checkpoint follows 3a71165 (implementation fe7ec14). Re-read
+> current head and CI; full protected CI/review was pending at handoff.
+> The bounded atomic wrapper scripts/client_baseline_compare.py is implemented
+> and live-verified. Run 20261107T131951Z-0c27fad0d0fb completed immediate guest
+> screen/clock after every probe and verified cleanup; Meta+Shift+g still caused
+> a follow-up RFB timeout, and usable keyboard delivery remains unproven.
+> Continue CF-1C with a named bounded atomic pointer-selected Finder Go menu
+> versus keyboard comparison using observed native PNG coordinates. Record the
+> slice before changing diagnostic steps, retain immediate screen/clock after
+> each input and owned cleanup in one execution, with private redirected logs.
+> Preserve all private evidence and unrelated files; never reuse the cleaned
+> active-console pointer. Five original VMs were stopped, with no owned clone
+> or QA processes at shutdown. No app cases until usable input and fresh frames
+> are observed. Keep Pi v0.85.1-psmfd.1, defer #219's Pi 1.3.0 comparison, and
+> preserve all activation/backend/release gates. Execution approval persists.

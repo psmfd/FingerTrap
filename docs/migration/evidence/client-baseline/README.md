@@ -7,6 +7,16 @@ Read the [implementation plan](../../client-foundation-plan.html#cf1-plan) and
 The maintainer approved execution after selecting the production-only scope.
 Individual acceptance results remain separate from harness implementation.
 
+## GUI continuation — 2026-11-07 session end
+
+Draft [#224](https://github.com/psmfd/FingerTrap/pull/224) implements the bounded
+atomic diagnostic wrapper. [Latest sanitized evidence](gui-continuation/atomic-comparison.json)
+records successful immediate guest screen/clock readback after every probe;
+Meta+Shift+g still times out and usable keyboard delivery remains unproven.
+No app row changed: one input PASS, eleven BLOCKED. Owned cleanup verified.
+Next action and reproduction commands: [session handoff](../../HANDOFF-client-baseline-gui.md).
+Full protected CI/review and baseline acceptance remain pending.
+
 ## Current result — 2026-10-22
 
 [Verified inputs](inputs.json) and [case results](results.json) record run

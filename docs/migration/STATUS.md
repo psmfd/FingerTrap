@@ -1,6 +1,22 @@
 # Runtime migration: current status
 
-Updated: 2026-11-07. Resumed at the maintainer's request.
+Updated: 2026-11-07. Paused at the maintainer's request for session end.
+
+## Session-end checkpoint
+
+Implementation `fe7ec1471cae5751700bcc77a61e8b48fbe977d7` and status checkpoint
+`3a71165aec179d376b91729d1a3c10ca7ed9af4b` are committed and remotely backed up
+in open draft #224 on `test/client-baseline-gui` against `dev`. This wrap-up
+commit follows them; read local/draft head for its identity. No further guest
+starts in this session. Final inventory: five original stopped VMs, no disposable
+clone and no QA/controller/probe/Tart/Softnet process. Private evidence preserved.
+
+Hosted checks on `3a71165` include successful repo-check, lint and several platform
+jobs, with other jobs still running at readback. Full protected CI/review remains
+pending; re-read the final head next session. No merge or acceptance.
+Use [the handoff and copyable prompt](HANDOFF-client-baseline-gui.md#next-session-prompt).
+The atomic wrapper is complete; the next change is the bounded pointer-selected
+Finder menu versus keyboard comparison, not reimplementation of the wrapper.
 
 ## CF-1C atomic comparison — implemented and live-verified wrapper
 
@@ -29,7 +45,7 @@ secret-scanned (zero findings) and remotely backed up in draft #224. A subsequen
 status-only commit records this identity; read git/draft head for its own SHA.
 Full protected CI and review remain pending; no acceptance or merge claimed.
 
-## CF-1C handoff — independent client reproduces frame timeout
+## Historical 2026-10-29 handoff — superseded by atomic wrapper above
 
 Branch `test/client-baseline-gui`, draft #224. Handoff evidence checkpoint
 `2cdf67406416f4d0cce3a5023af4bde7be66fd8b` is committed, secret-scanned and remotely backed up.
@@ -53,12 +69,12 @@ clone, no QA driver/controller/comparison/Tart/Softnet process. Latest run state
 is cleaned with cleanupVerified=true and no controller events. Active-console
 points to that cleaned run; do not reuse it. Private evidence is preserved.
 
-**One resume action:** implement and name a bounded atomic comparison wrapper
+**Historical resume action (completed 2026-11-07):** implement and name a bounded atomic comparison wrapper
 around the saved driver and independent probes: boot/new first frame, paced
 pointer/keyboard, immediate guest screen/clock readback, then owned cleanup in
 one approved tool execution. Do not repeat separated calls across approval or
 session delays. Validate ownership/stale-pointer/deadline behavior before live
-use. This wrapper is the next change; it has not been implemented. Exact existing
+use. That historical action is now implemented and live-verified as recorded above. Exact existing
 commands, private paths and probe limitations are in
 [HANDOFF-client-baseline-gui.md](HANDOFF-client-baseline-gui.md).
 

@@ -11,6 +11,11 @@ accounted for separately. A disposition does not assert a bug is fixed.
 
 ## Successor work
 
+CF-1C session end, 2026-11-07: draft #224 contains the implemented/live-verified
+atomic comparison wrapper. Immediate guest screen/clock now works; usable
+keyboard input remains blocked. #217 stays one input PASS/eleven app BLOCKED;
+Comparison #219 remains deferred. [Current resume action](HANDOFF-client-baseline-gui.md).
+
 | ID                                                                            | FingerTrap owner                                                            | Start condition                                                                                                                                                                                                                     |
 | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [CLIENT-FOUNDATION / #216](https://github.com/psmfd/FingerTrap/issues/216)    | Packaged client, completed profiles and supervised JavaScript/Pi SDK worker | Current sequence; [plan](client-foundation-plan.html). Further catalog import/review waits for foundation exit. Existing #201/#202/#186/#187 retain implementation ownership.                                                       |
