@@ -21,6 +21,175 @@ vnc = compare.vnc
 
 
 class AtomicGuards(unittest.TestCase):
+    def agent(self, pid=42):
+        return {
+            "plist": "/Library/LaunchAgents/org.cirruslabs.tart-guest-agent.plist",
+            "plistSha256": "a" * 64,
+            "target": "gui/501/org.cirruslabs.tart-guest-agent",
+            "uid": 501,
+            "pid": pid,
+            "program": "/opt/homebrew/bin/tart-guest-agent",
+            "executable": "/opt/homebrew/bin/tart-guest-agent",
+            "programSha256": "b" * 64,
+            "executableMatches": True,
+            "document": {
+                "ProgramArguments": [
+                    "/opt/homebrew/bin/tart-guest-agent",
+                    "--run-agent",
+                ]
+            },
+        }
+
+    def test_restart_selector_rejects_ambiguous_non_rpc_wrong_uid_or_binary(self):
+        good = self.agent()
+        for services in (
+            [],
+            [good, self.agent(43)],
+            [dict(good, uid=0)],
+            [dict(good, executableMatches=False)],
+            [
+                dict(
+                    good,
+                    document={"ProgramArguments": [good["program"], "--run-daemon"]},
+                )
+            ],
+        ):
+            with self.subTest(services=services), self.assertRaises(ValueError):
+                compare.select_agent({"uid": 501, "services": services})
+        self.assertEqual(compare.select_agent({"uid": 501, "services": [good]}), good)
+        with self.assertRaises(ValueError):
+            compare.permission_step(
+                {"action": "restart-agent", "target": "system/other"}, 0
+            )
+
+    def test_restart_revalidates_pid_and_binary_before_service_command(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            baseline = {"uid": 501, "services": [self.agent()]}
+            (root / "agent-inventory.json").write_text(json.dumps(baseline))
+            for index, changed in enumerate(
+                (self.agent(43), dict(self.agent(), programSha256="c" * 64))
+            ):
+                with (
+                    patch.object(
+                        compare,
+                        "agent_inventory",
+                        return_value={"uid": 501, "services": [changed]},
+                    ),
+                    patch.object(
+                        compare,
+                        "guest_command",
+                        side_effect=AssertionError("Restart must not run"),
+                    ) as command,
+                    self.assertRaises(ValueError),
+                ):
+                    compare.restart_agent(
+                        root,
+                        root,
+                        {"Name": f"step-{index:02d}"},
+                        compare.time.monotonic() + 90,
+                    )
+                command.assert_not_called()
+
+    def test_restart_transport_loss_requires_changed_pid_before_screen_readback(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            baseline = {"uid": 501, "services": [self.agent()]}
+            after = {"uid": 501, "services": [self.agent(43)]}
+            (root / "agent-inventory.json").write_text(json.dumps(baseline))
+            events = []
+
+            def inventory(*args):
+                events.append("inventory")
+                return after if len(events) >= 4 else baseline
+
+            def restart(*args, **kwargs):
+                events.append("restart")
+                raise subprocess.CalledProcessError(
+                    1, "tart", stderr=b"RPC disconnected"
+                )
+
+            with (
+                patch.object(compare, "agent_inventory", side_effect=inventory),
+                patch.object(compare, "guest_command", side_effect=restart),
+                patch.object(compare.time, "sleep"),
+                patch.object(
+                    compare,
+                    "guest_screen",
+                    side_effect=lambda *args: events.append("screen"),
+                ),
+            ):
+                compare.restart_agent(
+                    root, root, {"Name": "step-00"}, compare.time.monotonic() + 90
+                )
+            self.assertEqual(
+                events, ["inventory", "restart", "inventory", "inventory", "screen"]
+            )
+            receipt = json.loads((root / "step-00/restart.json").read_text())
+            self.assertEqual((receipt["beforePid"], receipt["afterPid"]), (42, 43))
+            self.assertTrue(receipt["reconnected"])
+
+    def test_inventory_keeps_failed_service_output_and_precedes_first_capture(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            service = self.agent()
+            document = dict(
+                service["document"], Label="org.cirruslabs.tart-guest-agent"
+            )
+            with patch.object(
+                compare,
+                "guest_command",
+                side_effect=[
+                    b"501\n",
+                    b"42 501 /opt/homebrew/bin/tart-guest-agent\n",
+                    (service["plist"] + "\n").encode(),
+                    json.dumps(document).encode(),
+                    subprocess.CalledProcessError(
+                        1, "launchctl", output=b"partial inventory", stderr=b"inactive"
+                    ),
+                ],
+            ):
+                compare.agent_inventory(
+                    root, root / "inventory.json", compare.time.monotonic() + 10
+                )
+            evidence = json.loads((root / "inventory.json").read_text())
+            self.assertEqual(evidence["commands"][-1]["stdout"], "partial inventory")
+            self.assertEqual(evidence["commands"][-1]["stderr"], "inactive")
+            image = root / "console-first-frame.png"
+            image.write_bytes(b"fresh frame")
+            events = []
+            with (
+                patch.object(vnc, "connection"),
+                patch.object(
+                    compare,
+                    "agent_inventory",
+                    side_effect=lambda *args: events.append("inventory"),
+                ),
+                patch.object(
+                    compare,
+                    "guest_screen",
+                    side_effect=lambda *args: events.append("screen"),
+                ),
+                patch.object(
+                    compare,
+                    "permission_session",
+                    side_effect=lambda *args: events.append("queue"),
+                ),
+            ):
+                compare.observe(root, image, permission=True)
+            self.assertEqual(events, ["inventory", "screen", "queue"])
+
+    def test_unowned_guest_cannot_execute_inventory_or_restart_command(self):
+        with (
+            patch.object(vnc, "connection", side_effect=ValueError("unowned")),
+            patch.object(compare.qa, "command") as command,
+            self.assertRaises(ValueError),
+        ):
+            compare.guest_command(
+                Path("unowned"), compare.time.monotonic() + 10, "/usr/bin/id", "-u"
+            )
+        command.assert_not_called()
+
     def test_permission_requests_reject_unknown_actions_and_arbitrary_text(self):
         for request in (
             {"action": "shell", "command": "id"},

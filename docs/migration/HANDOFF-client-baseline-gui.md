@@ -1,6 +1,56 @@
 # CF-1C session handoff — 2026-11-07
 
-## Latest continuation: CF-1C-CAPTURE-1
+## Latest continuation: CF-1C-CAPTURE-2
+
+Run `20261107T153328Z-e16d52dd729f` finished explicitly after nine actions:
+eight RFB probes plus the normal RPC-agent restart. Initial and all nine immediate
+independent guest screen/clock readbacks completed. Inventory before capture
+identified `gui/501/org.cirruslabs.tart-guest-agent`, PID 423, executable
+`/opt/homebrew/bin/tart-guest-agent`; executable/plist program digests match.
+The disk-resize daemon is separately inventoried and excluded from selection.
+Supported guest privacy UI/public fixture authentication enabled the executable
+recording toggle while another guest-agent entry was already enabled.
+
+Identity was revalidated before `launchctl kickstart -k`. Its RPC request hit
+the 10s command timeout, but reconnection and fresh process/service inventory
+proved PID **423 → 843** with the same service, plist and executable identity.
+Immediate post-restart screen/clock succeeded. RFB after restart still shows
+the permission prompt over Settings; independent screenshots still omit windows.
+The restart is verified and is not sufficient to fix capture in this run.
+Only probe 00's follow-up frame timed out; the other seven follow-up RFB captures
+succeeded. No input qualification or app case advanced. Driver exit 0 is not a
+capture/input pass. Normal owned cleanup verified, controller events empty;
+five original VMs stopped/preserved, no clone or QA/probe/Tart/Softnet/drain process.
+
+[Sanitized agent restart evidence](evidence/client-baseline/gui-continuation/agent-restart-comparison.json)
+retains exact service/PID/digests, nine actions, ten independent readbacks and
+86 private-file hashes. Raw inventory/frames/logs remain private. All 36 kept
+guards, Ruff and repository checks pass. Red proof: isolated removal of the
+pre-restart PID comparison fails the kept guard; unchanged production source
+passes. Result is implemented and locally/live verified; commit/backup/CI follow.
+
+**Next bounded action: CF-1C-CAPTURE-3.** Collect the identified guest agent's
+code-signing identity and narrowly scoped macOS privacy (TCC) decision logs around
+one capture in a fresh owned atomic session. Correlate the actual requesting
+client with the two visible permission entries before deciding any supported
+exact-entry UI re-enrollment. Do not repeat grant/restart as an assumed fix.
+No TCC database edits, permission bypass, host changes or app validation. Retain
+immediate readbacks, private output and cleanup. Baseline stays one input PASS /
+eleven BLOCKED, Pi v0.85.1-psmfd.1, deferred #219 and all existing gates.
+
+The existing `--permission-session` command below now inventories the guest
+agent before its first independent capture. Queue action
+`{"action":"restart-agent"}` accepts no additional fields. It rechecks the
+baseline service/PID/binary, normally restarts only that unique RPC service,
+then requires a changed PID and matching service/executable before readback.
+The reconnect budget is at most 90s within the 720s observation deadline.
+No caller command, target, path or endpoint is accepted for restart.
+
+Component-role references: [Tart guest-agent README](https://github.com/cirruslabs/tart-guest-agent#readme)
+and [image launch-agent template](https://github.com/cirruslabs/macos-image-templates/blob/master/data/tart-guest-agent.plist).
+Runtime selection uses the actual guest inventory, not a guessed template label.
+
+## Historical continuation: CF-1C-CAPTURE-1
 
 Run `20261107T143813Z-90064f4d9802` completed sixteen probes with immediate
 independent screen/clock readbacks. The supported guest privacy panel showed two
@@ -303,7 +353,7 @@ a real sleeping child. No new protected CI success or app acceptance is claimed.
 > private evidence/unrelated files, Pi v0.85.1-psmfd.1, deferred #219 and all gates.
 > Existing CF-1 execution approval persists.
 
-## Current resume prompt
+## Historical permission resume prompt
 
 > Resume FingerTrap, branch test/client-baseline-gui and draft #224 against dev.
 > Read STATUS, this handoff and latest WORK_LOG; verify exact head/CI.
@@ -317,4 +367,22 @@ a real sleeping child. No new protected CI success or app acceptance is claimed.
 > same bounded atomic execution; verify reconnection and full-window capture.
 > No TCC bypass, host permission changes or app validation. Preserve private
 > evidence/stale pointer, Pi v0.85.1-psmfd.1, deferred #219, one input PASS/eleven
+> BLOCKED and all activation/backend/release gates. CF-1 approval persists.
+
+## Current resume prompt
+
+> Resume FingerTrap, branch test/client-baseline-gui, open draft #224 against dev.
+> Read STATUS, this handoff and latest WORK_LOG; verify exact head/CI.
+> CF-1C-CAPTURE-2 run 20261107T153328Z-e16d52dd729f identified the actual RPC
+> service and verified normal restart PID 423 to 843 with matching identity.
+> Supported guest UI grant plus restart did not resolve capture: RFB still
+> shows the recording prompt/Settings while independent screenshots omit windows.
+> Nine actions/ten readbacks completed, explicit finish/normal cleanup verified,
+> five original stopped VMs, no clone or QA processes. Private evidence preserved.
+> Next: record CF-1C-CAPTURE-3, collect guest-agent signing identity and narrowly
+> scoped TCC capture-decision logs, map the actual client to the two permission
+> entries before choosing supported exact-entry UI re-enrollment. No TCC database
+> edits, permission bypass, host changes or app validation. Keep the bounded
+> atomic execution, immediate readbacks, private output and cleanup. Preserve
+> stale active pointer, Pi v0.85.1-psmfd.1, deferred #219, one input PASS/eleven
 > BLOCKED and all activation/backend/release gates. CF-1 approval persists.

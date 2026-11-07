@@ -11,14 +11,14 @@ accounted for separately. A disposition does not assert a bug is fixed.
 
 ## Successor work
 
-CF-1C-CAPTURE-1, 2026-11-07: supported guest UI/authentication enabled the
-executable agent recording toggle, but the prompt recurred and independent
-screenshots still omit windows. Sixteen probes/readbacks completed; observer
-deadline expired and cleanup verified. New bounded permission-session mode
-passes 31 guards; no app case ran. #217 remains one input PASS/eleven BLOCKED;
-comparison #219 deferred. Next: CF-1C-CAPTURE-2 active guest-agent inventory and normal
-service restart after UI grant, then reliable full-window capture verification.
-[Evidence](evidence/client-baseline/gui-continuation/permission-comparison.json)
+CF-1C-CAPTURE-2, 2026-11-07: actual guest RPC service identified; supported UI
+grant and normal restart PID 423 → 843 verified with matching service/executable
+identity and reconnection. RFB still shows permission prompt/Settings that
+independent screenshots omit. Nine actions/ten readbacks and normal cleanup
+verified. All 36 guards pass. No app case advanced; #217 one input PASS/eleven
+BLOCKED, comparison #219 deferred. Next: CF-1C-CAPTURE-3 signing identity and
+narrow TCC decision logs before any supported exact-entry UI re-enrollment.
+[Evidence](evidence/client-baseline/gui-continuation/agent-restart-comparison.json)
 and [current resume action](HANDOFF-client-baseline-gui.md).
 
 | ID                                                                            | FingerTrap owner                                                            | Start condition                                                                                                                                                                                                                     |

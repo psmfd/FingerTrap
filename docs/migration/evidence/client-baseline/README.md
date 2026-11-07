@@ -7,25 +7,26 @@ Read the [implementation plan](../../client-foundation-plan.html#cf1-plan) and
 The maintainer approved execution after selecting the production-only scope.
 Individual acceptance results remain separate from harness implementation.
 
-## GUI continuation — CF-1C-CAPTURE-1, 2026-11-07
+## GUI continuation — CF-1C-CAPTURE-2, 2026-11-07
 
-[Permission comparison](gui-continuation/permission-comparison.json), run
-`20261107T143813Z-90064f4d9802`: supported guest UI/authentication enabled the
-executable guest-agent recording toggle, but the prompt recurred and independent
-screenshots still omit windows. RFB captures Settings/Finder. Sixteen probes and
-immediate screen/clock readbacks completed; the 720s observation deadline expired
-and owned cleanup verified five original stopped VMs, no clone or QA processes.
-No app row changed: one input PASS, eleven BLOCKED. Raw evidence remains private.
+[Agent restart comparison](gui-continuation/agent-restart-comparison.json), run
+`20261107T153328Z-e16d52dd729f`: actual RPC service identified before capture;
+supported guest UI grant plus normal identity-checked restart verified PID
+423 → 843. Reconnection and immediate independent readback succeed. RFB still
+shows the permission prompt/Settings; independent screenshots still omit windows.
+Restart is verified and is not sufficient to fix capture in this run.
 
-All 31 guards, Ruff and repository checks pass; symlink rejection has red-first
-proof. New permission mode preserves the default comparison, adds 720s/40-action
-observation with 960s guest hold and retains per-input readbacks/owned cleanup.
-Current implementation CI/review and baseline acceptance remain pending.
-Next: CF-1C-CAPTURE-2 active guest-agent identity and normal service restart after
-the UI grant, then actual window-capture verification. Exact reproduction and
-current checkpoint: [handoff](../../HANDOFF-client-baseline-gui.md).
-[Go-menu comparison](gui-continuation/go-menu-comparison.json) and
-[previous atomic comparison](gui-continuation/atomic-comparison.json) are preserved.
+Nine actions (eight RFB probes plus restart), ten independent readbacks and
+explicit finish/normal cleanup verified. Five originals stopped/preserved,
+no clone/QA processes; raw evidence private. No app row changed: one input PASS,
+eleven BLOCKED. All 36 guards, Ruff and repository checks pass; stale-PID
+rejection has red-first proof. Current implementation CI/review remains pending.
+Next: CF-1C-CAPTURE-3 signing identity and narrowly scoped TCC decision logs before
+choosing any exact-entry UI re-enrollment. [Handoff](../../HANDOFF-client-baseline-gui.md)
+contains commands, checkpoint and gates. Previous evidence is preserved:
+[permission grant](gui-continuation/permission-comparison.json),
+[Go-menu](gui-continuation/go-menu-comparison.json),
+[atomic comparison](gui-continuation/atomic-comparison.json).
 
 ## Current result — 2026-10-22
 

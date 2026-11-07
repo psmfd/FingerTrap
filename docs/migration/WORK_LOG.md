@@ -2149,3 +2149,79 @@ ddb4ef1a043bf5615f86e143c95ad3e4926ca584. Title/gitflow pass; full CodeQL/review
 still pending. Documentation checkpoint 2a7009d0aecf2ff8d0c4f1870c8aca30165246b3
 is remotely backed up with CI skipped; this final CI-readback update follows it.
 No new guest starts, app validation or gate changes. Next: CF-1C-CAPTURE-2.
+
+## 2026-11-07 — CF-1C-CAPTURE-2 approved implementation
+
+Maintainer approved this next bounded action. Start at
+`0cf35d21f239c7c65f5d1c82b359913cf86285ee`, branch `test/client-baseline-gui`,
+open draft #224 against dev. Reuse the existing atomic permission session.
+Before the first independent capture, inventory guest-agent process executable,
+launch plist, domain/label and active PID. Preserve complete private inventory
+and errors; optional missing directories must not discard useful output.
+Only a unique active RPC-capable launch service whose PID/executable match the
+inventory may be restarted. Revalidate identity immediately before restart.
+Use normal guest launchctl service restart, then bounded reconnection and verify
+a changed PID with the same service/executable. No guessed service, broad kill,
+TCC edits, host settings change or permission bypass.
+
+Affected files: scripts/client_baseline_compare.py and kept guard tests, plus
+migration records/evidence. Add one fixed restart-agent queue action with no
+caller-supplied command, service, path or endpoint. Supported guest UI grant and
+public fixture authentication remain observable through RFB. Keep immediate
+independent screen/clock attempts after every probe; restart records its own
+bounded reconnect/readback outcome in the same owned execution. Default runner
+unchanged. Retain 720s observation, 960s hold, 40 actions, 45s probe and 30s guest
+command limits; restart gets at most 90s within remaining observation time.
+
+Validate ownership, ambiguous/non-RPC/wrong-PID rejection and changed-PID
+readback with meaningful regressions/red proof, then one fresh private redirected
+live run. Compare actual Settings/Finder windows in both capture paths after UI
+grant and restart. Only after reliable capture, qualify pointer Go To Folder,
+focused keyboard chord and synthetic text. No app cases in this slice. Finish
+or fail within bounds and independently verify owned cleanup. One input PASS /
+eleven BLOCKED, Pi v0.85.1-psmfd.1, deferred #219 and all gates remain intact.
+Next: implement and verify the inventory/restart operation before guest boot.
+
+CF-1C-CAPTURE-2 preflight: inventory and identity-checked restart-agent operation
+implemented in the existing permission session. All 36 guards and Ruff pass.
+Removing pre-restart PID comparison in an isolated module fails the new guard;
+production source unchanged. Pinned probe verified; local/draft head 0cf35d2
+matches open draft #224 against dev. Five original stopped VMs, no guest driver,
+probe/Tart/Softnet/drain process. Next: one fresh atomic private redirected run,
+inspect pre-capture inventory, supported UI grant and normal service restart.
+
+Run `20261107T153328Z-e16d52dd729f` finished explicitly after nine actions:
+eight RFB probes plus the normal RPC-agent restart. Initial and all nine immediate
+independent guest screen/clock readbacks completed. Inventory before capture
+identified `gui/501/org.cirruslabs.tart-guest-agent`, PID 423, executable
+`/opt/homebrew/bin/tart-guest-agent`; executable/plist program digests match.
+The disk-resize daemon is separately inventoried and excluded from selection.
+Supported guest privacy UI/public fixture authentication enabled the executable
+recording toggle while another guest-agent entry was already enabled.
+
+Identity was revalidated before `launchctl kickstart -k`. Its RPC request hit
+the 10s command timeout, but reconnection and fresh process/service inventory
+proved PID **423 → 843** with the same service, plist and executable identity.
+Immediate post-restart screen/clock succeeded. RFB after restart still shows
+the permission prompt over Settings; independent screenshots still omit windows.
+The restart is verified and is not sufficient to fix capture in this run.
+Only probe 00's follow-up frame timed out; the other seven follow-up RFB captures
+succeeded. No input qualification or app case advanced. Driver exit 0 is not a
+capture/input pass. Normal owned cleanup verified, controller events empty;
+five original VMs stopped/preserved, no clone or QA/probe/Tart/Softnet/drain process.
+
+[Sanitized agent restart evidence](evidence/client-baseline/gui-continuation/agent-restart-comparison.json)
+retains exact service/PID/digests, nine actions, ten independent readbacks and
+86 private-file hashes. Raw inventory/frames/logs remain private. All 36 kept
+guards, Ruff and repository checks pass. Red proof: isolated removal of the
+pre-restart PID comparison fails the kept guard; unchanged production source
+passes. Result is implemented and locally/live verified; commit/backup/CI follow.
+
+**Next bounded action: CF-1C-CAPTURE-3.** Collect the identified guest agent's
+code-signing identity and narrowly scoped macOS privacy (TCC) decision logs around
+one capture in a fresh owned atomic session. Correlate the actual requesting
+client with the two visible permission entries before deciding any supported
+exact-entry UI re-enrollment. Do not repeat grant/restart as an assumed fix.
+No TCC database edits, permission bypass, host changes or app validation. Retain
+immediate readbacks, private output and cleanup. Baseline stays one input PASS /
+eleven BLOCKED, Pi v0.85.1-psmfd.1, deferred #219 and all existing gates.

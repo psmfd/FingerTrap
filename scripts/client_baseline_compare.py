@@ -8,8 +8,10 @@ private. Neither process success nor screenshot existence is input acceptance.
 import argparse
 import base64
 from datetime import datetime, timezone
+import hashlib
 import json
 from pathlib import Path
+import re
 import signal
 import subprocess
 import sys
@@ -44,13 +46,198 @@ def verify_probe():
         raise ValueError("Independent probe module sums changed")
 
 
+def guest_command(run, deadline, *args, cap=30):
+    vnc.connection(run)
+    _, state = qa.load(run)
+    return qa.command(
+        ["tart", "exec", state["vm"], *args], timeout=remaining(deadline, cap)
+    )
+
+
+def agent_inventory(run, output, deadline):
+    evidence = {"commands": [], "services": []}
+
+    def execute(*args):
+        try:
+            data = guest_command(run, deadline, *args)
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+            evidence["commands"].append(
+                {
+                    "arguments": args,
+                    "exitCode": getattr(error, "returncode", None),
+                    "timedOut": isinstance(error, subprocess.TimeoutExpired),
+                    "stdout": (error.stdout or b"").decode(errors="replace"),
+                    "stderr": (error.stderr or b"").decode(errors="replace"),
+                }
+            )
+            qa.save(output, evidence)
+            raise
+        evidence["commands"].append(
+            {
+                "arguments": args,
+                "exitCode": 0,
+                "stdout": data.decode(errors="replace"),
+            }
+        )
+        qa.save(output, evidence)
+        return data
+
+    evidence["uid"] = int(execute("/usr/bin/id", "-u"))
+    processes = {}
+    for line in execute("/bin/ps", "-axo", "pid=,uid=,comm=").decode().splitlines():
+        fields = line.split(None, 2)
+        if len(fields) == 3 and Path(fields[2]).name == "tart-guest-agent":
+            processes[int(fields[0])] = {"uid": int(fields[1]), "executable": fields[2]}
+    evidence["processes"] = processes
+    # Optional directories are handled in the guest, never dropped on ls failure.
+    paths = (
+        execute(
+            "/bin/sh",
+            "-c",
+            "for p in /Library/LaunchAgents/*tart*.plist "
+            "/Library/LaunchDaemons/*tart*.plist "
+            "/Users/admin/Library/LaunchAgents/*tart*.plist; "
+            'do if test -f "$p"; then printf "%s\\n" "$p"; fi; done',
+        )
+        .decode()
+        .splitlines()
+    )
+    if len(paths) > 16:
+        raise ValueError("Guest-agent plist inventory exceeds budget")
+    for path in paths:
+        if not re.fullmatch(
+            r"/(?:Library/Launch(?:Agents|Daemons)|Users/admin/Library/LaunchAgents)"
+            r"/[A-Za-z0-9._-]*tart[A-Za-z0-9._-]*\.plist",
+            path,
+        ):
+            raise ValueError("Unexpected guest-agent plist path")
+        raw = execute("/usr/bin/plutil", "-convert", "json", "-o", "-", path)
+        document = json.loads(raw)
+        label = document.get("Label", "")
+        if not re.fullmatch(r"[A-Za-z0-9._-]{1,128}", label):
+            raise ValueError("Unexpected guest launch service label")
+        target = (
+            "system/"
+            if path.startswith("/Library/LaunchDaemons/")
+            else f"gui/{evidence['uid']}/"
+        ) + label
+        service = {
+            "plist": path,
+            "plistSha256": hashlib.sha256(raw).hexdigest(),
+            "target": target,
+            "document": document,
+        }
+        evidence["services"].append(service)
+        try:
+            listing = execute("/bin/launchctl", "print", target).decode()
+        except subprocess.CalledProcessError:
+            continue  # Preserve inactive/unavailable candidates and their errors.
+        match = re.search(r"^\s*pid = ([0-9]+)\s*$", listing, re.MULTILINE)
+        if not match or int(match[1]) not in processes:
+            continue
+        service.update(pid=int(match[1]), **processes[int(match[1])])
+        arguments = document.get("ProgramArguments", [])
+        program = document.get("Program") or (arguments[0] if arguments else "")
+        if not Path(program).is_absolute() or Path(program).name != "tart-guest-agent":
+            continue
+        service["program"] = program
+        digest = execute("/usr/bin/shasum", "-a", "256", program).decode().split()[0]
+        if not re.fullmatch(r"[0-9a-f]{64}", digest):
+            raise ValueError("Invalid guest-agent executable digest")
+        service["programSha256"] = digest
+        executable = service["executable"]
+        if not Path(executable).is_absolute():
+            continue
+        actual = execute("/usr/bin/shasum", "-a", "256", executable).decode().split()[0]
+        service["executableMatches"] = actual == digest
+    qa.save(output, evidence)
+    return evidence
+
+
+def select_agent(inventory):
+    candidates = [
+        s
+        for s in inventory["services"]
+        if (
+            s.get("pid")
+            and s.get("executableMatches")
+            and s.get("programSha256")
+            and s.get("uid") == inventory["uid"]
+            and set(s["document"].get("ProgramArguments", []))
+            & {"--run-agent", "--run-rpc"}
+        )
+    ]
+    if len(candidates) != 1:
+        raise ValueError("A unique active guest RPC service is required")
+    return candidates[0]
+
+
+def same_service(before, after):
+    return all(
+        before.get(k) == after.get(k)
+        for k in (
+            "plist",
+            "plistSha256",
+            "target",
+            "uid",
+            "program",
+            "programSha256",
+            "executable",
+        )
+    )
+
+
+def restart_agent(run, root, step, deadline):
+    output = root / step["Name"]
+    output.mkdir(mode=0o700)
+    restart_deadline = min(deadline, time.monotonic() + 90)
+    baseline = select_agent(json.loads((root / "agent-inventory.json").read_text()))
+    before = select_agent(
+        agent_inventory(run, output / "before.json", restart_deadline)
+    )
+    if not same_service(baseline, before) or baseline["pid"] != before["pid"]:
+        raise ValueError("Guest RPC service identity changed before restart")
+    receipt = {"target": before["target"], "beforePid": before["pid"]}
+    qa.save(output / "restart.json", receipt)
+    try:
+        # A normal service restart can disconnect its own RPC transport.
+        guest_command(
+            run,
+            restart_deadline,
+            "/bin/launchctl",
+            "kickstart",
+            "-k",
+            before["target"],
+            cap=10,
+        )
+        receipt["requestCompleted"] = True
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+        receipt["requestError"] = type(error).__name__
+    qa.save(output / "restart.json", receipt)
+    attempt = 0
+    while True:
+        remaining(restart_deadline)
+        try:
+            current = agent_inventory(
+                run, output / f"reconnect-{attempt:02d}.json", restart_deadline
+            )
+            after = select_agent(current)
+            if not same_service(before, after):
+                raise RuntimeError("Guest RPC service identity changed after restart")
+            if before["pid"] != after["pid"]:
+                receipt.update(afterPid=after["pid"], reconnected=True)
+                qa.save(output / "restart.json", receipt)
+                guest_screen(run, output, restart_deadline)
+                return
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+            pass
+        attempt += 1
+        time.sleep(min(1, remaining(restart_deadline)))
+
+
 def guest_screen(run, output, deadline):
     def execute(*args):
-        vnc.connection(run)
-        _, state = qa.load(run)
-        return qa.command(
-            ["tart", "exec", state["vm"], *args], timeout=remaining(deadline)
-        )
+        return guest_command(run, deadline, *args)
 
     # Fixed guest-only paths/commands; no host clipboard or operator data.
     command = (
@@ -115,6 +302,8 @@ def probe_step(run, step, root, deadline):
 
 
 def permission_step(request, index):
+    if request == {"action": "restart-agent"}:
+        return {"Name": f"step-{index:02d}", "RestartAgent": True}
     vnc.validate(request)
     action = request["action"]
     if (
@@ -153,7 +342,10 @@ def permission_session(run, root, deadline):
         if step is None:
             qa.save(root / "session.json", {"phase": "finished", "actions": index})
             return
-        probe_step(run, step, root, deadline)
+        if step.get("RestartAgent"):
+            restart_agent(run, root, step, deadline)
+        else:
+            probe_step(run, step, root, deadline)
     raise TimeoutError("Permission session action budget exhausted")
 
 
@@ -165,6 +357,8 @@ def observe(run, image, permission=False):
     deadline = time.monotonic() + (720 if permission else 240)
     root = run / "atomic-comparison"
     root.mkdir(mode=0o700)
+    if permission:
+        agent_inventory(run, root / "agent-inventory.json", deadline)
     guest_screen(run, root, deadline)
     if permission:
         permission_session(run, root, deadline)
