@@ -67,8 +67,9 @@ rejection makes the new guard fail; unchanged production source passes. CF-1C-CA
 `ddb4ef1a043bf5615f86e143c95ad3e4926ca584` is committed, secret-scanned (zero
 findings) and remotely backed up in open draft #224 against dev. Independent
 GitHub readback confirms the head. CI run
-[42385049680](https://github.com/psmfd/FingerTrap/actions/runs/42385049680) is in
-progress; title/gitflow pass, full CI/CodeQL/review remain pending. All four macOS
+[42385049680](https://github.com/psmfd/FingerTrap/actions/runs/42385049680) now
+passes all fourteen platform/repository jobs. Title/gitflow pass; full
+CodeQL/review remain pending. All four macOS
 jobs use hosted macos-15 runners; no local jobs queued, no local drain launched.
 GitHub runner registrations are zero. This subsequent documentation-only
 checkpoint records the implementation identity with CI skipped; read git/draft

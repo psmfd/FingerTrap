@@ -2143,3 +2143,9 @@ Next remains CF-1C-CAPTURE-2 as described above.
 Final Markdown/Prettier and local links pass after the lint correction. All 148
 private evidence digests match; all 31 kept guards, Ruff and repository checks
 pass. Private evidence, stale active pointer and original unrelated files preserved.
+
+Post-checkpoint CI refresh: all fourteen jobs in run 42385049680 pass on source
+ddb4ef1a043bf5615f86e143c95ad3e4926ca584. Title/gitflow pass; full CodeQL/review
+still pending. Documentation checkpoint 2a7009d0aecf2ff8d0c4f1870c8aca30165246b3
+is remotely backed up with CI skipped; this final CI-readback update follows it.
+No new guest starts, app validation or gate changes. Next: CF-1C-CAPTURE-2.
