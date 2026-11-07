@@ -2,7 +2,7 @@
 
 Updated: 2026-11-07. Resumed CF-1C under the existing execution approval.
 
-Latest steering: layout/sibling-close observed under shell fixture; timeout retained, checkpoint/CI next.
+Latest steering: shell-fixture layout/sibling-close checkpoint backed up; all fourteen CI jobs pass. Timeout retained; normal GUI quit is next.
 
 ## CF-1C-AUTOMATION-4/4B — resize/split/sibling-close observed
 
@@ -42,9 +42,16 @@ actions. Both guests cleaned; five originals stopped, no clone/QA/tool processes
 retain failure, fixture, exact proofs, images/process review and cleanup. All 62
 kept guards/Ruff/repo checks pass. Intentional unproven-sibling close, replacement/
 sentinel/geometry acceptance and overlong-command regressions fail kept guards;
-restored source passes. Implemented and locally/live verified; scoped commit,
-remote backup and current-source CI are next. Private evidence/unrelated files/
-cleaned pointer preserved. No baseline row promoted pending review: one input
+restored source passes. Source checkpoint
+`cc86814ce59e54d6816d7b1130427fb3b39e2ae0` is committed and remotely backed up on
+`test/client-baseline-gui`, open draft #224 against `dev`. All fourteen jobs in
+[CI run 42413472484](https://github.com/psmfd/FingerTrap/actions/runs/42413472484)
+pass; title/gitflow checks also pass. All 1,031 private-file hashes reverify and
+secret scanning reports zero findings. Five original VMs remain stopped, no
+QA/clone processes remain, and runner registrations are zero; macOS CI was hosted.
+Draft #224 and issues #216/#217 record the results. Full CodeQL/review and
+maintainer acceptance remain pending. Private evidence/unrelated files/cleaned
+pointer preserved. No baseline row promoted pending review: one input
 PASS/eleven BLOCKED. These are shell-configured, paced, bounded observations;
 default-cadence delimiter loss and longer-input response budget remain limitations.
 Pi v0.85.1-psmfd.1, comparison #219 deferred and every existing gate unchanged.
