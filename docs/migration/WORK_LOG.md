@@ -1881,3 +1881,41 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   lock/RPC checks pass with zero errors/warnings. This subsequent status-only
   checkpoint records that identity; read git for its own hash. The PR body and
   #217 tracker receive the final source/branch identities and exact resume action.
+
+## 2026-11-07 — CF-1C atomic comparison
+
+- Maintainer resumes the handoff. Local branch and GitHub draft #224 match
+  81341dd6df244fcf6d879e2ead0b6b50e2cde207, open/draft against dev.
+- Intended slice: kept bounded boot/RFB/immediate independent guest screen and
+  clock/owned cleanup wrapper. Pass the newly created run directly; never select
+  the cleaned active-console pointer. Validate ownership, deadlines and failure
+  cleanup before live use. Preserve existing private files and raw evidence.
+- Production Pi v0.85.1-psmfd.1 unchanged; #219 comparison deferred. App validation
+  remains gated on observed input and fresh frames. No new result/CI claimed.
+
+- Implemented scripts/client_baseline_compare.py and an explicit fresh-run observer
+  hook in the driver. Per-step probe (45s cap) is followed immediately by guest
+  screen/clock, including timeouts; total observation budget 240s, guest hold
+  480s. Existing guest cleanup runs in finally; wrapper checks external VM absence
+  and original stopped VM preservation. Active pointer is neither read nor written.
+- Local verification: 28 guards and Ruff pass. Deliberately dropping the observer
+  call makes the new driver-failure guard fail; restored code passes. Deadline
+  check also kills a real sleeping child through the command timeout.
+- Preflight: four preserved input/frame digests, pinned private probe source/binary
+  hashes and module sums, Softnet ownership/setuid/digest and free controller lock
+  verified. Tart 2.32.1, cryptography 49.0.0; only original stopped VMs listed.
+  Next: one complete bounded live execution with output redirected privately.
+
+- Live atomic run 20261107T131951Z-0c27fad0d0fb completed normally. Initial and
+  all three immediate post-input guest screen/clock readbacks succeeded (13:20:06,
+  :10, :13, :32 UTC). Independent RFB captured after pointer and Escape; lowerg
+  still timed out. Apple icon highlighting is visible after pointer, desktop after
+  Escape, desktop without Go To Folder after the chord. Usable keyboard delivery
+  remains unproven; no app case attempted/passed. Do not overclaim freshness from
+  a clock readback alone. Sanitized metadata and private-file hashes are retained
+  in evidence/client-baseline/gui-continuation/atomic-comparison.json.
+- Controller events empty; normal owned cleanup and independent inventory verified
+  five original VMs stopped/preserved and no disposable clone. Private evidence
+  and stale active pointer preserved. Next: bounded fresh atomic comparison of
+  pointer-selected Finder menu at native coordinates versus keyboard input, with
+  independent screen after each; app cases remain gated. No production pin change.

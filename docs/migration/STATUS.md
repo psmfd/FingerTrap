@@ -1,6 +1,30 @@
 # Runtime migration: current status
 
-Updated: 2026-10-29. Paused at the maintainer's request for session wrap-up.
+Updated: 2026-11-07. Resumed at the maintainer's request.
+
+## CF-1C atomic comparison — implemented and live-verified wrapper
+
+Resumed branch/draft #224 at `81341dd6df244fcf6d879e2ead0b6b50e2cde207`.
+Implemented `scripts/client_baseline_compare.py`: explicit fresh driver-owned run,
+pinned independent probe, immediate per-step guest screen/clock, 240s observation
+budget, 480s guest hold, and owned cleanup with independent inventory verification.
+The active-console pointer is neither read nor written; its cleaned run stays stale.
+28 local guards, Ruff and repository checks pass. Dropping the observer call makes
+the new regression fail; restoring it passes. No protected CI claim.
+
+Live run `20261107T131951Z-0c27fad0d0fb` completed every independent screen/clock
+readback. RFB captured after pointer and Escape; Meta+Shift+g still timed out.
+Screens show Apple icon highlighting then desktop, with no Go To Folder dialog.
+Usable keyboard delivery remains unproven; no app case attempted/passed. Evidence:
+[atomic-comparison.json](evidence/client-baseline/gui-continuation/atomic-comparison.json).
+Guest cleaned normally, events empty, cleanup verified, five original VMs stopped
+and preserved, no disposable clone. Raw screens/logs remain private.
+
+**Next action:** fresh atomic pointer-versus-keyboard comparison using observed
+Finder menu/native PNG coordinates, with immediate guest screen/clock after each
+input. Establish usable input and fresh frames before app validation. Keep Pi
+`v0.85.1-psmfd.1`, defer #219, and retain activation/backend/release gates.
+Implemented and locally/live verified; commit/backup pending below.
 
 ## CF-1C handoff — independent client reproduces frame timeout
 

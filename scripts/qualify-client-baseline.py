@@ -92,7 +92,7 @@ def safe_unzip(archive, destination):
                 target.chmod(0o755 if member.external_attr >> 16 & 0o111 else 0o644)
 
 
-def command(argv, **kwargs):
+def command(argv, timeout=60, **kwargs):
     env = {
         k: os.environ[k]
         for k in ("HOME", "TMPDIR", "USER", "LOGNAME")
@@ -103,7 +103,7 @@ def command(argv, **kwargs):
         TART_NO_AUTO_PRUNE="1",
     )
     return subprocess.run(
-        argv, env=env, check=True, capture_output=True, timeout=60, **kwargs
+        argv, env=env, check=True, capture_output=True, timeout=timeout, **kwargs
     ).stdout
 
 

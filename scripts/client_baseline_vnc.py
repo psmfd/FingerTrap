@@ -257,7 +257,7 @@ def perform(run, request, output):
         console.socket.close()
 
 
-def serve(archive, runtime, hold):
+def serve(archive, runtime, hold, observer=None):
     run = qa.prepare(archive, runtime)
     child = None
     failure = None
@@ -296,6 +296,9 @@ def serve(archive, runtime, hold):
             image = run / "console-first-frame.png"
             console = Console(run)
             console.capture(image)
+            if observer is not None:
+                observer(run, image)
+                return run
             qa.save(
                 qa.ROOT / ".artifacts/client-baseline/active-console.json",
                 {"run": str(run), "image": str(image)},

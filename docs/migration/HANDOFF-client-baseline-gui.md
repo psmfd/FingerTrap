@@ -1,6 +1,7 @@
-# CF-1C session handoff — 2026-10-29
+# CF-1C session handoff — 2026-11-07
 
-The maintainer requested session wrap-up. Read [STATUS](STATUS.md), the latest
+Resumed the saved checkpoint and completed the atomic diagnostic wrapper. Read
+[STATUS](STATUS.md), the latest
 [WORK_LOG](WORK_LOG.md) entry, CONTRIBUTING, the
 [approved CF-1 plan](client-foundation-plan.html#cf1-plan) and ADR-0034.
 Execution approval persists for CF-1 against production Pi only.
@@ -81,74 +82,63 @@ records exact original archive sizes/hashes; they were reverified this session:
   artifact 12382323858, source `42bb1b2a210acf30e17de1744257a60988398ecc`.
   Both candidates say app 0.1.0; this is not a published-release upgrade claim.
 
-## One concrete resume action
+## Current atomic runner and one concrete resume action
 
-Reverify branch/draft, tools, input hashes, original stopped VMs, Softnet
-permissions/digest and controller lock. Then **name and implement a bounded
-atomic comparison wrapper** around the existing driver/probe commands below:
-boot a fresh owned guest, identify its new first frame, send paced pointer and
-keyboard input, immediately capture guest screen and clock independently,
-retain observations, and finish/verify owned cleanup in `finally`.
+`scripts/client_baseline_compare.py` now composes boot, first pixels, independent
+paced pointer/keyboard probes, immediate guest screen/clock and verified cleanup.
+It receives the new run directly and never reads or writes active-console.json.
+Its private probe binary/source/module hashes must match the saved comparison
+fixture; private files are not restored or overwritten automatically.
 
-The wrapper has **not** been implemented. Validate fresh-run versus stale-pointer
-selection, ownership refusal, observation deadline and cleanup before its live
-run. Keep host home/credentials/clipboard unshared and the guest offline.
-Do not spread boot and observation across separate approval/session delays.
+Run `20261107T131951Z-0c27fad0d0fb` completed screen/clock readback after every
+step. Independent RFB captured pointer and Escape frames; Meta+Shift+g still
+produced a follow-up timeout. Guest screenshots show Apple icon highlighting
+then desktop; no Go To Folder dialog. Usable keyboard delivery is unproven.
+See [atomic evidence](evidence/client-baseline/gui-continuation/atomic-comparison.json).
+No app case ran. Cleanup verified five original stopped VMs, no owned clone and
+no QA/controller/Tart/Softnet process. The old active pointer stays stale.
 
-The existing commands to compose are shown for reproduction; this is not yet
-an atomic runner. The driver must run with Tart filesystem access outside the
-sandbox and its output redirected privately:
+**Next:** use a fresh bounded atomic session to compare selecting Finder's Go
+menu through paced pointer input at native PNG coordinates with keyboard input.
+Keep immediate independent screen/clock after each step. Establish usable input
+and frame freshness before app cases; do not infer either from exit code 0 or a
+clock readback alone. Record any changed diagnostic steps before the next run.
+
+The complete wrapper invocation requires Tart filesystem access outside the
+sandbox. Redirect stdout/stderr to a new private log (do not overwrite evidence):
 
 ```bash
-driver_log=".artifacts/client-baseline/driver-$(date -u +%Y%m%dT%H%M%SZ).log"
-python3 scripts/client_baseline_vnc.py \
+python3 scripts/client_baseline_compare.py \
   --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
   --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
-  --hold-seconds 1800 > "$driver_log" 2>&1
+  > .artifacts/client-baseline/atomic-UNIQUE.log 2>&1
 ```
 
-The isolated Go probe is already compiled. Rebuild offline if needed from its
-private directory using the verified module/build cache:
+The observer has a 240-second total budget, each RFB probe a 45-second process
+cap, each guest command at most 30 seconds bounded by the remaining observation
+time, and the guest a 480-second hold. Screens transfer in 64 KiB chunks.
+The driver's finally signals owned finish and waits for the controller's cleanup;
+the wrapper independently rechecks VM absence and stopped original preservation.
+Never boot and observe through separately approved delayed calls.
 
-```bash
-cd .artifacts/client-baseline/rfb-compare
-GOMODCACHE="$PWD/modcache" GOCACHE="$PWD/buildcache" GOPROXY=off \
-  go build -o rfb-probe .
-```
-
-From repository root, these existing probes require the fresh active owned run:
-
-```bash
-python3 .artifacts/client-baseline/rfb-compare/probe.py probe \
-  '[{"Name":"escape","Keys":[65307]},{"Name":"lowerg","Keys":[65511,65505,103]},{"Name":"upperg","Keys":[65511,65505,71]}]'
-python3 .artifacts/client-baseline/rfb-compare/probe.py screen
-```
-
-`probe.py screen` captures through the guest agent, transfers the JPEG in 64 KiB
-chunks and saves a guest clock readback. The old large-output disconnect is
-avoided. Both probes save under a new private `independent-*` subdirectory.
-The screenshot probe itself has not yet completed live in the latest run.
-Use actual PNG dimensions for pointer coordinates: the image viewer scales them.
-Create `finish-session` in the owned run to end early; inspect actual process/VM
-absence afterwards. Recover only recorded owned leftovers with
-`qualify-client-baseline.py cleanup --run ...`.
-
-Reproduce kept guards without a guest:
+Validate without a guest:
 
 ```bash
 python3 -m unittest discover -s scripts/tests -p 'test_*.py' -v
-ruff check scripts/qualify-client-baseline.py scripts/client_baseline_vnc.py scripts/tests
+ruff check scripts/qualify-client-baseline.py scripts/client_baseline_vnc.py scripts/client_baseline_compare.py scripts/tests
 ```
+
+All 28 guards, Ruff and repository checks pass locally. Dropping the driver
+observer call fails the new regression; restoring passes. The timeout test kills
+a real sleeping child. No new protected CI success or app acceptance is claimed.
 
 ## Next-session prompt
 
-> Resume FingerTrap in /Users/pdavis/projects/_personal/FingerTrap. Read
-> CONTRIBUTING.md, docs/migration/STATUS.md,
-> docs/migration/HANDOFF-client-baseline-gui.md and the latest WORK_LOG entry.
-> Verify test/client-baseline-gui and draft #224. Continue CF-1C by implementing
-> the bounded atomic boot/RFB-probe/immediate guest-screen-and-clock/cleanup
-> wrapper described in the handoff; the independent pinned go-vnc client has
-> reproduced follow-up frame timeouts, and its post-input screen check expired.
-> Preserve private evidence and don't reuse the cleaned active-console pointer.
-> Continue app validation only after observed input/frame freshness work. Keep
-> production Pi v0.85.1-psmfd.1 and defer Pi 1.3.0 comparison in #219.
+> Resume FingerTrap on test/client-baseline-gui / draft #224. Read CONTRIBUTING,
+> STATUS, this handoff and the latest WORK_LOG. The bounded atomic wrapper is
+> implemented and live-verified; screen/clock readback now works immediately after
+> input. The independent client still times out after Meta+Shift+g, and keyboard
+> delivery is unproven. Continue with a named bounded atomic pointer-selected
+> Finder menu versus keyboard comparison using native PNG coordinates. Preserve
+> private evidence and the stale active pointer. No app cases before usable input
+> and fresh frames. Keep Pi v0.85.1-psmfd.1 and defer #219's Pi 1.3.0 comparison.
