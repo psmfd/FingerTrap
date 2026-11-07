@@ -25,8 +25,17 @@ service identity is claimed. Follow-up validation safely refused the cleaned run
 [Sanitized permission evidence](evidence/client-baseline/gui-continuation/permission-comparison.json)
 records sixteen probes, 148 private-file hashes and exact timeout/cleanup outcome.
 All 31 guards, Ruff and repository checks pass. Isolated removal of symlink
-rejection makes the new guard fail; unchanged production source passes. Source
-and evidence are locally verified; commit/remote/CI identities will follow.
+rejection makes the new guard fail; unchanged production source passes. CF-1C-CAPTURE-1 implementation/evidence checkpoint
+`ddb4ef1a043bf5615f86e143c95ad3e4926ca584` is committed, secret-scanned (zero
+findings) and remotely backed up in open draft #224 against dev. Independent
+GitHub readback confirms the head. CI run
+[42385049680](https://github.com/psmfd/FingerTrap/actions/runs/42385049680) is in
+progress; title/gitflow pass, full CI/CodeQL/review remain pending. All four macOS
+jobs use hosted macos-15 runners; no local jobs queued, no local drain launched.
+GitHub runner registrations are zero. This subsequent documentation-only
+checkpoint records the implementation identity with CI skipped; read git/draft
+head for its own SHA. No activation, app validation or baseline acceptance.
+Next remains CF-1C-CAPTURE-2 as described above.
 
 **Next bounded action: CF-1C-CAPTURE-2.** Before triggering capture in a fresh
 owned guest, inventory the active guest-agent executable and launch service.

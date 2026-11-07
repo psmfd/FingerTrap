@@ -2127,3 +2127,19 @@ a reliable capture result. Pi v0.85.1-psmfd.1, deferred #219 and all gates remai
 - Final documentation check initially flagged a line starting with bare #219 as
   an ATX heading in issue-ledger.md; changed it to prose. Next: rerun that lint,
   secret scan and checkpoint only the reviewed slice/evidence files.
+
+CF-1C-CAPTURE-1 implementation/evidence checkpoint
+`ddb4ef1a043bf5615f86e143c95ad3e4926ca584` is committed, secret-scanned (zero
+findings) and remotely backed up in open draft #224 against dev. Independent
+GitHub readback confirms the head. CI run
+[42385049680](https://github.com/psmfd/FingerTrap/actions/runs/42385049680) is in
+progress; title/gitflow pass, full CI/CodeQL/review remain pending. All four macOS
+jobs use hosted macos-15 runners; no local jobs queued, no local drain launched.
+GitHub runner registrations are zero. This subsequent documentation-only
+checkpoint records the implementation identity with CI skipped; read git/draft
+head for its own SHA. No activation, app validation or baseline acceptance.
+Next remains CF-1C-CAPTURE-2 as described above.
+
+Final Markdown/Prettier and local links pass after the lint correction. All 148
+private evidence digests match; all 31 kept guards, Ruff and repository checks
+pass. Private evidence, stale active pointer and original unrelated files preserved.
