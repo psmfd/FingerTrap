@@ -3152,3 +3152,23 @@ Next implementation action: predeclare CF-1C-AUTOMATION-5 normal GUI Quit and
 owned descendant termination with unrelated guest survival control, and a finite
 completion path that avoids waiting for a final operator request after all proofs.
 Do not silently increase deadlines or infer a VM-performance root cause.
+
+## 2026-11-07 — approved #224 merge, current-head validation
+
+## CF-1C-REVIEW-1 — maintainer merge approval and required head checks
+
+Maintainer approved merging PR #224 into dev after the correction review.
+Correction source `74f9d3b08d4f86e9e71ee339e94c2534992396c3` passes all fourteen
+CI jobs and all CodeQL analyses; documentation checkpoint
+`e80d638296dde1e4b348c852c3bd2d3dd95c20c4` passes CodeQL. Its skip-ci marker
+left required workflow checks absent at the current PR head, so merge protection
+blocks it. This scoped documentation update deliberately runs normal CI. Do not
+bypass protection, synthesize check statuses or alter any gates. Once current-head
+required checks and security pass, execute the approved squash merge and verify
+PR merged/base dev plus the resulting commit. Record that actual merge identity
+in the next migration status update. No new guest execution is needed.
+
+Baseline stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred
+and all application acceptance/provider/activation/backend/release gates unchanged.
+Next implementation slice remains predeclared normal GUI Quit/descendant checks;
+this approval authorizes merge, not baseline promotion or activation.
