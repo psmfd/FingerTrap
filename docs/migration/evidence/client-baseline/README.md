@@ -1,11 +1,57 @@
 # CF-1 packaged-client baseline evidence
 
+[Review corrections](review-corrections.json) retain the 67-guard recovery fix,
+fresh layout proofs, observer deadline after result completion and verified owned
+cleanup, with 652 private-file hashes. No baseline promotion.
+
+Latest CF-1C-AUTOMATION-4/4B observes shell resize, right split and sibling-only
+close under a disclosed supported guest shell-default fixture and 50ms cadence.
+Original PID/sentinel and PTY dimensions survive; sibling termination independently
+verified. A longer typing-timeout attempt is retained alongside compact-command
+success in [layout comparison](shell-layout-comparison.json). Baseline remains
+one input PASS/eleven BLOCKED pending review; all existing gates remain intact.
+
+Latest CF-1C-AUTOMATION-3/3B verifies one shell command/output at 50ms typing
+cadence with exact independent guest-file proof and decoded output in native/Bridge
+frames. Default cadence lost at least one delimiter and correctly failed the proof
+guard; both attempts/cleanup retained in [shell comparison](shell-input-comparison.json).
+Corrected main-window admission now passes live. This remains partial CF1-03;
+no baseline row promoted, one input PASS/eleven BLOCKED and all gates unchanged.
+
+Latest CF-1C-AUTOMATION-2 observes a real packaged-client window through the
+signed GUI Bridge, with three uncached AX snapshots and independent native/Bridge
+frames. Original window-count guard blocked on an off-screen helper; corrected
+classification is verified by retained-evidence replay, not a repeated launch.
+See [launch observation](client-launch-observation.json). No baseline row promoted;
+Pi v0.85.1-psmfd.1 and all acceptance gates remain unchanged.
+
 Status: **baseline captured with blockers; not accepted**. Foundation [#216](https://github.com/psmfd/FingerTrap/issues/216), baseline [#217](https://github.com/psmfd/FingerTrap/issues/217).
 
 Read the [implementation plan](../../client-foundation-plan.html#cf1-plan) and
 [product acceptance checklist](../../../apple-silicon-release-validation.md).
 The maintainer approved execution after selecting the production-only scope.
 Individual acceptance results remain separate from harness implementation.
+
+## GUI continuation — CF-1C-CAPTURE-3, 2026-11-07
+
+[Privacy attribution](gui-continuation/privacy-attribution.json) preserves a
+failed initial signing-readout run and corrected read-only retry. TCC explicitly
+fails an existing Screen Recording code requirement for the resolved guest-agent
+binary, status -67050, then denies capture. Signing display reports a.out/linker
+ad hoc metadata but exits 1 for designated requirement; do not call it entirely
+unsigned. Same executable digest as the [verified normal restart](gui-continuation/agent-restart-comparison.json).
+This is an observed denial; exact-entry re-enrollment remains proposed/unproven.
+
+Both guests cleaned; five originals stopped/preserved, no clone/QA processes.
+No permission, signing, binary or host setting changed in CAPTURE-3. Raw logs
+remain private; sanitized metadata retains 33 file hashes. All 38 guards, Ruff
+and repository checks pass. Current implementation CI/review pending.
+No app row changed: one input PASS, eleven BLOCKED. Next: CF-1C-CAPTURE-4 supported
+exact-entry UI re-enrollment with post-grant TCC and actual window-capture checks.
+[Handoff](../../HANDOFF-client-baseline-gui.md) contains commands and gates.
+Previous evidence is preserved: [grant](gui-continuation/permission-comparison.json),
+[Go-menu](gui-continuation/go-menu-comparison.json),
+[atomic comparison](gui-continuation/atomic-comparison.json).
 
 ## Current result — 2026-10-22
 

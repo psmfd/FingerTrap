@@ -1,0 +1,197 @@
+{
+  "slice": "CF-1C atomic comparison",
+  "runId": "20261107T131951Z-0c27fad0d0fb",
+  "runtimeTag": "v0.85.1-psmfd.1",
+  "guestOs": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.7\nBuildVersion:\t\t24G720",
+  "observationBudgetSeconds": 240,
+  "guestHoldSeconds": 480,
+  "initialGuestClock": "Sat Nov  7 13:20:06 UTC 2026",
+  "steps": [
+    {
+      "step": {
+        "Name": "applemenu",
+        "Click": true,
+        "X": 20,
+        "Y": 12
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncaptured applemenu (0,0)-(2048,1536)\n",
+      "guestClock": "Sat Nov  7 13:20:10 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T13:20:16.227421+00:00",
+        "screenSha256": "f99da2be2278c6f425f2dfdc330c0ff019843c57f9bd3002ac5dcc2cc4df15a8"
+      }
+    },
+    {
+      "step": {
+        "Name": "escape",
+        "Keys": [65307]
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncaptured escape (0,0)-(2048,1536)\n",
+      "guestClock": "Sat Nov  7 13:20:13 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T13:20:20.048644+00:00",
+        "screenSha256": "1f12db55cdd046840afcff56d8989d276a1a6363407e630f8040f13dfbd93d56"
+      }
+    },
+    {
+      "step": {
+        "Name": "lowerg",
+        "Keys": [65511, 65505, 103]
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncapture-timeout lowerg\n",
+      "guestClock": "Sat Nov  7 13:20:32 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T13:20:38.939603+00:00",
+        "screenSha256": "1f12db55cdd046840afcff56d8989d276a1a6363407e630f8040f13dfbd93d56"
+      }
+    }
+  ],
+  "files": [
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/applemenu/govnc-applemenu.png",
+      "size": 3876645,
+      "sha256": "81812fb697c5d4743b3638cbfe1bbdda89959f508becffac48e0ee9cfc815aa4"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/applemenu/govnc-before.png",
+      "size": 4282825,
+      "sha256": "4229a1953e465efb1a40894a466f3809989692f5f62e88b718d73c00c7689d6b"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/applemenu/guest-clock.txt",
+      "size": 29,
+      "sha256": "5062d62bd28c0b3026da818fd7968e53090dd754aa89054a74fd1443dd9e31d5"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/applemenu/guest-screen.jpg",
+      "size": 206673,
+      "sha256": "f99da2be2278c6f425f2dfdc330c0ff019843c57f9bd3002ac5dcc2cc4df15a8"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/applemenu/probe.log",
+      "size": 71,
+      "sha256": "c873398e4a34a62e608186048ff98841d270d3b6efe29e1f2efd7586f7a337f9"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/applemenu/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/applemenu/readback.json",
+      "size": 138,
+      "sha256": "6cdb566559fcc21296e33b219d4e18916e1cb46a177ab71890d677ad8ac6bde5"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/applemenu/step.json",
+      "size": 65,
+      "sha256": "80f8cd83725d54d323f4356815971546320e3b93d52f3982780ecd7bd0a5bf47"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/escape/govnc-before.png",
+      "size": 3876645,
+      "sha256": "81812fb697c5d4743b3638cbfe1bbdda89959f508becffac48e0ee9cfc815aa4"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/escape/govnc-escape.png",
+      "size": 4282870,
+      "sha256": "eae51fe3967cd6cf551c791da96563aa46cfe115e27f61c7eb3e60df617903b0"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/escape/guest-clock.txt",
+      "size": 29,
+      "sha256": "3761bf7833046e313263b6e103badb6825e3b71323b06ed26a5399eea2f55507"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/escape/guest-screen.jpg",
+      "size": 206629,
+      "sha256": "1f12db55cdd046840afcff56d8989d276a1a6363407e630f8040f13dfbd93d56"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/escape/probe.log",
+      "size": 68,
+      "sha256": "faffbb6b4f5ac739e1d698e580a37ed3fbb32911bd10555aedd83325bfb64dd3"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/escape/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/escape/readback.json",
+      "size": 138,
+      "sha256": "6f91352e5c87869c933aaff583e4eab18ea0742dcc61dda7a2b05910149f02c8"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/escape/step.json",
+      "size": 50,
+      "sha256": "1621977fd6da140f545a0cffa5abe86ecfdf77f4ef5eab3d9d42887357c53805"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/guest-clock.txt",
+      "size": 29,
+      "sha256": "61e2ff4d2342328e46fe65f0e0ee0c2ec09e4a3baea23ca017a3603bcd7685c4"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/guest-screen.jpg",
+      "size": 206588,
+      "sha256": "517cf36c1b9c5cc21c34a6ac132e1f9651d5325fc7e33ea1349648acdff4b1c4"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/lowerg/govnc-before.png",
+      "size": 4282870,
+      "sha256": "eae51fe3967cd6cf551c791da96563aa46cfe115e27f61c7eb3e60df617903b0"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/lowerg/guest-clock.txt",
+      "size": 29,
+      "sha256": "bc91d5060fa9d9bb4adde3d30e34c5f1fd7237ef2ce84ea9a8aa140648ff972c"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/lowerg/guest-screen.jpg",
+      "size": 206629,
+      "sha256": "1f12db55cdd046840afcff56d8989d276a1a6363407e630f8040f13dfbd93d56"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/lowerg/probe.log",
+      "size": 57,
+      "sha256": "a37449fe872e0b9b7b8c5a2bdb79ca876fb09bb461aad58a4301f7ef2f6577d5"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/lowerg/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/lowerg/readback.json",
+      "size": 138,
+      "sha256": "30db0112079d26d043359cd7b52b8b5dfa9d04c15c1a96fa0ca8c52de3902bf0"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/lowerg/step.json",
+      "size": 70,
+      "sha256": "67c06ba9f28b7bafcaa95dce28986023952d5eeeed3178c2cfb489fbffb344c8"
+    },
+    {
+      "privateFile": "20261107T131951Z-0c27fad0d0fb/atomic-comparison/readback.json",
+      "size": 138,
+      "sha256": "7a74aa3362f2b126ac23ad36a0b0ef42b88eca7954c1596716a3659ba07dfea3"
+    }
+  ],
+  "cleanup": {
+    "cleanupVerified": true,
+    "originalVmsStoppedAndPreserved": true
+  },
+  "controllerEvents": [],
+  "observation": "Independent guest screenshots and clock readbacks succeeded immediately after every bounded probe. Pointer screenshot highlights Apple menu icon but no dropdown is visible; Escape restores unhighlighted desktop. These changes indicate some pointer response and independent image changes, but usable keyboard delivery is unproven. RFB captured after pointer and Escape; Meta+Shift+g follow-up frame timed out. Its independent screenshot still shows desktop, not Go To Folder. No app case attempted or passed.",
+  "nextAction": "In a fresh atomic session, compare observed Finder menu selection through paced pointer input at native PNG coordinates with a bounded keyboard variant; capture guest screen immediately after each. Do not use the stale active-console pointer or start app cases before usable input and frame freshness are established."
+}

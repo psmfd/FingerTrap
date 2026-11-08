@@ -1670,3 +1670,1505 @@ The compact [status board](STATUS.md) is the starting point for a new session.
   own protected checks before merging #220 normally. Final head/merge identities
   and post-merge readback belong in #220/#217 without fabricating a self hash.
   #217 remains open, baseline not accepted, CF-2 unstarted, #219 deferred.
+
+## 2026-10-23 UTC — CF-1C observable GUI continuation
+
+- Maintainer says "Proceed" after #220 merged at
+  8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8 with 22 head and 19 post-merge
+  checks passed. Main checkout matches origin/dev with only the three preserved
+  private entries untracked. All original VMs are stopped; no disposable
+  baseline/CI VM remains. Recheck remote state and exact input digests before use.
+- Intended slice: establish guest GUI input/frame observation through Tart's
+  native console/VNC path, since guest AppleEvents timed out. Inspect installed
+  CLI and primary source behavior first; use only a loopback connection to our
+  uniquely owned guest, with no host-home/credential/clipboard sharing. Preserve
+  first failures. Continue keyless actual-client cases and identify verified
+  previous QA app bytes; supported real-provider login remains a separate input.
+- Proposed harness change, if needed: add a bounded native-VNC console option
+  to scripts/qualify-client-baseline.py, preserving ownership, shared CI lock,
+  guest lifetime and cleanup guards. Validate mutually exclusive console modes,
+  private connection metadata and actual owned-guest cleanup. Add only meaningful
+  guard regressions for changed behavior. No client fix is assumed before a
+  concrete reproduction; no Pi 1.3.0 comparison or SDK/backend activation.
+- Installed Tart 2.32.1 primary source confirms native Virtualization VNC with a
+  generated per-session password and 127.0.0.1 URL. Add mutually exclusive
+  --vnc/--graphics modes; VNC runs with --no-graphics so no host viewer opens.
+  Preserve connection data only in the private run's vm.log. A bounded QA VNC
+  probe may be kept as scripts/client_baseline_vnc.py if it proves useful;
+  restrict it to the owned active run/loopback endpoint and retain meaningful
+  ownership/frame-size/input guards. No privacy database changes are authorized
+  or needed for this virtual keyboard/frame path.
+- Native-VNC run 20261023T004000Z-26339eea6cb5 reached guest-ready and wrote its
+  private connection URL. Its thirty-minute deadline cleaned it before the
+  separately launched framebuffer probe executed; that probe correctly refused
+  the cleaned run. No GUI result is claimed. Consolidate boot/first capture and
+  a bounded guest-only input queue in scripts/client_baseline_vnc.py, so the
+  initial observation is atomic and subsequent virtual input stays inside the
+  approved owned session. Preserve the same deadline, ownership, offline network,
+  clipboard/share and cleanup restrictions; validate the queue/path/frame guards.
+- Atomic run 20261023T132854Z-e69e67da8c60 authenticates to native VNC but the
+  host framework aborts after its pseudo-encoding warning on the first pixel
+  request. No app/UI case ran. Add DesktopSize capability negotiation and
+  resize bounds, retaining real pixel updates as a capture requirement.
+- The resulting stopped clone exposes a harness cleanup defect: tart stop on
+  an already-stopped owned VM returns 2 and prevents deletion. A new regression
+  fails before the fix, then all 17 baseline guards pass after checking Running
+  before stop. The exact stopped clone is removed with receipt/config validation;
+  prior failure history stays in its private state. Add six console bounds/
+  ownership/replay guards to repo-check's scripts/tests discovery before retry.
+- Run 20261023T133506Z-b727c20f4c58 captures a real 1824x1368 desktop frame
+  after DesktopSize negotiation, but Tart's script wrapper exits before the
+  first input and the controller cleans its guest. The wrapper had /dev/null
+  input, sending EOF to its PTY. Keep a dedicated unwritten pipe open instead,
+  close it after process exit, and retain one authenticated VNC connection for
+  the observation session. Record process exit codes. No app case passes yet.
+
+## 2026-10-28 — maintainer-requested reboot handoff
+
+- Stop acceptance work now and preserve a scoped checkpoint on
+  test/client-baseline-gui. Dev/origin/dev remain
+  8e5fd0cb60748ba197c60928e3b0c4895fbb1ba8; #220 is merged with the already
+  recorded 22 head/19 merged checks. Remote new Dependabot #221/#222/#223 are
+  inventoried only; no dependency/runtime input changed for this handoff.
+- Last aborted call left its edits in place but created no new run. The final
+  input-pipe/persistent-connection change is implemented and Ruff-clean; fresh
+  verification passes all 23 current local guard tests. It is not live-verified
+  and has no new protected CI result. Baseline remains one mandatory input PASS
+  and eleven BLOCKED cases; no app acceptance, production pin or activation.
+- Independent shutdown check: all Tart VMs stopped, no disposable clone remains,
+  and process inspection finds no QA driver, baseline controller or CI drain.
+  All recorded created runs report cleanupVerified=true. The historical failed
+  preparation created no VM. Original VM names and private files are preserved.
+- Rehashed current app archive, production Pi archive, previous QA app archive
+  and first native framebuffer; all expected digests match. Essential references
+  and sanitized red/green cleanup evidence are saved with the handoff. Private
+  binaries, raw logs/connection URLs, screenshots and run states remain ignored
+  under .artifacts; retain that directory through reboot. No temporary helper
+  under /private/tmp is required to resume the kept driver.
+- Next concrete action: verify the checkpoint/remote and host tools, start the
+  atomic VNC driver and confirm first frame plus one Go To Folder key chord on
+  the live owned guest. Do not repeat the old separate probe against the stale
+  active-console pointer. Full protected CI/enrollment/merge and all real client
+  cases remain pending after this WIP checkpoint. Exact commands and prompt:
+  HANDOFF-client-baseline-gui.md. No new guest or CI run starts before reboot.
+
+- Reboot backup 977c128ed63e8bacf57dfce41af8022d745f1c27 is committed, secret-scanned and remotely
+  backed up in draft #224. A subsequent status-only checkpoint records
+  this identity; its own hash is read from git. No guest or CI was launched.
+
+## 2026-10-28 — CF-1C post-reboot persistent-console retest
+
+- Resumed at maintainer request. Saved branch/draft #224 match c8abce5; remote
+  dev is unchanged at 8e5fd0c. #217/#219 remain open; six CodeQL checks pass,
+  full protected CI pending. No runtime or dependency integration.
+- Intended slice: live retest of dedicated input pipe/persistent native VNC,
+  first frame then one guest Go To Folder chord; continue Finder/keyless cases
+  only if the console survives. Preserve private evidence and production Pi
+  v0.85.1-psmfd.1; Pi 1.3.0 comparison and activation stay deferred.
+- Preflight passes: 23 guards, Ruff, all four reboot inventory hashes, Softnet
+  digest/permissions, available controller lock, Tart 2.32.1/cryptography 49.0.0.
+  All original VMs stopped, no disposable clone. GitHub readback required access
+  outside the sandbox; per-command TheSemicolon identity succeeds unchanged.
+- Next: launch kept atomic driver, inspect first frame and chord response, then
+  record lifetime/input result before any app acceptance attempt.
+
+- Live attempt 20261028T183917Z-4e765150c1e2 failed before creating a clone in
+  the filesystem sandbox; retained failure. Approved outside-sandbox retry
+  20261028T183947Z-e59ca2bacfab booted macOS 15.7.7/24G720, authenticated
+  VNC and wrote a first framebuffer at 18:40:04 UTC plus active-console.json.
+  It then recorded BrokenPipeError and immediately requested normal cleanup.
+- Diagnosis: after capture and active-pointer save, the next operation is a
+  flushed stdout print. No input requests exist, and the owned controller log
+  has no boot/lifetime error. Strong evidence identifies a closed tool-output
+  pipe at that status print, rather than an app crash; no traceback survives
+  the vanished exec session, so the exact origin is inferred. No new relevant
+  Tart/Python crash report was found. Persistent input is still unverified.
+- Independently verified cleanup: cleanupVerified=true, clone absent, original
+  VMs stopped/preserved, no QA controller/driver/Tart/Softnet process. Raw logs,
+  frame and state remain private. Active pointer is stale again; do not reuse.
+- Concrete resume: redirect atomic-driver stdout/stderr to a unique private
+  .artifacts/client-baseline log and run with required Tart filesystem access;
+  inspect fresh first pixels and send the handoff's single Go To Folder chord.
+  Record live lifetime/input before app validation. No runtime/acceptance change.
+
+- Maintainer says Proceed. Retest started with stdout/stderr redirected to private
+  driver-20261028-retest.log, avoiding the vanished tool-output pipe. New owned
+  run 20261028T184851Z-755e4f85b29e; planned observation remains fresh first frame
+  plus one Go To Folder chord before any app acceptance.
+
+- Redirected run 20261028T184851Z-755e4f85b29e remains guest-ready across
+  repeated requests; first desktop is 2048x1536 (viewer renders it scaled).
+  No output-pipe failure. Pointer input visibly opens Finder View/Go menus.
+  Original Meta+Shift+G chord and Super variant return frame timeouts; a paced
+  diagnostic Meta chord still does not show Go To Folder. Independent shared
+  connection captures a real desktop; later original-connection captures can
+  succeed. Thus lifetime is live-verified, keyboard/usable console still blocked.
+  No app case attempted/passed. Preserve all queue responses/screenshots,
+  including failed requests. Investigate bounded input/protocol correction
+  before continuing installation; do not confuse viewer coordinates with PNG.
+
+- Finished bounded diagnostic session normally. Run phase cleaned, events=[],
+  cleanupVerified=true; external Tart listing and filtered process inspection
+  verify original VMs stopped/preserved, owned clone absent and no QA processes.
+  No app/source/runtime changes or acceptance claims. Canonical evidence:
+  evidence/client-baseline/gui-continuation/live-retest.json (sanitized metadata,
+  queue outcomes and private-image hashes). All screenshots remain ignored.
+- Independent guest screenshot retrieval first hit the existing large-output
+  transport limit; the smaller 320px copy retrieved successfully. The guest
+  date/process readback works and the independent screen still shows desktop.
+  Avoid attributing this to a GPU freeze or a product defect without evidence.
+- Next bounded slice: compare a known RFB client's keyboard/pointer events and
+  fresh frames against this minimal driver in a fresh owned offline guest.
+  No mtell/vncdotool/vncviewer on PATH. Record exact isolated probe provenance
+  before use, validate actual input/frame freshness, then continue Finder app
+  installation. Do not churn through app rows until the console is usable.
+  Keep stdout/stderr redirected privately; no Pi 1.3.0/#219 or activation change.
+
+- Sanitized evidence checkpoint b9db2fe81e02c491b6775b70592374300ac5dc98
+  committed, secret-scanned (zero findings), pushed to existing draft #224.
+  Markdown/Prettier, all retained image digests/local links, diff whitespace and
+  repository structure/lock/RPC checks pass. Only original three private entries
+  remain untracked. This subsequent status-only checkpoint records that identity;
+  its own hash must be read from git. Protected CI/review remain pending, no merge.
+
+## 2026-10-28 — CF-1C independent RFB input comparison
+
+- Maintainer says proceed. Start from backed-up draft #224 head 41c80e6 with
+  original private entries preserved. Intended slice: compare an independent
+  go-vnc client, pin v0.0.0-20150629162542-723ed9867aed (Cirrus Labs mtell's
+  published go.mod uses this exact version), with the kept driver in one owned
+  offline clean guest. Probe remains isolated under ignored artifacts; retain
+  exact source/module hashes, loopback/ownership validation, bounded lifetime,
+  read-only QA share, no host credentials/clipboard. Validate fresh frames and
+  actual keyboard/pointer response before installation. Any harness correction
+  requires named scope and meaningful regression/live verification.
+
+## 2026-10-29 — maintainer-requested session wrap-up
+
+- Independent run 20261028T194636Z-ceb986018619 / probe independent-8e000f6c323c
+  authenticated and captured a 2048x1536 desktop using pinned go-vnc. Escape,
+  paced Meta+Shift+g and paced Meta+Shift+G each had capture-timeout results.
+  Probe process exited 0, which is not an input success claim. No post-input
+  screenshot was captured before the 1800-second owned guest deadline.
+- Next-day independent screenshot request safely refused the already-cleaned
+  run. Keep the failed/expired attempt; no keyboard success, app case or root
+  cause is established. The comparison reproduces frame timeout using a second
+  implementation, so do not assume changing our wire encoder fixes it.
+- Shutdown verified: state cleaned, cleanupVerified=true, events empty, original
+  VMs stopped/preserved, owned clone absent, no QA controller/driver/comparison/
+  Tart/Softnet process. Active-console pointer is stale. No new guest starts
+  after the maintainer's wrap-up request. Preserve all ignored/private evidence.
+- Durable sanitized rfb-comparison.json and exact probe source/module text
+  fixtures retain provenance and reproduction. Private rfb-compare directory
+  retains its module/build caches, original source/binary/provenance manifest;
+  raw frame and probe logs stay in the run. No app/runtime dependency added.
+- Concrete resume action: name/implement a bounded atomic boot/probe/immediate
+  independent guest-screen+clock/cleanup wrapper, validating stale-run ownership
+  and deadline cleanup. Run these within one approved execution rather than
+  letting a separate approval consume the guest observation window. Existing
+  helper's screenshot transfer uses bounded chunks. Do not start app cases
+  until observed input and frame freshness work. #217 open, #219 deferred,
+  production Pi v0.85.1-psmfd.1 and all existing gates unchanged.
+
+- Wrap-up checks rerun: all 23 kept guards, Ruff, Markdown/Prettier, local links,
+  exact probe/module/source/frame hashes and whitespace pass. No app/runtime
+  source changed. Full protected CI/review remain pending. Downloading the pinned
+  comparison dependency initially hit sandbox DNS; approved isolated download
+  succeeded, then its build used GOPROXY=off. No host tool installation.
+
+- Handoff evidence checkpoint 2cdf67406416f4d0cce3a5023af4bde7be66fd8b committed, secret-scanned
+  (zero findings) and remotely backed up in draft #224. Repository structural/
+  lock/RPC checks pass with zero errors/warnings. This subsequent status-only
+  checkpoint records that identity; read git for its own hash. The PR body and
+  #217 tracker receive the final source/branch identities and exact resume action.
+
+## 2026-11-07 — CF-1C atomic comparison
+
+- Maintainer resumes the handoff. Local branch and GitHub draft #224 match
+  81341dd6df244fcf6d879e2ead0b6b50e2cde207, open/draft against dev.
+- Intended slice: kept bounded boot/RFB/immediate independent guest screen and
+  clock/owned cleanup wrapper. Pass the newly created run directly; never select
+  the cleaned active-console pointer. Validate ownership, deadlines and failure
+  cleanup before live use. Preserve existing private files and raw evidence.
+- Production Pi v0.85.1-psmfd.1 unchanged; #219 comparison deferred. App validation
+  remains gated on observed input and fresh frames. No new result/CI claimed.
+
+- Implemented scripts/client_baseline_compare.py and an explicit fresh-run observer
+  hook in the driver. Per-step probe (45s cap) is followed immediately by guest
+  screen/clock, including timeouts; total observation budget 240s, guest hold
+  480s. Existing guest cleanup runs in finally; wrapper checks external VM absence
+  and original stopped VM preservation. Active pointer is neither read nor written.
+- Local verification: 28 guards and Ruff pass. Deliberately dropping the observer
+  call makes the new driver-failure guard fail; restored code passes. Deadline
+  check also kills a real sleeping child through the command timeout.
+- Preflight: four preserved input/frame digests, pinned private probe source/binary
+  hashes and module sums, Softnet ownership/setuid/digest and free controller lock
+  verified. Tart 2.32.1, cryptography 49.0.0; only original stopped VMs listed.
+  Next: one complete bounded live execution with output redirected privately.
+
+- Live atomic run 20261107T131951Z-0c27fad0d0fb completed normally. Initial and
+  all three immediate post-input guest screen/clock readbacks succeeded (13:20:06,
+  :10, :13, :32 UTC). Independent RFB captured after pointer and Escape; lowerg
+  still timed out. Apple icon highlighting is visible after pointer, desktop after
+  Escape, desktop without Go To Folder after the chord. Usable keyboard delivery
+  remains unproven; no app case attempted/passed. Do not overclaim freshness from
+  a clock readback alone. Sanitized metadata and private-file hashes are retained
+  in evidence/client-baseline/gui-continuation/atomic-comparison.json.
+- Controller events empty; normal owned cleanup and independent inventory verified
+  five original VMs stopped/preserved and no disposable clone. Private evidence
+  and stale active pointer preserved. Next: bounded fresh atomic comparison of
+  pointer-selected Finder menu at native coordinates versus keyboard input, with
+  independent screen after each; app cases remain gated. No production pin change.
+
+- Implementation/evidence checkpoint fe7ec1471cae5751700bcc77a61e8b48fbe977d7 committed and pushed
+  to existing draft #224. Tracked-file secret scan reports zero findings.
+  Markdown/Prettier, 28 guards, Ruff, local links, all atomic evidence hashes,
+  whitespace and repository structural/lock/RPC checks pass. This subsequent
+  status-only checkpoint records the implementation identity; read git/draft head
+  for its own SHA. Full protected CI/review remain pending, no merge/acceptance.
+
+## 2026-11-07 — maintainer-requested session end
+
+- End acceptance/diagnostic work at maintainer request; no further guest starts.
+  Implementation fe7ec1471cae5751700bcc77a61e8b48fbe977d7 and status head
+  3a71165aec179d376b91729d1a3c10ca7ed9af4b are committed and backed up in
+  draft #224. Final wrap-up documentation follows; read git/draft for its SHA.
+- Rechecked five original stopped Tart VMs, no disposable clone, no QA driver,
+  controller, independent probe, Tart/Softnet or local CI drain process. Latest
+  atomic receipt remains cleaned/cleanupVerified=true/events empty. Old active
+  pointer untouched; private evidence and original untracked files preserved.
+- Hosted readback at 3a71165 has successful repo-check/lint and several platform
+  jobs; other checks remain in progress. No full protected CI/review, acceptance
+  or merge claimed. Re-read current head checks next session.
+- Reconcile #216/#217 and draft #224 with the completed atomic wrapper and
+  persistent keyboard blocker; retain one input PASS/eleven BLOCKED, production
+  Pi v0.85.1-psmfd.1 and deferred #219. Update worksheet index/ledger references,
+  STATUS and handoff with a copyable next-session prompt.
+- One concrete resume action: name/record the next bounded atomic comparison of
+  pointer-selected Finder Go menu at native PNG coordinates versus keyboard,
+  keeping immediate independent screen/clock and cleanup. Do not reimplement
+  the wrapper or advance app validation before usable input/fresh frames work.
+
+## 2026-11-07 — CF-1C-GO-1 native-coordinate Go menu comparison
+
+Starting checkpoint and CI refreshed; named scope recorded before diagnostic changes:
+
+Starting checkpoint `219daae53e3e28cd334156c0c776f52737252944` matches local
+`test/client-baseline-gui` and open draft #224 against `dev` (`8e5fd0c`).
+CI run [42377205471](https://github.com/psmfd/FingerTrap/actions/runs/42377205471)
+completed successfully: all fourteen jobs pass. Exact-head checks: 24 successful,
+CodeRabbit skipped, no pending/failing checks. Review and acceptance remain
+separate; these results apply to the saved checkpoint, not upcoming changes.
+
+**Named bounded slice, recorded before changing diagnostics:** CF-1C-GO-1.
+Reuse the implemented atomic wrapper and pinned private probe; change only the
+pointer step from Apple to Finder Go at native PNG `(520, 24)`, then Escape and
+the existing paced Meta+Shift+g comparator. Coordinates were observed in the
+2048x1536 first frame of run `20261107T131951Z-0c27fad0d0fb` (SHA-256
+`6a44b071a7d70e697b089fb563150d5c30557596de3cfe261bbd5f8a8140bcac`).
+Inspect the fresh first frame and each independent guest screen for matching
+layout and actual menu/dialog changes before interpreting input.
+
+Validation: kept Python guards, Ruff and repository checks; one fresh owned
+boot/probes/immediate per-input guest screen+clock/cleanup execution with both
+output streams redirected to a new private log. Retain the existing 240s
+observation/480s guest bounds and independent cleanup check. Never read or write
+the stale active-console pointer. Initial inventory: five original stopped VMs,
+no disposable clone. Raw evidence and unrelated files remain private/preserved.
+Next: update the named pointer step, validate, then run this single comparison.
+No app validation; baseline remains one input PASS/eleven BLOCKED. Keep Pi
+`v0.85.1-psmfd.1`, deferred #219 and all activation/backend/release gates.
+
+CF-1C-GO-1 preflight: named pointer step and existing guard expectation updated; all 28 guards, Ruff and scripts/check.sh pass. Next: one fresh atomic live execution, both output streams redirected privately; no app validation.
+
+Run `20261107T141221Z-dbb92f6fb20e` completed normally. Fresh native first frame
+matches the coordinate reference. RFB shows the Go dropdown opening, then closing
+after Escape: pointer response, limited Escape delivery and changed RFB frames
+are observed. All three post-input RFB captures succeeded, including the chord;
+Meta+Shift+g produced no Go To Folder dialog. The earlier timeout did not recur
+in this run; that does not establish a fix or usable chord/text delivery.
+
+RFB also reveals a **Screen Recording permission prompt for tart-guest-agent**,
+behind the dropdown and persisting after Escape/chord. Immediate independent
+guest screen/clock readbacks completed after every step, but those screenshots
+omit both the dropdown and permission prompt. They show only the menu highlight
+change, so they cannot corroborate window contents. Permission/focus interference
+is a hypothesis; no root cause or app defect is established. No app case ran.
+[Sanitized evidence and 29 private-file hashes](evidence/client-baseline/gui-continuation/go-menu-comparison.json)
+retain exact observations; raw frames and logs remain private.
+
+Cleanup verified: controller events empty, five original VMs stopped/preserved,
+owned clone absent, no QA/probe/Tart/Softnet/CI-drain process. The stale active
+pointer was never used. Wrapper source unchanged except the named pointer step
+and existing test expectation; all 28 guards, Ruff and repository checks pass.
+Result is implemented and locally/live verified; commit/backup/CI for this change
+remain pending. Saved-head CI above does not transfer to this change.
+
+**One concrete next action: CF-1C-CAPTURE-1**, a separately recorded bounded atomic
+permission/focus observation in a fresh owned guest. Inspect the guest-only
+Screen Recording prompt using native RFB pixels and supported guest privacy UI,
+then compare pointer-selected Go To Folder with keyboard input. Verify independent
+screens actually include visible windows before app validation. Keep immediate
+per-input screen/clock, private redirected output, explicit ownership and cleanup.
+No host permission changes or TCC bypass. Do not rerun a cleaned guest.
+
+CF-1C-GO-1 implementation/evidence checkpoint `1ca324f6d85779a1081680e05eed5f5292d2f3a8` is committed,
+secret-scanned (zero findings) and remotely backed up in open draft #224 against
+`dev`. GitHub independently confirms the branch head. All 28 guards, Ruff,
+repository structural/lock/RPC checks, Markdown/Prettier, local links, 29 evidence
+digests and pinned-probe provenance pass. New CI run
+[42381113002](https://github.com/psmfd/FingerTrap/actions/runs/42381113002) has
+started; title/gitflow pass, full platform CI/review remain pending. No activation
+or acceptance. This subsequent status-only checkpoint records that identity;
+read git/draft head for its own SHA. Next remains CF-1C-CAPTURE-1 as described above.
+
+- Implementation CI run 42381113002 now passes all fourteen jobs, including all
+  hosted macOS lanes. Title/gitflow and four CodeQL language analyses pass;
+  Rust remains in progress, aggregate CodeQL neutral, CodeRabbit skipped at
+  readback. Full CodeQL/review remain pending. Documentation-only status
+  checkpoint follows with CI skipped; source CI is specific to 1ca324f.
+- Prescribed local drain started one unused runner because this draft's jobs
+  ran on hosted macOS. Sent SIGTERM to owned drain PID 6993; its finally handler
+  cleaned ft-actions-job-20261107t142044z-4dbc3bf5 with cleanup_errors empty.
+  Drain exits 1 with InterruptedError(signal 15), an intentional cleanup, not
+  a CI test failure. Independent readback: zero GitHub runner registrations,
+  five original stopped VMs, no clone/QA/probe/Tart/Softnet/drain process.
+- Final local checks: 28 guards, Ruff, repository checks, Markdown/Prettier,
+  local links and all 29 private evidence hashes pass; tracked-file secret
+  scan has zero findings. No app result or gate changed. Concrete resume action
+  remains CF-1C-CAPTURE-1, supported guest permission/focus observation before
+  input comparison; see STATUS/handoff for the one-execution reproduction.
+
+## 2026-11-07 — CF-1C-CAPTURE-1 approved implementation
+
+Maintainer approved the presented plan. Start at `6a1ae46f76dff2b0a84b814e6768fd0bb70f4179`
+on `test/client-baseline-gui`, draft #224 against dev. Reuse the atomic driver,
+pinned independent probe, immediate guest screen/clock and owned cleanup.
+Affected implementation: `scripts/client_baseline_compare.py` and its kept guards.
+Add an explicit permission-session option: a fresh-run-only bounded guest-input
+queue permits inspecting native RFB images between UI actions while the same
+boot/observer/cleanup execution stays alive. No active-console pointer access.
+Each action still executes the pinned probe and immediate independent readback.
+
+Budget reviewed before changing code: permission session gets 720s observation,
+960s guest hold, at most 40 actions; retain 45s probe and 30s guest-command caps.
+The default three-step comparison keeps 240s/480s. Unknown/oversized/symlinked
+requests fail closed; timeout or interruption invokes owned cleanup. UI actions
+only, no host commands/clipboard, TCC database writes, permission bypass or host
+permission changes. Raw screenshots, request files and logs remain private.
+
+Live sequence: trigger/read the guest-agent recording prompt, use native RFB
+coordinates to open supported guest Privacy & Security settings, enable the
+actual guest-agent Screen Recording entry and follow any restart requirement.
+Then compare a visible window/menu between RFB and guest capture, pointer-selected
+Go To Folder versus focused Finder keyboard chord, and harmless synthetic text.
+Do not infer success from screenshot existence, clock progress or process exit.
+Stop with a preserved blocker if the guest UI cannot be resolved within bounds.
+
+Validation: existing guards plus meaningful queue ownership/limits/failure-readback
+regressions and red-first proof, Ruff, repository/docs checks, then one private
+redirected bounded live execution. Record exact observations and cleanup. No app
+validation until usable input and reliable window capture are observed. Keep
+one input PASS/eleven BLOCKED, Pi v0.85.1-psmfd.1, deferred #219 and all gates.
+Next: implement the explicit bounded session mode and validate before guest boot.
+
+CF-1C-CAPTURE-1 implemented: explicit 720s/40-action fresh-run queue, 960s guest
+hold; default comparison unchanged. All 31 guards, Ruff and repository checks
+pass. Red proof: isolated removal of symlink rejection makes the new guard fail;
+production source unchanged and full restored suite passes. Pinned private probe
+verified, five originals stopped, no QA/Tart/Softnet/drain process. Next: one fresh
+permission-session launch, privately redirected, inspect UI and remediate within
+that execution; retain independent screen/clock after every probe and cleanup.
+
+CF-1C-CAPTURE-1 live checkpoint: run 20261107T143813Z-90064f4d9802. Supported
+Settings UI shows duplicate guest-agent entries: executable disabled, another
+entry enabled. Enabling the executable requests normal guest administrator
+authentication. Use only the base image's documented public fixture account
+through this guest UI (Tart quick-start credentials); no host/operator credential
+is read or copied. Keep masked-field frames/logs private. No permission database
+write or bypass. Next: authenticate the guest UI, inspect resulting permission
+state and verify independent window capture before any app work.
+
+Run `20261107T143813Z-90064f4d9802` completed sixteen probes with immediate
+independent screen/clock readbacks. The supported guest privacy panel showed two
+guest-agent entries: executable disabled, another entry enabled. Normal guest
+administrator authentication using the documented public base-image fixture
+account enabled the executable toggle. No host/operator credential was used.
+Native RFB proves the toggle change and captures Settings/Finder windows; no
+restart instruction was shown. The recording prompt later recurred, and all
+independent guest screenshots continued to omit windows. Permission activation
+or duplicate identity remains unresolved; enabling the toggle alone is not a fix.
+
+Pointer Go To Folder attempts did not establish a visible dialog. Focused chord
+comparison and synthetic path verification were not completed; no app case ran.
+Capture-only probes 07/12 timed out after their initial RFB frame; every probe
+still received its immediate independent readback. Observer hit its 720s deadline
+while waiting for the next action, exited 1 and recorded TimeoutError. Owned
+cleanup succeeded and independently verified five original stopped VMs, no clone
+or QA/probe/Tart/Softnet/drain process. A supporting service inventory command
+failed on an absent optional directory; stdout was not retained, so no active
+service identity is claimed. Follow-up validation safely refused the cleaned run.
+
+[Sanitized permission evidence](evidence/client-baseline/gui-continuation/permission-comparison.json)
+records sixteen probes, 148 private-file hashes and exact timeout/cleanup outcome.
+All 31 guards, Ruff and repository checks pass. Isolated removal of symlink
+rejection makes the new guard fail; unchanged production source passes. Source
+and evidence are locally verified; commit/remote/CI identities will follow.
+
+**Next bounded action: CF-1C-CAPTURE-2.** Before triggering capture in a fresh
+owned guest, inventory the active guest-agent executable and launch service.
+After the supported UI grant, restart that identified guest service normally,
+within the same bounded controller execution; verify reconnection and actual
+window capture. Preserve duplicate-entry evidence. Keep immediate per-input
+readbacks, private output and cleanup. No TCC database edits, host permission
+changes or app validation. Pointer/chord/synthetic text comparison follows only
+a reliable capture result. Pi v0.85.1-psmfd.1, deferred #219 and all gates remain.
+
+- Final documentation check initially flagged a line starting with bare #219 as
+  an ATX heading in issue-ledger.md; changed it to prose. Next: rerun that lint,
+  secret scan and checkpoint only the reviewed slice/evidence files.
+
+CF-1C-CAPTURE-1 implementation/evidence checkpoint
+`ddb4ef1a043bf5615f86e143c95ad3e4926ca584` is committed, secret-scanned (zero
+findings) and remotely backed up in open draft #224 against dev. Independent
+GitHub readback confirms the head. CI run
+[42385049680](https://github.com/psmfd/FingerTrap/actions/runs/42385049680) is in
+progress; title/gitflow pass, full CI/CodeQL/review remain pending. All four macOS
+jobs use hosted macos-15 runners; no local jobs queued, no local drain launched.
+GitHub runner registrations are zero. This subsequent documentation-only
+checkpoint records the implementation identity with CI skipped; read git/draft
+head for its own SHA. No activation, app validation or baseline acceptance.
+Next remains CF-1C-CAPTURE-2 as described above.
+
+Final Markdown/Prettier and local links pass after the lint correction. All 148
+private evidence digests match; all 31 kept guards, Ruff and repository checks
+pass. Private evidence, stale active pointer and original unrelated files preserved.
+
+Post-checkpoint CI refresh: all fourteen jobs in run 42385049680 pass on source
+ddb4ef1a043bf5615f86e143c95ad3e4926ca584. Title/gitflow pass; full CodeQL/review
+still pending. Documentation checkpoint 2a7009d0aecf2ff8d0c4f1870c8aca30165246b3
+is remotely backed up with CI skipped; this final CI-readback update follows it.
+No new guest starts, app validation or gate changes. Next: CF-1C-CAPTURE-2.
+
+## 2026-11-07 — CF-1C-CAPTURE-2 approved implementation
+
+Maintainer approved this next bounded action. Start at
+`0cf35d21f239c7c65f5d1c82b359913cf86285ee`, branch `test/client-baseline-gui`,
+open draft #224 against dev. Reuse the existing atomic permission session.
+Before the first independent capture, inventory guest-agent process executable,
+launch plist, domain/label and active PID. Preserve complete private inventory
+and errors; optional missing directories must not discard useful output.
+Only a unique active RPC-capable launch service whose PID/executable match the
+inventory may be restarted. Revalidate identity immediately before restart.
+Use normal guest launchctl service restart, then bounded reconnection and verify
+a changed PID with the same service/executable. No guessed service, broad kill,
+TCC edits, host settings change or permission bypass.
+
+Affected files: scripts/client_baseline_compare.py and kept guard tests, plus
+migration records/evidence. Add one fixed restart-agent queue action with no
+caller-supplied command, service, path or endpoint. Supported guest UI grant and
+public fixture authentication remain observable through RFB. Keep immediate
+independent screen/clock attempts after every probe; restart records its own
+bounded reconnect/readback outcome in the same owned execution. Default runner
+unchanged. Retain 720s observation, 960s hold, 40 actions, 45s probe and 30s guest
+command limits; restart gets at most 90s within remaining observation time.
+
+Validate ownership, ambiguous/non-RPC/wrong-PID rejection and changed-PID
+readback with meaningful regressions/red proof, then one fresh private redirected
+live run. Compare actual Settings/Finder windows in both capture paths after UI
+grant and restart. Only after reliable capture, qualify pointer Go To Folder,
+focused keyboard chord and synthetic text. No app cases in this slice. Finish
+or fail within bounds and independently verify owned cleanup. One input PASS /
+eleven BLOCKED, Pi v0.85.1-psmfd.1, deferred #219 and all gates remain intact.
+Next: implement and verify the inventory/restart operation before guest boot.
+
+CF-1C-CAPTURE-2 preflight: inventory and identity-checked restart-agent operation
+implemented in the existing permission session. All 36 guards and Ruff pass.
+Removing pre-restart PID comparison in an isolated module fails the new guard;
+production source unchanged. Pinned probe verified; local/draft head 0cf35d2
+matches open draft #224 against dev. Five original stopped VMs, no guest driver,
+probe/Tart/Softnet/drain process. Next: one fresh atomic private redirected run,
+inspect pre-capture inventory, supported UI grant and normal service restart.
+
+Run `20261107T153328Z-e16d52dd729f` finished explicitly after nine actions:
+eight RFB probes plus the normal RPC-agent restart. Initial and all nine immediate
+independent guest screen/clock readbacks completed. Inventory before capture
+identified `gui/501/org.cirruslabs.tart-guest-agent`, PID 423, executable
+`/opt/homebrew/bin/tart-guest-agent`; executable/plist program digests match.
+The disk-resize daemon is separately inventoried and excluded from selection.
+Supported guest privacy UI/public fixture authentication enabled the executable
+recording toggle while another guest-agent entry was already enabled.
+
+Identity was revalidated before `launchctl kickstart -k`. Its RPC request hit
+the 10s command timeout, but reconnection and fresh process/service inventory
+proved PID **423 → 843** with the same service, plist and executable identity.
+Immediate post-restart screen/clock succeeded. RFB after restart still shows
+the permission prompt over Settings; independent screenshots still omit windows.
+The restart is verified and is not sufficient to fix capture in this run.
+Only probe 00's follow-up frame timed out; the other seven follow-up RFB captures
+succeeded. No input qualification or app case advanced. Driver exit 0 is not a
+capture/input pass. Normal owned cleanup verified, controller events empty;
+five original VMs stopped/preserved, no clone or QA/probe/Tart/Softnet/drain process.
+
+[Sanitized agent restart evidence](evidence/client-baseline/gui-continuation/agent-restart-comparison.json)
+retains exact service/PID/digests, nine actions, ten independent readbacks and
+86 private-file hashes. Raw inventory/frames/logs remain private. All 36 kept
+guards, Ruff and repository checks pass. Red proof: isolated removal of the
+pre-restart PID comparison fails the kept guard; unchanged production source
+passes. Result is implemented and locally/live verified; commit/backup/CI follow.
+
+**Next bounded action: CF-1C-CAPTURE-3.** Collect the identified guest agent's
+code-signing identity and narrowly scoped macOS privacy (TCC) decision logs around
+one capture in a fresh owned atomic session. Correlate the actual requesting
+client with the two visible permission entries before deciding any supported
+exact-entry UI re-enrollment. Do not repeat grant/restart as an assumed fix.
+No TCC database edits, permission bypass, host changes or app validation. Retain
+immediate readbacks, private output and cleanup. Baseline stays one input PASS /
+eleven BLOCKED, Pi v0.85.1-psmfd.1, deferred #219 and all existing gates.
+
+CF-1C-CAPTURE-2 implementation/evidence checkpoint
+`3db39be45bfe320089ca91491d529cd369767782` is committed, secret-scanned (zero
+findings) and remotely backed up in open draft #224 against dev. Independent
+GitHub readback confirms the head. CI run
+[42387709718](https://github.com/psmfd/FingerTrap/actions/runs/42387709718) has
+started; title/gitflow pass. Full platform CI/CodeQL/review remain pending at
+this readback. This subsequent documentation-only checkpoint records the source
+identity with CI skipped; read git/draft head for its own SHA. No activation or
+acceptance. Next remains CF-1C-CAPTURE-3 as described above.
+
+Final verification: 36 guards, Ruff, repository structural/lock/RPC checks,
+Markdown/Prettier, local file links, all 86 private-file hashes and secret scan
+pass. Five original VMs stopped/preserved; no clone or QA processes. Private
+evidence/stale pointer and original unrelated files preserved.
+
+Final implementation CI refresh: all fourteen jobs in 42387709718 pass on
+3db39be45bfe320089ca91491d529cd369767782. Four CodeQL analyses/title/gitflow pass;
+Rust remains in progress, aggregate neutral, CodeRabbit skipped. Full CodeQL/
+review remain pending. All macOS lanes hosted; no local queue/drain; zero runner
+registrations. Next remains CF-1C-CAPTURE-3 privacy-client attribution diagnostic.
+
+## 2026-11-07 — CF-1C-CAPTURE-3 read-only continuation
+
+Continue within persistent CF-1 diagnostic approval after verified restart
+proved insufficient. Starting source 3db39be and documentation
+`a61b2596275a4ed8dc556d19ba04122dedfab43d` are backed up in draft #224.
+Before changing the slice: add a fixed diagnose-agent queue action with no
+caller commands/paths/predicates. Read the selected guest executable's signing
+identity/designated requirement and the last two minutes of narrowly filtered
+macOS TCC decision logs for capture/agent attribution; preserve output privately.
+No permission/config/database mutation, global logging change or host operation.
+
+Affected files: existing atomic comparison script, focused guard test and
+migration records/evidence. Keep guest ownership checks, 720s observation/960s
+hold/40-action budgets and 30s command caps. A guest-local privileged read of
+system privacy logs may use the clean image's existing noninteractive sudo;
+never request or copy host credentials. Failures/redaction are evidence, not an
+excuse to alter TCC or weaken gates. No app or input qualification in this slice.
+One fresh atomic session: inventory, initial capture/clock, fixed diagnostic
+readout, explicit finish and verified cleanup. Validate before boot; review the
+actual requesting client and denial before proposing any exact-entry UI change.
+Next: implement the read-only diagnostic action and kept guard.
+
+CF-1C-CAPTURE-3 logging refinement before implementation: installed Apple log
+help confirms bounded stream --timeout. Use a fixed 12-second debug stream
+around one guest capture rather than relying only on persisted debug history.
+Retain a 30s guest-command cap, 256 KiB returned-log cap and guest-only files.
+This changes no logging configuration, TCC database or permission. No UI grant
+or restart is repeated for this attribution-only run.
+
+CF-1C-CAPTURE-3 implementation/preflight: fixed read-only diagnose-agent action
+added. Initial quoted command failed Python parsing; replaced with a fixed
+multiline shell script, now Python/Ruff and sh -n pass. All 37 guards pass;
+isolated removal of diagnostic identity validation fails the kept guard.
+No production source mutation for red proof. Next: one fresh private redirected
+atomic attribution run, normal finish and owned cleanup; no UI permission change.
+
+CF-1C-CAPTURE-3 first run 20261107T160333Z-036e67bd3539 failed at codesign
+(exit 1) before log collection. Diagnostic did not retain codesign stdout, so no
+unsigned/signature/root-cause claim is established. Cleanup verified; preserve
+this failed run. Bounded correction: retain nonzero signing output/status and
+continue the read-only log collection; add regression, then retry one fresh
+atomic attribution run. No permission change or app validation.
+
+CF-1C-CAPTURE-3 correction implemented: signing exit/stdout/stderr now retained;
+negative signing status does not skip privacy log collection. All 38 guards and
+Ruff pass, including the real-failure regression. Next: fresh bounded read-only
+retry with private output; preserve the original failed run.
+
+The read-only retry `20261107T160656Z-104c57df8692` completed diagnostic,
+independent readback, an RFB capture and explicit normal finish/cleanup. Original
+failed run `20261107T160333Z-036e67bd3539` is preserved: codesign exit 1 stopped
+the first implementation before logs, without retaining signing output. The kept
+correction now preserves nonzero signing status/output and continues diagnostics;
+all 38 guards pass, including that real-failure regression.
+
+**Observed privacy failure:** TCC attributes capture to resolved executable
+`/opt/homebrew/Cellar/tart-guest-agent/0.10.0/bin/tart-guest-agent` (type 1),
+then explicitly reports failure to match an existing Screen Recording code
+requirement (check status -67050) and returns denied. The 12-second stream
+returned 28,069 bytes, below the 256 KiB cap, with four code-requirement failures.
+The binary digest matches the CAPTURE-2 agent. Signing display shows identifier
+`a.out`, linker-signed ad hoc metadata, no bound Info.plist/team, and exit 1 for
+the designated-requirement readout; do not flatten this into an entirely unsigned
+binary claim. This establishes an actual permission/code-requirement failure
+in the fresh unmodified guest. Why the prior UI grant failed and whether UI
+re-enrollment fixes it remain unproven. No permission/signing/database/logging
+configuration, binary or host setting changed in CAPTURE-3.
+
+RFB still shows the recording prompt; independent guest screenshot omits it.
+The RFB follow-up capture timed out after its initial frame; its independent
+screen/clock completed. No input/app qualification advanced. Both owned guests
+cleaned and independent inventory verified five original stopped VMs, no clone
+or QA/probe/Tart/Softnet/controller process. Raw signing/TCC logs stay private.
+[Sanitized attribution and 33 private-file hashes](evidence/client-baseline/gui-continuation/privacy-attribution.json)
+preserve both attempts, selected identity, short denial excerpts and cleanup.
+No app row changes: one input PASS/eleven BLOCKED. Pi v0.85.1-psmfd.1, deferred
+comparison #219 and all activation/backend/release gates remain intact.
+
+**Next bounded action: CF-1C-CAPTURE-4.** Record a supported exact-entry guest
+permission re-enrollment experiment. Preserve both guest-agent entries and collect
+TCC decisions after the normal UI grant in that same guest. If the requirement
+mismatch persists, remove/re-add only the identified agent entry through normal
+Privacy & Security UI using the exact resolved executable, authenticate with the
+public fixture account, then verify TCC decisions and actual window captures.
+No direct TCC database edits, host changes or binary re-signing. Re-enrollment is
+proposed, not implemented/proven. Keep immediate readbacks, private output and
+owned cleanup; input/app qualification stays gated until reliable capture.
+
+Final Markdown check flagged a bare #219 at line start in the new shared result;
+changed to prose. Next: rerun lint, secret scan and scoped checkpoint.
+
+## 2026-11-07 — open-source UI automation evaluation requested
+
+Maintainer approves the interrupted checkpoint command and asks whether an open-
+source automation solution should script interface execution. Resumed checkpoint
+verification shows all CAPTURE-3 changes preserved, not yet staged/committed; no
+new guest start. Research recommendation (not adoption/installation): evaluate
+Peekaboo released CLI plus signed GUI Bridge inside a fresh disposable guest.
+Its documented semantic element/window/menu commands and JSON results can be
+driven deterministically; permissions guidance specifically covers wallpaper-
+only background-session captures and prefers the GUI Bridge for these contexts.
+Primary sources: [Peekaboo](https://github.com/openclaw/Peekaboo), its
+[permissions guide](https://github.com/openclaw/Peekaboo/blob/main/docs/permissions.md)
+and [platform support](https://github.com/openclaw/Peekaboo/blob/main/docs/platform-support.md). Released app/CLI target macOS 15+. Main-branch docs
+are candidate capabilities, not proof that any chosen release/our guest works.
+
+Compare Hammerspoon (Lua/Accessibility/CLI scripting) and Appium Mac2 (native
+XCTest/WebDriver, requires Xcode). Proposed CF-1C-AUTOMATION-1: pin/review one
+matching Peekaboo app+CLI release and signatures/digests; guest-only installation
+and supported permissions; deterministic Finder menu/dialog/text scenario with
+observable window assertions, fresh screenshots and independent RFB comparison;
+owned cleanup and exact artifact/permission provenance. Keep model-agent/MCP/cloud
+features out of this offline deterministic pilot. Retain current Tart ownership/
+budget/evidence wrapper. No automatic adoption, host/global installation, product
+dependency change, TCC bypass or app-case acceptance. Existing direct UI re-
+enrollment remains a separate proposed diagnostic; evaluate tooling before more
+custom UI orchestration. Pi v0.85.1-psmfd.1, deferred #219 and all gates intact.
+
+CF-1C-CAPTURE-3 implementation/evidence checkpoint
+`8876c5839ed6536aec879ccdba11c36163278fd7` is committed, secret-scanned (zero
+findings) and remotely backed up in open draft #224 against dev. All 38 guards,
+Ruff, repository checks, fixed shell syntax, Markdown/Prettier, local file links
+and 33 private-file digests pass. Implementation CI
+[42392072357](https://github.com/psmfd/FingerTrap/actions/runs/42392072357) passes
+all fourteen jobs; title/gitflow pass. Full CodeQL/review remain pending.
+All macOS jobs hosted; no local drain needed, zero runner registrations. Final
+inventory: five original stopped VMs, no disposable clone or QA processes.
+This following documentation-only checkpoint records that source identity with
+CI skipped; read git/draft head for its own SHA. Automation tooling is proposed,
+not installed/adopted. Latest steering: evaluate pinned Peekaboo CLI + GUI Bridge
+before additional custom UI orchestration; retain existing ownership/cleanup and
+all acceptance/activation gates.
+
+The automation research note initially had a bare-URL Markdown lint finding;
+converted sources to proper Markdown links and lint passes. No new guest start
+after attribution cleanup, and no automation tool installation performed.
+
+## 2026-11-07 — approved CF-1C-AUTOMATION-1 Peekaboo pilot
+
+Maintainer approved the pilot. Start at `a0aa2655a30c220a33481b4f632d1bd4e0841a09`,
+branch test/client-baseline-gui, draft #224 against dev. Select published Peekaboo
+v4.9.8 (release 435831803, 2026-11-05), matching app zip asset 715044161 and
+ARM64 CLI tar asset 715044399. Pin GitHub asset digests, release signing/inventory
+manifests and actual embedded source identities before any guest execution.
+No host/global installation or package manager, no runtime/product dependency.
+
+Scope: a dedicated QA pilot module using the existing Tart/VNC owner and cleanup
+wrapper. Minimal reviewed hooks may stage verified tool inputs into the new
+read-only QA share and select a per-probe independent readback. Do not rebuild
+the atomic lifetime/RFB implementation. Guest-only installation of matching
+prebuilt app/CLI, normal supported Screen Recording/Accessibility permissions to
+the actual signed GUI Bridge, deterministic CLI Finder/menu/dialog/text scenario,
+JSON/AX/window assertions, real screenshots plus independent native RFB evidence.
+No model agent, MCP/cloud credentials, host clipboard, TCC edits/bypass or binary
+re-signing. No fallback capture through a background CLI accepted as a Bridge pass.
+Record test-tool footprint; do not claim a pristine tool-free consumer test.
+
+Reviewed pilot bounds before implementation: 1200s observer, 1500s guest hold,
+40 native bootstrap actions and a fixed finite CLI scenario. Each guest command
+at most 30s (install/verification at most 60s bounded by remaining time), native
+probe cap 45s. One boot/stage/permissions/script/observations/cleanup execution
+with private redirected stdout/stderr. Before Bridge permission works, preserve
+capture failure plus independent guest clock without inferring window contents.
+After grants, require actual full-window capture and input proof. Run identifier
+passed explicitly; never select the cleaned active-console pointer.
+
+Validation: artifact/source/signature/archive provenance, meaningful staging/
+callback/ownership/Bridge-source guards and red proof, existing kept suite/Ruff/
+repo/docs checks, then bounded live pilot and independent cleanup. Preserve all
+private evidence and unrelated files. Pilot go/no-go stays separate from app
+validation: baseline one input PASS/eleven BLOCKED, Pi v0.85.1-psmfd.1, deferred
+comparison #219 and all activation/backend/release gates remain unchanged. Next: acquire and
+review exact artifacts and release command docs, implement minimal QA integration.
+
+AUTOMATION-1 artifact review: v4.9.8 asset/inventory/signing digests match; source
+70dbc4183f390a5a72d5dc01d8a77eb672217070, Developer ID team FWJYW4S8P8. App zip
+paths and six framework symlinks remain contained. Passive host extraction only,
+no tool launch/installation. App identifier boo.peekaboo.mac, minimum macOS 15.0,
+source stamp matches, stapled ticket observed. App/deep library and ARM64 CLI
+strict signature checks pass outside the sandbox. Initial sandboxed CLI signature
+check reported invalid/authority unavailable; unrestricted read-only verification
+passes, so no corrupt-artifact claim. CLI requires its shipped Swift compatibility
+dylib. Next: stage these pinned inputs and implement Bridge-only QA readback.
+
+AUTOMATION-1 preflight: matching app/CLI/dylib provenance reviewed and pinned in
+peekaboo-pilot-inputs.json. Dedicated guest-only pilot and minimal prepare/readback
+hooks implemented locally; 43 kept guards/Ruff/repository checks pass. Intentional
+Bridge-local fallback regression fails the kept guard; restored code passes.
+Branch/draft head a0aa265 verified; prior implementation 8876c58 CI remains green.
+Five original VMs stopped, no disposable clone. Next: one bounded live boot with
+normal GUI app permission enrollment, fixed Finder scenario, independent frames/
+clock and owned cleanup. Source is not yet committed or CI-verified.
+
+AUTOMATION-1 live run 20261107T171635Z-8d74599c3c32: guest signature/source
+verification succeeds and canonical GUI Bridge responds with source=bridge.
+All three grants initially denied, blocked capture and immediate guest clock
+preserved. Native menu item pointer attempts dismiss menu without opening UI;
+Down then Return visibly selects/opens the permission checklist. This is bounded
+native keyboard evidence, not Peekaboo input qualification. Normal GUI Screen
+Recording Grant produces correctly attributed Peekaboo prompt. Next: finish
+normal guest app permission enrollment then run the fixed Finder scenario.
+
+AUTOMATION-1 result: run 20261107T171635Z-8d74599c3c32 aborted safely on
+Peekaboo type exit 1/INTERACTION_FAILED, outcome indeterminate/may_have_dispatched,
+retry unsafe. Immediate independent RFB and Bridge pixels both visibly show exact
+/tmp/ft-input-probe in Finder Go to Folder. The CLI error is preserved; do not
+blindly replay. GUI app Screen Recording + Accessibility normal enrollment,
+macOS Quit & Reopen, supported Allow prompt, then normal app quit/relaunch yield
+all three Bridge grants. Bridge full-window capture works, unlike prior agent
+capture. Semantic Go menu delivery resolves to fresh AX GoToWindow/PathTextField;
+used_cache=false. Escape/chord not reached. Owned cleanup verified, five originals
+stopped/preserved. No app validation and baseline unchanged.
+
+Next bounded comparison CF-1C-AUTOMATION-1B: preserve indeterminate type failure,
+then resolve once with mandatory fresh Finder AX value plus independent images;
+never repeat typing. Continue Escape and keyboard shortcut only if the exact
+field is observed. Strengthen dialog/freshness/readback checks and guards before
+one fresh pilot with identical pinned artifacts, deadlines and owned cleanup.
+
+## 2026-11-07 — CF-1C-AUTOMATION-1/1B results
+
+Pinned Peekaboo v4.9.8, source `70dbc4183f390a5a72d5dc01d8a77eb672217070`,
+Developer ID team `FWJYW4S8P8`, app `boo.peekaboo.mac`, matching ARM64 CLI and
+shipped Swift compatibility library were installed only inside disposable guests.
+[Input provenance](evidence/client-baseline/peekaboo-pilot-inputs.json) and
+[results with 779 private-file hashes](evidence/client-baseline/peekaboo-pilot-result.json)
+retain both attempts. No host/global installation or runtime dependency added.
+
+First run `20261107T171635Z-8d74599c3c32` safely aborted on type exit 1:
+INTERACTION_FAILED, indeterminate/may_have_dispatched, retry unsafe. Independent
+RFB and Bridge frames nevertheless show the exact synthetic path. The correction
+preserves that error and resolves it once with a mandatory fresh Finder AX read;
+no input replay. Guard regressions for accepting local capture and skipping the
+fresh field assertion both fail; restored code passes all 46 kept guards/Ruff.
+
+Continuation `20261107T172734Z-0f7178a10a0d` completed the fixed scenario and
+explicit finish after 21 queue actions. Normal signed app Screen Recording and
+Accessibility enrollment, macOS Quit & Reopen/Allow, then normal app Quit and
+interactive relaunch yield all three canonical GUI Bridge grants. Full-window
+Bridge screenshots agree with independent native RFB frames. Semantic Go menu
+selection opens Finder Go to Folder; fresh AX sees PathTextField. Type returns
+the retained indeterminate error, then uncached AX and both image sources confirm
+`/tmp/ft-input-probe`. Escape visibly closes the dialog; Peekaboo foreground
+`cmd+shift+g` reopens it, with fresh AX and independent frames confirming an empty
+path field. CLI dispatch status alone is never acceptance. Native RFB Meta+q did
+not quit; that older chord path is not claimed fixed. Follow-up RFB timeouts remain
+possible; first native frames plus immediate Bridge screen/clock are retained.
+
+Both owned guests cleaned; independent inventory verifies five original stopped
+VMs and no disposable clone/QA/Peekaboo/Tart/Softnet processes. Initial blocked
+captures and restart gaps retain errors plus independent guest clocks. Raw frames,
+JSON, signing output and logs remain private; unrelated files and cleaned pointer
+preserved. Tool footprint is explicit, not a pristine tool-free consumer claim.
+No FingerTrap app validation occurred. Baseline remains one input PASS/eleven
+BLOCKED, Pi v0.85.1-psmfd.1, #219 deferred and all existing gates unchanged.
+
+**Decision:** this bounded Finder workflow has usable scripted input and real
+window capture through the signed GUI Bridge. Production adoption, unattended
+permission enrollment, and broad app reliability are not established. Keep fresh
+AX and image assertions around every mutation, including indeterminate outcomes.
+Implementation `5fa59ffe8ae86a117d9a8ce7b8359dd6ae884490` is committed,
+secret-scanned (zero findings), remotely backed up and CI-verified in open
+draft #224 against dev. CI [42397076555](https://github.com/psmfd/FingerTrap/actions/runs/42397076555)
+passes all fourteen jobs; title/gitflow pass. Full CodeQL/review and app acceptance
+remain pending. All macOS jobs hosted, no local drain; zero runner registrations.
+Following documentation checkpoints skip CI and do not change the tested source.
+
+**Concrete next action:** checkpoint/review this pilot, then name CF-1C-AUTOMATION-2
+for a bounded packaged-client launch/observation-only slice using the pinned GUI
+Bridge. Record exact app window/ready-state assertions and private evidence before
+boot; retain existing app acceptance/provider and activation/backend/release gates.
+Do not promote any app row from this Finder pilot. Reproduction:
+
+```sh
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+python3 scripts/client_baseline_peekaboo.py \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/peekaboo-pilot-NEW-UNIQUE.log 2>&1
+```
+
+Use a new private log with restrictive umask/no-clobber. The process owns boot,
+1200s observation, 1500s guest hold, at most 40 bootstrap queue actions, fixed
+scenario, immediate per-step readbacks and cleanup. Select only the newly printed
+explicit run, never active-console.json. Queue fixed actions pilot-status,
+pilot-permissions-ui and pilot-scenario in that run's peekaboo-pilot/request-NN.json;
+normal native click/chord/capture handles supported UI enrollment. Finish explicitly
+with action finish. No arbitrary commands, operator data, models or MCP/cloud.
+
+## 2026-11-07 — Peekaboo pilot checkpoint and CI
+
+Implementation 5fa59ffe8ae86a117d9a8ce7b8359dd6ae884490 committed and remotely
+backed up on test/client-baseline-gui, open draft #224 against dev. All 46 kept
+guards, Ruff, repo checks, Markdown/Prettier, migration links and 779 private-file
+digests pass; secret scan zero findings. CI 42397076555 passes all fourteen jobs;
+title/gitflow pass. Full CodeQL/review and packaged-client acceptance remain open.
+PR and issues #216/#217 updated with concrete tooling result and preserved gates.
+Five original VMs stopped/preserved, no clone/QA/tool processes, zero runner
+registrations. Hosted macOS jobs, no local drain. Source and private evidence
+preserved; following docs-only checkpoint skips CI. Next concrete slice is
+CF-1C-AUTOMATION-2: record bounded packaged-client launch/observation assertions
+before a fresh boot; never reuse a cleaned pointer or infer an app row from Finder.
+
+## 2026-11-07 — CF-1C-AUTOMATION-2 begins
+
+## CF-1C-AUTOMATION-2 — approved packaged-client launch/observation
+
+Proceed authorized from f27dcd9, branch test/client-baseline-gui, open draft #224
+against dev; prior source 5fa59ff CI fourteen jobs green. Before implementation:
+add one dedicated fixed client-observe queue action around the existing Peekaboo
+pilot lifetime. Fresh guest, same pinned app/runtime/tool artifacts and normal
+GUI Bridge permission enrollment. No custom RFB/lifetime reimplementation.
+
+Install the already verified candidate zip into guest /Applications via ditto;
+verify installed bundle ID dev.fingertrap.app and all three native binary hashes
+against the prepared run before one normal LaunchServices open. Record actual
+Gatekeeper/prompts without disabling, re-signing or stripping quarantine. This
+is tool-assisted launch observation, not a pristine Finder installation pass.
+No runtime/profile/provider/keychain changes or app command input in this slice.
+
+Predeclared observed-ready criterion: exactly one positive-size FingerTrap window,
+uncached complete AX observation targeting FingerTrap with session-browser and
+status-panel controls visible, two fresh observations five seconds apart, plus
+private independent native RFB and Bridge screen/clock after each step. Record
+app/sidecar PIDs and installed paths independently; process existence alone is
+not UI readiness. At most three read-only observation attempts; launch never
+replayed. If webview AX is unavailable, preserve pixels/processes and mark the
+criterion blocked rather than weakening it to CLI success. Preserve all failures.
+
+Bounds unchanged: 1200s observer, 1500s guest hold, 40 queue actions, command cap
+30s (installation 60s), native probe 45s. Boot, enrollment, launch, observations,
+explicit finish and verified owned cleanup in one process, stdout/stderr private.
+Do not reuse cleaned pointer. Validate new guards with intentional regression,
+existing suite/Ruff/repo/docs/hash/secret checks, then one bounded live run.
+Baseline stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred,
+all activation/backend/release/provider acceptance gates intact. Next: implement
+fixed installed-identity and fresh-window assertions, then run the owned slice.
+
+AUTOMATION-2 implementation prepared locally: dedicated fixed client-observe
+module reuses pinned Peekaboo staging/enrollment and existing atomic owner;
+installed ID/three binary hashes checked before single LaunchServices open.
+Mandatory native/Bridge screen+clock follows every install/launch/window/AX/
+process probe. Fifty kept guards/Ruff pass. Intentional cached/empty/wrong-app
+UI acceptance regression fails kept guard; restored code passes. Prior source
+CI remains green and draft/head verified. Next: bounded live run with normal
+permissions, at most three read-only observations, explicit finish and cleanup.
+
+AUTOMATION-2 run 20261107T175616Z-5064033904d3 completed three uncached AX and
+native/Bridge readbacks, installed identity proof and independent process inventory;
+explicit finish after 21 queue actions. App PID 933 and child sidecar 940 use the
+verified installed paths. Visible window 80 exposes both required controls and
+an actionable missing-Pi default pane. No Pi/profile/provider setup performed.
+Original live guard blocked because it counted unnamed off-screen helper 85.
+Before correction: classify exactly one observed visible titled FingerTrap main
+window, bind its ID to the fresh AX target and retain partial-inventory warnings.
+Do not claim complete global window inventory. Preserve original blocked result;
+validate corrected classification by replay of the retained independently acquired
+snapshots/screens/clocks after cleanup, not by relaunching or fabricating live
+callback success. Add kept real-inventory regression fixture. Baseline unchanged.
+
+## 2026-11-07 — packaged-client observation and classification result
+
+## CF-1C-AUTOMATION-2 — packaged-client window observed
+
+Run `20261107T175616Z-5064033904d3` installed the pinned candidate inside a fresh
+owned guest, verified bundle ID dev.fingertrap.app and all three native binary
+hashes, then launched exactly once through normal LaunchServices. No Gatekeeper
+bypass, quarantine removal, re-signing or host/global install. Peekaboo GUI Bridge
+grants came through the same normal guest UI enrollment/relaunch as the pilot.
+
+**Observed:** native RFB and independent Bridge screenshots show FingerTrap's
+visible window and controls. Three distinct uncached AX snapshots, each at least
+five seconds apart, expose Toggle session browser and Toggle status panel in
+window 80 (1024x686 logical bounds). Process readback independently records app
+PID 933 and child sidecar PID 940 at the verified /Applications bundle paths.
+The default Pi pane visibly reports an actionable missing-executable error. This
+slice did not install/configure Pi or send app command/provider/keychain input;
+do not claim terminal transport, provider acceptance or clean Finder installation.
+
+**Guard correction preserved:** original live result is blocked because its
+window guard counted an unnamed off-screen helper (85) as well as the visible
+FingerTrap main window (80). The actual inventory is partial and keeps its warnings.
+Corrected classification binds exactly one observed visible titled main window
+to fresh AX; it does not assert a complete global window count. The original
+blocked result remains untouched. Corrected guard passes offline replay of all
+three retained live observations/screens/clocks after cleanup; no second launch,
+no fabricated live callback success. Acquisition commands unchanged; final
+corrected live callback was not re-executed. A kept sanitized real-inventory
+fixture rejects restoration of the old count-all-windows guard. An intentional
+cached/empty/wrong-app UI acceptance regression also fails the kept guard.
+
+[Sanitized result and 350 private-file hashes](evidence/client-baseline/client-launch-observation.json)
+retain exact identities, original failure, classification mode, process/image
+review and cleanup. All 51 kept guards/Ruff/repo/docs/link/hash checks pass; secret scan zero.
+Source `237afcdc2a5afcebcf3194200e2933be0dc43bac` is committed and remotely backed
+up in open draft #224 against dev. CI
+[42399603531](https://github.com/psmfd/FingerTrap/actions/runs/42399603531)
+passes all fourteen jobs; title/gitflow pass. Full CodeQL/review and maintainer/
+app acceptance remain open. Zero runner registrations, hosted macOS jobs; no local
+drain. Following documentation-only checkpoint skips CI; tested source unchanged. Raw images/JSON/logs
+remain private; unrelated files and cleaned active-console pointer preserved.
+Explicit finish after 21 queue actions; independent cleanup shows five original
+stopped VMs, no clone/QA/Peekaboo/Tart/Softnet processes. Baseline unchanged:
+one input PASS/eleven BLOCKED, Pi v0.85.1-psmfd.1, comparison #219 deferred,
+all provider/activation/backend/release and maintainer acceptance gates intact.
+
+**Next concrete slice: CF-1C-AUTOMATION-3.** Record a bounded first shell-pane
+input/output observation before boot: reuse corrected main-window admission in
+a fresh guest, select New shell tab through observed AX, deliver one synthetic
+printf probe, then observe exact output independently. No provider/runtime setup,
+no baseline row promotion without its full case evidence. This next slice also
+exercises the corrected classifier in the live callback. First checkpoint and
+refresh current-source CI. Reproduce current acquisition with:
+
+```sh
+python3 scripts/client_baseline_client_observe.py \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/client-observe-NEW-UNIQUE.log 2>&1
+python3 scripts/client_baseline_client_observe.py \
+  --review-run .artifacts/client-baseline/20261107T175616Z-5064033904d3
+```
+
+Use restrictive umask/no-clobber and a fresh explicit run for acquisition. Existing
+1200s observer/1500s guest hold/40-action/30s guest-command/45s native-probe bounds
+remain; fixed install verification cap 60s. Queue client-observe only after Bridge
+permission enrollment; finish explicitly. Review mode only reads a cleaned owned
+run, verifies retained image digest and timestamps, and never starts a guest.
+
+## 2026-11-07 — packaged-client observation checkpoint and CI
+
+Source 237afcdc2a5afcebcf3194200e2933be0dc43bac committed and remotely backed up
+on test/client-baseline-gui, draft #224 against dev. All 51 kept guards/Ruff,
+repo/docs checks, migration local links and 350 private hashes pass; secret scan
+zero. Source CI 42399603531 passes all fourteen jobs; title/gitflow pass.
+Draft and issues #216/#217 record the original live guard failure separately
+from corrected offline evidence replay. Full CodeQL/review/app acceptance remain
+pending. Five original stopped VMs, no disposable clone/QA/tool processes, zero
+runner registrations; hosted macOS jobs/no local drain. Private evidence and
+unrelated files preserved. No baseline row promoted: one input PASS/eleven BLOCKED,
+Pi v0.85.1-psmfd.1, #219 deferred and every existing gate unchanged.
+Next concrete action CF-1C-AUTOMATION-3: record bounded first shell-pane synthetic
+input/output assertions before a fresh owned boot, including corrected live
+window admission. Following docs-only checkpoint records this source SHA/CI and
+skips CI. Never reuse a cleaned active-console pointer.
+
+## 2026-11-07 — approved bounded shell probe begins
+
+## CF-1C-AUTOMATION-3 — approved bounded shell-pane input/output
+
+Start e8ff56b24ed7ad67a742cbb0f8bd913f56d0b44e, branch test/client-baseline-gui,
+draft #224 against dev. Prior implementation 237afcd CI fourteen jobs green.
+Before changes: add a fixed shell-probe queue action in a dedicated QA module,
+reuse the existing client install/one-launch, corrected live admission, pinned
+Peekaboo GUI Bridge and atomic Tart/VNC lifetime. No product/runtime changes.
+
+Fresh guest and normal permission enrollment. Require corrected live stable
+main-window admission. Select exactly one New shell tab AX button from a fresh
+explicit snapshot, click it once, then observe the newly added shell tab/terminal
+receiver. Deliver one fixed synthetic shell command through Peekaboo UI input.
+The command base64-decodes a run-bound marker and tees it to a single owned guest
+/tmp/ft-cf1-shell-proof file. Verify that file absent before UI input; only the
+interactive shell may create it. Independent guest read must exactly match the
+expected marker; decoded marker must be visible in fresh terminal evidence, not
+merely echoed as part of the typed command. No remote command writes the proof.
+
+Every probe/mutation gets independent native RFB plus Bridge screen/clock. No
+blind replay after an indeterminate input. Observe exact current receiver/value
+before deciding to send Return; otherwise stop with evidence. At most one tab
+creation, one command delivery and one Return; bounded read-only observations
+may repeat. Record app/sidecar/shell ancestry independently. Do not close siblings,
+install/configure Pi, access provider/keychain/host clipboard or use operator data.
+Bounds: 1200s observer, 1500s guest hold, 40 queue actions, 30s guest-command,
+60s fixed install verification, 45s native probe. Private stdout/stderr; explicit
+finish/owned cleanup in the same execution; never use cleaned active pointer.
+
+Validation: real-path guard regressions for stale/ambiguous receiver and forged
+or pre-existing proof, kept suite/Ruff/repo/docs/hash/secrets checks, one bounded
+live run. This is partial CF1-03 evidence, not its full resize/split/sibling case;
+baseline remains one input PASS/eleven BLOCKED. Pi v0.85.1-psmfd.1, comparison
+comparison #219 deferred and all activation/backend/release/provider gates intact. Next:
+implement fixed scenario and evidence assertions before boot.
+
+AUTOMATION-3 delivery refinement before implementation: one compound Peekaboo
+foreground type call carries the fixed printf/base64-decode/tee command plus its
+single trailing Return, using --accept-dispatched only to preserve unverified
+receipts without treating them as success. No separate Return after uncertain
+input. Fresh AX must first identify the shell tab and focused terminal receiver.
+Read-only proof-file bytes plus independent terminal pixels decide execution;
+encoded command echo does not contain the decoded output marker. Never replay.
+
+AUTOMATION-3 preflight: dedicated fixed shell-probe module implemented; reuses
+corrected live client admission and existing atomic owner without reimplementation.
+All 56 kept guards/Ruff pass. Intentional echoed-command/foreign-run proof
+acceptance regression fails; production restored. Fresh AX snapshot/unique button,
+shell tab/focused receiver and absent proof are enforced before delivery. One
+compound input with Return; all subsequent probes read-only. Next: bounded live
+run, independent file/pixel/ancestry review, explicit finish/verified cleanup.
+
+AUTOMATION-3 live run 20261107T181834Z-f41358dcd0f5: corrected main-window
+classifier now passes the actual live callback, two uncached snapshots of window 80. Installed identities and independent readbacks verified; guest proof absent
+before UI mutation. Next fixed step is unique fresh New shell tab action and
+one command/Return, followed only by proof/image/ancestry observations.
+
+AUTOMATION-3 first run 20261107T181834Z-f41358dcd0f5 failed safely: corrected
+live window admission passed, one New shell tab and focused AXTextArea observed.
+Single UI command/Return dispatched unverified. Native/Bridge images show at
+least the first intended delimiter lost: zsh reports command not found printf%s,
+versus requested printf %s. The tee-created proof file is empty; exact-byte guard
+rejects it and owned cleanup verifies. No input replay, no positive shell proof.
+
+Next bounded atomic comparison CF-1C-AUTOMATION-3B: fresh guest, same pinned
+inputs, app admission, tab selection and encoded marker command; change only
+foreground typing cadence to 50ms per character (under existing 30s command cap).
+One delivery/Return, observe proof and pixels, never retry input in the same guest.
+Retain original failed run as real red proof of false-success prevention. Existing
+CF-1/shell approval persists; no product/runtime/provider/gate changes.
+
+## 2026-11-07 — shell input/cadence comparison results
+
+## CF-1C-AUTOMATION-3/3B — bounded shell input/output verified
+
+Two fresh owned runs used the same pinned candidate, production runtime inputs
+and signed Peekaboo v4.9.8 GUI Bridge. Corrected main-window admission now passes
+in both actual live callbacks: two uncached snapshots of the same visible main
+window. A unique fresh New shell tab AX target creates one shell tab; fresh AX
+confirms a focused Terminal input AXTextArea in that exact window before input.
+
+**Original failure retained:** `20261107T181834Z-f41358dcd0f5` at default cadence
+shows `printf%s` and zsh command-not-found in independent native/Bridge frames,
+versus intended `printf %s`. The tee-created proof file is empty. Exact-byte guard
+rejects it despite the CLI's accepted/unverified dispatch. Exception-triggered
+owned cleanup verifies. At least the first delimiter was lost; root cause is
+unassigned between automation delivery and the client input path. No blind replay
+or product-fix claim. This is real failed-world evidence for the proof guard.
+
+**Bounded positive comparison:** `20261107T182716Z-cc826ea8ca2a` changes foreground
+typing cadence to 50ms per character. One fixed encoded-marker printf/decode/tee
+command and its single Return produce exactly the expected run-bound guest file.
+Independent RFB and Bridge images visibly show decoded marker output followed by
+new shell prompt; the marker does not occur in the echoed encoded command. CLI
+still truthfully reports dispatched_unverified; --accept-dispatched is not proof.
+Measured CLI execution 0.912s default versus 8.153s paced; no general throughput
+or arbitrary rapid-typing claim. Per-run markers differ to bind each trial.
+
+Independent process readback confirms app PID 917 -> sidecar 924 -> /bin/zsh 1105
+at the expected installed paths. Original exited pi 1 tab remains present. No
+Pi/profile/provider/keychain/host clipboard configuration or credentials used.
+Both attempts deliver input only once; subsequent checks are read-only. Positive
+run explicitly finishes after 21 queue actions. Both owned guests cleaned;
+independent inventory: five original stopped VMs, no disposable clone/QA/tool
+processes. Raw evidence private; unrelated files and cleaned pointer preserved.
+
+[Sanitized comparison and 828 private-file hashes](evidence/client-baseline/shell-input-comparison.json)
+retain both runs, requested commands, exact proof bytes, dispatch outcomes,
+independent image/process review and cleanup. All 56 kept guards/Ruff/repo checks
+pass. Intentional stale/ambiguous-target and echoed-command/foreign-run proof
+regressions fail; restored code passes. Source `ea433e6f8a1792a7e314b2415387269a17a57994` is committed and remotely
+backed up in open draft #224 against dev. Source CI
+[42402534267](https://github.com/psmfd/FingerTrap/actions/runs/42402534267)
+passes all fourteen jobs; title/gitflow pass. Full CodeQL/review and maintainer/
+app acceptance remain pending. All 56 guards and 828 private hashes pass locally;
+secret scan zero. Zero runner registrations, hosted macOS CI/no local drain.
+Following documentation-only checkpoint skips CI and leaves tested source intact. No baseline row promoted:
+one input PASS/eleven BLOCKED. This is partial CF1-03 input/output evidence;
+resize/split/sibling-close remain untested. Pi v0.85.1-psmfd.1, comparison #219
+deferred and all activation/backend/release/provider/maintainer gates unchanged.
+
+**Next concrete action: CF-1C-AUTOMATION-4.** Record a bounded shell resize/split/
+sibling-close scenario before a fresh boot, including exact dimensions/process
+ancestry and independent marker outputs before/after. Use the observed 50ms
+cadence as a limited QA condition; default-cadence delimiter loss remains open
+in the baseline tracking. Never treat a CLI receipt or encoded command echo as
+execution. Do not promote CF1-03 until its full case is independently observed.
+
+```sh
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+python3 scripts/client_baseline_shell_probe.py \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/shell-probe-NEW-UNIQUE.log 2>&1
+```
+
+Use restrictive umask/no-clobber, fresh explicit printed run and normal guest
+permission enrollment. Fixed queue action shell-probe runs one client launch and
+single tab/command/Return with mandatory readbacks; finish explicitly. Bounds
+remain 1200s observer/1500s guest hold/40 queue actions/30s guest commands/60s
+install verification/45s native probes. Never reuse cleaned active-console.json.
+
+## 2026-11-07 — shell input comparison checkpoint and CI
+
+Source ea433e6f8a1792a7e314b2415387269a17a57994 committed and remotely backed up
+on test/client-baseline-gui, open draft #224 against dev. All 56 kept guards,
+Ruff/repo/docs checks, local links and 828 private hashes pass; secret scan zero.
+CI 42402534267 passes all fourteen jobs; title/gitflow pass. Full CodeQL/review/
+maintainer/app acceptance remain pending. Draft and issues #216/#217 preserve the
+default-cadence delimiter loss/empty proof, bounded 50ms positive file+pixel proof
+and corrected live window admission. No product/tool root-cause fix claimed.
+Both owned guests cleaned, five originals stopped, no clone/QA/tool processes,
+zero registrations. Hosted macOS CI/no local drain. Unrelated files/private
+raw evidence/cleaned pointer preserved. Baseline stays one input PASS/eleven
+BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred and all gates intact.
+Next concrete CF-1C-AUTOMATION-4: record bounded resize/split/sibling-close
+assertions before a new owned boot, maintaining proof after every paced input.
+Default-cadence loss remains an open qualification limitation. Following docs-only
+checkpoint records source/CI identity and skips CI; never reuse cleaned pointer.
+
+## 2026-11-07 — approved shell layout slice begins
+
+## CF-1C-AUTOMATION-4 — approved bounded resize/split/sibling-close
+
+Start 0cb0be6ef2d0748ff89b0cae790424bc2b39219d, branch test/client-baseline-gui,
+open draft #224 against dev. Prior source ea433e6 CI fourteen jobs green. Before
+implementation: dedicated fixed layout scenario reuses current atomic owner,
+pinned candidate/runtime/Peekaboo GUI Bridge, supported permission enrollment,
+corrected live window admission and proven 50ms input cadence. No product edits.
+
+Source inspection shows split uses configured default kind rather than inheriting
+shell. Explicit guest-only supported ADR-0014 settings fixture before first app
+launch: {version:1,pane:{defaultKind:"shell"}} at ~/Library/Application Support/
+fingertrap/settings.json. Require absent file/no overwrite. This is a disclosed
+shell-configured test condition, not a pristine default-Pi installation. No Pi
+executable/profile/provider/keychain or activation/backend/release setting changes.
+
+One initial shell; four fixed paced UI command/Return deliveries generate distinct
+run-bound guest proof files only through the interactive shell. Each proof records
+decoded marker, $$ PID and /bin/stty size. Check absence before input and exact
+marker/parseable positive PID/rows/columns after, with independent native RFB and
+Bridge pixels/clock after every probe. No blind retry of a mutation.
+
+Predeclared sequence/assertions: original proof; resize exact main window to
+900x600 logical pixels, fresh AX confirms geometry and same shell PID with smaller
+rows/columns; Cmd+Shift+D once splits right; fresh AX exposes two terminal input
+areas and sibling proof has distinct shell PID/narrower columns. Independently
+verify app->sidecar->both shells ancestry. Cmd+Shift+W once closes focused sibling
+only; fresh AX returns to one terminal, sibling PID disappears, original stays.
+Final original proof has same PID and restored post-resize PTY dimensions. At most
+three read-only process observations for asynchronous sibling exit. No external
+kill, no closing whole tab/window or unrelated processes. Clean entire owned guest
+at explicit finish; never use cleaned active-console pointer.
+
+Bounds reviewed before boot: 1500s observer/1800s guest hold (extra fixed layout
+probes), 40 bootstrap queue actions, finite four-proof/one-resize/one-split/one-close
+scenario, 30s guest commands/60s install verification/45s native probes. stdout/
+stderr redirected privately. Validate target/PID/geometry/proof regression guards,
+kept suite/Ruff/repo/docs/hash/secrets, then one live owned run and cleanup.
+Baseline stays one input PASS/eleven BLOCKED pending review of complete evidence;
+default-cadence loss remains unresolved. Pi v0.85.1-psmfd.1, #219 deferred and all
+acceptance/activation/backend/release/provider gates intact. Next: implement and
+validate fixed scenario before fresh boot.
+
+AUTOMATION-4 identity refinement before implementation: first shell command also
+sets an unexported run-bound FT_CF1_SURVIVOR variable in that interactive shell.
+Each proof adds its sentinel value. Original proofs must retain the value; newly
+spawned sibling must not inherit it. PID+ancestry+sentinel checks prevent treating
+a replacement shell as the surviving original. This is guest shell state only.
+
+AUTOMATION-4 preflight: fixed guest-shell-default fixture, four run-bound
+PID/stty/sentinel proofs, exact resize and guarded split/sibling-close implemented.
+All 62 kept guards/Ruff pass; guest fixture Python/JSON syntax verified. Intentional
+bypass of sibling identity admission fails the kept mutation-path guard; production
+restored. Commands fit 30s cap at 50ms cadence. Next: one bounded live owned run,
+normal Bridge permissions, proof/image/process review and explicit finish/cleanup.
+
+AUTOMATION-4 failed run 20261107T200710Z-adb15f1b0c25: supported shell-default
+fixture and live window admission verify. First 254-character proof at 50ms
+cadence returns INTERACTION_FAILED/indeterminate/response_lost, NSPOSIX timeout;
+independent pixels show partial line, no proof file exists. It stops before resize,
+split or close, no blind input replay, owned cleanup verified. The outer 30s cap
+was insufficient to predict the Bridge response budget; preserve actual failure.
+
+Next bounded CF-1C-AUTOMATION-4B: fresh guest, same fixture/input artifacts/50ms
+cadence and assertions. Compact each proof to at most 150 characters, using the
+run's existing 12-hex nonce in marker/unexported FT4 sentinel and short owned
+/tmp/ft4-{b,r,s,a} paths. Preserve absolute tool paths, PID/stty/sentinel fields,
+one command/Return per phase, absent-file guard and exact marker binding. No
+chunked or repeated input; all other bounds/cleanup/gates unchanged. Add a kept
+command-length guard that rejects the original longer pattern before boot.
+
+AUTOMATION-4B preflight: compact proof lengths 144/127/127/127 characters; 50ms
+cadence unchanged. All 62 guards/Ruff pass, including 150-character maximum;
+intentional long-command regression fails. Fresh run 20261107T203154Z-15a8da01a49a
+has all three canonical GUI Bridge grants and is executing the fixed scenario.
+Original 254-character timeout attempt remains private and independently cleaned.
+
+## 2026-11-07 — bounded layout comparison results
+
+## CF-1C-AUTOMATION-4/4B — resize/split/sibling-close observed
+
+Pinned candidate and Peekaboo GUI Bridge unchanged. Disclosed guest-only supported
+ADR-0014 fixture sets version 1 pane.defaultKind=shell before the single app launch;
+this makes the app's normal split action create a shell sibling rather than Pi.
+No host/product/Pi/profile/provider/keychain/activation/backend/release changes.
+
+**Original failure preserved:** run `20261107T200710Z-adb15f1b0c25` verifies fixture
+and live admission, but its 254-character first proof at 50ms cadence returns
+INTERACTION_FAILED/indeterminate/response_lost with a native timeout. Independent
+frames show partial input; no first proof verifies. It stops before resize/split/
+close without blind replay, and owned cleanup verifies. The outer 30s cap did not
+predict the Bridge response budget. Do not claim the application failed layout.
+
+**Bounded positive comparison:** fresh run `20261107T203154Z-15a8da01a49a` retains
+50ms cadence and all checks but uses compact 144/127/127/127-character proofs,
+bound to the run nonce, phase and four absent-before-input guest files. One UI
+command/Return per phase; proof bytes and native/Bridge pixels independently agree.
+
+| Phase                    | Shell PID | PTY rows × columns | Original sentinel         |
+| ------------------------ | --------- | ------------------ | ------------------------- |
+| Before resize            | 1044      | 39 × 126           | retained                  |
+| 900×600 logical window   | 1044      | 34 × 108           | retained                  |
+| New right sibling        | 1328      | 34 × 53            | absent, independent shell |
+| After sibling-only close | 1044      | 34 × 108           | retained                  |
+
+Fresh AX confirms exact 900×600 main window, two visible Terminal input areas
+after Cmd+Shift+D, then one after Cmd+Shift+W. Process reads prove app PID 987 ->
+sidecar 994 -> both shells before close; afterward only original 1044 remains,
+sibling 1328 absent. Original PID/unexported sentinel and PTY dimensions survive;
+no external kill or whole-tab/window close. Independent images retain decoded
+markers, split geometry and final original prompt. Explicit finish after 21 queue
+actions. Both guests cleaned; five originals stopped, no clone/QA/tool processes.
+
+[Comparison and 1,031 private-file hashes](evidence/client-baseline/shell-layout-comparison.json)
+retain failure, fixture, exact proofs, images/process review and cleanup. All 62
+kept guards/Ruff/repo checks pass. Intentional unproven-sibling close, replacement/
+sentinel/geometry acceptance and overlong-command regressions fail kept guards;
+restored source passes. Source checkpoint
+`cc86814ce59e54d6816d7b1130427fb3b39e2ae0` is committed and remotely backed up on
+`test/client-baseline-gui`, open draft #224 against `dev`. All fourteen jobs in
+[CI run 42413472484](https://github.com/psmfd/FingerTrap/actions/runs/42413472484)
+pass; title/gitflow checks also pass. All 1,031 private-file hashes reverify and
+secret scanning reports zero findings. Five original VMs remain stopped, no
+QA/clone processes remain, and runner registrations are zero; macOS CI was hosted.
+Draft #224 and issues #216/#217 record the results. Full CodeQL/review and
+maintainer acceptance remain pending. Private evidence/unrelated files/cleaned
+pointer preserved. No baseline row promoted pending review: one input
+PASS/eleven BLOCKED. These are shell-configured, paced, bounded observations;
+default-cadence delimiter loss and longer-input response budget remain limitations.
+Pi v0.85.1-psmfd.1, comparison #219 deferred and every existing gate unchanged.
+
+**Next concrete slice: CF-1C-AUTOMATION-5.** Record a bounded normal GUI quit check
+before a fresh boot: capture exact app/sidecar/shell descendants and an independent
+unrelated guest fixture process, invoke supported GUI Quit once, observe only
+owned descendants terminate while unrelated fixture stays. No external kill
+accepted as normal shutdown proof. Preserve all existing acceptance gates.
+
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:fc6346d4d8e81e67651c84c029d17aab04b3e0edd25af55a1d8db649edcd4c94 -->
+
+```sh
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+# Terminal 1: keep the observer running while Terminal 2 queues requests.
+umask 077
+set -C
+python3 scripts/client_baseline_layout_probe.py \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/layout-probe-NEW-UNIQUE.log 2>&1
+```
+
+In Terminal 2, read the fresh run directory from the private observer log
+(the command above redirects stdout/stderr). Its request
+directory is `<fresh-run>/layout-observation/`. Read that directory's
+`session.json`; when `phase` is `waiting`, use its `nextIndex` for the filename
+`request-NN.json` (zero-padded to two digits). Complete normal Bridge permission
+enrollment through this queue, then write `{"action":"layout-probe"}` at the
+current index. Wait for `session.json` to advance before writing
+`{"action":"finish"}` at the new index. Use restrictive umask and no-clobber
+in Terminal 2 as well; never overwrite an existing request or reuse an old run.
+
+<!-- /coderabbit-ai-generated:v1 -->
+
+Use restrictive umask/no-clobber, fresh printed run, normal Bridge permission
+enrollment, fixed layout-probe queue action and explicit finish. Bounds 1500s
+observer/1800s hold/40 bootstrap actions, finite four-proof/one-resize/one-split/
+one-close scenario, 30s guest/60s install/45s native probe. Never select cleaned
+active-console.json. No automatic row promotion, runtime adoption or publishing.
+
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:0e85c9fd270da5fd4ad9c9285de8f96939afb6d21f4b83b1e66a6e2594313653 -->
+
+## 2026-11-07 — baseline probe review corrections
+
+<!-- coderabbit-ai-generated:v1 -->
+
+<!-- coderabbit-ai-generated-section:v1:3681788a028869df2b213358b20af71b4e878b35a8d09da83ac9e67d49ab7ef8 -->
+
+CF-1C-AUTOMATION-4 follow-up: latest consecutive window IDs, bounded partial
+proof readback and concurrent operator queue instructions. All 66 Python guards,
+`scripts/check.sh` and focused Ruff correctness checks pass. Each original
+implementation fails its new guards; restored fixes pass. Full Ruff reports
+existing import/style/executable-mode findings in the review environment. These
+fixes are committed in `287caafada5d5851593b79121066a9c78fa90833`; all fourteen
+CI jobs and current CodeQL checks pass. No live macOS run was performed by that
+review task; historical live evidence and baseline gates remain unchanged.
+
+<!-- /coderabbit-ai-generated:v1 -->
+
+## 2026-11-07 — layout source checkpoint and CI
+
+<!-- /coderabbit-ai-generated:v1 -->
+
+Source `cc86814ce59e54d6816d7b1130427fb3b39e2ae0` is committed and remotely
+backed up on draft #224 (`test/client-baseline-gui` against `dev`).
+[CI run 42413472484](https://github.com/psmfd/FingerTrap/actions/runs/42413472484)
+passes all fourteen jobs; title/gitflow pass. Local validation includes 62 kept
+guards, restored-source regression checks, 1,031 private evidence hashes, and
+zero secret findings. Draft #224 and issues #216/#217 are updated. Both owned
+runs cleaned; five originals stopped, no clone/QA process, zero runner
+registrations. CI macOS jobs were hosted.
+
+Next: predeclare CF-1C-AUTOMATION-5 normal GUI Quit and descendant termination,
+with an unrelated guest process as survival control. No baseline promotion:
+one input PASS/eleven BLOCKED; shell fixture, paced compact input and retained
+long-input timeout remain explicit. Pi stays v0.85.1-psmfd.1, #219 comparison
+deferred, and every activation/backend/release/review gate remains intact.
+
+## 2026-11-07 — approved CF-1C-REVIEW-1 corrections
+
+## CF-1C-REVIEW-1 — approved merge corrections in progress
+
+Starting from reviewed `287caafada5d5851593b79121066a9c78fa90833` on
+`test/client-baseline-gui`, ready PR #224 against dev. Approved scope: discard a
+failed native-console connection, reconnect before the next request with ownership
+revalidation, preserve failure receipts and never replay input. Add a regression
+that fails on the original code. Correct stale checkpoint/queue instructions and
+formatting. Validate all kept guards/Ruff/repo/docs, then one fresh bounded owned
+layout confirmation with immediate independent screens/clocks and private output.
+Boot/probes/cleanup remain one owner execution; never use a cleaned pointer.
+Historical evidence stays historical; baseline one PASS/eleven BLOCKED, pinned
+Pi v0.85.1-psmfd.1, #219 deferred and all gates unchanged. No merge authorized.
+
+## 2026-11-07 — CF-1C-REVIEW-1 correction results
+
+## CF-1C-REVIEW-1 — corrections implemented and locally/live verified
+
+Failed native-console requests now close/discard their socket; the next request
+revalidates ownership and creates a fresh Console. Failure receipts stay intact;
+no input is replayed. New regression uses text input followed by capture, verifies
+old-socket closure before replacement and exactly one text dispatch. Reviewed
+original source fails it (one connection rather than two); corrected source passes.
+All 67 kept guards, baseline Ruff/format, repository and Markdown/Prettier checks
+pass. Secret scanning passes with zero findings after authorized report-directory
+access; the initial sandbox report-write failure is not a passing scan.
+
+Fresh run `20261107T214721Z-76b7d2bd30f0` verifies normal guest-only Bridge
+enrollment, stable main window 82 and all four compact 50ms shell proofs. App 973
+-> sidecar 980 -> original shell 1030; sibling 1311 is independently verified and
+closed. Original PID/sentinel survive 39x126 -> resized 34x108 -> sibling 34x53 ->
+original 34x108. Fresh native/Bridge images show decoded output and final prompt.
+All proof reads completed at attempt 00: partial reads and connection failure
+recovery are regression-tested, not live fault-injected. Supported guest-only
+shell-default fixture and all prior typing limitations remain explicit.
+
+**Execution limitation retained:** layout result completes, then the 1500s observer
+deadline expires awaiting final finish. Owner exits 1 with TimeoutError; the later
+finish helper rejects the already-cleaned run without queuing input. This is not
+an overall successful execution or app Quit proof. Exception-triggered owned
+cleanup and independent atomic cleanup both verify. Five original VMs stopped,
+no disposable clone or QA/tool processes remain; never reuse the cleaned pointer.
+[Evidence summary and 652 private-file hashes](evidence/client-baseline/review-corrections.json)
+preserve the actual result and timeout. Original private evidence is unchanged.
+
+Implemented and locally/live verified; scoped commit, remote backup, current-source
+CI/CodeQL and review-thread closure are next. No merge performed or authorized.
+Baseline stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred,
+and all acceptance/provider/activation/backend/release gates remain intact.
+Next after merge review: CF-1C-AUTOMATION-5 normal GUI Quit/descendant termination
+with unrelated guest process survival control, predeclared before fresh boot.
+
+## 2026-11-07 — CF-1C-REVIEW-1 source checkpoint
+
+Source `74f9d3b08d4f86e9e71ee339e94c2534992396c3` committed and remotely backed
+up on ready PR #224 against dev. All fourteen CI jobs in run 42420784750 and
+title/gitflow checks pass; all six review threads are resolved. CodeQL Rust is
+still running; the neutral aggregate is not accepted as a green security gate.
+No merge. Next: finish security verification and final documentation checkpoint.
+
+Timeout clarification: the latest failure is the outer 1500-second wall-clock
+observer deadline after layout result completion, including normal permission
+enrollment and operator/approval queue waits. VM load has not been isolated as
+a cause. The earlier long typing failure is an inner Bridge response timeout;
+raising the outer deadline would not fix it. For the next fixed slice, predeclare
+automatic completion or separate enrollment/scenario budgets rather than quietly
+increasing the overall deadline. No timeout changes made in this correction.
+
+## 2026-11-07 — CF-1C-REVIEW-1 merge-review handoff
+
+Correction source `74f9d3b08d4f86e9e71ee339e94c2534992396c3` is remotely backed
+up. All fourteen CI jobs (42420784750), all five CodeQL language analyses and
+the aggregate (42420782243), title and gitflow checks pass. Rust completion
+cleared the temporary neutral aggregate. All six review threads resolved; ready
+PR #224 remains open against dev. PR body records the correction and actual
+wall-clock timeout/verified cleanup. Automatic CodeRabbit review remains skipped
+for the dev base; the addressed review and regression validation are retained.
+
+Both requested corrections are complete. Recommend maintainer merge as a tooling/
+evidence checkpoint after final review; no merge executed. Keep one PASS/eleven
+BLOCKED and all app acceptance/activation/backend/release gates. The live layout
+proofs pass, but owner exit 1 on the final-wait deadline is retained explicitly.
+Next implementation action: predeclare CF-1C-AUTOMATION-5 normal GUI Quit and
+owned descendant termination with unrelated guest survival control, and a finite
+completion path that avoids waiting for a final operator request after all proofs.
+Do not silently increase deadlines or infer a VM-performance root cause.
+
+## 2026-11-07 — approved #224 merge, current-head validation
+
+## CF-1C-REVIEW-1 — maintainer merge approval and required head checks
+
+Maintainer approved merging PR #224 into dev after the correction review.
+Correction source `74f9d3b08d4f86e9e71ee339e94c2534992396c3` passes all fourteen
+CI jobs and all CodeQL analyses; documentation checkpoint
+`e80d638296dde1e4b348c852c3bd2d3dd95c20c4` passes CodeQL. Its skip-ci marker
+left required workflow checks absent at the current PR head, so merge protection
+blocks it. This scoped documentation update deliberately runs normal CI. Do not
+bypass protection, synthesize check statuses or alter any gates. Once current-head
+required checks and security pass, execute the approved squash merge and verify
+PR merged/base dev plus the resulting commit. Record that actual merge identity
+in the next migration status update. No new guest execution is needed.
+
+Baseline stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred
+and all application acceptance/provider/activation/backend/release gates unchanged.
+Next implementation slice remains predeclared normal GUI Quit/descendant checks;
+this approval authorizes merge, not baseline promotion or activation.
