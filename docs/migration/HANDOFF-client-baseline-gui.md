@@ -30,8 +30,10 @@ retain process identities, UI proof, raw frames/readbacks and cleanup. Original
 1,031 layout and 652 review-correction hashes reverify unchanged. All 73 kept
 guards pass; bypassing termination attribution or automatic completion fails the
 new guards and restored source passes. Ruff/format and repository checks pass.
-Implemented and locally/live verified; scoped commit, remote backup, draft PR,
-current-head CI/CodeQL and review remain next. Unrelated local files preserved.
+Source checkpoint `2969e5e0133a2d95bcbf650c1e1ceeeae54ce04d` is committed
+and remotely backed up on `test/client-normal-quit`, [draft PR #227](https://github.com/psmfd/FingerTrap/pull/227)
+against dev. Current-head CI/CodeQL status is tracked in the PR checks; require
+both green before maintainer merge review. Unrelated local files preserved.
 
 This is a bounded observation in the supported guest shell-default fixture, with
 paced input and pinned automation installed. The final desktop still contains

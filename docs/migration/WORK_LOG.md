@@ -3278,3 +3278,22 @@ that private log, then `<fresh-run>/quit-observation/session.json`. At each wait
 permission enrollment using freshly observed native coordinates. Queue only
 `{"action":"quit-probe"}` once at the current index; successful verification
 finishes automatically. No final finish request and no cleaned pointer reuse.
+
+## 2026-11-08 — normal Quit source checkpoint and draft review
+
+Source `2969e5e0133a2d95bcbf650c1e1ceeeae54ce04d` is committed and remotely
+backed up on `test/client-normal-quit`. Draft PR #227 targets dev and records
+the 73 kept guards, observed normal Quit/control survival, automatic finish/exit 0,
+472 private hashes and verified cleanup. Original 1,031 + 652 evidence hashes
+remain unchanged. Secret scan zero findings. The supported shell-default fixture
+and remaining automation permission dialog are explicit limitations.
+
+PR #224 merge identity is `91bf7c53774e8559c486d3b59ad71be7b43e7f1b`. This
+follow-up is not merged; maintainer review and current-head CI/CodeQL remain gates.
+Read [current PR checks](https://github.com/psmfd/FingerTrap/pull/227/checks) rather
+than treating historical source checks as final-head results. This documentation
+checkpoint uses normal CI, not skip-ci, so required checks run on its head.
+Next concrete implementation action after review is predeclared
+CF-1C-AUTOMATION-6 repeated normal LaunchServices launch with stable identities,
+fresh focus/input proof and automatic cleanup. No additional live slice performed.
+Baseline one PASS/eleven BLOCKED and all existing gates remain intact.
