@@ -29,8 +29,14 @@ no disposable clone or QA/tool processes remain; never reuse the cleaned pointer
 [Evidence summary and 652 private-file hashes](evidence/client-baseline/review-corrections.json)
 preserve the actual result and timeout. Original private evidence is unchanged.
 
-Implemented and locally/live verified; scoped commit, remote backup, current-source
-CI/CodeQL and review-thread closure are next. No merge performed or authorized.
+Source `74f9d3b08d4f86e9e71ee339e94c2534992396c3` is committed and remotely
+backed up on ready PR #224 against dev. All fourteen jobs in
+[CI run 42420784750](https://github.com/psmfd/FingerTrap/actions/runs/42420784750)
+pass; title/gitflow pass. All six review threads are resolved (five addressed in
+this follow-up). All five analyses and the aggregate in
+[CodeQL run 42420782243](https://github.com/psmfd/FingerTrap/actions/runs/42420782243)
+pass, including Rust. The temporary neutral aggregate cleared when Rust completed.
+No merge performed or authorized.
 Baseline stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred,
 and all acceptance/provider/activation/backend/release gates remain intact.
 Next after merge review: CF-1C-AUTOMATION-5 normal GUI Quit/descendant termination

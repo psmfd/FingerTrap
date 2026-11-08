@@ -3117,3 +3117,38 @@ Baseline stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred,
 and all acceptance/provider/activation/backend/release gates remain intact.
 Next after merge review: CF-1C-AUTOMATION-5 normal GUI Quit/descendant termination
 with unrelated guest process survival control, predeclared before fresh boot.
+
+## 2026-11-07 — CF-1C-REVIEW-1 source checkpoint
+
+Source `74f9d3b08d4f86e9e71ee339e94c2534992396c3` committed and remotely backed
+up on ready PR #224 against dev. All fourteen CI jobs in run 42420784750 and
+title/gitflow checks pass; all six review threads are resolved. CodeQL Rust is
+still running; the neutral aggregate is not accepted as a green security gate.
+No merge. Next: finish security verification and final documentation checkpoint.
+
+Timeout clarification: the latest failure is the outer 1500-second wall-clock
+observer deadline after layout result completion, including normal permission
+enrollment and operator/approval queue waits. VM load has not been isolated as
+a cause. The earlier long typing failure is an inner Bridge response timeout;
+raising the outer deadline would not fix it. For the next fixed slice, predeclare
+automatic completion or separate enrollment/scenario budgets rather than quietly
+increasing the overall deadline. No timeout changes made in this correction.
+
+## 2026-11-07 — CF-1C-REVIEW-1 merge-review handoff
+
+Correction source `74f9d3b08d4f86e9e71ee339e94c2534992396c3` is remotely backed
+up. All fourteen CI jobs (42420784750), all five CodeQL language analyses and
+the aggregate (42420782243), title and gitflow checks pass. Rust completion
+cleared the temporary neutral aggregate. All six review threads resolved; ready
+PR #224 remains open against dev. PR body records the correction and actual
+wall-clock timeout/verified cleanup. Automatic CodeRabbit review remains skipped
+for the dev base; the addressed review and regression validation are retained.
+
+Both requested corrections are complete. Recommend maintainer merge as a tooling/
+evidence checkpoint after final review; no merge executed. Keep one PASS/eleven
+BLOCKED and all app acceptance/activation/backend/release gates. The live layout
+proofs pass, but owner exit 1 on the final-wait deadline is retained explicitly.
+Next implementation action: predeclare CF-1C-AUTOMATION-5 normal GUI Quit and
+owned descendant termination with unrelated guest survival control, and a finite
+completion path that avoids waiting for a final operator request after all proofs.
+Do not silently increase deadlines or infer a VM-performance root cause.
