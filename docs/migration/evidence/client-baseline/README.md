@@ -1,5 +1,11 @@
 # CF-1 packaged-client baseline evidence
 
+[Normal GUI Quit observation](normal-quit-observation.json) verifies recorded
+app/sidecar/shell termination while an unrelated guest process survives, then
+automatic completion and owned cleanup with exit 0. 472 private-file hashes;
+73 kept guards. Shell-default fixture and automation permission-dialog limitation
+remain explicit; no baseline promotion or full acceptance claim.
+
 [Review corrections](review-corrections.json) retain the 67-guard recovery fix,
 fresh layout proofs, observer deadline after result completion and verified owned
 cleanup, with 652 private-file hashes. No baseline promotion.

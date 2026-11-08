@@ -1,3 +1,99 @@
+## CF-1C-AUTOMATION-5 — bounded normal GUI Quit observed, 2026-11-08
+
+PR #224 merged into dev as `91bf7c53774e8559c486d3b59ad71be7b43e7f1b` after
+all fourteen required CI jobs and CodeQL passed. Follow-up branch
+`test/client-normal-quit` adds a fixed shell-configured Quit scenario and optional
+successful-dispatch completion hook to the existing atomic queue; no product edits.
+
+Run `20261108T152238Z-db6bbf2949e6`: pinned guest-only GUI Bridge grants verify;
+live main-window admission yields window 82 twice. One compact UI shell proof at
+50ms cadence independently verifies decoded output, PID 1063, 39x126 PTY and
+run-bound sentinel. Final independent process inventory binds app 1006 -> sidecar
+1013 -> shell 1063, plus unrelated adopted `/bin/sleep` control 961 with recorded
+start time, executable and parent. One normal foreground Cmd+Q targets window 82.
+The first post-Quit read finds every recorded app descendant gone while control
+961 retains its complete identity. Native RFB and Bridge images show the app
+window gone. No external app/sidecar/shell kill or reparenting accepted as proof;
+no claim about the internal graceful-versus-watchdog shutdown path.
+
+**Automatic completion passed:** successful dispatch finishes after 21 actions,
+without a final operator request. Owner exits 0; no timeout or error events.
+Owned cleanup plus independent atomic cleanup verify; five originals stopped,
+no clone/QA/tool processes remain. The unrelated control survives Quit and is
+removed only with the owned VM. Existing 1500s observer/1800s hold bounds retained,
+360s reserved for scenario admission, max three read-only post-Quit observations.
+
+[Quit evidence and 472 private-file hashes](evidence/client-baseline/normal-quit-observation.json)
+retain process identities, UI proof, raw frames/readbacks and cleanup. Original
+1,031 layout and 652 review-correction hashes reverify unchanged. All 73 kept
+guards pass; bypassing termination attribution or automatic completion fails the
+new guards and restored source passes. Ruff/format and repository checks pass.
+Implemented and locally/live verified; scoped commit, remote backup, draft PR,
+current-head CI/CodeQL and review remain next. Unrelated local files preserved.
+
+This is a bounded observation in the supported guest shell-default fixture, with
+paced input and pinned automation installed. The final desktop still contains
+an unrelated Peekaboo Screen Recording permission dialog despite successful
+Bridge capture/grant readbacks; unattended enrollment is not claimed resolved.
+No pristine Finder-install, live Pi/RPC pane cleanup, forced fallback or full
+acceptance case is inferred. Baseline stays one input PASS/eleven BLOCKED pending
+review; Pi v0.85.1-psmfd.1, #219 deferred, and every acceptance/provider/activation/
+backend/release gate unchanged. Never reuse the cleaned console pointer.
+
+**Next concrete slice: CF-1C-AUTOMATION-6.** Before a fresh boot, predeclare a
+bounded repeated normal LaunchServices launch against an already observed app.
+Verify same app/sidecar/proven shell and visible window identity, no duplicate
+process tree, fresh focus/input proof, and automatic owned cleanup. Keep hidden/
+minimized/startup/quit-race variants separate; no Pi/provider/credential changes.
+
+Reproduce with restrictive umask/no-clobber and private stdout/stderr:
+
+```sh
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+python3 scripts/client_baseline_quit_probe.py \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/quit-probe-NEW-UNIQUE.log 2>&1
+```
+
+Terminal 1 runs the observer; Terminal 2 reads the explicit fresh run path from
+that private log, then `<fresh-run>/quit-observation/session.json`. At each waiting
+`nextIndex`, write a new no-clobber `request-NN.json` (two digits). Complete normal
+permission enrollment using freshly observed native coordinates. Queue only
+`{"action":"quit-probe"}` once at the current index; successful verification
+finishes automatically. No final finish request and no cleaned pointer reuse.
+
+## CF-1C-AUTOMATION-5 — approved normal GUI Quit slice
+
+PR #224 squash-merged into dev as `91bf7c53774e8559c486d3b59ad71be7b43e7f1b`;
+all fourteen final-head CI jobs and CodeQL passed before merge. Current branch
+`test/client-normal-quit` starts at that merge. Existing CF-1 approval persists.
+
+Before implementation/boot: reuse pinned artifacts, signed guest GUI Bridge,
+supported guest-only shell-default fixture, latest-pair app admission and one
+compact paced UI shell proof. Create an unrelated guest-only `/bin/sleep 1200`
+control outside app ancestry. Independently bind exact app/sidecar/shell ancestry
+and all app descendants plus control PID/start-time/executable identity. Invoke
+normal foreground Cmd+Q once against the admitted exact window. Never externally
+kill app/sidecar/shell as shutdown proof. At most three read-only post-Quit process
+observations must show all recorded descendants gone and unchanged unrelated
+control alive. Native/Bridge frames and independent guest clock follow every
+probe, including failures. Whole owned VM cleanup happens afterward.
+
+Bounds: existing 1500s observer/1800s guest hold, 40 enrollment queue actions,
+reserve 360s before starting fixed scenario (enrollment must finish by 1140s),
+30s guest commands/60s install/45s native probes. A successful fixed quit dispatch
+automatically finishes the queue; no final operator request. Failed verification
+must never mark completion. stdout/stderr private, restrictive umask/no-clobber;
+no cleaned pointer, host installs, TCC database edits, operator/provider credentials or product edits.
+
+Validate ancestry/control identity, survivor/reparented-child refusal, one Quit
+mutation and automatic completion regressions, full kept suite/Ruff/repo/docs/
+links/hash/secrets, then one fresh owned live comparison and cleanup. Baseline
+one PASS/eleven BLOCKED, Pi v0.85.1-psmfd.1, #219 deferred; every application
+acceptance/provider/activation/backend/release gate remains unchanged.
+Next: implement fixed probe and its regression guards before boot.
+
 ## CF-1C-REVIEW-1 — maintainer merge approval and required head checks
 
 Maintainer approved merging PR #224 into dev after the correction review.
