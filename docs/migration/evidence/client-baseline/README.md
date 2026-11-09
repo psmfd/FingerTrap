@@ -1,5 +1,11 @@
 # CF-1 packaged-client baseline evidence
 
+Selected #227 order completed: [repeated launch](repeat-launch-observation.json)
+on 1b50acc, then [fresh Quit rerun](normal-quit-branch-rerun.json) on a3955ec.
+Same probe code/tree; 552 + 472 private hashes, both owners exit 0 and cleanup
+verify. All 77 guards pass. Readiness is for maintainer review, never merge or
+baseline promotion; permission-dialog limitation and all gates remain explicit.
+
 [Repeated normal launch](repeat-launch-observation.json) verifies stable process,
 window and proven shell identities with fresh second input, automatic completion
 and cleanup. 552 private-file hashes; the selected fresh Quit rerun follows on

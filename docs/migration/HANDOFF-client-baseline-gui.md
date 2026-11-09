@@ -1,4 +1,60 @@
-# CF-1C session handoff — 2026-11-08
+# CF-1C session handoff — 2026-11-09
+
+## Ordered #227 validations complete — review handoff, 2026-11-09
+
+Maintainer selected **add repeated launch, then rerun Quit on this branch** before
+marking #227 ready. Both fresh owned validations passed in that order. Review and
+any optional CodeRabbit scan belong to the maintainer; **do not merge #227**.
+
+| Validation               | Exact tested commit                        | Owned run                       | Result                                                                                                           |
+| ------------------------ | ------------------------------------------ | ------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Repeated normal launch   | `1b50acc62bbe304711b70d634e93d5872206850d` | `20261109T014125Z-992ae8ee8730` | Same window 83, app 1014/sidecar 1021/shell 1071 and control 969; fresh second proof retains PID/sentinel/39x126 |
+| Fresh bounded Quit rerun | `a3955ec478562a81076b60a9991f2b6ca7946eb6` | `20261109T022608Z-7c143051d784` | One Cmd+Q; app 1027/sidecar 1034/shell 1084 gone at first read; control 982 unchanged                            |
+
+The intermediate a3955ec checkpoint changes evidence/docs only. All eight probe
+source blobs and the complete `scripts` tree are identical between tested commits
+and this final evidence/docs update. No implementation changed after the live
+validations. Pinned candidate/runtime and supported guest-only shell fixture stay
+unchanged; these branch commits qualify the harness and that pinned candidate.
+
+Repeated launch: normal Finder foreground activation then one normal
+LaunchServices reopen. Immediate native frame preserves a window transition;
+subsequent read-only window inventory reports the same window key/frontmost and
+native/Bridge frames show FingerTrap frontmost before the second proof. Whole
+admitted process/start-time/executable/parent identities and unexported sentinel
+survive. No duplicate app/sidecar in independent inventories; no hidden/minimized,
+startup or quit-race variants inferred.
+
+Quit rerun: exact decoded UI proof precedes independent ancestry capture and one
+targeted Cmd+Q. Native/Bridge final images show the app gone. No external
+app/sidecar/shell kill; unrelated adopted control survives app Quit and is removed
+only with the owned VM. No inference about internal graceful/watchdog exit path.
+
+Both sessions automatically finish after 21 actions; owners exit 0, no error
+events or outer timeout. Owned plus independent cleanup verify five original VMs
+stopped, no clone/QA processes. Keep existing 1500s observer/1800s guest hold;
+repeat reserves 480s for extra proof/focus observations, Quit keeps 360s.
+
+[Repeated-launch evidence](evidence/client-baseline/repeat-launch-observation.json)
+pins 552 private-file hashes; [fresh branch Quit rerun](evidence/client-baseline/normal-quit-branch-rerun.json)
+pins 472. Original 472 Quit, 652 review-correction and 1,031 layout hashes remain
+unchanged. All 77 kept guards pass; identity/state acceptance bypass fails new
+guards, restored source passes. Local Ruff/format/repo/docs/link/hash checks pass.
+Final publication requires secret scanning and current-head CI/CodeQL; consult
+[PR #227 checks](https://github.com/psmfd/FingerTrap/pull/227/checks) for live status.
+
+**Resume action:** review current head and both evidence summaries in #227. After
+final checks pass, mark ready as authorized; maintainer performs review/optional
+scan and decides merge. No additional VM run needed for evidence/docs-only edits;
+any material probe/product change requires its affected bounded check again.
+No merge, activation, Pi upgrade or baseline promotion is authorized by readiness.
+
+Automation limitation retained: an unrelated Peekaboo Screen Recording dialog can
+remain visible despite positive grant and successful capture readbacks. No
+unattended enrollment or pristine Finder-install acceptance is claimed. Baseline
+stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred, and all
+acceptance/provider/activation/backend/release gates remain intact. Private raw
+evidence and unrelated local files preserved; never reuse a cleaned pointer.
 
 ## Ordered #227 validation — repeated launch complete, Quit rerun next
 
