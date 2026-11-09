@@ -3297,3 +3297,53 @@ Next concrete implementation action after review is predeclared
 CF-1C-AUTOMATION-6 repeated normal LaunchServices launch with stable identities,
 fresh focus/input proof and automatic cleanup. No additional live slice performed.
 Baseline one PASS/eleven BLOCKED and all existing gates remain intact.
+
+## 2026-11-08 — clarified approval: repeated launch then Quit rerun
+
+## CF-1C-AUTOMATION-6 then Quit rerun — approved order, 2026-11-08
+
+Maintainer explicitly selected: add bounded repeated-launch validation to existing
+draft #227, then rerun bounded Quit on that updated branch before readiness.
+Branch remains `test/client-normal-quit`, starting head
+`6464b466c436edcecf216209e83e6223b0177771`; #227 is draft/unmerged. Do not merge.
+After both runs and current-head CI/CodeQL pass, mark ready for maintainer review;
+maintainer may request CodeRabbit scanning and alone decides the merge.
+
+CF-1C-AUTOMATION-6: same pinned candidate/runtime/guest-only GUI Bridge and
+supported shell-default fixture. First admit one visible app/window and a proven
+shell; capture app/sidecar/shell/control PID/start-time/executable identities.
+Bring Finder forward through normal LaunchServices, then invoke normal
+`open /Applications/FingerTrap.app` once (no force-new-instance flag). Fresh AX
+and window inventory must bind the same visible main window and focused process.
+A second compact 50ms UI proof must retain shell PID, unexported sentinel and PTY
+geometry. Independent process inventory must retain the entire admitted app tree
+and unrelated control, with no duplicate app/sidecar. Record native/Bridge frames
+and independent clock immediately after every probe. Complete automatically after
+verified fixed dispatch, then owned cleanup. No hidden/minimized/startup/quit-race
+variants, product/runtime edits, operator/provider credentials or host changes.
+
+Predeclared bounds: 1500s observer/1800s guest hold, 480s reserved repeat scenario
+(extra second proof/focus observations), enrollment finishes by 1020s, max 40
+queue actions, one Finder activation/one repeat app launch/two proof deliveries;
+existing 30s guest/60s install/45s native probes. Do not increase the outer budget.
+Commit source before live execution. Preserve both red guards and local checks.
+After repeat evidence is recorded on this branch, run the existing normal Quit
+probe in a second fresh owned guest with its unchanged 360s scenario reservation.
+No code changes between these two validations unless a real failure requires a
+separately recorded correction. Final evidence-only documentation may follow;
+record the exact tested source heads and distinguish documentation-only changes.
+
+stdout/stderr remain private with restrictive umask/no-clobber; preserve all
+existing evidence and unrelated files. Never reuse a cleaned active-console
+pointer. Five original VMs stopped and no disposable clone/QA process at entry.
+Baseline stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred,
+and all acceptance/provider/activation/backend/release gates remain unchanged.
+Next: implement/guard repeated launch, checkpoint source, then the two live runs
+in the selected order. No readiness transition until both validations complete.
+
+CF-1C-AUTOMATION-6 implementation is locally verified: all 77 kept guards pass,
+including normal single-delivery LaunchServices ordering/failure handling and
+process/window/shell/nonce/geometry replacement refusal. Intentional acceptance
+bypass fails new guards; restored source passes. Ruff/repo/docs checks pass.
+Next: commit source before the ordered repeated-launch and Quit live validations.
+The remote PR remains draft at 6464b46 until the completed update is pushed.
