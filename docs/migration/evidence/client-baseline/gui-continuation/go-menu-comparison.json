@@ -1,0 +1,233 @@
+{
+  "slice": "CF-1C-GO-1",
+  "startingCheckpoint": "219daae53e3e28cd334156c0c776f52737252944",
+  "runId": "20261107T141221Z-dbb92f6fb20e",
+  "runtimeTag": "v0.85.1-psmfd.1",
+  "guestOs": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.7\nBuildVersion:\t\t24G720",
+  "observationBudgetSeconds": 240,
+  "guestHoldSeconds": 480,
+  "coordinates": {
+    "x": 520,
+    "y": 24,
+    "nativeWidth": 2048,
+    "nativeHeight": 1536,
+    "referenceRun": "20261107T131951Z-0c27fad0d0fb",
+    "referenceFirstFrameSha256": "6a44b071a7d70e697b089fb563150d5c30557596de3cfe261bbd5f8a8140bcac"
+  },
+  "initialGuestClock": "Sat Nov  7 14:12:34 UTC 2026",
+  "steps": [
+    {
+      "step": {
+        "Name": "gomenu",
+        "Click": true,
+        "X": 520,
+        "Y": 24
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncaptured gomenu (0,0)-(2048,1536)\n",
+      "guestClock": "Sat Nov  7 14:12:37 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T14:12:43.986387+00:00",
+        "screenSha256": "e67861aafa863195f8199729f86d687ff0a69edf6b1970e9aaf236c73a6a7c4d"
+      }
+    },
+    {
+      "step": {
+        "Name": "escape",
+        "Keys": [65307]
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncaptured escape (0,0)-(2048,1536)\n",
+      "guestClock": "Sat Nov  7 14:12:41 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T14:12:47.792465+00:00",
+        "screenSha256": "1f12db55cdd046840afcff56d8989d276a1a6363407e630f8040f13dfbd93d56"
+      }
+    },
+    {
+      "step": {
+        "Name": "lowerg",
+        "Keys": [65511, 65505, 103]
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncaptured lowerg (0,0)-(2048,1536)\n",
+      "guestClock": "Sat Nov  7 14:12:46 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T14:12:52.610320+00:00",
+        "screenSha256": "1f12db55cdd046840afcff56d8989d276a1a6363407e630f8040f13dfbd93d56"
+      }
+    }
+  ],
+  "files": [
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-cleanup.json",
+      "size": 72,
+      "sha256": "eb03e526d2369994b2c28434109e0d828ab0b258ea104b1bd564e95481f802c1"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/escape/govnc-before.png",
+      "size": 4238720,
+      "sha256": "87eb9db7c1f20debc0fe87a0fe427d7d3fc92bbf1c70e9bd0d497ea297f576b2",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/escape/govnc-escape.png",
+      "size": 4282710,
+      "sha256": "6b4eefac311d34c229c786aeac35cf7ab4c6e34ee10fdb4f76d32b0442b8aea5",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/escape/guest-clock.txt",
+      "size": 29,
+      "sha256": "8f58687f4463e061c48cd16ad392268901716176b22c34a32cb194cbc9145f32"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/escape/guest-screen.jpg",
+      "size": 206629,
+      "sha256": "1f12db55cdd046840afcff56d8989d276a1a6363407e630f8040f13dfbd93d56"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/escape/probe.log",
+      "size": 68,
+      "sha256": "faffbb6b4f5ac739e1d698e580a37ed3fbb32911bd10555aedd83325bfb64dd3"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/escape/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/escape/readback.json",
+      "size": 138,
+      "sha256": "95a5c9de34dcc6bae90c176d219f226853be8221fb9846f909d285a859a6d42d"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/escape/step.json",
+      "size": 50,
+      "sha256": "1621977fd6da140f545a0cffa5abe86ecfdf77f4ef5eab3d9d42887357c53805"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/gomenu/govnc-before.png",
+      "size": 4475358,
+      "sha256": "7a0a160467292aa371625a0bdfe6e9a9a9d4c666d165a002ef74e10d4817a31c",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/gomenu/govnc-gomenu.png",
+      "size": 4238752,
+      "sha256": "800e2528bf447ad1f5c4b42034d625c1a2e986456a63012d1d9b923a5c714329",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/gomenu/guest-clock.txt",
+      "size": 29,
+      "sha256": "631064f429d2264cb4c38b4dcb5447e816bf61fb932926643c2668bd001ad4ce"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/gomenu/guest-screen.jpg",
+      "size": 206681,
+      "sha256": "e67861aafa863195f8199729f86d687ff0a69edf6b1970e9aaf236c73a6a7c4d"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/gomenu/probe.log",
+      "size": 68,
+      "sha256": "4d5bb5327983ae1ea016530ca80e25edcba65b4a037efcb679432d3cbc87e708"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/gomenu/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/gomenu/readback.json",
+      "size": 138,
+      "sha256": "1ae9fc491efa244bf6fee89e352023e84f982f18246283866ceb81ebd2cc2e2e"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/gomenu/step.json",
+      "size": 63,
+      "sha256": "7ec2273c9c4cd107b88fef9abdc2fb7459a60674230af696b1448b5c320f58ad"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/guest-clock.txt",
+      "size": 29,
+      "sha256": "abefabda1e1d6e28a8296ea98cec31e2d3b71d70a1fefbeb12d39aa10fe37bf4"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/guest-screen.jpg",
+      "size": 206588,
+      "sha256": "517cf36c1b9c5cc21c34a6ac132e1f9651d5325fc7e33ea1349648acdff4b1c4"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/lowerg/govnc-before.png",
+      "size": 4282710,
+      "sha256": "6b4eefac311d34c229c786aeac35cf7ab4c6e34ee10fdb4f76d32b0442b8aea5",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/lowerg/govnc-lowerg.png",
+      "size": 4282775,
+      "sha256": "7df1af6b9fcd352f01510c6975b1a697252e92f10d37366fb610795a2bb616a7",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/lowerg/guest-clock.txt",
+      "size": 29,
+      "sha256": "9b534fd43fca106eed28ecb0dec43628433d33f5202602d3dffc227d0711bd68"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/lowerg/guest-screen.jpg",
+      "size": 206629,
+      "sha256": "1f12db55cdd046840afcff56d8989d276a1a6363407e630f8040f13dfbd93d56"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/lowerg/probe.log",
+      "size": 68,
+      "sha256": "bd339d9ed36a5d24dd97c41db73b6b322b91a83df3ff2286252f46816149e538"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/lowerg/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/lowerg/readback.json",
+      "size": 138,
+      "sha256": "82d315f9bb3365795b3d4011f47e63bdfbd19825a148dbad2acf016baa572b48"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/lowerg/step.json",
+      "size": 70,
+      "sha256": "67c06ba9f28b7bafcaa95dce28986023952d5eeeed3178c2cfb489fbffb344c8"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/atomic-comparison/readback.json",
+      "size": 138,
+      "sha256": "408d0cc018d6d998c15d769875dc17eac462002752ee11909ea3cef62cfc73a0"
+    },
+    {
+      "privateFile": "20261107T141221Z-dbb92f6fb20e/console-first-frame.png",
+      "size": 7577866,
+      "sha256": "aeff1dc7c4b1c2592e4f3ac0cd1c7e2231a1917c486f26370b4dbaccdef83690",
+      "dimensions": [2048, 1536]
+    }
+  ],
+  "cleanup": {
+    "cleanupVerified": true,
+    "originalVmsStoppedAndPreserved": true
+  },
+  "controllerEvents": [],
+  "independentInventory": {
+    "originalStoppedVms": 5,
+    "disposableClonePresent": false,
+    "qaProbeTartSoftnetOrDrainProcesses": false
+  },
+  "observation": "Fresh native first frame matches the observed Finder layout. RFB captures show Go dropdown opened by pointer (520,24), then closed after Escape. This establishes pointer response, a limited Escape response and visible RFB frame changes in this run. All three post-input RFB captures succeed, including Meta+Shift+g; no Go To Folder dialog appears. RFB shows a Screen Recording permission prompt for tart-guest-agent behind the menu and persisting after Escape/the chord. Immediate independent guest screen/clock readbacks all complete, but their screenshots omit the dropdown and permission prompt (only menu highlight changes); they cannot corroborate window contents. Permission/focus interference is a hypothesis, not an established root cause. Usable keyboard chord/text delivery and independent full-window capture remain unproven. No app case attempted/passed. Baseline remains one input PASS and eleven BLOCKED.",
+  "nextAction": "Name a bounded fresh atomic permission/focus observation slice before further input: use native RFB pixels to inspect the guest-only Screen Recording prompt and supported guest permission/focus state, then compare a pointer-selected Go To Folder action with keyboard input. Keep per-input independent screen/clock, explicit run ownership, private redirected output and cleanup; no host permission changes, TCC bypass or app validation. Do not reuse the cleaned active-console pointer."
+}

@@ -1,0 +1,26 @@
+{
+  "slice": "CF-1C-AUTOMATION-1",
+  "repository": "openclaw/Peekaboo",
+  "tag": "v4.9.8",
+  "releaseId": 435831803,
+  "sourceCommit": "70dbc4183f390a5a72d5dc01d8a77eb672217070",
+  "teamId": "FWJYW4S8P8",
+  "bundleId": "boo.peekaboo.mac",
+  "minimumMacOS": "15.0",
+  "privateDirectory": ".artifacts/client-baseline/peekaboo-pilot/v4.9.8",
+  "assetIds": {
+    "Peekaboo-4.9.8.app.zip": 715044161,
+    "peekaboo-macos-arm64.tar.gz": 715044399
+  },
+  "files": {
+    "Peekaboo-4.9.8.app.zip": "1b824ec0fea11836a2394ab550bee4e9517b7dabda8ef93700ebeb4263a4a528",
+    "peekaboo-macos-arm64.tar.gz": "5b82b246cd7b257b68d15e136a8234848a8e70a5999cdf5526993fb860685bfe",
+    "SIGNING-MANIFEST.json": "3debbce3203329687e4d6dd55d11453a04ac2f39cd06e55d0b44ec4c8f389521",
+    "ASSET-INVENTORY.json": "aa807c1f426ce2e6a12bf8edbce1e3666736102c07b201343c9269960d1c2827",
+    "checksums.txt": "bbedd941a04c51f599c2dd9dc186a02de829d49bf54905da78c381a52337adc7",
+    "RELEASE-NOTES.md": "6cc71bf3639a7ee98d9017351a7a6fbea1b79d99bcea511ff3df6863b3dd06dc",
+    "peekaboo": "6e2d9f91cf95689cc061d138cb26f023b511c434f571436c1ae139d040a0f3b4",
+    "libswiftCompatibilitySpan.dylib": "a9e85f785846635c6c12658d2ace9e70af018ba999dd2dcaeec7ffc067ba986e"
+  },
+  "verification": "Downloaded artifact digests match GitHub release metadata plus publisher signing/inventory manifests. Passive host bundle extraction only; app/CLI/library signature verification passes outside the host sandbox with expected Developer ID/Team. App source stamp matches publisher source commit and a stapled ticket is observed. Guest install must reverify artifacts, signatures, source stamps and selected GUI Bridge; host inspection is not pilot success."
+}

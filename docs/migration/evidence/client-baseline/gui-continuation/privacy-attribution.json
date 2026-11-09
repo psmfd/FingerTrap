@@ -1,0 +1,240 @@
+{
+  "slice": "CF-1C-CAPTURE-3",
+  "startingCheckpoint": "a61b2596275a4ed8dc556d19ba04122dedfab43d",
+  "runtimeTag": "v0.85.1-psmfd.1",
+  "attempts": [
+    {
+      "runId": "20261107T160333Z-036e67bd3539",
+      "cleanup": {
+        "cleanupVerified": true,
+        "originalVmsStoppedAndPreserved": true
+      },
+      "phase": "cleaned",
+      "driverExitCode": 1,
+      "failure": "codesign returned exit 1; signing stdout was not retained by the first implementation; no log stream started"
+    },
+    {
+      "runId": "20261107T160656Z-104c57df8692",
+      "cleanup": {
+        "cleanupVerified": true,
+        "originalVmsStoppedAndPreserved": true
+      },
+      "phase": "cleaned",
+      "driverExitCode": 0,
+      "session": {
+        "phase": "finished",
+        "actions": 2
+      },
+      "controllerEvents": [],
+      "signingStatus": {
+        "exitCode": 1,
+        "timedOut": false
+      }
+    }
+  ],
+  "selectedAgent": {
+    "target": "gui/501/org.cirruslabs.tart-guest-agent",
+    "pid": 444,
+    "program": "/opt/homebrew/bin/tart-guest-agent",
+    "programSha256": "9773bec7f115dc52778fca6bc98b648f07b5654084d6f48d9a91656579eec4a5",
+    "executable": "/opt/homebrew/bin/tart-guest-agent",
+    "executableMatches": true
+  },
+  "sameAgentBytesAsCapture2": true,
+  "codeSigning": {
+    "exitCode": 1,
+    "resolvedExecutable": "/opt/homebrew/Cellar/tart-guest-agent/0.10.0/bin/tart-guest-agent",
+    "identifier": "a.out",
+    "signature": "adhoc",
+    "infoPlist": "not bound",
+    "teamIdentifier": "not set",
+    "cdHash": "56d49b421cbff06da5708a276c4ecb7dbd531105",
+    "terminalMessage": "/opt/homebrew/bin/tart-guest-agent: code object is not signed at all",
+    "interpretation": "The display reports linker-signed ad hoc metadata but the designated-requirement operation exits 1. Do not simplify this to an entirely unsigned binary."
+  },
+  "privacyLog": {
+    "streamBudgetSeconds": 12,
+    "returnedByteCap": 262144,
+    "returnedBytes": 28069,
+    "truncated": false,
+    "codeRequirementFailures": 4,
+    "observedRequirementCheckStatus": -67050,
+    "excerpts": [
+      "IDENTITY_ATTRIBUTION: identifier = /opt/homebrew/Cellar/tart-guest-agent/0.10.0/bin/tart-guest-agent, type 1",
+      "Failed to match existing code requirement for subject /opt/homebrew/Cellar/tart-guest-agent/0.10.0/bin/tart-guest-agent and service kTCCServiceScreenCapture",
+      "Service kTCCServiceScreenCapture does not allow prompting; returning denied."
+    ]
+  },
+  "files": [
+    {
+      "privateFile": "20261107T160333Z-036e67bd3539/atomic-cleanup.json",
+      "size": 72,
+      "sha256": "eb03e526d2369994b2c28434109e0d828ab0b258ea104b1bd564e95481f802c1"
+    },
+    {
+      "privateFile": "20261107T160333Z-036e67bd3539/atomic-comparison/agent-inventory.json",
+      "size": 37979,
+      "sha256": "1ac3c5df1f30b3688f5a5cd18aa9dffabb25f451f1d4034ce9a06d99ea3b7ef6"
+    },
+    {
+      "privateFile": "20261107T160333Z-036e67bd3539/atomic-comparison/guest-clock.txt",
+      "size": 29,
+      "sha256": "80fdbac1b9d420d8a44b00d0b966c5ff1981b13766f9a4cd391e7949ef81471b"
+    },
+    {
+      "privateFile": "20261107T160333Z-036e67bd3539/atomic-comparison/guest-screen.jpg",
+      "size": 206592,
+      "sha256": "85bcf5c1e1be0dd4449c842c0acec864dddb869f4ac1ceea5c172e32de2489df"
+    },
+    {
+      "privateFile": "20261107T160333Z-036e67bd3539/atomic-comparison/readback.json",
+      "size": 138,
+      "sha256": "a9f1228eb5be2d705e08a753441c2f100a9b23c12dab5eab5bcaf59ac494bc6a"
+    },
+    {
+      "privateFile": "20261107T160333Z-036e67bd3539/atomic-comparison/request-00.json",
+      "size": 28,
+      "sha256": "154fcd7cc9b2a08fd3fe016b7ec71b7f4257d0a5cb6e24ee429dc75b8fea9cff"
+    },
+    {
+      "privateFile": "20261107T160333Z-036e67bd3539/atomic-comparison/session.json",
+      "size": 43,
+      "sha256": "60797d47bb563ce346fe39c6516787e0fc4a4cf67ed69b48b61987eb37581252"
+    },
+    {
+      "privateFile": "20261107T160333Z-036e67bd3539/atomic-comparison/step-00/identity.json",
+      "size": 42871,
+      "sha256": "23bced33fb26efcdd315d3c10d6f776905492cf3015b31a664d3a2eb41c817bb"
+    },
+    {
+      "privateFile": "20261107T160333Z-036e67bd3539/console-first-frame.png",
+      "size": 7580956,
+      "sha256": "44e14f03d70c97aaf5c5f95c372c1c77aff0cdb814d963c5f91949a76587601f",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-cleanup.json",
+      "size": 72,
+      "sha256": "eb03e526d2369994b2c28434109e0d828ab0b258ea104b1bd564e95481f802c1"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/agent-inventory.json",
+      "size": 38164,
+      "sha256": "2b7ae30d2feccb2e34092d3847d30b4315aa5a4ae55bdd9eeee64af1bd9cbb2e"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/guest-clock.txt",
+      "size": 29,
+      "sha256": "2006baa28b666abc1ffb7be9e9773f530ed6ee1ef9d9dda7a61c5bbbfd0d8786"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/guest-screen.jpg",
+      "size": 206592,
+      "sha256": "85bcf5c1e1be0dd4449c842c0acec864dddb869f4ac1ceea5c172e32de2489df"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/readback.json",
+      "size": 138,
+      "sha256": "094626d2fd95a5b9f423ac5d325dc36683bb93e2e2b6d65e38316a5d5abdceff"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/request-00.json",
+      "size": 28,
+      "sha256": "154fcd7cc9b2a08fd3fe016b7ec71b7f4257d0a5cb6e24ee429dc75b8fea9cff"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/request-01.json",
+      "size": 21,
+      "sha256": "5e16ed9a7cf1a9761fb5c51018e2818da9a7318cc1d8e704857e69ab382b59d2"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/request-02.json",
+      "size": 20,
+      "sha256": "8059753f3ff5ed2ff069ebc93150579fb5c79c40d35cb53653515ac110a3a97d"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/session.json",
+      "size": 42,
+      "sha256": "0b51d600c82fb4bf553d23be5c18e500327fff50c20c9193f4d6358e31529bd5"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-00/code-signing-status.json",
+      "size": 41,
+      "sha256": "23a58ed04b9581c7b31c5d89e6163655553b459d24f947766284b174a5359a2b"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-00/code-signing.txt",
+      "size": 882,
+      "sha256": "9f4542f9a140856b9e1433c49611790d4c8ee477f44cde3fc0e9832c87ee3a4a"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-00/guest-clock.txt",
+      "size": 29,
+      "sha256": "d035814285a67a6dd37f779797ea21c8d0f80c09cefc939724257225a4b83935"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-00/guest-screen.jpg",
+      "size": 206592,
+      "sha256": "85bcf5c1e1be0dd4449c842c0acec864dddb869f4ac1ceea5c172e32de2489df"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-00/identity.json",
+      "size": 42414,
+      "sha256": "6fb4ca4ed430c112ffd25d774e6367ac846f86753179b86600fe2549e05098fc"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-00/readback.json",
+      "size": 138,
+      "sha256": "c401922272c337b1a0201188c56914c38ea5780b8068e4dee8162e8a2a229e97"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-00/tcc-decisions.log",
+      "size": 28069,
+      "sha256": "f2dd1cd89409c8f3b907a6f3435fe743dae861c7268a4f4acd684b79624e6da5"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-01/govnc-before.png",
+      "size": 4477298,
+      "sha256": "b225d20f1098b25c59293c8383e1a1b0e32b05d166801fecba41e99397dd12e9",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-01/guest-clock.txt",
+      "size": 29,
+      "sha256": "a42739e377f938ce50bdd39a86d31b0fae2f3707dd8808593a9ba797450a6770"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-01/guest-screen.jpg",
+      "size": 206592,
+      "sha256": "85bcf5c1e1be0dd4449c842c0acec864dddb869f4ac1ceea5c172e32de2489df"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-01/probe.log",
+      "size": 58,
+      "sha256": "b7f31d752da4d3ada40c7a39362c5848228afcd927a7693b0bbe8210c8cd5527"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-01/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-01/readback.json",
+      "size": 138,
+      "sha256": "7a3b4ee407caa2951e6b7c21095aa0a8584488b6a155c5a209535e3bb7a7f181"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/atomic-comparison/step-01/step.json",
+      "size": 24,
+      "sha256": "4633843ed80288ba3bcaff37a8fe03c42c06a00397cbc788b52552b73b916f60"
+    },
+    {
+      "privateFile": "20261107T160656Z-104c57df8692/console-first-frame.png",
+      "size": 7580950,
+      "sha256": "f220eb5199aff7b46542beaf02e72af386f925475c7237281009c8aef0d348ac",
+      "dimensions": [2048, 1536]
+    }
+  ],
+  "observation": "Read-only diagnostic identifies macOS TCC capture attribution to the resolved Cellar guest-agent binary (client type 1), with identifier a.out in signing metadata. TCC explicitly fails to match an existing code requirement for ScreenCapture and returns denied; current prompt/window omission is observed through independent capture. This establishes an actual permission/code-requirement failure in this fresh unmodified guest. It does not yet prove why the earlier supported UI grant failed or that removing/re-enrolling an entry will fix capture. Same guest-agent binary digest as the capture-2 restart experiment. No permission, signing, binary, logging configuration or host setting changed. The first failed signing-readout run and corrected retry are both preserved; retry completes diagnostic and independent readback, one RFB capture, explicit finish and normal cleanup. No input qualification or app case advanced; baseline stays one input PASS and eleven BLOCKED.",
+  "nextAction": "CF-1C-CAPTURE-4: record a bounded supported exact-entry re-enrollment experiment. Preserve both guest-agent permission entries; correlate the actual resolved binary and collect TCC decisions after the UI grant in the same guest. If code-requirement mismatch persists, remove/re-add only the identified guest-agent entry through normal Privacy & Security UI using the exact resolved executable, authenticate with the public fixture account, and verify TCC decision plus actual full-window captures. No direct TCC database edits, host permission changes, binary re-signing or app validation. Keep per-input readbacks, private output and owned cleanup. Re-enrollment is proposed, not implemented or proven."
+}

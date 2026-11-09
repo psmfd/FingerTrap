@@ -1,0 +1,45 @@
+{
+  "slice": "CF-1C independent RFB comparison",
+  "runId": "20261028T194636Z-ceb986018619",
+  "probeId": "independent-8e000f6c323c",
+  "runtimeTag": "v0.85.1-psmfd.1",
+  "runtimeSource": "e7d09c9dc5fca409f46a5476669e3c0404054d69",
+  "guestOs": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.7\nBuildVersion:\t\t24G720",
+  "module": {
+    "module": "github.com/mitchellh/go-vnc",
+    "version": "v0.0.0-20150629162542-723ed9867aed",
+    "goSum": "github.com/mitchellh/go-vnc v0.0.0-20150629162542-723ed9867aed h1:FI2NIv6fpef6BQl2u3IZX/Cj20tfypRF4yd+uaHOMtI=\ngithub.com/mitchellh/go-vnc v0.0.0-20150629162542-723ed9867aed/go.mod h1:3rdaFaCv4AyBgu5ALFM0+tSuHrBh6v692nyQe3ikrq0=\n",
+    "files": {
+      "main.go": "06a8b1d65222ab0684093a844500ad416e652c458ce12a203535848c15e73670",
+      "probe.py": "8c3626f322024021193d170a846f8a831ef106fa2f51e3854b37f16d53b4f366",
+      "rfb-probe": "4af875724a5671e98556564f87fccc03cea21d2ecb3d14c63912607f2a6b343a"
+    }
+  },
+  "sourceReference": "https://github.com/cirruslabs/mtell/blob/main/go.mod",
+  "probeResult": "captured before (0,0)-(2048,1536)\ncapture-timeout escape\ncapture-timeout lowerg\ncapture-timeout upperg\n",
+  "steps": [
+    {
+      "Name": "escape",
+      "Keys": [65307]
+    },
+    {
+      "Name": "lowerg",
+      "Keys": [65511, 65505, 103]
+    },
+    {
+      "Name": "upperg",
+      "Keys": [65511, 65505, 71]
+    }
+  ],
+  "frame": {
+    "privateFile": "20261028T194636Z-ceb986018619/independent-8e000f6c323c/govnc-before.png",
+    "sha256": "3013ee0658009abd6252a300ecb9a42bc748fdd6f12458a4467a70c3a5dd953a",
+    "size": 4721121
+  },
+  "observation": "Independent go-vnc client authenticated and captured one real 2048x1536 desktop. Follow-up frames after Escape and paced Meta+Shift+g/G all timed out. No post-input guest screen was obtained before the owned guest deadline. Next-day readback safely refused the cleaned run. No usable-keyboard result, root cause, or app defect is established.",
+  "cleanupVerified": true,
+  "cleanupIndependent": "2026-10-29 Tart listing has only original stopped VMs; process inspection has no QA driver/controller/probe/Tart/Softnet process.",
+  "appCases": "No app case attempted or passed. Baseline retains one input PASS and eleven BLOCKED.",
+  "nextAction": "Create an atomic boot/probe/independent-screen/cleanup comparison runner using these saved probes, with the screen readback immediately after input inside the same approved tool execution. Compare paced pointer as well as keyboard and record guest clock/frame freshness before app cases.",
+  "fixtureNotes": "These text fixtures preserve the exact isolated diagnostic source, not a newly supported app dependency or CI lane. Copy to the documented private comparison directory before building; the Python wrapper expects that path. Probe exit 0 does not mean input success; inspect capture-timeout lines and actual images."
+}

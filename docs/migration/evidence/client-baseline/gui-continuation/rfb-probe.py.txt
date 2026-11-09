@@ -1,0 +1,49 @@
+import base64
+import importlib.util
+import json
+from pathlib import Path
+import subprocess
+import sys
+import uuid
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[2]
+spec = importlib.util.spec_from_file_location('owned_vnc', ROOT/'scripts/client_baseline_vnc.py')
+vnc = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(vnc)
+active = json.loads((ROOT/'.artifacts/client-baseline/active-console.json').read_text())
+run = Path(active['run'])
+endpoint = vnc.connection(run)
+_, state = vnc.qa.load(run)
+out = run/('independent-'+uuid.uuid4().hex[:12])
+out.mkdir(mode=0o700)
+if sys.argv[1] == 'probe':
+    steps = json.loads(sys.argv[2])
+    assert isinstance(steps, list) and len(steps) <= 3
+    for s in steps:
+        assert set(s) <= {'Name','Keys','Text','Click','X','Y'}
+        if s.get('Keys'): vnc.validate({'action':'chord','keys':s['Keys']})
+        if s.get('Text'): vnc.validate({'action':'text','text':s['Text']})
+        if s.get('Click'): vnc.validate({'action':'click','x':s['X'],'y':s['Y']})
+        assert s['Name'].isalnum()
+    cfg = {'Address':f'127.0.0.1:{endpoint.port}', 'Password':vnc.unquote(endpoint.password), 'Run':str(out), 'Steps':steps}
+    result = subprocess.run([str(HERE/'rfb-probe')], input=json.dumps(cfg).encode(), capture_output=True, timeout=110)
+    (out/'steps.json').write_text(json.dumps(steps,indent=2)+'\n')
+    (out/'result.log').write_bytes(result.stdout+result.stderr)
+    print(str(out)); print(result.stdout.decode()); print('exit',result.returncode)
+elif sys.argv[1] == 'screen':
+    vm = state['vm']
+    command = '/usr/sbin/screencapture -x /tmp/ft-rfb.png && /usr/bin/sips -s format jpeg -s formatOptions 60 -Z 1024 /tmp/ft-rfb.png --out /tmp/ft-rfb.jpg >/dev/null && /usr/bin/base64 -i /tmp/ft-rfb.jpg > /tmp/ft-rfb.b64 && /usr/bin/stat -f%z /tmp/ft-rfb.b64'
+    size = int(vnc.qa.command(['tart','exec',vm,'/bin/sh','-c',command]))
+    assert 0 < size < 1024*1024
+    data = bytearray()
+    for offset in range(0,size,65536):
+        vnc.connection(run)
+        data.extend(vnc.qa.command(['tart','exec',vm,'/bin/sh','-c',f'/usr/bin/tail -c +{offset+1} /tmp/ft-rfb.b64 | /usr/bin/head -c 65536']))
+    assert len(data)==size
+    (out/'guest-screen.jpg').write_bytes(base64.b64decode(data))
+    clock = vnc.qa.command(['tart','exec',vm,'/bin/date','-u'])
+    (out/'guest-clock.txt').write_bytes(clock)
+    print(str(out)); print(clock.decode())
+else:
+    raise ValueError('Only bounded RFB comparison or guest screen readback is allowed')

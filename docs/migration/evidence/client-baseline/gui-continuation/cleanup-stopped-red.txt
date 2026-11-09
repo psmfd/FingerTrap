@@ -1,0 +1,44 @@
+test_all_passes_require_cleanup_and_never_claim_maintainer_acceptance (test_qualify_client_baseline.BaselineGuards.test_all_passes_require_cleanup_and_never_claim_maintainer_acceptance) ... ok
+test_archive_symlink_rejected_before_any_extraction (test_qualify_client_baseline.BaselineGuards.test_archive_symlink_rejected_before_any_extraction) ... ok
+test_blocked_and_unrun_cases_prevent_acceptance (test_qualify_client_baseline.BaselineGuards.test_blocked_and_unrun_cases_prevent_acceptance) ... ok
+test_changed_clone_identity_is_not_stopped_or_deleted (test_qualify_client_baseline.BaselineGuards.test_changed_clone_identity_is_not_stopped_or_deleted) ... ok
+test_console_modes_keep_vnc_headless_and_reject_conflicting_modes (test_qualify_client_baseline.BaselineGuards.test_console_modes_keep_vnc_headless_and_reject_conflicting_modes) ... ok
+test_extract_into_existing_directory_refused (test_qualify_client_baseline.BaselineGuards.test_extract_into_existing_directory_refused) ... ok
+test_failure_remains_after_successful_retest (test_qualify_client_baseline.BaselineGuards.test_failure_remains_after_successful_retest) ... ok
+test_headless_result_cannot_pass_gui_case (test_qualify_client_baseline.BaselineGuards.test_headless_result_cannot_pass_gui_case) ... ok
+test_outside_and_symlink_evidence_rejected (test_qualify_client_baseline.BaselineGuards.test_outside_and_symlink_evidence_rejected) ... ok
+test_owned_cleanup_verifies_external_absence_and_original_preservation (test_qualify_client_baseline.BaselineGuards.test_owned_cleanup_verifies_external_absence_and_original_preservation) ... ok
+test_safe_archive_extracts_actual_bytes_and_executable_mode (test_qualify_client_baseline.BaselineGuards.test_safe_archive_extracts_actual_bytes_and_executable_mode) ... ok
+test_skipped_status_cannot_be_recorded_as_pass (test_qualify_client_baseline.BaselineGuards.test_skipped_status_cannot_be_recorded_as_pass) ... ok
+test_stopped_owned_clone_is_deleted_when_tart_stop_would_fail (test_qualify_client_baseline.BaselineGuards.test_stopped_owned_clone_is_deleted_when_tart_stop_would_fail) ... ERROR
+test_unobserved_or_unsupported_pass_rejected (test_qualify_client_baseline.BaselineGuards.test_unobserved_or_unsupported_pass_rejected) ... ok
+test_unowned_vm_cleanup_invokes_no_commands (test_qualify_client_baseline.BaselineGuards.test_unowned_vm_cleanup_invokes_no_commands) ... ok
+test_unsafe_archive_paths_never_write_outside_destination (test_qualify_client_baseline.BaselineGuards.test_unsafe_archive_paths_never_write_outside_destination) ... ok
+test_wrong_artifact_bytes_are_rejected (test_qualify_client_baseline.BaselineGuards.test_wrong_artifact_bytes_are_rejected) ... ok
+
+======================================================================
+ERROR: test_stopped_owned_clone_is_deleted_when_tart_stop_would_fail (test_qualify_client_baseline.BaselineGuards.test_stopped_owned_clone_is_deleted_when_tart_stop_would_fail)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "<repo>/scripts/tests/test_qualify_client_baseline.py", line 224, in test_stopped_owned_clone_is_deleted_when_tart_stop_would_fail
+    qa.cleanup(self.run, self.state)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "<repo>/scripts/qualify-client-baseline.py", line 286, in cleanup
+    command(["tart", "stop", state["vm"]])
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<python-stdlib>/unittest/mock.py", line 1169, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "<python-stdlib>/unittest/mock.py", line 1173, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "<python-stdlib>/unittest/mock.py", line 1240, in _execute_mock_call
+    result = effect(*args, **kwargs)
+  File "<repo>/scripts/tests/test_qualify_client_baseline.py", line 218, in command
+    raise subprocess.CalledProcessError(2, argv, stderr=b"VM is not running")
+subprocess.CalledProcessError: Command '['tart', 'stop', 'ft-client-baseline-20261022t120000z-abcdef123456']' returned non-zero exit status 2.
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.016s
+
+FAILED (errors=1)
