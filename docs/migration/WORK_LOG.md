@@ -3455,3 +3455,35 @@ This final records-only checkpoint preserves the identical tested `scripts` tree
 and uses normal CI so current-head checks remain enforceable. After they pass,
 mark #227 ready as authorized; maintainer reviews/optionally scans and alone
 performs any merge. No merge or baseline/activation/release promotion authorized.
+
+## CF-1C-REVIEW-EVIDENCE-1 — reviewable hash manifests, 2026-11-09
+
+Maintainer requested correction of CodeRabbit's unavailable repeat-launch evidence
+changes on #227. Starting code head: `1b6f10d98ba85a59ce37f5e0e5adf35fa4cb2113`.
+Keep observation/run/tested identities, limitations and independent review in the
+summary; move exactly 552 path/hash entries into two relative JSON manifests.
+Record original byte SHA-256 and document versioned schema/consumer migration.
+Apply this as the pattern for bulky evidence mappings where appropriate, without
+assuming an undocumented GitHub/CodeRabbit size limit or rewriting older evidence.
+
+Validation planned: strict duplicate-key JSON parsing; disjoint complete union
+identical to original Git blob; unchanged remaining observation fields; summary
+and manifest hashes/counts/references; repository/Markdown/format/link/secret
+checks. Then publish same PR branch, inspect GitHub files API patches for all
+three JSON files, request the authorized full CodeRabbit review, and inspect its
+Review info for actual coverage. Current implementation/review coverage pending.
+No live VM test or product change needed; no merge. Baseline one input PASS/eleven
+BLOCKED, Pi v0.85.1-psmfd.1 and all existing gates/private evidence unchanged.
+The separate handoff branch a2d8881 is retained; this follow-up supersedes its
+exact-head-only closeout snapshot. Finish session records after review evidence.
+
+Local implementation verified: version-2 summary is 5,120 bytes; two version-1
+manifests are 51,768 and 48,344 bytes, each 276 complete entries. Original summary
+SHA-256 `0d6a946906cb9f574013a788ed2db41c27c7ea37426a8e6f63c1c5994b3b57fe`
+verified against committed 1b6f10d bytes. Strict JSON/recombination recipe passes:
+552 exact entries, no duplicate keys/overlap/missing/changed values, all remaining
+observation and independent-review fields unchanged. No programmatic consumers
+found; schema/reader recipe and reusable evidence guidance documented. Before
+publication, GitHub files API omits the summary patch. Markdownlint initially
+found one extra blank in the new log entry; corrected. Publication, current-head
+CI and full CodeRabbit coverage remain pending; no size-based success claim.

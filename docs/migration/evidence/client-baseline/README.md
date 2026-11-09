@@ -1,5 +1,77 @@
 # CF-1 packaged-client baseline evidence
 
+## Repeated-launch evidence schema
+
+`repeat-launch-observation.json` schema version 2 retains the observation,
+run/tested identities, limitations and independent review unchanged. Its former
+inline `privateEvidence` mapping is now stored in two version-1 manifests:
+[part 1](repeat-launch-private-evidence-1.json) and
+[part 2](repeat-launch-private-evidence-2.json), with 276 complete entries each.
+`privateEvidenceManifests` lists paths relative to the summary, entry counts and
+byte SHA-256 values. Each manifest contains `schemaVersion`, `runId` and the
+`privateEvidence` mapping. `privateEvidenceProvenance` identifies the original
+committed summary, its byte SHA-256 and the total 552 entries. Original SHA-256:
+`0d6a946906cb9f574013a788ed2db41c27c7ea37426a8e6f63c1c5994b3b57fe`.
+
+Consumer migration: version 1/unversioned records have inline `privateEvidence`;
+for this version-2 record, load and verify both referenced manifests before using
+their disjoint union. No existing repository script consumes this observation
+mapping (repository search at conversion); existing summary links remain valid.
+Other evidence schemas stay unchanged. See [evidence guidance](../README.md) for
+the preferred pattern when large mappings obstruct review. Do not infer complete
+GitHub or CodeRabbit review from file sizes alone.
+
+Reproduce the preservation check from the repository root without opening private
+evidence or re-running a VM:
+
+```bash
+python3 - <<'PY'
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+
+def unique_pairs(pairs):
+    result = {}
+    for key, value in pairs:
+        assert key not in result, f"duplicate JSON key: {key}"
+        result[key] = value
+    return result
+
+def load(raw):
+    return json.loads(raw, object_pairs_hook=unique_pairs)
+
+p = Path("docs/migration/evidence/client-baseline/repeat-launch-observation.json")
+summary = load(p.read_bytes())
+assert summary["schemaVersion"] == 2
+provenance = summary["privateEvidenceProvenance"]
+original = subprocess.check_output([
+    "git", "show", provenance["originalCommit"] + ":" + provenance["originalPath"]
+])
+assert hashlib.sha256(original).hexdigest() == provenance["originalSha256"]
+old = load(original)
+combined = {}
+assert len(summary["privateEvidenceManifests"]) == 2
+for ref in summary["privateEvidenceManifests"]:
+    raw = (p.parent / ref["path"]).read_bytes()
+    assert hashlib.sha256(raw).hexdigest() == ref["sha256"]
+    manifest = load(raw)
+    assert manifest["schemaVersion"] == 1
+    assert manifest["runId"] == summary["runId"]
+    entries = manifest["privateEvidence"]
+    assert len(entries) == ref["entryCount"] == 276
+    assert not combined.keys() & entries.keys(), "overlapping manifests"
+    combined.update(entries)
+assert len(combined) == provenance["entryCount"] == 552
+assert combined == old.pop("privateEvidence")
+added = {"schemaVersion", "privateEvidenceManifests", "privateEvidenceProvenance"}
+assert {k: v for k, v in summary.items() if k not in added} == old
+print("PASS: 552 exact entries; unchanged observation and review")
+PY
+```
+
+## Observations
+
 Selected #227 order completed: [repeated launch](repeat-launch-observation.json)
 on 1b50acc, then [fresh Quit rerun](normal-quit-branch-rerun.json) on a3955ec.
 Same probe code/tree; 552 + 472 private hashes, both owners exit 0 and cleanup
