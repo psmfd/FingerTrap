@@ -3347,3 +3347,22 @@ process/window/shell/nonce/geometry replacement refusal. Intentional acceptance
 bypass fails new guards; restored source passes. Ruff/repo/docs checks pass.
 Next: commit source before the ordered repeated-launch and Quit live validations.
 The remote PR remains draft at 6464b46 until the completed update is pushed.
+
+## 2026-11-08 — repeated-launch live result before Quit rerun
+
+Tested local source `1b50acc62bbe304711b70d634e93d5872206850d` in fresh owned
+run `20261109T014125Z-992ae8ee8730`. Same window 83, app 1014 -> sidecar 1021
+-> shell 1071 and unrelated control 969 retain exact independent identities.
+Normal Finder activation then one LaunchServices reopen; later read-only window
+inventory marks window 83 key/frontmost, and native/Bridge frames show the app
+frontmost before the second proof. The immediate transition frame still shows
+Finder layered above the app; it is preserved. Both proofs retain PID 1071,
+39x126 geometry and unexported run sentinel. Automatic finish after 21 actions;
+owner exit 0 and independent atomic cleanup verify. No error events.
+Next: finalize this evidence-only checkpoint, then existing bounded Quit in a
+second fresh guest on the resulting branch head. No product or probe source edits
+planned between runs. PR #227 remains draft/unmerged; no merge authorization.
+
+Repeat evidence pins 552 private-file hashes; five originals stopped and no
+QA/clone processes remain. Commit this documentation/evidence-only update before
+the selected second validation; all probe source remains at 1b50acc.

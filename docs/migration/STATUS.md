@@ -1,3 +1,32 @@
+## Ordered #227 validation — repeated launch complete, Quit rerun next
+
+Maintainer selected add repeated-launch validation, then rerun bounded Quit on the
+updated branch before readiness. #227 stays draft/unmerged; maintainer handles
+review/optional CodeRabbit scan and the merge. No merge authorization inferred.
+
+Source `1b50acc62bbe304711b70d634e93d5872206850d` is locally committed (not yet
+remotely pushed). Fresh run `20261109T014125Z-992ae8ee8730` verifies unchanged
+window 83, app 1014 -> sidecar 1021 -> proven shell 1071 and unrelated control 969
+across one normal LaunchServices reopen after Finder foreground activation. All
+PID/start-time/executable/parent identities agree. Fresh second UI proof retains
+shell PID, run sentinel and 39x126 geometry. The first native transition frame
+still shows Finder above the app; subsequent read-only window inventory reports
+window 83 key/frontmost and independent frames show FingerTrap frontmost before
+second input. No duplicate app/sidecar in the independent inventories.
+
+Automatic completion after 21 actions, owner exit 0, no error events, independent
+owned cleanup verified. Five originals stopped and no clone/QA processes remain.
+[Repeat-launch evidence](evidence/client-baseline/repeat-launch-observation.json)
+pins 552 private-file hashes. All 77 kept guards, Ruff/repo/docs checks pass.
+Baseline remains one input PASS/eleven BLOCKED; all runtime/provider/activation/
+backend/release/acceptance gates unchanged, Pi v0.85.1-psmfd.1, #219 deferred.
+
+Next: commit these evidence/docs changes only, confirm probe source blobs unchanged,
+and run existing bounded Quit in a second fresh guest on that updated branch head.
+Keep its 1500s observer/360s reserved scenario/1800s hold and automatic completion.
+No readiness transition until that rerun, final-head CI/CodeQL and evidence checks
+complete. Final documentation-only updates will identify exact tested commits.
+
 ## CF-1C-AUTOMATION-6 then Quit rerun — approved order, 2026-11-08
 
 Maintainer explicitly selected: add bounded repeated-launch validation to existing

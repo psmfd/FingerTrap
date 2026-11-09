@@ -1,5 +1,10 @@
 # CF-1 packaged-client baseline evidence
 
+[Repeated normal launch](repeat-launch-observation.json) verifies stable process,
+window and proven shell identities with fresh second input, automatic completion
+and cleanup. 552 private-file hashes; the selected fresh Quit rerun follows on
+the same branch before #227 readiness. No baseline promotion.
+
 [Normal GUI Quit observation](normal-quit-observation.json) verifies recorded
 app/sidecar/shell termination while an unrelated guest process survives, then
 automatic completion and owned cleanup with exit 0. 472 private-file hashes;
