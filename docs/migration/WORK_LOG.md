@@ -3441,3 +3441,17 @@ unattended enrollment or pristine Finder-install acceptance is claimed. Baseline
 stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred, and all
 acceptance/provider/activation/backend/release gates remain intact. Private raw
 evidence and unrelated local files preserved; never reuse a cleaned pointer.
+
+## 2026-11-09 — published ordered-validation checks green
+
+## #227 source/evidence checks green — 2026-11-09
+
+Published source/evidence head `d89b7c994a022b142227c45eee8e283784a11695` passes
+all fourteen jobs in [CI 42607141348](https://github.com/psmfd/FingerTrap/actions/runs/42607141348)
+and all five CodeQL language analyses plus aggregate. Title/gitflow pass. Both
+selected live validations and cleanup completed before readiness; 77 kept guards
+and final secret scan pass. PR title/body now cover repeated launch and Quit.
+This final records-only checkpoint preserves the identical tested `scripts` tree
+and uses normal CI so current-head checks remain enforceable. After they pass,
+mark #227 ready as authorized; maintainer reviews/optionally scans and alone
+performs any merge. No merge or baseline/activation/release promotion authorized.
