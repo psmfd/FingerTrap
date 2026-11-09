@@ -11,6 +11,15 @@ accounted for separately. A disposition does not assert a bug is fixed.
 
 ## Successor work
 
+Session handoff 2026-11-09: [#227](https://github.com/psmfd/FingerTrap/pull/227)
+is ready/open/unmerged at 1b6f10d; maintainer reviewing. Both ordered repeat/
+Quit validations and current-head CI/CodeQL pass; baseline remains one input PASS/
+eleven BLOCKED. CodeRabbit COMMENTED includes a docstring-coverage warning and
+incomplete bot review of repeat evidence; no inline threads at snapshot. Refresh
+review before changes; maintainer alone decides merge. Session records are on
+`docs/client-review-handoff-20261109`, keeping the reviewed PR head unchanged.
+See [current handoff](HANDOFF-client-baseline-gui.md). #219 remains deferred.
+
 CF-1C-CAPTURE-3, 2026-11-07: read-only signing/TCC diagnostic identifies actual
 Screen Recording code-requirement mismatch (-67050) for the resolved agent,
 followed by denial. Initial signing-readout failure preserved; corrected retry

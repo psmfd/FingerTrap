@@ -1,5 +1,90 @@
 # CF-1C session handoff — 2026-11-09
 
+[Copy-ready next-session prompt](NEXT_SESSION-client-review.md).
+
+## Session handoff — maintainer reviewing #227, 2026-11-09
+
+**First resume action:** read this snapshot, fetch remote state, then read #227's
+latest maintainer review, CodeRabbit review and inline threads. Address validated
+requested changes on `test/client-normal-quit`; do not start a new GUI slice or
+repeat completed runs by default. Maintainer performs review/optional scans and
+alone decides merge. **Do not merge, enable auto-merge or infer merge permission
+from "approved/proceed" without an explicit change to that policy.**
+
+Review target is ready/open/unmerged #227 against dev at
+`1b6f10d98ba85a59ce37f5e0e5adf35fa4cb2113` in this snapshot. All fourteen jobs
+in [CI 42609238927](https://github.com/psmfd/FingerTrap/actions/runs/42609238927),
+all five analyses plus aggregate in
+[CodeQL 42609234487](https://github.com/psmfd/FingerTrap/actions/runs/42609234487),
+title/gitflow and the GitHub CodeRabbit check pass. Local 77 guards/Ruff/repo/
+docs/links/hash checks and secret scan pass. No product code changed.
+
+**Open review item:** CodeRabbit submitted COMMENTED at 2026-11-09T12:06:07Z
+against 1b6f10d, with a docstring-coverage pre-merge warning. Its review also says
+`repeat-launch-observation.json` was not fully reviewed because changes were
+unavailable. No inline threads exist at snapshot time. Do not treat a successful
+GitHub CodeRabbit check or COMMENTED submission as maintainer approval, a resolved
+coverage warning or a full evidence review. Refresh actual review state next time;
+maintainer's decision on those items is still outstanding. No source fixes are
+made during this session close while the maintainer reviews the exact head.
+
+**Handoff storage is isolated from the reviewed PR:** current documentation-only
+branch `docs/client-review-handoff-20261109` starts at 1b6f10d. It carries this
+STATUS/handoff/WORK_LOG/issue-ledger update and is backed up separately. The code
+branch and PR head remain unchanged. Read this branch's records before switching
+to the fresh remote code branch; do not push the handoff onto #227 or main/dev
+without a subsequent instruction. #216/#217 and #227 link the immutable handoff
+checkpoint after publication. No additional PR or merge is needed to resume.
+
+Completed in the selected **repeat launch, then Quit rerun** order:
+
+- Repeat: source `1b50acc62bbe304711b70d634e93d5872206850d`, run
+  `20261109T014125Z-992ae8ee8730`; same window 83, app 1014/sidecar 1021/shell
+  1071/control 969 identities and fresh second input/sentinel/39x126 geometry.
+- Quit rerun: head `a3955ec478562a81076b60a9991f2b6ca7946eb6`, run
+  `20261109T022608Z-7c143051d784`; app 1027/sidecar 1034/shell 1084 terminate
+  after one Cmd+Q; unrelated control 982 survives. The complete `scripts` tree
+  and eight probe blobs match between tests and the reviewed head.
+- Both owners exit 0, automatic finish after 21 actions, no timeout/error events,
+  owned/independent cleanup verify. Five original VMs stopped, no owned clone/QA
+  process. Private evidence stays private: 552 + 472 new hashes; original 472 Quit,
+  652 review-correction and 1,031 layout hashes unchanged.
+
+Evidence summaries: [repeat](evidence/client-baseline/repeat-launch-observation.json)
+and [fresh Quit](evidence/client-baseline/normal-quit-branch-rerun.json). These are
+bounded observations with supported guest-only shell defaults, paced compact
+input and pinned automation/candidate. Peekaboo Screen Recording prompt remains
+an explicit limitation despite working capture/grants. No unattended enrollment,
+pristine Finder install, Pi/RPC cleanup or broad acceptance claim. Prior fast-
+typing delimiter loss and long-input Bridge response timeout are not claimed fixed.
+No additional guest execution at close; never reuse cleaned active-console.json.
+
+Preserve `.local-testing/`, `LEGACY_pi_config_3579dc1.patch`,
+`NEXT_SESSION_pi-fold-reassessment.md` and ignored `.artifacts/`. Baseline remains
+one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 Pi 1.3.0 comparison
+deferred, all acceptance/provider/activation/backend/release gates unchanged.
+Existing CF-1 execution approval persists within those bounds; readiness and
+review are not new runtime activation, baseline promotion or merge authority.
+
+```sh
+git fetch origin
+git status --short
+gh pr view 227 --repo psmfd/FingerTrap \
+  --json state,isDraft,headRefOid,baseRefName,reviews,statusCheckRollup
+gh api repos/psmfd/FingerTrap/pulls/227/comments
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+```
+
+Use the authorized GitHub connector for reads, or the existing per-command
+TheSemicolon CLI token when necessary; never switch global authentication or
+print credentials. If #227 has been merged by the maintainer, verify its actual
+merge commit and dev readback, record that identity, then agree/record the next
+bounded slice before executing. If review changes are needed, preserve the failing
+guard, fix only validated findings, run affected checks, and refresh head CI/CodeQL.
+Evidence/docs-only changes do not require new VM runs; material probe/product
+changes require the affected bounded validation. Do not reimplement existing
+comparison/Peekaboo/Quit tools or redo completed qualification without cause.
+
 ## #227 source/evidence checks green — 2026-11-09
 
 Published source/evidence head `d89b7c994a022b142227c45eee8e283784a11695` passes

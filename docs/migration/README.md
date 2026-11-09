@@ -1,5 +1,13 @@
 # Agent runtime migration inventory
 
+[Copy-ready next-session prompt](NEXT_SESSION-client-review.md).
+
+Session close (2026-11-09): maintainer reviewing ready/unmerged #227 at 1b6f10d.
+Resume from [the current handoff](HANDOFF-client-baseline-gui.md) on documentation
+branch `docs/client-review-handoff-20261109`; the reviewed code branch stays
+unchanged. Refresh review/CodeRabbit items before any new slice. Maintainer alone
+decides merge; baseline and all gates remain unchanged.
+
 **Active sequence: client foundation before further extension catalog import/review.**
 The maintainer selected [foundation #216](https://github.com/psmfd/FingerTrap/issues/216)
 and [packaged-client baseline #217](https://github.com/psmfd/FingerTrap/issues/217).
