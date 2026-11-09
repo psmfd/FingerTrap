@@ -1,0 +1,144 @@
+{
+  "slice": "CF-1C-AUTOMATION-6",
+  "testedCommit": "1b50acc62bbe304711b70d634e93d5872206850d",
+  "sourceBlobs": {
+    "scripts/client_baseline_repeat_probe.py": "d0a9197a49d264b5cc425df8fc77bf1170ce0123",
+    "scripts/client_baseline_quit_probe.py": "edd7bcb7109f34eaa880563e64e2d84b533ca92f",
+    "scripts/client_baseline_compare.py": "ff70cec958c0e10a655919ff7ddb3ea7bd2ea080",
+    "scripts/client_baseline_vnc.py": "de165af7854df0176e4c18b19da8107c4525cc52",
+    "scripts/client_baseline_layout_probe.py": "467a5687caecf3c123d323cafa7b86520ebd79ae",
+    "scripts/client_baseline_shell_probe.py": "d67f1b363828d66e6c88ca23e8aad66efd7ddc42",
+    "scripts/client_baseline_client_observe.py": "7686467fb4917080decc3ad8c44fc9ba29b8f08a",
+    "scripts/client_baseline_peekaboo.py": "b0c34485e46d4fbd3a332e41474c7648ff972eee"
+  },
+  "runId": "20261109T014125Z-992ae8ee8730",
+  "ownerExitCode": 0,
+  "result": {
+    "slice": "CF-1C-AUTOMATION-6",
+    "windowId": 83,
+    "beforeProof": {
+      "pid": 1071,
+      "rows": 39,
+      "columns": 126,
+      "sentinel": "992ae8ee8730"
+    },
+    "afterProof": {
+      "pid": 1071,
+      "rows": 39,
+      "columns": 126,
+      "sentinel": "992ae8ee8730"
+    },
+    "beforeAdmitted": {
+      "owned": {
+        "1014": {
+          "parent": 1,
+          "started": "Mon Nov 9 02:02:06 2026",
+          "command": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+        },
+        "1021": {
+          "parent": 1014,
+          "started": "Mon Nov 9 02:02:06 2026",
+          "command": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+        },
+        "1071": {
+          "parent": 1021,
+          "started": "Mon Nov 9 02:02:08 2026",
+          "command": "/bin/zsh"
+        }
+      },
+      "controlPid": 969,
+      "control": {
+        "parent": 1,
+        "started": "Mon Nov 9 02:01:45 2026",
+        "command": "/bin/sleep"
+      },
+      "sidecarPid": 1021
+    },
+    "afterAdmitted": {
+      "owned": {
+        "1014": {
+          "parent": 1,
+          "started": "Mon Nov 9 02:02:06 2026",
+          "command": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+        },
+        "1021": {
+          "parent": 1014,
+          "started": "Mon Nov 9 02:02:06 2026",
+          "command": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+        },
+        "1071": {
+          "parent": 1021,
+          "started": "Mon Nov 9 02:02:08 2026",
+          "command": "/bin/zsh"
+        }
+      },
+      "controlPid": 969,
+      "control": {
+        "parent": 1,
+        "started": "Mon Nov 9 02:01:45 2026",
+        "command": "/bin/sleep"
+      },
+      "sidecarPid": 1021
+    },
+    "repeatLaunchDeliveries": 1,
+    "finderActivations": 1,
+    "proofDeliveries": 2,
+    "sameObservedSession": true,
+    "independentImageReviewRequired": true,
+    "baselineRowPromoted": false
+  },
+  "session": {
+    "phase": "finished",
+    "actions": 21
+  },
+  "cleanup": {
+    "cleanupVerified": true,
+    "originalVmsStoppedAndPreserved": true
+  },
+  "fixture": {
+    "pane.defaultKind": "shell",
+    "toolProvenance": "peekaboo-pilot-inputs.json",
+    "typingCadenceMs": 50,
+    "proofCommandMaxCharacters": 150
+  },
+  "bounds": {
+    "observerSeconds": 1500,
+    "reservedScenarioSeconds": 480,
+    "guestHoldSeconds": 1800
+  },
+  "validation": {
+    "keptGuards": 77,
+    "independentImageReviewRequired": true,
+    "baselineRowPromoted": false
+  },
+  "limitations": [
+    "Supported shell-default fixture with pinned guest automation; not pristine Finder acceptance.",
+    "Peekaboo Screen Recording dialog may remain visible despite positive grant/capture readbacks; unattended enrollment not claimed.",
+    "No Pi 1.3 comparison, provider credentials, activation/backend/release changes or full baseline promotion."
+  ],
+  "schemaVersion": 2,
+  "privateEvidenceManifests": [
+    {
+      "path": "repeat-launch-private-evidence-1.json",
+      "entryCount": 276,
+      "sha256": "f824099518a830443f62c39e7313dc1129b245c16badea97591555c18a899ad7"
+    },
+    {
+      "path": "repeat-launch-private-evidence-2.json",
+      "entryCount": 276,
+      "sha256": "4ae3471ddb1e37e51d0955e32aafd2276725051ec94a6a307daba36d90524ec9"
+    }
+  ],
+  "privateEvidenceProvenance": {
+    "originalCommit": "1b6f10d98ba85a59ce37f5e0e5adf35fa4cb2113",
+    "originalPath": "docs/migration/evidence/client-baseline/repeat-launch-observation.json",
+    "originalSha256": "0d6a946906cb9f574013a788ed2db41c27c7ea37426a8e6f63c1c5994b3b57fe",
+    "entryCount": 552
+  },
+  "independentReview": {
+    "finderForeground": "Finder menu and Recents window observed above inactive FingerTrap before reopen.",
+    "activation": "Immediate native frame catches a transition; subsequent read-only window inventory has is_key=true/is_frontmost=true for window 83 and native/Bridge frames show FingerTrap frontmost before second proof.",
+    "session": "Before and after decoded markers, original PID 1071/sentinel/39x126 geometry and fresh prompts observed; process identities agree.",
+    "acceptance": "Bounded guest-shell observation only; no baseline promotion."
+  }
+}

@@ -383,7 +383,7 @@ def permission_step(request, index):
 
 
 def permission_session(
-    run, root, deadline, request_step=permission_step, dispatch=None
+    run, root, deadline, request_step=permission_step, dispatch=None, complete=None
 ):
     # Files are private to this new explicit run, never selected via a pointer.
     for index in range(40):
@@ -411,6 +411,9 @@ def permission_session(
             diagnose_agent(run, root, step, deadline)
         else:
             probe_step(run, step, root, deadline)
+        if complete is not None and complete(step):
+            qa.save(root / "session.json", {"phase": "finished", "actions": index + 1})
+            return
     raise TimeoutError("Permission session action budget exhausted")
 
 
