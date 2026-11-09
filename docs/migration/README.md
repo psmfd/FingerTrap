@@ -9,6 +9,13 @@ blockers and is not accepted. The inventory
 below remains the dated M0 source snapshot; current qualification/activation facts
 are recorded in STATUS, not inferred from these historical candidate rows.
 
+Peekaboo v4.9.8 guest-only Finder pilot now demonstrates usable menu/text/keyboard
+input and full-window GUI Bridge capture, including fresh AX resolution of an
+indeterminate typing result. Both disposable guests cleaned. This is tooling
+qualification only: baseline remains one input PASS/eleven BLOCKED. See the
+[pilot results](evidence/client-baseline/peekaboo-pilot-result.json) and
+[latest handoff](HANDOFF-client-baseline-gui.md) before a new app slice.
+
 **M0 inventory recorded on 2026-10-20.** FingerTrap owns new product planning
 under [ADR-0034](../../adrs/0034-own-agent-runtime-and-retire-pi-config.md).
 **M1a source import completed locally:** the token and cache meters now live
@@ -19,6 +26,8 @@ and successor ADR.
 
 This directory contains:
 
+- [Evidence record guidance](evidence/README.md): reviewable summaries, referenced
+  hash manifests, exact preservation checks and actual review-coverage verification.
 - [Current status and resume instructions](STATUS.md) and
   [activity log](WORK_LOG.md): durable progress, checkpoints, validation and
   the next action. Start here when continuing work.

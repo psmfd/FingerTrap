@@ -11,6 +11,16 @@ accounted for separately. A disposition does not assert a bug is fixed.
 
 ## Successor work
 
+CF-1C-CAPTURE-3, 2026-11-07: read-only signing/TCC diagnostic identifies actual
+Screen Recording code-requirement mismatch (-67050) for the resolved agent,
+followed by denial. Initial signing-readout failure preserved; corrected retry
+and both cleanup receipts retained. All 38 guards pass. CAPTURE-2 restart was
+verified and insufficient. No app case advanced; #217 one input PASS/eleven
+BLOCKED, comparison #219 deferred. Next: CF-1C-CAPTURE-4 supported exact-entry UI
+re-enrollment with post-grant TCC decisions and actual window-capture checks.
+[Evidence](evidence/client-baseline/gui-continuation/privacy-attribution.json)
+and [current resume action](HANDOFF-client-baseline-gui.md).
+
 | ID                                                                            | FingerTrap owner                                                            | Start condition                                                                                                                                                                                                                     |
 | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [CLIENT-FOUNDATION / #216](https://github.com/psmfd/FingerTrap/issues/216)    | Packaged client, completed profiles and supervised JavaScript/Pi SDK worker | Current sequence; [plan](client-foundation-plan.html). Further catalog import/review waits for foundation exit. Existing #201/#202/#186/#187 retain implementation ownership.                                                       |

@@ -1,0 +1,22 @@
+[
+  {
+    "path": ".artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip",
+    "size": 71652794,
+    "sha256": "e9cf6f7b10957f35de1ddae431abdc17bed17002f93d5e196ebbeddb81688990"
+  },
+  {
+    "path": ".artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz",
+    "size": 29376934,
+    "sha256": "e0e0331d478af7724fa24d780a8d4abc0033c6f5ee7c0d45dddae6f922e5c4cb"
+  },
+  {
+    "path": ".artifacts/pr-merge-20261021/apple/candidate.zip",
+    "size": 71649829,
+    "sha256": "452d2f93ff10ad5bf677df54581192a7a371cf72cf4fa42079da92615fe57f6e"
+  },
+  {
+    "path": ".artifacts/client-baseline/20261023T133506Z-b727c20f4c58/console-first-frame.png",
+    "size": 7578923,
+    "sha256": "58171cd9258bbb378676b47b0247995f354f5f5cde6ec5f6849667cf09023ace"
+  }
+]

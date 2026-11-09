@@ -1,0 +1,650 @@
+{
+  "slice": "CF-1C-CAPTURE-2",
+  "startingCheckpoint": "0cf35d21f239c7c65f5d1c82b359913cf86285ee",
+  "runId": "20261107T153328Z-e16d52dd729f",
+  "runtimeTag": "v0.85.1-psmfd.1",
+  "guestOs": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.7\nBuildVersion:\t\t24G720",
+  "observationBudgetSeconds": 720,
+  "guestHoldSeconds": 960,
+  "restartBudgetSeconds": 90,
+  "initialAgent": {
+    "target": "gui/501/org.cirruslabs.tart-guest-agent",
+    "pid": 423,
+    "uid": 501,
+    "plist": "/Library/LaunchAgents/org.cirruslabs.tart-guest-agent.plist",
+    "plistSha256": "4e5632ff6589ebdd2b8ad24212a2598f958329b5dbc5f3b350401ee30b9f84b6",
+    "program": "/opt/homebrew/bin/tart-guest-agent",
+    "programSha256": "9773bec7f115dc52778fca6bc98b648f07b5654084d6f48d9a91656579eec4a5",
+    "executable": "/opt/homebrew/bin/tart-guest-agent",
+    "executableMatches": true
+  },
+  "restart": {
+    "target": "gui/501/org.cirruslabs.tart-guest-agent",
+    "beforePid": 423,
+    "requestError": "TimeoutExpired",
+    "afterPid": 843,
+    "reconnected": true
+  },
+  "steps": [
+    {
+      "index": 0,
+      "purpose": "initial prompt capture",
+      "guestClock": "Sat Nov  7 15:34:27 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T15:34:33.404025+00:00",
+        "screenSha256": "517cf36c1b9c5cc21c34a6ac132e1f9651d5325fc7e33ea1349648acdff4b1c4"
+      },
+      "step": {
+        "Name": "step-00"
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncapture-timeout step-00\n"
+    },
+    {
+      "index": 1,
+      "purpose": "open guest Privacy settings",
+      "guestClock": "Sat Nov  7 15:34:40 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T15:34:46.239157+00:00",
+        "screenSha256": "928a445cde89b7044efab86731dac54cfdefc11f313403f9e0e9e9dfaf0a0121"
+      },
+      "step": {
+        "Name": "step-01",
+        "Click": true,
+        "X": 1160,
+        "Y": 598
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncaptured step-01 (0,0)-(2048,1536)\n"
+    },
+    {
+      "index": 2,
+      "purpose": "observe duplicate guest-agent entries",
+      "guestClock": "Sat Nov  7 15:34:45 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T15:34:52.080654+00:00",
+        "screenSha256": "0a62d1089db390a8e2d53143d56fb0a9869b741e962d73ee0b5b80f3eb190e40"
+      },
+      "step": {
+        "Name": "step-02"
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncaptured step-02 (0,0)-(2048,1536)\n"
+    },
+    {
+      "index": 3,
+      "purpose": "dismiss prompt to inspect entries",
+      "guestClock": "Sat Nov  7 15:35:01 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T15:35:07.929153+00:00",
+        "screenSha256": "928a445cde89b7044efab86731dac54cfdefc11f313403f9e0e9e9dfaf0a0121"
+      },
+      "step": {
+        "Name": "step-03",
+        "Click": true,
+        "X": 1395,
+        "Y": 598
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncaptured step-03 (0,0)-(2048,1536)\n"
+    },
+    {
+      "index": 4,
+      "purpose": "enable disabled executable permission",
+      "guestClock": "Sat Nov  7 15:35:09 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T15:35:15.751478+00:00",
+        "screenSha256": "0a62d1089db390a8e2d53143d56fb0a9869b741e962d73ee0b5b80f3eb190e40"
+      },
+      "step": {
+        "Name": "step-04",
+        "Click": true,
+        "X": 1652,
+        "Y": 539
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncaptured step-04 (0,0)-(2048,1536)\n"
+    },
+    {
+      "index": 5,
+      "purpose": "public fixture authentication; key details omitted",
+      "guestClock": "Sat Nov  7 15:35:19 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T15:35:25.591560+00:00",
+        "screenSha256": "0a62d1089db390a8e2d53143d56fb0a9869b741e962d73ee0b5b80f3eb190e40"
+      },
+      "step": {
+        "Name": "step-05",
+        "input": "documented public guest-fixture authentication; key details omitted"
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncaptured step-05 (0,0)-(2048,1536)\n"
+    },
+    {
+      "index": 6,
+      "purpose": "submit guest permission grant",
+      "guestClock": "Sat Nov  7 15:35:29 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T15:35:35.422487+00:00",
+        "screenSha256": "0a62d1089db390a8e2d53143d56fb0a9869b741e962d73ee0b5b80f3eb190e40"
+      },
+      "step": {
+        "Name": "step-06",
+        "Click": true,
+        "X": 1024,
+        "Y": 969
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncaptured step-06 (0,0)-(2048,1536)\n"
+    },
+    {
+      "index": 7,
+      "purpose": "normal RPC service restart and reconnect",
+      "guestClock": "Sat Nov  7 15:35:45 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T15:35:51.915699+00:00",
+        "screenSha256": "928a445cde89b7044efab86731dac54cfdefc11f313403f9e0e9e9dfaf0a0121"
+      },
+      "restart": {
+        "target": "gui/501/org.cirruslabs.tart-guest-agent",
+        "beforePid": 423,
+        "requestError": "TimeoutExpired",
+        "afterPid": 843,
+        "reconnected": true
+      }
+    },
+    {
+      "index": 8,
+      "purpose": "post-restart native/independent capture comparison",
+      "guestClock": "Sat Nov  7 15:35:57 UTC 2026",
+      "readback": {
+        "hostUtc": "2026-11-07T15:36:03.755667+00:00",
+        "screenSha256": "928a445cde89b7044efab86731dac54cfdefc11f313403f9e0e9e9dfaf0a0121"
+      },
+      "step": {
+        "Name": "step-08"
+      },
+      "process": {
+        "exitCode": 0
+      },
+      "probeResult": "captured before (0,0)-(2048,1536)\ncaptured step-08 (0,0)-(2048,1536)\n"
+    }
+  ],
+  "completedActions": 9,
+  "completedRfbProbes": 8,
+  "completedIndependentReadbacks": 10,
+  "files": [
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-cleanup.json",
+      "size": 72,
+      "sha256": "eb03e526d2369994b2c28434109e0d828ab0b258ea104b1bd564e95481f802c1"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/agent-inventory.json",
+      "size": 36092,
+      "sha256": "0e195f85d923eb9a9246880b605568c6622289e181b24e82c2289f3e9416ac84"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/guest-clock.txt",
+      "size": 29,
+      "sha256": "a1418c897104ce0d80f98482497cb7d39f9a548ffc8948172615627200f8a212"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/guest-screen.jpg",
+      "size": 206588,
+      "sha256": "517cf36c1b9c5cc21c34a6ac132e1f9651d5325fc7e33ea1349648acdff4b1c4"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/readback.json",
+      "size": 138,
+      "sha256": "687e55f4eb557ca6581b387e68b23aa6c5c8b4c1e228954dfdcae10b56e82511"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/request-00.json",
+      "size": 21,
+      "sha256": "5e16ed9a7cf1a9761fb5c51018e2818da9a7318cc1d8e704857e69ab382b59d2"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/request-01.json",
+      "size": 40,
+      "sha256": "e5fb7306ac0bc2b8b109d799f9005121e70f076ee891f3ccd9e2ba3d3dc2ffce"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/request-02.json",
+      "size": 21,
+      "sha256": "5e16ed9a7cf1a9761fb5c51018e2818da9a7318cc1d8e704857e69ab382b59d2"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/request-03.json",
+      "size": 40,
+      "sha256": "e1726db87967e8122ed728403c9c9be24104152647be78660d6ef0b5b53c5775"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/request-04.json",
+      "size": 40,
+      "sha256": "2e3d9e391ff7eec0565537a8ce81d2377790295a61dfbb985a7ebfe8d6c2dc5a"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/request-05.json",
+      "size": 53,
+      "sha256": "81575b8ed3722d8e76906a8c25c0cf8a2188d094dbb564486a73a29cd5f91051"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/request-06.json",
+      "size": 40,
+      "sha256": "313773635befede5be94d93e781d33e8cbe7c1e1ee78822305d84c6cac3d1016"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/request-07.json",
+      "size": 27,
+      "sha256": "2e92d2214448f7ebdaed10091001c2da158c6be0c6dd1abd5003c786a8fb3eec"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/request-08.json",
+      "size": 21,
+      "sha256": "5e16ed9a7cf1a9761fb5c51018e2818da9a7318cc1d8e704857e69ab382b59d2"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/request-09.json",
+      "size": 20,
+      "sha256": "8059753f3ff5ed2ff069ebc93150579fb5c79c40d35cb53653515ac110a3a97d"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/session.json",
+      "size": 42,
+      "sha256": "9a1517282d2f1dac0577a8b7877aab01dffb998b6be58fc56c9042259ad6b437"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-00/govnc-before.png",
+      "size": 4283221,
+      "sha256": "e010a625a64a12cbfaafc76f5a4328adfb49a4ae4b228107ce1d586eedabbd32",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-00/guest-clock.txt",
+      "size": 29,
+      "sha256": "77b5bf2e1e35b7e3cb3e1e192d557b79d268d5b00d4488eb34ec9c6adb10a0e8"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-00/guest-screen.jpg",
+      "size": 206588,
+      "sha256": "517cf36c1b9c5cc21c34a6ac132e1f9651d5325fc7e33ea1349648acdff4b1c4"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-00/probe.log",
+      "size": 58,
+      "sha256": "352465d972ffbf81e8be2198f87e6ba8839da5f11fde0084110bf408b09e8525"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-00/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-00/readback.json",
+      "size": 138,
+      "sha256": "3d66feff31bc07f571b75f356289951f17379dd293d727c2acf4a523ff6fb65a"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-00/step.json",
+      "size": 24,
+      "sha256": "c8c722b8957a27e9d221298e73beb471617036f6ed4f250c5eb48fc1006162a4"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-01/govnc-before.png",
+      "size": 4283318,
+      "sha256": "79ebb8a052e8cca8499fa413ae08a230d04c430947c576319f4397b9f5686ba8",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-01/govnc-step-01.png",
+      "size": 2197587,
+      "sha256": "c6a92b2a9289c3d1cf9a79b41a7dcb30da7ff4bd41c591ee23e75d76558fcad5",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-01/guest-clock.txt",
+      "size": 29,
+      "sha256": "a323a238fdbfbfa352fb35049bc80dd48342da892463084a9c223cd895d82299"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-01/guest-screen.jpg",
+      "size": 206754,
+      "sha256": "928a445cde89b7044efab86731dac54cfdefc11f313403f9e0e9e9dfaf0a0121"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-01/probe.log",
+      "size": 69,
+      "sha256": "d35dccdd9d800f4a8a1a6c9ef26be64f2ca898fd7bc652ee681944760ca9221c"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-01/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-01/readback.json",
+      "size": 138,
+      "sha256": "900ee785f210409c5e886fe381ed5e8e73dbe183a45191762b78e766bba1db90"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-01/step.json",
+      "size": 66,
+      "sha256": "f587fb7659a5d3f50695e4a7a37de443152134f8ab26e61a1b2805471b28dcdd"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-02/govnc-before.png",
+      "size": 2266764,
+      "sha256": "87038a3d1a2094967f92cdb08dcea2bede9c48df7700a6b04409a3eb84576021",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-02/govnc-step-02.png",
+      "size": 2266733,
+      "sha256": "26d6cf0e10bddd8432836cb61792cb386b3efac91cec8c7ae26d285a92a42458",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-02/guest-clock.txt",
+      "size": 29,
+      "sha256": "57190a3d00db4e447408be3079e474e366006399b8ab5d879ababea72df65cc6"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-02/guest-screen.jpg",
+      "size": 206795,
+      "sha256": "0a62d1089db390a8e2d53143d56fb0a9869b741e962d73ee0b5b80f3eb190e40"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-02/probe.log",
+      "size": 69,
+      "sha256": "dcc0edd0f202e6eb3adb7990ecc78a9afc9604222f820d6efafc4ae604ed8272"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-02/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-02/readback.json",
+      "size": 138,
+      "sha256": "b7220df16f949cade21b5cb46e9703ead37025bb047df3794c83112e5a53562e"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-02/step.json",
+      "size": 24,
+      "sha256": "c740b74cdd44d20b59ec8efa37bbaa49e16dbb6abc442ad38ec1f3b3f085c769"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-03/govnc-before.png",
+      "size": 2266753,
+      "sha256": "273711e868ea6240a9c582236a50d0672bcdc6a505f374954612b6ddc0d52cab",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-03/govnc-step-03.png",
+      "size": 2219141,
+      "sha256": "81ad48ed20bd439a55403435632e193a76086d11424a1e08030728752ca6c663",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-03/guest-clock.txt",
+      "size": 29,
+      "sha256": "14e4bccd14e2b90b343fd856cdefb264665bad6347a9b9d304202667e427ea33"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-03/guest-screen.jpg",
+      "size": 206754,
+      "sha256": "928a445cde89b7044efab86731dac54cfdefc11f313403f9e0e9e9dfaf0a0121"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-03/probe.log",
+      "size": 69,
+      "sha256": "71c22c4911899ab34a80cd707c7812762a6206f7500fd4486b48b99b60c4d24b"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-03/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-03/readback.json",
+      "size": 138,
+      "sha256": "bb9d195799d2e88112ded23ccc8c4d919f3fbd8b52be877f7d60863c02967951"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-03/step.json",
+      "size": 66,
+      "sha256": "07181495ffb3be4cbff46cc858c7b2e3b3c946777572127edb7671d979dc8ddc"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-04/govnc-before.png",
+      "size": 2267091,
+      "sha256": "5daf3c40a1df035d9c42ed7d8d723b47c69221037d961ca57d9ce1969315635d",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-04/govnc-step-04.png",
+      "size": 2186511,
+      "sha256": "0204ae4e526ace93cab2ba4e6db6f769f975329f662e3fabebe970447fd6e340",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-04/guest-clock.txt",
+      "size": 29,
+      "sha256": "8713315337e2500ec14f08ee7cb3526e8d52de5bfcf78aa7c26f14ed9c2156f9"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-04/guest-screen.jpg",
+      "size": 206795,
+      "sha256": "0a62d1089db390a8e2d53143d56fb0a9869b741e962d73ee0b5b80f3eb190e40"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-04/probe.log",
+      "size": 69,
+      "sha256": "a06119d11dab71b6ca55abacdf118a7b0002782b7383e5310be288151853bf25"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-04/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-04/readback.json",
+      "size": 138,
+      "sha256": "d56c09f385116f0e633f498992f7c5d397529eadcba52da882ad035a305b9182"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-04/step.json",
+      "size": 66,
+      "sha256": "6493e61ff441057d26a12ba23d67178be04954d666f2730e716c8df88358229b"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-05/govnc-before.png",
+      "size": 2224752,
+      "sha256": "72e3989a52cea562faf499abac314bba8cb1b117cc901ee5f2e6c5c3d1b9f188",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-05/govnc-step-05.png",
+      "size": 2223234,
+      "sha256": "6924a7805ffe5688720a771179fb6172e138554ad3e12950748cb730465d9484",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-05/guest-clock.txt",
+      "size": 29,
+      "sha256": "ee5651261bc119235b169f434c694ab44c110697f3a48f0f5e192763892814bc"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-05/guest-screen.jpg",
+      "size": 206795,
+      "sha256": "0a62d1089db390a8e2d53143d56fb0a9869b741e962d73ee0b5b80f3eb190e40"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-05/probe.log",
+      "size": 69,
+      "sha256": "d332eaf322a22202b229d7f14f910bc084cbdef3b958d6b152bf642b013b678e"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-05/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-05/readback.json",
+      "size": 138,
+      "sha256": "4b64b8cd70822e8f0c66969b67dfba4b45032cf7cd05de76572189158193281a"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-05/step.json",
+      "size": 84,
+      "sha256": "90f04fd6248e89357411d977cd0659401c30b2e935070e06bba1efe299c919c3"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-06/govnc-before.png",
+      "size": 2223234,
+      "sha256": "6924a7805ffe5688720a771179fb6172e138554ad3e12950748cb730465d9484",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-06/govnc-step-06.png",
+      "size": 2233043,
+      "sha256": "8d11f6a683bf0b7e874c6d1793f622faa0f14bdea79a21f0ad6c5c47fe0b3848",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-06/guest-clock.txt",
+      "size": 29,
+      "sha256": "332cbe402f05754c9530e0d1fa388166fdee47abb07bccd5c4438d2e9e6343a9"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-06/guest-screen.jpg",
+      "size": 206795,
+      "sha256": "0a62d1089db390a8e2d53143d56fb0a9869b741e962d73ee0b5b80f3eb190e40"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-06/probe.log",
+      "size": 69,
+      "sha256": "e8190650bb643db363d32101bdc8e0e9d7ca356914357471bc5b41d514bc4331"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-06/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-06/readback.json",
+      "size": 138,
+      "sha256": "395fdca2cef30c4d13222800f3dd188a701dfc214c99d5cee9bb57bcf077a44a"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-06/step.json",
+      "size": 66,
+      "sha256": "1996276a690654eea5c62c27abb3690b7b8f7f5a633b9652fd38fd088e8ddee1"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-07/before.json",
+      "size": 43011,
+      "sha256": "baed27ed982ccb3fe2d3d7450d294a8a2daf08bbe8d40f27562dc6efe586820b"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-07/guest-clock.txt",
+      "size": 29,
+      "sha256": "18e67edba286a1fd9510e0bbc2bc2c398f06ff6a2b799e0f9b2cddcc0c75a4dc"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-07/guest-screen.jpg",
+      "size": 206754,
+      "sha256": "928a445cde89b7044efab86731dac54cfdefc11f313403f9e0e9e9dfaf0a0121"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-07/readback.json",
+      "size": 138,
+      "sha256": "f642e5d26458d7858e28fec87724b6a040045573382690d26bf1f85f44031587"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-07/reconnect-00.json",
+      "size": 44090,
+      "sha256": "6128c15e4ba3180869b940f1a62d82c4e01ea6f6235a520f756435235ac4ca02"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-07/restart.json",
+      "size": 156,
+      "sha256": "11059c46c1198f67a8b285919cdc685d6dc47719fcd4c66dfc87822389ca1b79"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-08/govnc-before.png",
+      "size": 2272100,
+      "sha256": "a7a1d333e0d038b43c3884aaca3996488766d7a4017ec64abd5c874d152c60b8",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-08/govnc-step-08.png",
+      "size": 2272100,
+      "sha256": "a7a1d333e0d038b43c3884aaca3996488766d7a4017ec64abd5c874d152c60b8",
+      "dimensions": [2048, 1536]
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-08/guest-clock.txt",
+      "size": 29,
+      "sha256": "022f5730b990ba033b33ed3ed9c5dae9d923a671d71faaa98bff01eeb5d15552"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-08/guest-screen.jpg",
+      "size": 206754,
+      "sha256": "928a445cde89b7044efab86731dac54cfdefc11f313403f9e0e9e9dfaf0a0121"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-08/probe.log",
+      "size": 69,
+      "sha256": "50ab96255a609430cd12c0bd527703ce4a8bd4c4fb5f3c42ab9d1e47ae27987e"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-08/process.json",
+      "size": 20,
+      "sha256": "ff8ae5796bcef71911ff9c5c3eaea341819c471f669549e252b830106edd4305"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-08/readback.json",
+      "size": 138,
+      "sha256": "71fcdc3252073d8cd6e44a9ed154dec41d9d52e68cdcde4754cc66a5ec9bc635"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/atomic-comparison/step-08/step.json",
+      "size": 24,
+      "sha256": "af8266620c79356dd6a470eead684c17eea9a3cf4d448ff86acf253fba1b55a4"
+    },
+    {
+      "privateFile": "20261107T153328Z-e16d52dd729f/console-first-frame.png",
+      "size": 7428475,
+      "sha256": "10e515d9a6125de22d597b005010474b26d9095d6fe24552c6ac8a34bcbd1d1e",
+      "dimensions": [2048, 1536]
+    }
+  ],
+  "cleanup": {
+    "cleanupVerified": true,
+    "originalVmsStoppedAndPreserved": true
+  },
+  "controllerEvents": [],
+  "session": {
+    "phase": "finished",
+    "actions": 9
+  },
+  "driverExitCode": 0,
+  "observation": "Before the first independent capture, inventory identified a unique active RPC service gui/501/org.cirruslabs.tart-guest-agent, PID 423, /opt/homebrew/bin/tart-guest-agent with matching executable/plist program digests. The distinct disk-resize daemon was excluded. Supported guest privacy UI/public fixture authentication enabled the disabled executable recording toggle; another guest-agent entry was already enabled. Identity was revalidated immediately before normal launchctl kickstart -k. The restart request timed out on its own RPC transport, but independent reconnection/service inventory proved the same service/executable/plist at changed PID 843 and completed immediate guest screen/clock readback. Post-restart RFB still shows the recording prompt over the Settings window while independent guest capture omits windows. Restart is verified; it is not sufficient to remediate capture in this run. The follow-up capture for capture-only probe 00 timed out following its initial RFB frame; all other RFB probes captured their follow-up frames; all eight probes and the restart received immediate independent readbacks. Session finished explicitly after nine actions, normal owned cleanup verified and events empty. No pointer/chord/text qualification or app case was advanced. Baseline remains one input PASS and eleven BLOCKED.",
+  "nextAction": "CF-1C-CAPTURE-3: record a bounded fresh atomic diagnostic to collect the identified guest-agent code-signing identity and narrowly scoped macOS TCC decision logs around a capture request, correlate the actual permission client with the two visible UI entries, then decide any supported exact-entry UI re-enrollment from that evidence. Do not repeat grant/restart as an assumed fix, edit TCC databases, bypass permissions, alter host settings or begin app validation. Keep fixed guest-only operations, private raw logs, immediate readbacks and owned cleanup."
+}
