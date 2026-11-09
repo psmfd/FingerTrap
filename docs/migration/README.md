@@ -26,6 +26,8 @@ and successor ADR.
 
 This directory contains:
 
+- [Evidence record guidance](evidence/README.md): reviewable summaries, referenced
+  hash manifests, exact preservation checks and actual review-coverage verification.
 - [Current status and resume instructions](STATUS.md) and
   [activity log](WORK_LOG.md): durable progress, checkpoints, validation and
   the next action. Start here when continuing work.

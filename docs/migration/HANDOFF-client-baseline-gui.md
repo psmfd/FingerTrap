@@ -1,4 +1,168 @@
-# CF-1C session handoff — 2026-11-07
+# CF-1C session handoff — 2026-11-09
+
+## #227 source/evidence checks green — 2026-11-09
+
+Published source/evidence head `d89b7c994a022b142227c45eee8e283784a11695` passes
+all fourteen jobs in [CI 42607141348](https://github.com/psmfd/FingerTrap/actions/runs/42607141348)
+and all five CodeQL language analyses plus aggregate. Title/gitflow pass. Both
+selected live validations and cleanup completed before readiness; 77 kept guards
+and final secret scan pass. PR title/body now cover repeated launch and Quit.
+This final records-only checkpoint preserves the identical tested `scripts` tree
+and uses normal CI so current-head checks remain enforceable. After they pass,
+mark #227 ready as authorized; maintainer reviews/optionally scans and alone
+performs any merge. No merge or baseline/activation/release promotion authorized.
+
+## Ordered #227 validations complete — review handoff, 2026-11-09
+
+Maintainer selected **add repeated launch, then rerun Quit on this branch** before
+marking #227 ready. Both fresh owned validations passed in that order. Review and
+any optional CodeRabbit scan belong to the maintainer; **do not merge #227**.
+
+| Validation               | Exact tested commit                        | Owned run                       | Result                                                                                                           |
+| ------------------------ | ------------------------------------------ | ------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Repeated normal launch   | `1b50acc62bbe304711b70d634e93d5872206850d` | `20261109T014125Z-992ae8ee8730` | Same window 83, app 1014/sidecar 1021/shell 1071 and control 969; fresh second proof retains PID/sentinel/39x126 |
+| Fresh bounded Quit rerun | `a3955ec478562a81076b60a9991f2b6ca7946eb6` | `20261109T022608Z-7c143051d784` | One Cmd+Q; app 1027/sidecar 1034/shell 1084 gone at first read; control 982 unchanged                            |
+
+The intermediate a3955ec checkpoint changes evidence/docs only. All eight probe
+source blobs and the complete `scripts` tree are identical between tested commits
+and this final evidence/docs update. No implementation changed after the live
+validations. Pinned candidate/runtime and supported guest-only shell fixture stay
+unchanged; these branch commits qualify the harness and that pinned candidate.
+
+Repeated launch: normal Finder foreground activation then one normal
+LaunchServices reopen. Immediate native frame preserves a window transition;
+subsequent read-only window inventory reports the same window key/frontmost and
+native/Bridge frames show FingerTrap frontmost before the second proof. Whole
+admitted process/start-time/executable/parent identities and unexported sentinel
+survive. No duplicate app/sidecar in independent inventories; no hidden/minimized,
+startup or quit-race variants inferred.
+
+Quit rerun: exact decoded UI proof precedes independent ancestry capture and one
+targeted Cmd+Q. Native/Bridge final images show the app gone. No external
+app/sidecar/shell kill; unrelated adopted control survives app Quit and is removed
+only with the owned VM. No inference about internal graceful/watchdog exit path.
+
+Both sessions automatically finish after 21 actions; owners exit 0, no error
+events or outer timeout. Owned plus independent cleanup verify five original VMs
+stopped, no clone/QA processes. Keep existing 1500s observer/1800s guest hold;
+repeat reserves 480s for extra proof/focus observations, Quit keeps 360s.
+
+[Repeated-launch evidence](evidence/client-baseline/repeat-launch-observation.json)
+pins 552 private-file hashes; [fresh branch Quit rerun](evidence/client-baseline/normal-quit-branch-rerun.json)
+pins 472. Original 472 Quit, 652 review-correction and 1,031 layout hashes remain
+unchanged. All 77 kept guards pass; identity/state acceptance bypass fails new
+guards, restored source passes. Local Ruff/format/repo/docs/link/hash checks pass.
+Final publication requires secret scanning and current-head CI/CodeQL; consult
+[PR #227 checks](https://github.com/psmfd/FingerTrap/pull/227/checks) for live status.
+
+**Resume action:** review current head and both evidence summaries in #227. After
+final checks pass, mark ready as authorized; maintainer performs review/optional
+scan and decides merge. No additional VM run needed for evidence/docs-only edits;
+any material probe/product change requires its affected bounded check again.
+No merge, activation, Pi upgrade or baseline promotion is authorized by readiness.
+
+Automation limitation retained: an unrelated Peekaboo Screen Recording dialog can
+remain visible despite positive grant and successful capture readbacks. No
+unattended enrollment or pristine Finder-install acceptance is claimed. Baseline
+stays one input PASS/eleven BLOCKED; Pi v0.85.1-psmfd.1, #219 deferred, and all
+acceptance/provider/activation/backend/release gates remain intact. Private raw
+evidence and unrelated local files preserved; never reuse a cleaned pointer.
+
+## Ordered #227 validation — repeated launch complete, Quit rerun next
+
+Maintainer selected add repeated-launch validation, then rerun bounded Quit on the
+updated branch before readiness. #227 stays draft/unmerged; maintainer handles
+review/optional CodeRabbit scan and the merge. No merge authorization inferred.
+
+Source `1b50acc62bbe304711b70d634e93d5872206850d` is locally committed (not yet
+remotely pushed). Fresh run `20261109T014125Z-992ae8ee8730` verifies unchanged
+window 83, app 1014 -> sidecar 1021 -> proven shell 1071 and unrelated control 969
+across one normal LaunchServices reopen after Finder foreground activation. All
+PID/start-time/executable/parent identities agree. Fresh second UI proof retains
+shell PID, run sentinel and 39x126 geometry. The first native transition frame
+still shows Finder above the app; subsequent read-only window inventory reports
+window 83 key/frontmost and independent frames show FingerTrap frontmost before
+second input. No duplicate app/sidecar in the independent inventories.
+
+Automatic completion after 21 actions, owner exit 0, no error events, independent
+owned cleanup verified. Five originals stopped and no clone/QA processes remain.
+[Repeat-launch evidence](evidence/client-baseline/repeat-launch-observation.json)
+pins 552 private-file hashes. All 77 kept guards, Ruff/repo/docs checks pass.
+Baseline remains one input PASS/eleven BLOCKED; all runtime/provider/activation/
+backend/release/acceptance gates unchanged, Pi v0.85.1-psmfd.1, #219 deferred.
+
+Next: commit these evidence/docs changes only, confirm probe source blobs unchanged,
+and run existing bounded Quit in a second fresh guest on that updated branch head.
+Keep its 1500s observer/360s reserved scenario/1800s hold and automatic completion.
+No readiness transition until that rerun, final-head CI/CodeQL and evidence checks
+complete. Final documentation-only updates will identify exact tested commits.
+
+## CF-1C-AUTOMATION-5 — bounded normal GUI Quit observed, 2026-11-08
+
+PR #224 merged into dev as `91bf7c53774e8559c486d3b59ad71be7b43e7f1b` after
+all fourteen required CI jobs and CodeQL passed. Follow-up branch
+`test/client-normal-quit` adds a fixed shell-configured Quit scenario and optional
+successful-dispatch completion hook to the existing atomic queue; no product edits.
+
+Run `20261108T152238Z-db6bbf2949e6`: pinned guest-only GUI Bridge grants verify;
+live main-window admission yields window 82 twice. One compact UI shell proof at
+50ms cadence independently verifies decoded output, PID 1063, 39x126 PTY and
+run-bound sentinel. Final independent process inventory binds app 1006 -> sidecar
+1013 -> shell 1063, plus unrelated adopted `/bin/sleep` control 961 with recorded
+start time, executable and parent. One normal foreground Cmd+Q targets window 82.
+The first post-Quit read finds every recorded app descendant gone while control
+961 retains its complete identity. Native RFB and Bridge images show the app
+window gone. No external app/sidecar/shell kill or reparenting accepted as proof;
+no claim about the internal graceful-versus-watchdog shutdown path.
+
+**Automatic completion passed:** successful dispatch finishes after 21 actions,
+without a final operator request. Owner exits 0; no timeout or error events.
+Owned cleanup plus independent atomic cleanup verify; five originals stopped,
+no clone/QA/tool processes remain. The unrelated control survives Quit and is
+removed only with the owned VM. Existing 1500s observer/1800s hold bounds retained,
+360s reserved for scenario admission, max three read-only post-Quit observations.
+
+[Quit evidence and 472 private-file hashes](evidence/client-baseline/normal-quit-observation.json)
+retain process identities, UI proof, raw frames/readbacks and cleanup. Original
+1,031 layout and 652 review-correction hashes reverify unchanged. All 73 kept
+guards pass; bypassing termination attribution or automatic completion fails the
+new guards and restored source passes. Ruff/format and repository checks pass.
+Source checkpoint `2969e5e0133a2d95bcbf650c1e1ceeeae54ce04d` is committed
+and remotely backed up on `test/client-normal-quit`, [draft PR #227](https://github.com/psmfd/FingerTrap/pull/227)
+against dev. Current-head CI/CodeQL status is tracked in the PR checks; require
+both green before maintainer merge review. Unrelated local files preserved.
+
+This is a bounded observation in the supported guest shell-default fixture, with
+paced input and pinned automation installed. The final desktop still contains
+an unrelated Peekaboo Screen Recording permission dialog despite successful
+Bridge capture/grant readbacks; unattended enrollment is not claimed resolved.
+No pristine Finder-install, live Pi/RPC pane cleanup, forced fallback or full
+acceptance case is inferred. Baseline stays one input PASS/eleven BLOCKED pending
+review; Pi v0.85.1-psmfd.1, #219 deferred, and every acceptance/provider/activation/
+backend/release gate unchanged. Never reuse the cleaned console pointer.
+
+**Next concrete slice: CF-1C-AUTOMATION-6.** Before a fresh boot, predeclare a
+bounded repeated normal LaunchServices launch against an already observed app.
+Verify same app/sidecar/proven shell and visible window identity, no duplicate
+process tree, fresh focus/input proof, and automatic owned cleanup. Keep hidden/
+minimized/startup/quit-race variants separate; no Pi/provider/credential changes.
+
+Reproduce with restrictive umask/no-clobber and private stdout/stderr:
+
+```sh
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+python3 scripts/client_baseline_quit_probe.py \
+  --archive .artifacts/pr-merge-20261021/golden-fix-apple/candidate.zip \
+  --runtime-archive .artifacts/client-baseline/inputs/pi-darwin-arm64-v0.85.1-psmfd.1.tar.gz \
+  > .artifacts/client-baseline/quit-probe-NEW-UNIQUE.log 2>&1
+```
+
+Terminal 1 runs the observer; Terminal 2 reads the explicit fresh run path from
+that private log, then `<fresh-run>/quit-observation/session.json`. At each waiting
+`nextIndex`, write a new no-clobber `request-NN.json` (two digits). Complete normal
+permission enrollment using freshly observed native coordinates. Queue only
+`{"action":"quit-probe"}` once at the current index; successful verification
+finishes automatically. No final finish request and no cleaned pointer reuse.
 
 ## CF-1C-REVIEW-1 — corrections implemented and locally/live verified
 
