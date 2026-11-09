@@ -1,5 +1,63 @@
 # CF-1C session handoff — 2026-11-09
 
+## Session close — evidence coverage corrected, 2026-11-09
+
+**First resume action:** fetch origin, read this handoff, then refresh #227's
+maintainer review, CodeRabbit reviews/threads and current-head checks against dev.
+PR is ready/open/unmerged, head `76c1269c6699b86456dc38aa050d2aeb4ff30543`. Maintainer alone decides
+review/optional scans and merge. **Do not merge or enable auto-merge.**
+
+CF-1C-REVIEW-EVIDENCE-1 is implemented, locally verified, committed and remotely
+backed up on the same PR: split `d8c2139`, optimization-safe recipe `76c1269`.
+Summary schema v2 retains all observations/run/tested identities/limitations and
+independent review. Two relative schema-v1 hash manifests hold 276 complete entries
+each. Strict parsing rejects duplicate keys; the disjoint union equals all original
+552 path/hash values. Original summary SHA-256:
+`0d6a946906cb9f574013a788ed2db41c27c7ea37426a8e6f63c1c5994b3b57fe`.
+No raw private evidence published; no observation or acceptance status changed.
+
+Actual coverage verification: prior GitHub files API omitted the summary patch;
+after splitting, each of the three API patches reconstructs its committed file
+byte for byte. Completed full review [5826441662](https://github.com/psmfd/FingerTrap/pull/227#pullrequestreview-5826441662) at 2026-11-09T13:22:06Z, commit `76c1269c6699b86456dc38aa050d2aeb4ff30543`, selects all 16 PR files including the summary and both manifests, with no skipped/unavailable/incomplete files reported.
+Full-review requests: [initial](https://github.com/psmfd/FingerTrap/pull/227#issuecomment-6740355536)
+and [after recipe fix](https://github.com/psmfd/FingerTrap/pull/227#issuecomment-6740998209).
+No success was inferred merely from smaller sizes or green checks.
+
+Local checks: exact recombination/unchanged observation fields, normal recipe
+PASS and optimized execution fails closed (old recipe reproduced false PASS under
+`-O`); repository checks, Markdownlint, Prettier, local links and diff checks pass.
+Original split secret scan has zero findings; final handoff scan runs before commit.
+The bot marked the recipe thread resolved in 76c1269. **Docstring coverage remains
+10.71% versus 80%; this separate warning is not fixed or waived here.** Validate
+that item with the maintainer before any merge recommendation. Snapshot: CI 14/14 jobs successful; CodeQL 5/5 analyses successful, aggregate success; CodeRabbit check success.
+No new source or GUI execution; entire `scripts` tree still matches the tested
+implementation. No current-head CI success is implied by an older checkpoint.
+
+The reusable [evidence pattern](evidence/README.md) documents relative manifests,
+provenance, strict exact equivalence, consumer migration and actual review coverage.
+Schema and reproduction command: [baseline README](evidence/client-baseline/README.md#repeated-launch-evidence-schema).
+No repository script consumes this observation's hash mapping; other schemas stay
+unchanged. Copy-ready resume prompt: [NEXT_SESSION-client-review.md](NEXT_SESSION-client-review.md).
+
+Both ordered live validations remain complete; do not replay without a material
+change or a concrete failed check. Repeated launch: source 1b50acc, run
+20261109T014125Z-992ae8ee8730 (552 hashes). Then fresh Quit: source a3955ec,
+run 20261109T022608Z-7c143051d784 (472 hashes). Both owners exit 0 and cleanup
+verified. Five original VMs stopped; no owned clone/QA processes at shutdown.
+Permission-dialog and prior typing/Bridge-timeout limitations remain explicit.
+Never reuse a cleaned console pointer. Preserve private `.artifacts/`, unrelated
+`.local-testing/`, `LEGACY_pi_config_3579dc1.patch` and
+`NEXT_SESSION_pi-fold-reassessment.md`. Baseline **one input PASS/eleven BLOCKED**;
+Pi **v0.85.1-psmfd.1**, #219 Pi 1.3.0 deferred; every acceptance/provider/
+activation/backend/release gate retained. Existing CF-1 execution approval persists.
+
+This final closeout is on separate branch `docs/client-review-handoff-20261109-coverage`, based on
+76c1269. It supersedes the earlier a2d8881 handoff branch without changing #227's
+reviewed head. Read these records before switching back to `test/client-normal-quit`;
+do not push this documentation branch onto the PR merely to synchronize trackers.
+Issues #216/#217 and PR #227 receive immutable handoff links after backup. No merge,
+issue closure, auto-merge or activation is part of this session close.
+
 ## #227 source/evidence checks green — 2026-11-09
 
 Published source/evidence head `d89b7c994a022b142227c45eee8e283784a11695` passes

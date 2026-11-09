@@ -1,5 +1,9 @@
 # Agent runtime migration inventory
 
+Latest session: [coverage correction and resume handoff](HANDOFF-client-baseline-gui.md)
+and [copy-ready prompt](NEXT_SESSION-client-review.md). PR #227 remains with the
+maintainer for review and merge decision.
+
 **Active sequence: client foundation before further extension catalog import/review.**
 The maintainer selected [foundation #216](https://github.com/psmfd/FingerTrap/issues/216)
 and [packaged-client baseline #217](https://github.com/psmfd/FingerTrap/issues/217).
