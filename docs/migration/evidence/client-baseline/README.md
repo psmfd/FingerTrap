@@ -31,6 +31,9 @@ import json
 from pathlib import Path
 import subprocess
 
+if not __debug__:
+    raise RuntimeError("Run verification without -O or PYTHONOPTIMIZE")
+
 def unique_pairs(pairs):
     result = {}
     for key, value in pairs:

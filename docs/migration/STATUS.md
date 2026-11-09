@@ -1,3 +1,24 @@
+## CF-1C-REVIEW-EVIDENCE-1 — publication and review result
+
+Published `d8c2139a6cd92a02ebc8da9b952b3690c7b32c9d` to ready/open #227.
+GitHub files API now provides complete patches for summary and both manifests;
+reconstructing each added file from its API patch reproduces its committed bytes.
+Requested full CodeRabbit review in issuecomment-6740355536. Completed review
+[pullrequestreview-5826037330](https://github.com/psmfd/FingerTrap/pull/227#pullrequestreview-5826037330)
+selects all three JSON files, with no skipped/unavailable/incomplete file section.
+Thus the prior three-file coverage gap is resolved at d8c2139; file sizes alone
+were not used as evidence. Review was incremental (eight changed files), despite
+the full-review request; request full review again after the recipe correction.
+
+Bot found a valid documentation-recipe issue: Python optimization disables
+assertions. Reproduced the old recipe printing PASS under `python3 -O`; add an
+explicit RuntimeError when `__debug__` is false before parsing. Normal strict
+verification must pass; optimized invocation must fail closed. JSON artifacts
+remain unchanged. Earlier docstring-coverage warning (10.71% vs 80%) is separate
+and remains for maintainer review; no docstring/product change in this task.
+All fourteen current-head CI jobs pass; Rust CodeQL still running at snapshot,
+so full current-head CodeQL success is not yet claimed. No new VM run or merge.
+
 ## CF-1C-REVIEW-EVIDENCE-1 — reviewable hash manifests, 2026-11-09
 
 Maintainer requested correction of CodeRabbit's unavailable repeat-launch evidence

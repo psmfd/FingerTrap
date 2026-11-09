@@ -15,7 +15,8 @@ For a split record:
 - Record each manifest's relative path, entry count and byte SHA-256 in the
   summary. Retain the original record's immutable Git commit, path and byte
   SHA-256 for provenance; preserve all other observation fields exactly.
-- Parse JSON with duplicate-key rejection. Resolve references relative to the
+- Use checks that remain effective with Python optimization enabled, or reject
+  optimized execution before verification. Parse JSON with duplicate-key rejection. Resolve references relative to the
   summary, verify hashes/run IDs/counts, reject overlap, then combine mappings.
   Compare the result exactly against the original committed mapping, including
   every path and hash value. Counts alone cannot establish equivalence.
