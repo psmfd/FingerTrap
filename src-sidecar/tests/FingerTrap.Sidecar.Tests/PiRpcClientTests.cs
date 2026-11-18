@@ -333,11 +333,34 @@ public sealed class PiRpcClientTests
     }
 
     [Fact]
+    public async Task ExitDrain_CompletionDoesNotWaitForTimeout()
+    {
+        var drained = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        var wait = PiRpcClient.WaitForExitDrainAsync(drained.Task, TimeSpan.FromMinutes(1));
+        Assert.False(wait.IsCompleted);
+
+        drained.SetResult();
+        await wait.WaitAsync(TestBudget, TestContext.Current.CancellationToken);
+    }
+
+    [Fact]
+    public async Task ExitDrain_TimeoutDoesNotRequireReaderCompletion()
+    {
+        var stalled = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        await PiRpcClient.WaitForExitDrainAsync(stalled.Task, TimeSpan.FromMilliseconds(25))
+            .WaitAsync(TestBudget, TestContext.Current.CancellationToken);
+
+        Assert.False(stalled.Task.IsCompleted);
+        stalled.SetResult();
+    }
+
+    [Fact]
     public async Task Shutdown_EofHonored_FlushesAndExitsZero()
     {
         await using var client = StartFakePi(
             Step("waitForEof", true),
             Step("writeLine", """{"type":"session_info_changed","flushed":true}"""),
+            Step("writeStderrLine", "final shutdown diagnostic"),
             Step("exit", 0));
 
         await client.ShutdownAsync(TestContext.Current.CancellationToken)
@@ -345,6 +368,7 @@ public sealed class PiRpcClientTests
 
         var fault = await client.Exited.WaitAsync(TestBudget, TestContext.Current.CancellationToken);
         Assert.Equal(0, fault.ExitCode);
+        Assert.Contains("final shutdown diagnostic", fault.StderrTail, StringComparison.Ordinal);
 
         // stdin-EOF is the flushing shutdown: the child's final line made
         // it into the event stream before the channel completed.
