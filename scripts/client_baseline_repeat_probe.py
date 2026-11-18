@@ -29,6 +29,7 @@ def require_repeat(before, after, first, second, window, observed_window, nonce)
 
 
 def reopen_once(run, root, deadline):
+    """Activate Finder and deliver one LaunchServices open for the installed app."""
     # Normal user launch semantics: activate Finder, then reopen the existing app.
     shell.guest(
         run,
@@ -43,6 +44,7 @@ def reopen_once(run, root, deadline):
 
 
 def repeat_probe(run, root, deadline):
+    """Compare independently observed window, shell and process state across reopen."""
     root.mkdir(mode=0o700)  # No replay of partial launch or proof delivery.
     pilot.require_bridge(
         shell.cli(run, root, "admission", deadline, "permissions", "status"), True
@@ -109,12 +111,14 @@ def repeat_probe(run, root, deadline):
 
 
 def request_step(request, index):
+    """Recognize the fixed reopen request alongside the existing permission actions."""
     if request == {"action": "repeat-probe"}:
         return {"Name": f"step-{index:02d}", "Repeat": True}
     return pilot.request_step(request, index)
 
 
 def scenario_deadline(deadline):
+    """Reserve the full reopen observation window before starting the scenario."""
     now = time.monotonic()
     if deadline - now < SCENARIO_SECONDS:
         raise TimeoutError("Insufficient reserved repeat budget; scenario not started")
@@ -122,6 +126,7 @@ def scenario_deadline(deadline):
 
 
 def observe(run, image):
+    """Start the permission queue from the exact first frame of the owned guest."""
     pilot.atomic.vnc.connection(run)
     if image != run / "console-first-frame.png" or not image.is_file():
         raise ValueError("Exact fresh owned first frame required")
@@ -132,6 +137,7 @@ def observe(run, image):
     pilot.readback(run, root, deadline)
 
     def dispatch(run, step, root, deadline):
+        """Run the fixed reopen scenario or let enrollment use its remaining time."""
         if step.get("Repeat"):
             repeat_probe(run, root / "repeat", scenario_deadline(deadline))
         else:
@@ -149,6 +155,7 @@ def observe(run, image):
 
 
 def main():
+    """Run the reopen observer under the owned Tart session and cleanup handler."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--archive", type=Path, required=True)
     parser.add_argument("--runtime-archive", type=Path, required=True)

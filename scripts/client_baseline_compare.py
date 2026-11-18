@@ -385,6 +385,7 @@ def permission_step(request, index):
 def permission_session(
     run, root, deadline, request_step=permission_step, dispatch=None, complete=None
 ):
+    """Process bounded requests from this guest until finish or scenario completion."""
     # Files are private to this new explicit run, never selected via a pointer.
     for index in range(40):
         request = root / f"request-{index:02d}.json"

@@ -44,6 +44,7 @@ class QuitGuards(unittest.TestCase):
         }
 
     def test_admission_requires_real_proven_ancestry_and_unrelated_control(self):
+        """Reject a changed executable, broken shell ancestry or a dependent control."""
         good = self.rows()
         admitted = quit_probe.admit_tree(good, 10, 12, 20)
         self.assertEqual(set(admitted["owned"]), {"10", "11", "12", "13"})
@@ -59,6 +60,7 @@ class QuitGuards(unittest.TestCase):
                 quit_probe.admit_tree(rows, 10, 12, 20)
 
     def test_shutdown_rejects_reparented_children_and_replaced_or_missing_control(self):
+        """Require every recorded descendant to exit and the original control to survive."""
         rows = self.rows()
         admitted = quit_probe.admit_tree(rows, 10, 12, 20)
         survivor = {20: rows[20]}
@@ -73,6 +75,7 @@ class QuitGuards(unittest.TestCase):
                 quit_probe.require_shutdown(bad, admitted)
 
     def test_quit_delivered_once_while_reads_poll_and_control_loss_is_fatal(self):
+        """Allow repeat observations of shutdown after a single Quit delivery."""
         before = self.rows()
         admitted = quit_probe.admit_tree(before, 10, 12, 20)
         after = {20: before[20]}
@@ -111,6 +114,7 @@ class QuitGuards(unittest.TestCase):
             quit_probe.request_step({"action": "quit-probe", "command": "anything"}, 2)
 
     def test_parser_preserves_start_time_and_rejects_duplicate_or_empty_inventory(self):
+        """Keep process start time available to detect a reused PID."""
         value = quit_probe.processes(
             b" PID PPID STARTED COMM\n20 1 Sat Nov  7 21:59:00 2026 /bin/sleep\n"
         )
@@ -120,6 +124,7 @@ class QuitGuards(unittest.TestCase):
                 quit_probe.processes(raw)
 
     def test_queue_finishes_only_after_successful_fixed_dispatch(self):
+        """Only verified Quit can finish the owned request queue."""
         atomic = quit_probe.pilot.atomic
         for fails in (False, True):
             with tempfile.TemporaryDirectory() as directory:
@@ -137,6 +142,7 @@ class QuitGuards(unittest.TestCase):
                     )
 
                     def dispatch(*args):
+                        """Check that completion has yet to be recorded during dispatch."""
                         self.assertEqual(
                             json.loads((root / "session.json").read_text())["phase"],
                             "waiting",
