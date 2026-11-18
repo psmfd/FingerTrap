@@ -3508,3 +3508,83 @@ remain unchanged. Earlier docstring-coverage warning (10.71% vs 80%) is separate
 and remains for maintainer review; no docstring/product change in this task.
 All fourteen current-head CI jobs pass; Rust CodeQL still running at snapshot,
 so full current-head CodeQL success is not yet claimed. No new VM run or merge.
+
+## 2026-11-18 — #230 merged; CF1-05 preparation
+
+TheSemicolon merged #230 at 17:23:05Z as `34a755a`. Fetched dev contains that
+commit. The merge tree matches both reviewed `d6151ba` and the tested PR
+package source `9bbf099`. Integrated dev CI 44358074769 has four queued local
+Tart macOS jobs. The package workflow needs dispatch on dev. Build the exact
+merge in the existing local Tart lane and verify it before CF1-05 setup.
+
+Dispatched dev Apple Silicon run 44358288656 at 34a755a. The existing shared
+controller drains it and the four dev macOS jobs. CF1-05 checks the pinned Pi
+executable and installed app identities, packaged sidecar smoke, GUI local
+command interaction, same-process PTY resize, pane close and independent
+sibling/process readback. A fresh owned Tart guest uses no credentials or
+provider turn. Existing CF1-04 and ordered launch/quit evidence stays scoped
+to its original packages.
+
+Integrated dev CI 44358074769 passed 14/14, CodeQL passed, and artifact
+14456220605 from run 44358288656 verifies against commit 34a755a. The five
+GitHub Tart clones cleaned and runner group 5 is empty. First CF1-05 guest
+20261118T174353Z-9f32c02fedd5 stopped at the guest setup version check after
+staging only the Pi binary. No smoke or GUI case ran. Owner cleanup verified.
+The verified runtime archive contains package metadata and support files.
+Next: stage the full verified distribution in a fresh clone and check version
+and executable hashes before smoke and GUI observations.
+
+## 2026-11-18 — CF1-05 passed on the integrated package
+
+Fresh Tart run 20261118T175156Z-ea07a7556335 verified installed ARM64 app
+hashes and the full Pi distribution, pin v0.85.1-psmfd.1 and CLI version
+0.85.1. Packaged sidecar --require-pi smoke passed. It logged an automatic
+fd download attempt inside the guest before the GUI phase. Relaunched via
+the guest's normal open command with PI_OFFLINE=1. The Pi pane explicitly
+skipped tool downloads, rendered its version, accepted /hotkeys and showed
+the shortcuts. No model turn or credentials were used.
+
+Independent stty sampling showed Pi PID 973 on ttys001 changing from 39×126
+to 39×61. After Pi pane close, that process disappeared while shell PIDs
+900 and 1007 and the original app/sidecar remained. First frame 17:52:13Z,
+explicit finish 17:55:29Z, owner exit 0. Both QA clones removed, all five
+original Tart entries stopped. The sanitized receipt hash-checks private
+observations. CF1-05 PASS, five PASS and seven BLOCKED across named packages.
+Next: scope CF1-06 on artifact 14456220605. Existing gates and Pi pin hold.
+
+## 2026-11-18 — CF1-06 fixture-backed native RPC approved
+
+Use integrated artifact 14456220605 at dev 34a755a and real Pi
+v0.85.1-psmfd.1. Stage only verified files and guest loopback fixture in a
+fresh owned local Tart clone. Run native RPC launch and streaming, abort and
+successful follow-up, confirmation round trip and session-browser resume.
+Require independent fixture, session and process observations and verified
+cleanup. Keep the 30-minute session with five minutes reserved. Real provider
+authentication and all baseline acceptance and upgrade gates stay separate.
+
+Fresh guest 20261118T180858Z-b0bd2d3784ea verified app and Pi bytes and opened
+the native RPC pane. Native text input lowercased the first prompt while the
+fixture expected uppercase, so the endpoint rejected it. No streaming pass.
+Quit the app, verified the Pi and fixture exited, and removed the guest. Retry
+in a fresh clone with lowercase fixed prompts in both fixtures. Keep this
+first result private and independent of the retry.
+
+## 2026-11-18 — CF1-06 passed with real Pi and a guest loopback model
+
+Fresh Tart run 20261118T181228Z-9070615c7832 verified integrated artifact
+14456220605 and Pi v0.85.1-psmfd.1. Native RPC visibly streamed its first
+chunk before release, rendered the final chunk and returned to idle. The
+held abort request disconnected without completing. Recovery used the
+same Pi PID 759. The confirmation extension recorded true before the model
+request. Pane closure removed PID 759, then Session Browser resume opened
+PID 923 under the same sidecar, restored history, and appended a follow-up
+to the same saved session. No provider authentication was exercised.
+
+App, sidecar, Pi and fixture all exited before explicit finish at 18:15:57Z,
+3m12s after the first frame. Both private VM cleanup receipts and independent
+inventory verify removal of the two owned guests and preservation of five
+stopped originals. Both observer wrappers returned 1 when a final read-only
+Tart exec poll timed out during VM teardown. All passing observations and
+shutdown receipts precede the timeout. Sanitized evidence hashes and exact
+fixture sources retained. Worksheet now six PASS and six BLOCKED. Next:
+scope supported provider login in CF1-07 and keep existing gates.

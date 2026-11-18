@@ -1,3 +1,103 @@
+## Pi upgrade and SDK evaluation tracker — 2026-11-18
+
+The maintainer agreed to this sequence and approved execution of the first slice
+below using Tart. Additional packages and changes to local machine configuration
+require separate approval. Candidate selection, release/pin promotion, SDK
+adoption and managed activation remain separate decisions.
+
+| Work                                                                                                                                         | Current state                                                                                                                     | Next result or gate                                                                                                                                                                                                                                                                            |
+| -------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Packaged-client baseline ([#217](https://github.com/psmfd/FingerTrap/issues/217))                                                            | CF1-01–03 PASS on #225, CF1-04 PASS on verified #230 candidate, CF1-05–06 PASS on integrated artifact 14456220605, six BLOCKED.   | Scope CF1-07 supported provider login. All mandatory rows and maintainer acceptance are required.                                                                                                                                                                                              |
+| Fork delta ([#210](https://github.com/psmfd/FingerTrap/issues/210))                                                                          | Read-only review complete. Nine paths conflict in the test merge.                                                                 | Recommend qualifying a v1.5.2-based fork through a separate scoped port. Keep the v1.3.0 candidate as fallback if the port or qualification materially delays a needed update.                                                                                                                 |
+| Packaged comparison ([#219](https://github.com/psmfd/FingerTrap/issues/219))                                                                 | Deferred pending accepted #217 and separate plan approval.                                                                        | Select one candidate. Prefer a `v1.5.2`-based fork if the delta supports it. Keep `v1.3.0` available if validating the newer base would materially delay a needed update. Amend the comparison plan if candidate selection changes.                                                            |
+| Production CLI release/pin ([#210](https://github.com/psmfd/FingerTrap/issues/210))                                                          | Pending packaged comparison and release decision.                                                                                 | Resolve remaining dependency disposition, verify exact published artifacts and affected RPC goldens, and review the pin transaction and rollback before promotion.                                                                                                                             |
+| Profile and worker contract ([#201](https://github.com/psmfd/FingerTrap/issues/201), [#216](https://github.com/psmfd/FingerTrap/issues/216)) | Design and compatibility review can be prepared now. Foundation implementation follows its reviewed sequence.                     | Define explicit profile, resource, session, tool and credential boundaries and the versioned .NET command/event interface. Complete profile isolation before running a worker prototype.                                                                                                       |
+| SDK evaluation ([#202](https://github.com/psmfd/FingerTrap/issues/202))                                                                      | Worker prototype gated on profile isolation and a selected, qualified fork revision. Production CLI pin promotion is independent. | Compare one supervised JS worker per managed native session with executable/RPC from the same fork source. Prove a concrete control benefit and check lifecycle parity, failure cleanup, packaging and rollback before a successor ADR. Keep executable/RPC for PTY and user-managed sessions. |
+
+Latest upstream reference: [Pi v1.5.2](https://github.com/earendil-works/pi/releases/tag/v1.5.2)
+and its [SDK documentation](https://github.com/earendil-works/pi/blob/v1.5.2/packages/coding-agent/docs/sdk.md).
+Existing evidence: [Pi 1.3.0 qualification](evidence/pi-next/README.md),
+[promotion and rollback](evidence/pi-next/promotion-rollback.md), and
+[ADR-0034](../../adrs/0034-own-agent-runtime-and-retire-pi-config.md).
+
+### CF1-04 CodeRabbit corrections — pushed and verified
+
+Path fix `2e0fa03` and docstring follow-up `d6151ba` are pushed to
+[#230](https://github.com/psmfd/FingerTrap/pull/230). Each new PTY case
+reproduced its issue on `e501392`. The corrected legacy Unix PTY resolves
+symlink and `..` components as Unix does, reports permission-denied lookup
+accurately, and checks execute access under the launch credentials. The
+ordinary child exit-13 control still passes. Locally, 418 sidecar tests pass
+and 12 skip. All 60 baseline probe tests pass. Python AST comparison verifies
+that the five probe and test files differ only in docstrings.
+
+[CI 44347487313](https://github.com/psmfd/FingerTrap/actions/runs/44347487313)
+passed 14/14, and the [Apple Silicon candidate](https://github.com/psmfd/FingerTrap/actions/runs/44347487083)
+passed package and smoke. Each of the five macOS GitHub jobs ran on its own
+local Tart clone. The runner group is empty and all five clones were removed.
+Verified artifact 14445949024 at synthetic build `9bbf099` matches the PR head
+tree, outer and inner archive digests, and three installed ARM64 binary hashes.
+
+Fresh GUI run `20261118T164517Z-9538a22d2370` showed distinct actionable
+diagnostics for inaccessible traversal and an owned mode-0401 file. Samples
+showed only the existing shell for those cases. The symlink target printed its
+start marker, accepted input and exited 13. The guest finished 2m18s after its
+first frame, was removed, and five original Tart entries were stopped.
+[Sanitized retest](evidence/client-baseline/pi-path-review-retest-observation.json).
+
+All three CodeRabbit threads are resolved. The [completed CodeRabbit review](https://github.com/psmfd/FingerTrap/runs/134983676965)
+covered `d6151ba` and reported [no actionable findings](https://github.com/psmfd/FingerTrap/pull/230#issuecomment-6981386811).
+Before merge, GitHub reported a clean merge state against dev and no formal approval or
+change request. The #227 docstrings are included in the new head. The latest
+review reports no separate docstring coverage score.
+
+### CF1-05 real Pi PTY — passed on integrated dev
+
+The maintainer merged #230 as `34a755a` on dev. Its tree matches the reviewed
+head `d6151ba` and the previous candidate source exactly. Integrated
+[dev CI](https://github.com/psmfd/FingerTrap/actions/runs/44358074769) passed
+14/14 and [CodeQL](https://github.com/psmfd/FingerTrap/actions/runs/44358075678)
+passed. The [integrated package](https://github.com/psmfd/FingerTrap/actions/runs/44358288656)
+and four macOS CI jobs ran in five disposable local Tart clones. All were
+removed and runner group 5 is empty. Artifact 14456220605 matches the merge
+commit, the outer and inner archive digests, and three installed ARM64 hashes.
+
+Fresh GUI run `20261118T175156Z-ea07a7556335` verified the full pinned
+distribution `v0.85.1-psmfd.1` and reported version `0.85.1`. Packaged
+sidecar smoke passed with `--require-pi`. GUI Pi ran in offline mode,
+rendered `/hotkeys`, and split right resized the same Pi PID 973 on `ttys001`
+from 39×126 to 39×61. Closing the Pi pane removed PID 973 while both
+shells survived. Owner exit 0 and independent inventory verified 3m16s to
+explicit finish and full cleanup. The earlier binary-only setup stopped at
+the version check and also cleaned up. [Sanitized result](evidence/client-baseline/real-pi-pty-observation.json).
+
+### CF1-06 native Pi RPC — passed with a guest loopback model
+
+Fresh Tart run `20261118T181228Z-9070615c7832` verified installed artifact
+14456220605 and real Pi `v0.85.1-psmfd.1`. The packaged native RPC pane showed
+the first stream chunk before release and the final chunk after release.
+Abort disconnected the held model request. The next prompt succeeded in the
+same Pi process. The guest extension recorded the confirmation before the
+turn continued. Session Browser resumed the saved transcript in a new Pi
+process and appended a follow-up to the same session. [Sanitized result](evidence/client-baseline/native-pi-rpc-observation.json).
+
+The first guest's fixture rejected the prompt after Tart delivered lowercase.
+A fresh guest used fixed lowercase prompts. Both guests independently
+verified app, Pi and fixture exit and clone removal. The observer wrapper
+timed out on a final poll during teardown after the shutdown evidence had
+been recorded. Five original Tart entries remain stopped.
+
+**Resume action:** scope CF1-07 supported provider login, including the
+supported guest network and credential-entry path. CF1-06 used a deterministic
+guest loopback model. Worksheet evidence is six PASS and six BLOCKED across
+named packages.
+Baseline acceptance, #219, release, pin, SDK and managed activation remain gated.
+
+Reproduce readback with `gh api repos/psmfd/FingerTrap/pulls/230`,
+`gh api repos/psmfd/FingerTrap/pulls/230/comments`,
+`gh api repos/psmfd/FingerTrap/actions/runs/44347487313/jobs`, and
+`gh api repos/psmfd/FingerTrap/actions/runs/44347487083/artifacts`.
+
 ## CF-1C-REVIEW-EVIDENCE-1 — publication and review result
 
 Published `d8c2139a6cd92a02ebc8da9b952b3690c7b32c9d` to ready/open #227.

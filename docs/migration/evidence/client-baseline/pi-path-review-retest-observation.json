@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "runId": "20261118T164517Z-9538a22d2370",
+  "retests": "pi-path-drain-retest-observation.json",
+  "pullRequest": 230,
+  "artifact": {
+    "kind": "cf1-04-corrected-candidate",
+    "campaign": "CF-1",
+    "artifactId": 14445949024,
+    "run": "https://github.com/psmfd/FingerTrap/actions/runs/44347487083",
+    "sourceHead": "d6151ba89d15626922184296dff6c1c37fedfe8b",
+    "buildCommit": "9bbf099996c4e7fd6528afbecc91fe5eea8b5dad",
+    "sourceTree": "3d7287f88790b3b25f01bec9f2a1e42a0a915dda",
+    "archiveDigest": "sha256:19517cf08899f542a01809540ae9d76831034df3c11cb18072eb2ac9c94cc42f",
+    "appArchiveDigest": "sha256:d08eb1baede6473fcfd946584171a4fd6c214f8e48ad622ec08d8cf1d65a703b",
+    "dmgDigest": "sha256:3d113b13ef6448a32c16500fa7a513f01fa09b135187287174c60b7cefe66b5b",
+    "appVersion": "0.1.0",
+    "target": "aarch64-apple-darwin",
+    "productionRuntimeSelection": "v0.85.1-psmfd.1",
+    "distribution": "unsigned candidate; not notarized; not a published release",
+    "runner": "ft-actions-job-20261118t162830z-aed9fe14"
+  },
+  "binaries": [
+    {
+      "name": "fingertrap",
+      "sha256": "9937ffc6377dd7547e2444aa47a93800653925bdec5dad7ed756a32886286ff2",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "fingertrap-sidecar",
+      "sha256": "06169a9bb8ec3c25496c827d38df78d353eccba33c8751c7b5ed72a782352f10",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "libporta_pty.dylib",
+      "sha256": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3",
+      "architecture": "Mach-O 64-bit dynamically linked shared library arm64"
+    }
+  ],
+  "guest": {
+    "base": "ghcr.io/cirruslabs/macos-sequoia-base@sha256:3f4d14a5ffb9efd3bda2ae0184fd4bc2773d924ff8b7565f958761420ec41a0c",
+    "macOS": "15.7.7",
+    "build": "24G720",
+    "tart": "2.32.1"
+  },
+  "observationWindow": {
+    "holdSeconds": 1800,
+    "reservedSeconds": 300,
+    "firstFrameUtc": "2026-11-18T16:45:33+00:00",
+    "explicitFinishUtc": "2026-11-18T16:47:51+00:00"
+  },
+  "cases": [
+    {
+      "case": "CF1-04",
+      "status": "PASS",
+      "observation": "Artifact 14445949024 named the selected inaccessible path and reported could not be accessed. It named the owned mode-0401 path and reported is not executable. Both messages included settings guidance, and process samples showed only the existing fixture shell. A configured symlink followed by .. launched the shell fixture at its real target, displayed the unique start marker and reported ordinary exit 13 after input. The process sample showed the extra fixture interpreter under the sidecar.",
+      "evidence": [
+        {
+          "path": "fixture-initial.json",
+          "sha256": "d9e1ae3a101bdd2a13d5674428c742bb69076ea940ec799c7f910151391bb25f"
+        },
+        {
+          "path": "fixture-inaccessible.json",
+          "sha256": "085153b5665e750c7dac95bdb3d91732088635f832998a830c5a6a5e4f607e0c"
+        },
+        {
+          "path": "fixture-nonexecutable.json",
+          "sha256": "8de8754923eaef45fb5275d607d90f764b27b9c8e764b94b7c2ceda1f75fc2bb"
+        },
+        {
+          "path": "fixture-symlink.json",
+          "sha256": "ee300b8d31f3e334a418391792b4feebd00e6bea3599f124f6370668a7e85812"
+        },
+        {
+          "path": "pi-process-proof.json",
+          "sha256": "5bcdecfc4a2a6965a429910ac7e4b2a2ed1a8eb1d7dd85b110930e8f33a092e6"
+        },
+        {
+          "path": "console-fedc766c907d.png",
+          "sha256": "88e9ce74642d24ae24d0db9ece3177199e69f92d5bdc9ce4dd1aa4e6457eec74"
+        },
+        {
+          "path": "console-ce627f0be398.png",
+          "sha256": "99a3b772efbc3cbd55ab6820273a3a56fcbe949e296edf8c875cf26faab0e61d"
+        },
+        {
+          "path": "console-2b48f6a898a8.png",
+          "sha256": "937d0d2def0ca4f3a7ee673d0cf0c78f1fa7b2f471f6c55207da80e610b473d4"
+        },
+        {
+          "path": "console-39284afea388.png",
+          "sha256": "a5eb295eb744bebb34581e3c98c268bea3d90ba2ed50e144eb97834a52ede0d9"
+        }
+      ],
+      "observer": "native Tart VNC and independent process inventory",
+      "mode": "observed-gui",
+      "utc": "2026-11-18T16:47:51.503215+00:00"
+    }
+  ],
+  "settledProcesses": {
+    "inaccessible": {
+      "epoch": 1795020386.963456,
+      "app": {
+        "pid": 761,
+        "parent": 1,
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+      },
+      "sidecar": {
+        "pid": 766,
+        "parent": 761,
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+      },
+      "children": [
+        {
+          "pid": 813,
+          "parent": 766,
+          "executable": "/bin/zsh"
+        }
+      ]
+    },
+    "ownerDenied": {
+      "epoch": 1795020415.0775611,
+      "app": {
+        "pid": 878,
+        "parent": 1,
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+      },
+      "sidecar": {
+        "pid": 882,
+        "parent": 878,
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+      },
+      "children": [
+        {
+          "pid": 929,
+          "parent": 882,
+          "executable": "/bin/zsh"
+        }
+      ]
+    },
+    "symlinkLaunched": {
+      "epoch": 1795020439.942975,
+      "app": {
+        "pid": 991,
+        "parent": 1,
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+      },
+      "sidecar": {
+        "pid": 995,
+        "parent": 991,
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+      },
+      "children": [
+        {
+          "pid": 1043,
+          "parent": 995,
+          "executable": "/bin/zsh"
+        },
+        {
+          "pid": 1093,
+          "parent": 995,
+          "executable": "/bin/sh"
+        }
+      ]
+    }
+  },
+  "verification": {
+    "redPtyRegressions": 3,
+    "localSidecarPassed": 418,
+    "localSidecarSkipped": 12,
+    "pythonProbeTestsPassed": 60,
+    "ciRun": 44347487313,
+    "ciPassed": 14,
+    "localTartJobs": [
+      {
+        "jobId": 134953726201,
+        "runner": "ft-actions-job-20261118t162830z-aed9fe14",
+        "registrationId": 130
+      },
+      {
+        "jobId": 134953733212,
+        "runner": "ft-actions-job-20261118t163514z-1db3655f",
+        "registrationId": 133
+      },
+      {
+        "jobId": 134953733374,
+        "runner": "ft-actions-job-20261118t163248z-4ae7e611",
+        "registrationId": 131
+      },
+      {
+        "jobId": 134953733382,
+        "runner": "ft-actions-job-20261118t163403z-09855510",
+        "registrationId": 132
+      },
+      {
+        "jobId": 134953733553,
+        "runner": "ft-actions-job-20261118t163857z-7d0c03c7",
+        "registrationId": 134
+      }
+    ],
+    "localRunnerRegistrationsAfter": 0
+  },
+  "cleanup": {
+    "ownerExit": 0,
+    "ownedCloneAbsent": true,
+    "independentBeforeAfterMatch": true,
+    "originalEntriesStopped": 5
+  },
+  "limits": [
+    "CF1-04 retest on the unmerged PR candidate with a synthetic executable fixture. Earlier package results retain their original attribution.",
+    "Real Pi PTY, provider and acceptance remain gated. Production pin v0.85.1-psmfd.1."
+  ]
+}

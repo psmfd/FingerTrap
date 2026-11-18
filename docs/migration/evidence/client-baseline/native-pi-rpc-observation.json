@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "runId": "20261118T181228Z-9070615c7832",
+  "artifact": {
+    "kind": "cf1-05-integrated-candidate",
+    "campaign": "CF-1",
+    "artifactId": 14456220605,
+    "run": "https://github.com/psmfd/FingerTrap/actions/runs/44358288656",
+    "sourceHead": "34a755a09868b9fb147acdbbbb5332a80e395dcc",
+    "buildCommit": "34a755a09868b9fb147acdbbbb5332a80e395dcc",
+    "sourceTree": "3d7287f88790b3b25f01bec9f2a1e42a0a915dda",
+    "archiveDigest": "sha256:d15eeeb601286158ac83ca69806d520e1c89b9c4ef82cfd053fe0c6690775d78",
+    "appArchiveDigest": "sha256:9bf32f7ae9db0af83907060234a99007d81b954f8f7d883a69b22622a5bdd354",
+    "dmgDigest": "sha256:f6b1838e7d906adb1924fec6487dcf70d18d5a1b2b761f1f0b5681e33ae6e54a",
+    "appVersion": "0.1.0",
+    "target": "aarch64-apple-darwin",
+    "productionRuntimeSelection": "v0.85.1-psmfd.1",
+    "distribution": "unsigned candidate; not notarized; not a published release",
+    "runner": "ft-actions-job-20261118t174006z-12db0416"
+  },
+  "binaries": [
+    {
+      "name": "fingertrap",
+      "sha256": "9937ffc6377dd7547e2444aa47a93800653925bdec5dad7ed756a32886286ff2",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "fingertrap-sidecar",
+      "sha256": "cd67fbdad4eb707b7b520918a71ee6fe3d66a782bba5054ed4d26ca966323ed4",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "libporta_pty.dylib",
+      "sha256": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3",
+      "architecture": "Mach-O 64-bit dynamically linked shared library arm64"
+    }
+  ],
+  "runtime": {
+    "tag": "v0.85.1-psmfd.1",
+    "version": "0.85.1",
+    "archiveSha256": "e0e0331d478af7724fa24d780a8d4abc0033c6f5ee7c0d45dddae6f922e5c4cb",
+    "executableSha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5"
+  },
+  "fixtures": {
+    "mode": "Real Pi with deterministic guest loopback provider",
+    "provider": "canned",
+    "model": "canned-model",
+    "address": "127.0.0.1",
+    "authenticatedProviderTurn": false,
+    "files": [
+      {
+        "path": "native-rpc-fixtures/model.py",
+        "sha256": "558ca722d8408da51cf01735b7cee2b4cfc383fff57cc12ddff9980d288efcfd"
+      },
+      {
+        "path": "native-rpc-fixtures/confirm.ts",
+        "sha256": "d72fc5b0dc8cc2b2f1e71051de30b62e34c49ab7e5b6168fb4fcd37eb5fde351"
+      }
+    ]
+  },
+  "guest": {
+    "base": "ghcr.io/cirruslabs/macos-sequoia-base@sha256:3f4d14a5ffb9efd3bda2ae0184fd4bc2773d924ff8b7565f958761420ec41a0c",
+    "macOS": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.7\nBuildVersion:\t\t24G720",
+    "tart": "2.32.1"
+  },
+  "observationWindow": {
+    "holdSeconds": 1800,
+    "reservedSeconds": 300,
+    "firstFrameUtc": "2026-11-18T18:12:45+00:00",
+    "explicitFinishUtc": "2026-11-18T18:15:57+00:00"
+  },
+  "cases": [
+    {
+      "case": "CF1-06",
+      "status": "PASS",
+      "observation": "Integrated FingerTrap opened the native RPC pane with real pinned Pi and the guest-only canned model. It rendered the first chunk while held, rendered the final chunk and settled after release, and Abort disconnected the second held request. Recovery succeeded in the same Pi process. The guest extension acknowledged the GUI confirmation before the dialog turn continued. Session Browser resume restored prior history with a new Pi process, and a follow-up appended to the same saved session. App, Pi and model fixture exited. No provider login or authenticated turn was involved.",
+      "evidence": [
+        {
+          "path": "fixture.json",
+          "sha256": "7f3fe8699996c6666e21cdd7bfe7f0291f3571d31fde1ee458ee8aec3e18b7a1"
+        },
+        {
+          "path": "release-receipt.json",
+          "sha256": "49327b8531c2b8f978b24061ef0d931c74c82d39ab8b70b07650dd218c917b4c"
+        },
+        {
+          "path": "cf106-proof.json",
+          "sha256": "6aad53a316d1907b4d700812fa6412d852d4d12d06e7581e7f76ae24cf6063cb"
+        },
+        {
+          "path": "shutdown-proof.json",
+          "sha256": "26429f46fac0b6e819ea53b416f2be7c9445f271c0f1ec3b46967ceb67447a66"
+        },
+        {
+          "path": "console-9dfabd1f5f0c.png",
+          "sha256": "dc5bf64dc72654e7af219e63c6067bbde8020957d5625bba558ad12eb8e30e7d"
+        },
+        {
+          "path": "console-8197f249b690.png",
+          "sha256": "57ec5f5e104753db831ee5d84e9775eea1c6cebb9a47839374371396ca25af0c"
+        },
+        {
+          "path": "console-4d36ed9c13e4.png",
+          "sha256": "28157a918a9f8e3737e70d2f7a12d52ac26ca1104bc66d9b7521c23268d88004"
+        },
+        {
+          "path": "console-22c7809a29a0.png",
+          "sha256": "10d4eae9efd7ed0782fe2afc9a7f07a3a1028dffd12499f2727d2b4cdedf3843"
+        },
+        {
+          "path": "console-5a76ee620de6.png",
+          "sha256": "59edfa9d55c1f87f810cf11441ca5d12bc63355bd6a09032313deb352cf432b9"
+        },
+        {
+          "path": "console-796988118087.png",
+          "sha256": "b4c71b02217e7e18289f1af145dc431be2b21bd93364950a6aeecacc8c10c350"
+        },
+        {
+          "path": "console-bd04f01248f2.png",
+          "sha256": "779370a73cb80092e60080519778baee43f7510033d3f66601338a50379f6160"
+        },
+        {
+          "path": "console-cd8cfabf4748.png",
+          "sha256": "b5702286db6f700914385c652adf5d5e974155f745dc301814e357ba4cfa7ca5"
+        },
+        {
+          "path": "console-b991b5e9ec83.png",
+          "sha256": "6ad14f5b305098fcd38044e54b1ca110b08d7d1e797e18dc90ea13e8a0042819"
+        },
+        {
+          "path": "console-6931a266c46a.png",
+          "sha256": "5ad182cccd127363dc556c1e5300921b35e03c9ae8e7c27e386985ded1001b9b"
+        },
+        {
+          "path": "console-889da75df60c.png",
+          "sha256": "85aeb5a507bf469f7e43871346ff50227e7bf55337761d8e2850fb9b0f54a589"
+        },
+        {
+          "path": "console-0d9ffe6cbce1.png",
+          "sha256": "0ab4c3fac7e456d6757c1bfbd3061cec4e332c8ee9d97254ab1b5d052d65a647"
+        },
+        {
+          "path": "console-f1c051914ac7.png",
+          "sha256": "2a29876e20f5e2d15cd7cab218bb2d3a11e02e0460f7ef04f0a6487a6a79bce8"
+        }
+      ],
+      "observer": "native Tart VNC, loopback fixture events, guest process and session inventory",
+      "mode": "observed-gui",
+      "utc": "2026-11-18T18:15:57.430540+00:00"
+    }
+  ],
+  "proof": {
+    "modelEvents": {
+      "stream": ["request", "first", "last", "done"],
+      "abort": ["request", "first", "disconnected"],
+      "recover": ["request", "first", "done"],
+      "dialog": ["request", "first", "done"],
+      "resume": ["request", "first", "done"]
+    },
+    "dialogs": [
+      {
+        "state": "requested",
+        "epoch": 1795025622.872
+      },
+      {
+        "state": "answered",
+        "confirmed": true,
+        "epoch": 1795025628.85
+      }
+    ],
+    "releaseEpoch": 1795025592.210942,
+    "firstChunkSampleEpoch": 1795025587.054452,
+    "samePanePostAbortPid": 759,
+    "closedPiSampleEpoch": 1795025649.023934,
+    "resumedPiPid": 923,
+    "app": {
+      "pid": 591,
+      "parent": 1,
+      "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+    },
+    "sidecar": {
+      "pid": 603,
+      "parent": 591,
+      "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+    },
+    "savedSession": {
+      "pathHash": "bc36705b013ffe7a4e2fb63c3ff572a215f2249b4ba09e30f6b8b180dbbec56f",
+      "markers": [
+        "STREAM FIRST",
+        "STREAM LAST",
+        "RECOVERED",
+        "DIALOG CONTINUED"
+      ]
+    },
+    "resumedSession": {
+      "pathHash": "bc36705b013ffe7a4e2fb63c3ff572a215f2249b4ba09e30f6b8b180dbbec56f",
+      "markers": [
+        "STREAM FIRST",
+        "STREAM LAST",
+        "RECOVERED",
+        "DIALOG CONTINUED",
+        "RESUMED"
+      ]
+    },
+    "shutdown": {
+      "apps": [],
+      "sidecars": [],
+      "pi": [],
+      "modelAlive": false
+    }
+  },
+  "firstAttempt": {
+    "runId": "20261118T180858Z-b0bd2d3784ea",
+    "result": "Fixture rejected lowercase keyboard input when it expected uppercase.",
+    "processExitVerified": true,
+    "guestRemovalVerified": true
+  },
+  "cleanup": {
+    "appSidecarPiAndFixtureAbsent": true,
+    "ownedGuestsAbsent": true,
+    "independentInventoryMatches": true,
+    "originalEntriesStopped": 5,
+    "observerExit": 1,
+    "observerNote": "A final read-only Tart exec poll timed out during explicit guest teardown. Both guest cleanup receipts and independent process and VM observations verified cleanup."
+  }
+}

@@ -1,5 +1,16 @@
 # Agent runtime issue migration ledger
 
+The [active Pi upgrade and SDK tracker](STATUS.md#pi-upgrade-and-sdk-evaluation-tracker--2026-11-18)
+records current sequencing and approval state for #216, #217, #210, #219, #201
+and #202. CF1-01 through CF1-03 passed on #225 and CF1-04 passed on verified
+PR #230 artifact 14445949024. The maintainer merged #230 as `34a755a` and
+integrated CI passed 14/14. CF1-05 and CF1-06 passed in Tart on integrated
+artifact 14456220605 with pinned Pi `v0.85.1-psmfd.1`. CF1-06 used a guest
+loopback model. Worksheet evidence is six PASS and six BLOCKED. Scope
+CF1-07 supported provider login next.
+Issue #219 remains deferred until #217 acceptance and approval of its own
+candidate comparison plan. Historical snapshots follow.
+
 Snapshot: 2026-10-20. Governing decision: [ADR-0034](../../adrs/0034-own-agent-runtime-and-retire-pi-config.md).
 See the [component inventory and sequence](README.md) and [immutable inputs](source-manifest.json).
 

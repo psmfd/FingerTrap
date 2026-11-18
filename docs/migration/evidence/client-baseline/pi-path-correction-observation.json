@@ -1,0 +1,205 @@
+{
+  "schemaVersion": 1,
+  "runId": "20261118T151710Z-477d0870ab1c",
+  "corrects": "shell-layout-pi-failures.json",
+  "draftPullRequest": 230,
+  "fixCommit": "00d4cf32c392f5922478296336a30396d93fe956",
+  "artifact": {
+    "kind": "cf1-04-corrected-candidate",
+    "campaign": "CF-1",
+    "artifactId": 14438638035,
+    "run": "https://github.com/psmfd/FingerTrap/actions/runs/44329939962",
+    "sourceHead": "c1518b88423a4030173dfc83ab70e608d05af69c",
+    "buildCommit": "4b0c1f90befd3a8ba71f69d9c987fdc8b259558a",
+    "sourceTree": "6e7625202ac2838d35428223d309dfb0bd611200",
+    "archiveDigest": "sha256:2bf04426fecafb90e996a6004a14a59f09c88db5354388268058b88b383a2b2c",
+    "appArchiveDigest": "sha256:bbaf9144f29bdfdfa7bfb94274a2dd5a5cba071ecb0531c7c9482402393fb880",
+    "dmgDigest": "sha256:36f139268c4559335436c31d46ad0ebe6d03ac12790f2c4788060105532f10d0",
+    "appVersion": "0.1.0",
+    "target": "aarch64-apple-darwin",
+    "productionRuntimeSelection": "v0.85.1-psmfd.1",
+    "distribution": "unsigned candidate; not notarized; not a published release",
+    "runner": "ft-actions-job-20261118t145956z-1aed1555"
+  },
+  "binaries": [
+    {
+      "name": "fingertrap",
+      "sha256": "9937ffc6377dd7547e2444aa47a93800653925bdec5dad7ed756a32886286ff2",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "fingertrap-sidecar",
+      "sha256": "f1ba739b3e553c476e16ebe93cf917fe88a64cc3688575011456f559dd3834ff",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "libporta_pty.dylib",
+      "sha256": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3",
+      "architecture": "Mach-O 64-bit dynamically linked shared library arm64"
+    }
+  ],
+  "runtime": {
+    "tag": "v0.85.1-psmfd.1",
+    "archiveSha256": "e0e0331d478af7724fa24d780a8d4abc0033c6f5ee7c0d45dddae6f922e5c4cb",
+    "executableSha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5",
+    "installed": false
+  },
+  "guest": {
+    "base": "ghcr.io/cirruslabs/macos-sequoia-base@sha256:3f4d14a5ffb9efd3bda2ae0184fd4bc2773d924ff8b7565f958761420ec41a0c",
+    "macOS": "15.7.7",
+    "build": "24G720",
+    "architecture": "arm64",
+    "tart": "2.32.1"
+  },
+  "observationWindow": {
+    "holdSeconds": 1800,
+    "reservedSeconds": 300,
+    "firstFrameUtc": "2026-11-18T15:17:27Z",
+    "explicitFinishUtc": "2026-11-18T15:19:27Z"
+  },
+  "cases": [
+    {
+      "case": "CF1-04",
+      "status": "PASS",
+      "observation": "On the verified Apple Silicon candidate the explicit New pi pane showed actionable guidance with Pi absent. With the selected configured path missing it named that path and said it does not name an existing file. With the same configured file present at mode 0600 it named the path, said it is not executable, and identified settings.json and executable selectors. Each Pi tab was exited and no fallback shell appeared. The ordinary shell returned /Users/admin for pwd. Independent settled process reads show only the existing fixture shell under each sidecar.",
+      "evidence": [
+        {
+          "path": "fixture-initial.json",
+          "sha256": "63dc1d2d008bee78ba45f08e881921457d4fc3416f5b60f797e0ae72bf1bc14e"
+        },
+        {
+          "path": "console-9b3f416261af.png",
+          "sha256": "3ff913e19ed8d82c60e379f199dd441dc6841061a2cf67cf4fa8cff78e48641f"
+        },
+        {
+          "path": "console-11590bb71a42.png",
+          "sha256": "ed459a9e28486c4e3b7921336a3dc9f136a8d3d9fc5c78531e7f43c0e1cda231"
+        },
+        {
+          "path": "fixture-missing.json",
+          "sha256": "69c0ca5738aa1f6e7db973fa432b078bcef7862eaceb1a4e8bb9ffd54cadea4f"
+        },
+        {
+          "path": "console-19b470823eaf.png",
+          "sha256": "b26bcbdb43ae1d06510ccb5ade601fa7879b2c7a3e7fbf193f855407acb5919a"
+        },
+        {
+          "path": "fixture-nonexecutable.json",
+          "sha256": "80a8327b6c26a3318fdd7f9da6183025bf85e98d18a4d3f98d2637c9340cb2d8"
+        },
+        {
+          "path": "console-09769386c024.png",
+          "sha256": "a8733693689866478a2e3da22df9aa550ac708c543382478aff21fd983fe4e8c"
+        },
+        {
+          "path": "pi-process-proof.json",
+          "sha256": "408f348ab5b8a97c0eb814964165aaf9174931e59f31bd03d2e5382fe2cbb60f"
+        }
+      ],
+      "observer": "native Tart VNC and independent process inventory",
+      "mode": "observed-gui",
+      "utc": "2026-11-18T15:19:27.160483+00:00"
+    }
+  ],
+  "subcases": {
+    "absent": {
+      "status": "PASS",
+      "observed": "No Pi executable found with sources tried and corrective guidance",
+      "settledProcesses": {
+        "epoch": 1795015079.286433,
+        "app": {
+          "pid": 575,
+          "parent": 1,
+          "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+        },
+        "sidecar": {
+          "pid": 591,
+          "parent": 575,
+          "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+        },
+        "shell": {
+          "pid": 655,
+          "parent": 591,
+          "executable": "/bin/zsh"
+        },
+        "otherSidecarChildren": []
+      }
+    },
+    "missingConfiguredPath": {
+      "status": "PASS",
+      "observed": "Selected path does not name an existing file, with corrective guidance",
+      "settledProcesses": {
+        "epoch": 1795015107.157388,
+        "app": {
+          "pid": 760,
+          "parent": 1,
+          "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+        },
+        "sidecar": {
+          "pid": 765,
+          "parent": 760,
+          "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+        },
+        "shell": {
+          "pid": 812,
+          "parent": 765,
+          "executable": "/bin/zsh"
+        },
+        "otherSidecarChildren": []
+      }
+    },
+    "nonExecutableConfiguredPath": {
+      "status": "PASS",
+      "observed": "Selected path is not executable, with corrective guidance",
+      "fixtureFileMode": "0600",
+      "settledProcesses": {
+        "epoch": 1795015137.9090078,
+        "app": {
+          "pid": 877,
+          "parent": 1,
+          "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+        },
+        "sidecar": {
+          "pid": 881,
+          "parent": 877,
+          "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+        },
+        "shell": {
+          "pid": 929,
+          "parent": 881,
+          "executable": "/bin/zsh"
+        },
+        "otherSidecarChildren": []
+      }
+    },
+    "ordinaryShell": {
+      "status": "PASS",
+      "observed": "pwd returned /Users/admin and prompt returned"
+    }
+  },
+  "verification": {
+    "redFirstInvalidPathsFailed": 2,
+    "localSidecarPassed": 413,
+    "localSidecarSkipped": 12,
+    "validRelativeOverrideAndOrdinaryExit13Passed": true,
+    "macosRunner": "local Tart",
+    "macosLocalJobsPassed": 5,
+    "localRunnerRegistrationsAfter": 0,
+    "ciRun": 44329939789,
+    "ciPassed": 12,
+    "ciTotal": 14,
+    "ciFailures": ["Linux sidecar build", "Linux Tauri sidecar staging"],
+    "ciFailureReason": "CA2027 in unchanged PiRpcClient.MonitorExitAsync under hosted SDK 10.0.404"
+  },
+  "cleanup": {
+    "ownerExit": 0,
+    "ownedCloneAbsent": true,
+    "independentBeforeAfterMatch": true,
+    "originalEntriesStopped": 5
+  },
+  "limits": [
+    "CF1-04 passed on the unmerged #230 candidate. Original #225 observations and failure remain valid for their original bytes.",
+    "Legacy Unix Pi PTY file-path diagnostics only. Bare command lookup, Windows, native RPC and managed launches retain their original behavior.",
+    "No real Pi executable/provider and no production activation. CF1-05 through CF1-12 remain blocked."
+  ]
+}
