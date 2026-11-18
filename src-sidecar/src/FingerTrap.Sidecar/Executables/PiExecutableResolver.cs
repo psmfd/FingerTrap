@@ -21,6 +21,8 @@ internal static class PiExecutableResolver
 
     /// <summary>Executable name searched for on <c>PATH</c>.</summary>
     private const string PiExecutableName = "pi";
+    private const UnixFileMode AnyExecute =
+        UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute;
 
     /// <summary>
     /// Locate the pi executable. Throws rather than falling back: a pi pane
@@ -69,6 +71,50 @@ internal static class PiExecutableResolver
     }
 
     /// <summary>
+    /// The legacy Unix PTY reports an exec failure as a child exit. Check a
+    /// selected file path before spawn so the pane can render a setup error.
+    /// Bare command names still use the PTY child's PATH search.
+    /// </summary>
+    internal static void ValidateLegacyUnixPtyPath(string executable, string workingDirectory)
+    {
+        if ((!OperatingSystem.IsMacOS() && !OperatingSystem.IsLinux()) || !executable.Contains('/'))
+        {
+            return;
+        }
+
+        var path = Path.Combine(workingDirectory, executable);
+        if (!File.Exists(path))
+        {
+            throw InvalidPtyPath(executable, "does not name an existing file");
+        }
+
+        UnixFileMode mode;
+        try
+        {
+            mode = File.GetUnixFileMode(path);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            throw InvalidPtyPath(executable, "could not be accessed");
+        }
+
+        if ((mode & AnyExecute) == 0)
+        {
+            throw InvalidPtyPath(executable, "is not executable");
+        }
+    }
+
+    private static PiNotFoundException InvalidPtyPath(string executable, string reason)
+    {
+        // This text reaches a terminal pane. Do not render control characters
+        // from the configured path as terminal instructions.
+        var displayPath = string.Concat(executable.Select(c => char.IsControl(c) ? '\uFFFD' : c));
+        return new PiNotFoundException(
+            $"Pi executable '{displayPath}' {reason}. Fix: select an executable Pi file in " +
+            $"the spawn request, pi.path in settings.json, or ${PiPathEnvVar}.");
+    }
+
+    /// <summary>
     /// First executable match for <paramref name="name"/> across <c>PATH</c>,
     /// or null.
     /// </summary>
@@ -113,8 +159,6 @@ internal static class PiExecutableResolver
             }
 
             var mode = File.GetUnixFileMode(candidate);
-            const UnixFileMode AnyExecute =
-                UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute;
             if ((mode & AnyExecute) != 0)
             {
                 return candidate;

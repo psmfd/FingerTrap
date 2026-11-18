@@ -5,6 +5,7 @@ using FingerTrap.Sidecar.PiRpc;
 using FingerTrap.Sidecar.Processes;
 using FingerTrap.Sidecar.Pty;
 using FingerTrap.Sidecar.Runtime;
+using FingerTrap.Sidecar.Settings;
 using Xunit;
 
 namespace FingerTrap.Sidecar.Tests;
@@ -12,6 +13,65 @@ namespace FingerTrap.Sidecar.Tests;
 public sealed class LaunchProcessTests
 {
     private static CancellationToken Token => TestContext.Current.CancellationToken;
+
+    [Theory]
+    [InlineData(false, "does not name an existing file")]
+    [InlineData(true, "is not executable")]
+    public async Task LegacyPiPty_InvalidConfiguredPath_IsActionable(bool exists, string reason)
+    {
+        if (!OperatingSystem.IsMacOS() && !OperatingSystem.IsLinux()) return;
+
+        var root = Directory.CreateTempSubdirectory("ft-invalid-pi-");
+        try
+        {
+            var path = Path.Combine(root.FullName, "configured pi");
+            if (exists)
+            {
+                File.WriteAllText(path, "fixture without execute permission");
+                File.SetUnixFileMode(path, UnixFileMode.UserRead);
+            }
+
+            await using var service = new PtyService(new PiSettings { Path = path });
+            var error = await Assert.ThrowsAsync<PiNotFoundException>(() => service.SpawnAsync(
+                "invalid-pi", new(null, root.FullName, 80, 24, null, PaneKind.Pi), Token));
+            Assert.Contains(path, error.Message, StringComparison.Ordinal);
+            Assert.Contains(reason, error.Message, StringComparison.Ordinal);
+            Assert.Contains("settings.json", error.Message, StringComparison.Ordinal);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Fact]
+    public async Task LegacyPiPty_ValidRelativeRequestOverridesSettings_ReportsOrdinaryExit()
+    {
+        if (OperatingSystem.IsWindows()) return;
+
+        var root = Directory.CreateTempSubdirectory("ft-valid-pi-");
+        try
+        {
+            var path = Path.Combine(root.FullName, "fake-pi");
+            File.WriteAllText(path, "#!/bin/sh\nread -r value\nexit 13\n");
+            File.SetUnixFileMode(path, UnixFileMode.UserRead | UnixFileMode.UserExecute);
+
+            await using var service = new PtyService(new PiSettings { Path = Path.Combine(root.FullName, "missing") });
+            var exit = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+            service.Exited += (_, e) =>
+            {
+                if (e.SessionId == "ordinary-exit") exit.TrySetResult(e.ExitCode);
+            };
+            await service.SpawnAsync("ordinary-exit",
+                new("./fake-pi", root.FullName, 80, 24, null, PaneKind.Pi), Token);
+            await service.WriteAsync("ordinary-exit", "finish\n"u8.ToArray(), Token);
+            Assert.Equal(13, await exit.Task.WaitAsync(TimeSpan.FromSeconds(5), Token));
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
 
     [Theory]
     [InlineData(false, false)]
