@@ -1,0 +1,203 @@
+{
+  "schemaVersion": 1,
+  "runId": "20261118T155111Z-7b6312381788",
+  "retests": "pi-path-correction-observation.json",
+  "draftPullRequest": 230,
+  "artifact": {
+    "kind": "cf1-04-corrected-candidate",
+    "campaign": "CF-1",
+    "artifactId": 14442208012,
+    "run": "https://github.com/psmfd/FingerTrap/actions/runs/44337808048",
+    "sourceHead": "e501392d00b008713c2bdca6db0c09eff7c802fe",
+    "buildCommit": "6bad38f6ddc66afdef5133735f07ebd420639858",
+    "sourceTree": "faf03ef7a06fdb7106120b3e8a0fcafa23400ba6",
+    "archiveDigest": "sha256:d73882f858c7346f417adc18162cb396e7cb8ca2014022893b330edc4f38913c",
+    "appArchiveDigest": "sha256:b15b91c3c8f61710c6a5825d60a22bf3a84761a3848cfe780e9a35e372df84cc",
+    "dmgDigest": "sha256:3f38c5408389e76692e85d9271e19104bf59ce990288e47e07d50c544e8c118e",
+    "appVersion": "0.1.0",
+    "target": "aarch64-apple-darwin",
+    "productionRuntimeSelection": "v0.85.1-psmfd.1",
+    "distribution": "unsigned candidate; not notarized; not a published release",
+    "runner": "ft-actions-job-20261118t154142z-99659efc"
+  },
+  "binaries": [
+    {
+      "name": "fingertrap",
+      "sha256": "9937ffc6377dd7547e2444aa47a93800653925bdec5dad7ed756a32886286ff2",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "fingertrap-sidecar",
+      "sha256": "5fbdd99ffc91a4f656b5604a120eee2053ecfce693f5cd2d10f6e30e57262790",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "libporta_pty.dylib",
+      "sha256": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3",
+      "architecture": "Mach-O 64-bit dynamically linked shared library arm64"
+    }
+  ],
+  "guest": {
+    "base": "ghcr.io/cirruslabs/macos-sequoia-base@sha256:3f4d14a5ffb9efd3bda2ae0184fd4bc2773d924ff8b7565f958761420ec41a0c",
+    "macOS": "15.7.7",
+    "build": "24G720",
+    "tart": "2.32.1"
+  },
+  "observationWindow": {
+    "holdSeconds": 1800,
+    "reservedSeconds": 300,
+    "firstFrameUtc": "2026-11-18T15:51:28+00:00",
+    "explicitFinishUtc": "2026-11-18T15:53:48+00:00"
+  },
+  "cases": [
+    {
+      "case": "CF1-04",
+      "status": "PASS",
+      "observation": "On artifact 14442208012, explicit New pi pane showed corrective guidance for absent Pi, a selected missing path, and the same selected path at mode 0600. Both configured-file messages named the path and corrective settings. Each Pi tab showed exited. The ordinary shell returned /Users/admin from pwd. Independent reads within each scenario showed one existing fixture shell and no fallback process.",
+      "evidence": [
+        {
+          "path": "fixture-initial.json",
+          "sha256": "99040eba3a4cb0471beb38797dcbd99df1c05e1e053fc85e6881f9312be23ac5"
+        },
+        {
+          "path": "fixture-missing.json",
+          "sha256": "c13e01c0f977a9db4b05167f0bd6756563ef349f79d6c714ba704b95856e6208"
+        },
+        {
+          "path": "fixture-nonexecutable.json",
+          "sha256": "b0868b2161ddcc3bdcbf8215458128ce0bbff82b72440d757d763d1484d031d1"
+        },
+        {
+          "path": "pi-process-proof.json",
+          "sha256": "7d98902336903df7c9f14dcbafb8d5d96248588cf07bde4e6083654f9dd2bb67"
+        },
+        {
+          "path": "console-eb38605bfd48.png",
+          "sha256": "2acba10c76569aa5693ff684ba282a65b36c812b190a58800dd9357f0a3dce38"
+        },
+        {
+          "path": "console-4b261646bf04.png",
+          "sha256": "26b96e08875c87e99364dbf09ddffacb5d2f95dd348ac5b350fbcd091c79b7fb"
+        },
+        {
+          "path": "console-af3a3cb2e85e.png",
+          "sha256": "b8a235b40d01dddfbcf03281e57308cb28ba35ec84e6112830f92be0e8fb7cbb"
+        },
+        {
+          "path": "console-40e7b39101c7.png",
+          "sha256": "a3a64cf918fe840aaa9c32828e964e27451fad4c8024c61488110f8e84878c83"
+        }
+      ],
+      "observer": "native Tart VNC and independent process inventory",
+      "mode": "observed-gui",
+      "utc": "2026-11-18T15:53:48.872797+00:00"
+    }
+  ],
+  "settledProcesses": {
+    "absent": {
+      "epoch": 1795017154.0638871,
+      "app": {
+        "pid": 584,
+        "parent": 1,
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+      },
+      "sidecar": {
+        "pid": 595,
+        "parent": 584,
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+      },
+      "shell": {
+        "pid": 660,
+        "parent": 595,
+        "executable": "/bin/zsh"
+      },
+      "otherSidecarChildren": []
+    },
+    "missingConfiguredPath": {
+      "epoch": 1795017178.8750951,
+      "app": {
+        "pid": 783,
+        "parent": 1,
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+      },
+      "sidecar": {
+        "pid": 787,
+        "parent": 783,
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+      },
+      "shell": {
+        "pid": 834,
+        "parent": 787,
+        "executable": "/bin/zsh"
+      },
+      "otherSidecarChildren": []
+    },
+    "nonExecutableConfiguredPath": {
+      "epoch": 1795017215.2577548,
+      "app": {
+        "pid": 900,
+        "parent": 1,
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+      },
+      "sidecar": {
+        "pid": 904,
+        "parent": 900,
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+      },
+      "shell": {
+        "pid": 951,
+        "parent": 904,
+        "executable": "/bin/zsh"
+      },
+      "otherSidecarChildren": []
+    }
+  },
+  "verification": {
+    "devReproductionJob": 134915451251,
+    "devReproductionSdk": "10.0.404",
+    "localSidecarPassed": 415,
+    "localSidecarSkipped": 12,
+    "focusedRegressionsDetected": 2,
+    "restoredFocusedTestsPassed": 2,
+    "ciRun": 44337808718,
+    "ciPassed": 14,
+    "localTartJobs": [
+      {
+        "jobId": 134919159295,
+        "runner": "ft-actions-job-20261118t154142z-99659efc",
+        "registrationId": 125
+      },
+      {
+        "jobId": 134919169493,
+        "runner": "ft-actions-job-20261118t154502z-5f3a607e",
+        "registrationId": 126
+      },
+      {
+        "jobId": 134919169553,
+        "runner": "ft-actions-job-20261118t154808z-72d48a5c",
+        "registrationId": 128
+      },
+      {
+        "jobId": 134919169577,
+        "runner": "ft-actions-job-20261118t154624z-0fa1d448",
+        "registrationId": 127
+      },
+      {
+        "jobId": 134919169998,
+        "runner": "ft-actions-job-20261118t155011z-b7ff105d",
+        "registrationId": 129
+      }
+    ],
+    "localRunnerRegistrationsAfter": 0
+  },
+  "cleanup": {
+    "ownerExit": 0,
+    "ownedCloneAbsent": true,
+    "independentBeforeAfterMatch": true,
+    "originalEntriesStopped": 5
+  },
+  "limits": [
+    "CF1-04 draft-only retest. Earlier package results retain their original attribution.",
+    "Real Pi PTY, provider and acceptance remain gated. Production pin v0.85.1-psmfd.1."
+  ]
+}

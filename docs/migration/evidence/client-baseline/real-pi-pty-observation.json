@@ -1,0 +1,252 @@
+{
+  "schemaVersion": 1,
+  "runId": "20261118T175156Z-ea07a7556335",
+  "pullRequest": 230,
+  "artifact": {
+    "kind": "cf1-05-integrated-candidate",
+    "campaign": "CF-1",
+    "artifactId": 14456220605,
+    "run": "https://github.com/psmfd/FingerTrap/actions/runs/44358288656",
+    "sourceHead": "34a755a09868b9fb147acdbbbb5332a80e395dcc",
+    "buildCommit": "34a755a09868b9fb147acdbbbb5332a80e395dcc",
+    "sourceTree": "3d7287f88790b3b25f01bec9f2a1e42a0a915dda",
+    "archiveDigest": "sha256:d15eeeb601286158ac83ca69806d520e1c89b9c4ef82cfd053fe0c6690775d78",
+    "appArchiveDigest": "sha256:9bf32f7ae9db0af83907060234a99007d81b954f8f7d883a69b22622a5bdd354",
+    "dmgDigest": "sha256:f6b1838e7d906adb1924fec6487dcf70d18d5a1b2b761f1f0b5681e33ae6e54a",
+    "appVersion": "0.1.0",
+    "target": "aarch64-apple-darwin",
+    "productionRuntimeSelection": "v0.85.1-psmfd.1",
+    "distribution": "unsigned candidate; not notarized; not a published release",
+    "runner": "ft-actions-job-20261118t174006z-12db0416"
+  },
+  "binaries": [
+    {
+      "name": "fingertrap",
+      "sha256": "9937ffc6377dd7547e2444aa47a93800653925bdec5dad7ed756a32886286ff2",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "fingertrap-sidecar",
+      "sha256": "cd67fbdad4eb707b7b520918a71ee6fe3d66a782bba5054ed4d26ca966323ed4",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "libporta_pty.dylib",
+      "sha256": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3",
+      "architecture": "Mach-O 64-bit dynamically linked shared library arm64"
+    }
+  ],
+  "runtime": {
+    "tag": "v0.85.1-psmfd.1",
+    "version": "0.85.1",
+    "archiveSha256": "e0e0331d478af7724fa24d780a8d4abc0033c6f5ee7c0d45dddae6f922e5c4cb",
+    "executableSha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5"
+  },
+  "guest": {
+    "base": "ghcr.io/cirruslabs/macos-sequoia-base@sha256:3f4d14a5ffb9efd3bda2ae0184fd4bc2773d924ff8b7565f958761420ec41a0c",
+    "macOS": "15.7.7",
+    "build": "24G720",
+    "tart": "2.32.1"
+  },
+  "observationWindow": {
+    "holdSeconds": 1800,
+    "reservedSeconds": 300,
+    "firstFrameUtc": "2026-11-18T17:52:13+00:00",
+    "explicitFinishUtc": "2026-11-18T17:55:29+00:00"
+  },
+  "cases": [
+    {
+      "case": "CF1-05",
+      "status": "PASS",
+      "observation": "Verified integrated artifact 14456220605 and Pi v0.85.1-psmfd.1. Packaged sidecar smoke passed with --require-pi. The GUI legacy Pi pane rendered v0.85.1 in offline mode, accepted /hotkeys and showed its shortcuts. Split right resized the same PID 973 on ttys001 from 39 x 126 to 39 x 61. Closing the Pi pane removed PID 973 while both shell PIDs survived. No provider credentials or provider turn were used.",
+      "evidence": [
+        {
+          "path": "fixture.json",
+          "sha256": "2418540aa3df4b24bfaa25e389fd9d4bbade8efcfb663c665cc59ce231c99ebd"
+        },
+        {
+          "path": "offline-launch.json",
+          "sha256": "a3fa6196fb36c411229badc86c816e422cb0269e4d2e582db043d0c81d66ba5b"
+        },
+        {
+          "path": "cf105-process-proof.json",
+          "sha256": "869fbc65cbcc9368584de0c4fc284d6caaa36e80534dc2ab3b510b39bab312e0"
+        },
+        {
+          "path": "console-e8f2befa879c.png",
+          "sha256": "8030fcb675a139ffd07f3ab1c1b99e48254940783890ff91f08eb92781605a2c"
+        },
+        {
+          "path": "console-5177e7faa646.png",
+          "sha256": "515e02620591ee816296238edafae60d537f7927035f65fb4b9f54f3455fddfa"
+        },
+        {
+          "path": "console-1d18339c28c7.png",
+          "sha256": "daf2e77e6cb0e8ab837a5730b1387aa199d59e780862052712ed8cedec3f7b44"
+        },
+        {
+          "path": "console-ec094eb34973.png",
+          "sha256": "df4685ed9877fd876ab212e766dd48dae90befa6bb2eebbe0910bd56bb7a5101"
+        },
+        {
+          "path": "console-cac08b801f7d.png",
+          "sha256": "ea62451c456452f5ef8f2bed9f685103ec77066a45b905391124ea9adb944d4c"
+        }
+      ],
+      "observer": "native Tart VNC, independent process inventory and stty",
+      "mode": "observed-gui",
+      "utc": "2026-11-18T17:55:29.200203+00:00"
+    }
+  ],
+  "guiPiOffline": true,
+  "firstSetupAttempt": {
+    "runId": "20261118T174353Z-9f32c02fedd5",
+    "reason": "Version check stopped setup after extracting only the executable.",
+    "noGuiResult": true,
+    "cleanupVerified": true
+  },
+  "smokeStartup": "Auxiliary smoke logged an automatic fd download attempt within the guest before offline GUI launch.",
+  "settledProcesses": {
+    "beforeResize": {
+      "epoch": 1795024464.874464,
+      "app": {
+        "pid": 849,
+        "parent": 1,
+        "tty": "??",
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+      },
+      "sidecar": {
+        "pid": 853,
+        "parent": 849,
+        "tty": "??",
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+      },
+      "shells": [
+        {
+          "pid": 900,
+          "parent": 853,
+          "tty": "ttys000",
+          "executable": "/bin/zsh"
+        }
+      ],
+      "pi": {
+        "pid": 973,
+        "parent": 853,
+        "tty": "ttys001",
+        "executable": "/Users/admin/.ft-cf105-runtime/pi",
+        "rows": 39,
+        "columns": 126
+      }
+    },
+    "afterResize": {
+      "epoch": 1795024483.239831,
+      "app": {
+        "pid": 849,
+        "parent": 1,
+        "tty": "??",
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+      },
+      "sidecar": {
+        "pid": 853,
+        "parent": 849,
+        "tty": "??",
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+      },
+      "shells": [
+        {
+          "pid": 900,
+          "parent": 853,
+          "tty": "ttys000",
+          "executable": "/bin/zsh"
+        },
+        {
+          "pid": 1007,
+          "parent": 853,
+          "tty": "ttys002",
+          "executable": "/bin/zsh"
+        }
+      ],
+      "pi": {
+        "pid": 973,
+        "parent": 853,
+        "tty": "ttys001",
+        "executable": "/Users/admin/.ft-cf105-runtime/pi",
+        "rows": 39,
+        "columns": 61
+      }
+    },
+    "afterClose": {
+      "epoch": 1795024510.729038,
+      "app": {
+        "pid": 849,
+        "parent": 1,
+        "tty": "??",
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+      },
+      "sidecar": {
+        "pid": 853,
+        "parent": 849,
+        "tty": "??",
+        "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+      },
+      "shells": [
+        {
+          "pid": 900,
+          "parent": 853,
+          "tty": "ttys000",
+          "executable": "/bin/zsh"
+        },
+        {
+          "pid": 1007,
+          "parent": 853,
+          "tty": "ttys002",
+          "executable": "/bin/zsh"
+        }
+      ],
+      "pi": null
+    }
+  },
+  "verification": {
+    "packagedSidecarRequirePiPassed": true,
+    "ciRun": 44358074769,
+    "ciPassed": 14,
+    "localTartJobs": [
+      {
+        "jobId": 134992295770,
+        "runner": "ft-actions-job-20261118t174006z-12db0416",
+        "registrationId": 139
+      },
+      {
+        "jobId": 134991507815,
+        "runner": "ft-actions-job-20261118t173224z-2e881f71",
+        "registrationId": 135
+      },
+      {
+        "jobId": 134991508324,
+        "runner": "ft-actions-job-20261118t173353z-d2ba5180",
+        "registrationId": 136
+      },
+      {
+        "jobId": 134991508385,
+        "runner": "ft-actions-job-20261118t173740z-00bd7f77",
+        "registrationId": 137
+      },
+      {
+        "jobId": 134991508499,
+        "runner": "ft-actions-job-20261118t173845z-91fb7ae6",
+        "registrationId": 138
+      }
+    ],
+    "localRunnerRegistrationsAfter": 0
+  },
+  "cleanup": {
+    "ownerExit": 0,
+    "ownedCloneAbsent": true,
+    "independentBeforeAfterMatch": true,
+    "originalEntriesStopped": 5
+  },
+  "limits": [
+    "Local command only. Provider, native RPC and baseline acceptance remain gated.",
+    "Previously recorded observations retain their original package attribution."
+  ]
+}

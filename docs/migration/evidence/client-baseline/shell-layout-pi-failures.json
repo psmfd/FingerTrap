@@ -1,0 +1,245 @@
+{
+  "schemaVersion": 1,
+  "runId": "20261118T134755Z-907770328744",
+  "artifactReference": "finder-install-observation.json",
+  "artifactId": 13679544449,
+  "buildCommit": "41596a1d76e20be9d7d83ee6ab94533e58f8a158",
+  "archiveSha256": "bdf8bc7062ebc34bf19656344d5cb6ea067ac3c98bed7026b3151300dd2145a4",
+  "sourceTree": "30d3e7a48b4ba5100ff55c2ab0b984006c428b71",
+  "runtime": {
+    "tag": "v0.85.1-psmfd.1",
+    "executableSha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5",
+    "installed": false
+  },
+  "guest": {
+    "base": "ghcr.io/cirruslabs/macos-sequoia-base@sha256:3f4d14a5ffb9efd3bda2ae0184fd4bc2773d924ff8b7565f958761420ec41a0c",
+    "macOS": "15.7.7",
+    "build": "24G720",
+    "architecture": "arm64"
+  },
+  "installation": {
+    "method": "verified app ZIP through guest ditto",
+    "binaries": [
+      {
+        "name": "fingertrap",
+        "sha256": "e80329ed45bd79c6c9d618d4d8e968a0aad9e6ffa60430f5720a9c06a36e6982",
+        "architecture": "Mach-O 64-bit executable arm64"
+      },
+      {
+        "name": "fingertrap-sidecar",
+        "sha256": "c2d96eded0e96e6242baa9d450aea4d2ff466562b90fb596db8ab4800e739dc1",
+        "architecture": "Mach-O 64-bit executable arm64"
+      },
+      {
+        "name": "libporta_pty.dylib",
+        "sha256": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3",
+        "architecture": "Mach-O 64-bit dynamically linked shared library arm64"
+      }
+    ]
+  },
+  "timing": {
+    "holdSeconds": 1800,
+    "reservedSeconds": 300,
+    "firstFrameUtc": "2026-11-18T13:48:14Z",
+    "explicitFinishUtc": "2026-11-18T13:53:56Z"
+  },
+  "cases": [
+    {
+      "case": "CF1-03",
+      "status": "PASS",
+      "observation": "Native shell output showed PID 684 and f=9077. Resize changed the original PTY from 39x126 to 30x102 without changing shell state. The right split created PID 831 with no original variable and a 30x50 PTY. Closing the focused sibling restored the original 30x102 PTY and preserved PID and variable. Guest process inventory confirms the original app/sidecar/shell ancestry and only the sibling absent after close.",
+      "evidence": [
+        {
+          "path": "layout-stage.log",
+          "sha256": "a21c9061021e79be08b57a5477b35de5e77d6994c241c57e80ec14b67f780596"
+        },
+        {
+          "path": "console-be79f4d27f9b.png",
+          "sha256": "4481fd54440933d7dac734efce9f211a061af7660f360d42467354adc644a6f8"
+        },
+        {
+          "path": "console-layout-resize.png",
+          "sha256": "543ed779c9faadea1a5387f2fd64589378674263b11532de0a9158bcc521805a"
+        },
+        {
+          "path": "console-40dcb5705c57.png",
+          "sha256": "f0ed6374b7bf8ff35cba3838f14d2df058fed1148f01fd42f5de17ba6f93b58a"
+        },
+        {
+          "path": "console-6f5f7b76ae72.png",
+          "sha256": "1ef782e4b23e73b8dcc4102471f0c486656a5b6cba98dd2a9ed4933117f25fb8"
+        },
+        {
+          "path": "console-66bc82fe627e.png",
+          "sha256": "c70fb909db3ada4743e79b2782deddc46e47572f776e162641ff7c144e6f4536"
+        },
+        {
+          "path": "console-5d49608a32e3.png",
+          "sha256": "1723b95963ee57a1f5544ce931bcb6dc87f91f5f68a894fcbc5fcb9bcc75e3ee"
+        },
+        {
+          "path": "console-62f32cede9a3.png",
+          "sha256": "26b994a2d50c12bebb47996b174b3aeea3ad717ada350c474be8bd5b3f993181"
+        },
+        {
+          "path": "layout-process-proof.json",
+          "sha256": "6e963ffeb6c86ba37951e57ab143306ef7db9dd56ea04dceff0957971e641bb8"
+        }
+      ],
+      "observer": "native Tart VNC and independent process inventory",
+      "mode": "observed-gui",
+      "utc": "2026-11-18T13:52:00.288291+00:00"
+    },
+    {
+      "case": "CF1-04",
+      "status": "FAIL",
+      "observation": "Explicit New pi pane with Pi absent showed actionable executable configuration guidance and an exited Pi tab. After a normal quit and relaunch with a verified non-executable pi.path, the same explicit request showed only process exited (13) without the path, reason, or remediation. No fallback shell was observed. The invalid-executable case fails the actionable error requirement.",
+      "evidence": [
+        {
+          "path": "console-6daf3ea51e3e.png",
+          "sha256": "c684a588cac95bd444d7c05dbbfbe71cea253ab836a04a81432bf7f3b42f46e2"
+        },
+        {
+          "path": "console-d58853435ff5.png",
+          "sha256": "af5e761dd3cc4209f918e7a02a9446bd3636f397e11b6cbe57df07bdc8b02ab0"
+        },
+        {
+          "path": "invalid-pi-stage.log",
+          "sha256": "30bdecffda42009bbc3d1020d36b7b411bdb32ba5b03befe63d91c20a7a2759a"
+        },
+        {
+          "path": "console-b3193f019792.png",
+          "sha256": "245d2821a243251cc140e0527eec03c15a8de63969a12a96b7217a6940e5fd78"
+        },
+        {
+          "path": "console-b85d25ae7fc1.png",
+          "sha256": "a4d363fc747e1a09894d10d282dce1265679ca52c777ba5b98e7268f69fae823"
+        },
+        {
+          "path": "console-70245926ceb0.png",
+          "sha256": "2fb39564234e994635436ecabbbee0155d14b7778ed21e5496f33b5c3e27695d"
+        },
+        {
+          "path": "invalid-pi-process-proof.json",
+          "sha256": "14ce4f8f40ddc07d266d02e2eb47ee611072a6e7c26e09550bdecb07f83946df"
+        }
+      ],
+      "observer": "native Tart VNC and independent process inventory",
+      "mode": "observed-gui",
+      "utc": "2026-11-18T13:53:55.851466+00:00"
+    }
+  ],
+  "layout": {
+    "fixture": {
+      "version": 1,
+      "pane": {
+        "defaultKind": "shell"
+      }
+    },
+    "before": {
+      "pid": 684,
+      "rows": 39,
+      "columns": 126,
+      "sentinel": "9077"
+    },
+    "resized": {
+      "pid": 684,
+      "rows": 30,
+      "columns": 102,
+      "sentinel": "9077"
+    },
+    "sibling": {
+      "pid": 831,
+      "rows": 30,
+      "columns": 50,
+      "sentinel": null
+    },
+    "survivor": {
+      "pid": 684,
+      "rows": 30,
+      "columns": 102,
+      "sentinel": "9077"
+    },
+    "independentProcessProof": {
+      "beforeClose": {
+        "epoch": 1795009831.891606,
+        "processes": {
+          "620": [1, "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"],
+          "630": [
+            620,
+            "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+          ],
+          "684": [630, "/bin/zsh"],
+          "831": [630, "/bin/zsh"]
+        }
+      },
+      "afterClose": {
+        "epoch": 1795009836.196228,
+        "processes": {
+          "620": [1, "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"],
+          "630": [
+            620,
+            "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+          ],
+          "684": [630, "/bin/zsh"]
+        }
+      }
+    }
+  },
+  "explicitPi": {
+    "missing": {
+      "status": "PASS",
+      "observed": "Exited Pi tab with a missing executable diagnostic and settings/PATH remediation"
+    },
+    "invalid": {
+      "status": "FAIL",
+      "observed": "[process exited (13)]",
+      "actionableDiagnostic": false,
+      "fallbackShellObserved": false,
+      "fixture": {
+        "fixture": {
+          "version": 1,
+          "pane": {
+            "defaultKind": "shell"
+          },
+          "pi": {
+            "path": "/Users/admin/ft-cf104-invalid-pi"
+          }
+        },
+        "fileMode": "0o600",
+        "previousAppAndSidecarAbsent": true
+      },
+      "independentProcessProof": {
+        "epoch": 1795010000.585168,
+        "app": {
+          "pid": 928,
+          "parent": 1,
+          "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap"
+        },
+        "sidecar": {
+          "pid": 932,
+          "parent": 928,
+          "executable": "/Applications/FingerTrap.app/Contents/MacOS/fingertrap-sidecar"
+        },
+        "existingShell": {
+          "pid": 979,
+          "parent": 932,
+          "executable": "/bin/zsh"
+        },
+        "otherSidecarChildren": []
+      }
+    }
+  },
+  "cleanup": {
+    "ownerExit": 0,
+    "ownedCloneAbsent": true,
+    "independentBeforeAfterMatch": true,
+    "originalEntriesStopped": 5
+  },
+  "limits": [
+    "First separately staged guest expired before staging and cleaned successfully. The retry staged the app within the bounded owner execution.",
+    "Native input incorrectly mapped two modifier combinations and uppercase/symbol input. The unsubmitted shell line was cleared before sending a verified command. The working native shortcuts and actual output are recorded.",
+    "CF1-04 invalid case exercised a supported explicit pi.path fixture pointing to a non-executable file. It does not verify an explicit executable field through an API-only path or native RPC behavior.",
+    "Absent Pi and the non-executable fixture are separate observations. No real Pi runtime, extra tools, credentials or host changes were used."
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 1,
+  "runId": "20261118T121007Z-65f00dd257bb",
+  "artifact": {
+    "kind": "approved-cf1-02-replacement",
+    "campaign": "CF-1",
+    "artifactId": 13679544449,
+    "run": "https://github.com/psmfd/FingerTrap/actions/runs/42629776576",
+    "sourceHead": "eb5488cfc6c2dd8e1e09095171180c3ea40db1ce",
+    "buildCommit": "41596a1d76e20be9d7d83ee6ab94533e58f8a158",
+    "sourceTree": "30d3e7a48b4ba5100ff55c2ab0b984006c428b71",
+    "comparisonCommit": "c3cddd40bdb81e5780f5e38ccf3bb7b658dd2e18",
+    "archiveDigest": "sha256:bdf8bc7062ebc34bf19656344d5cb6ea067ac3c98bed7026b3151300dd2145a4",
+    "appArchiveDigest": "sha256:827627318b387a7d016d4c1c81b60a16b7d2f83e055f9f1e078cf46e2d546259",
+    "dmgDigest": "sha256:ab7b5c7d3fabb0288e9a2ee082a037a699a486e88306b1dcc37ae0586df7b6f3",
+    "appVersion": "0.1.0",
+    "target": "aarch64-apple-darwin",
+    "productionRuntimeSelection": "v0.85.1-psmfd.1",
+    "distribution": "unsigned candidate; not notarized; not a published release"
+  },
+  "runtime": {
+    "tag": "v0.85.1-psmfd.1",
+    "source": "e7d09c9dc5fca409f46a5476669e3c0404054d69",
+    "archiveSha256": "e0e0331d478af7724fa24d780a8d4abc0033c6f5ee7c0d45dddae6f922e5c4cb",
+    "executableSha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5",
+    "installedDuringCf102": false
+  },
+  "guest": {
+    "base": "ghcr.io/cirruslabs/macos-sequoia-base@sha256:3f4d14a5ffb9efd3bda2ae0184fd4bc2773d924ff8b7565f958761420ec41a0c",
+    "tart": "2.32.1",
+    "macOS": "15.7.7",
+    "build": "24G720",
+    "architecture": "arm64",
+    "preinstalledTools": [
+      "Command Line Tools",
+      "Homebrew",
+      "Node",
+      "npm",
+      "System Python"
+    ]
+  },
+  "binaries": [
+    {
+      "name": "fingertrap",
+      "sha256": "e80329ed45bd79c6c9d618d4d8e968a0aad9e6ffa60430f5720a9c06a36e6982",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "fingertrap-sidecar",
+      "sha256": "c2d96eded0e96e6242baa9d450aea4d2ff466562b90fb596db8ab4800e739dc1",
+      "architecture": "Mach-O 64-bit executable arm64"
+    },
+    {
+      "name": "libporta_pty.dylib",
+      "sha256": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3",
+      "architecture": "Mach-O 64-bit dynamically linked shared library arm64"
+    }
+  ],
+  "observationWindow": {
+    "holdSeconds": 1800,
+    "firstFrameUtc": "2026-11-18T12:10:23Z",
+    "explicitFinishUtc": "2026-11-18T12:21:08Z"
+  },
+  "cases": [
+    {
+      "case": "CF1-01",
+      "status": "PASS",
+      "observation": "Verified approved artifact 13679544449 archive, app ZIP, DMG, exact build and source tree, three ARM64 binaries, installed binary digest readback, pinned guest, guest inventory and the production Pi QA archive and executable digests before use.",
+      "evidence": [
+        {
+          "path": "share/build.json",
+          "sha256": "42d49c94bc543864f120b18ab75ffcd642ff223c7add64afb8deb891df980d0b"
+        },
+        {
+          "path": "share/SHA256SUMS",
+          "sha256": "0c495051aba4d0f33ae1232f088406d09aa4b0682cfac77e664caeee8e5eb6f9"
+        },
+        {
+          "path": "guest-os.txt",
+          "sha256": "1367cb95da30c8b7c0038bee2b2c889d8aa3131a053ae52e1e5f9c8adcf82b50"
+        },
+        {
+          "path": "guest-tools.txt",
+          "sha256": "34db7db8a1f4e6400321d1d7a69f25b0364dcc3d7f68089ba1132dedc2f13bdc"
+        },
+        {
+          "path": "installed-readback.txt",
+          "sha256": "c87bb2cd073b925eb1d276476f0de336ec2c243a4159b05d51ab186327f9a780"
+        }
+      ],
+      "observer": "archive and guest inventory verification",
+      "mode": "artifact-verification",
+      "utc": "2026-11-18T12:21:38.668496+00:00"
+    },
+    {
+      "case": "CF1-02",
+      "status": "PASS",
+      "observation": "Installed the verified DMG app into Applications using Finder drag-to-Applications after Paste was disabled. Installed binary hashes match preparation. Opened the installed icon from Finder. The app window displayed an actionable missing Pi message and the normal +sh control opened a shell pane. Typed pwd in the pane and observed /Users/admin and a new prompt. No Gatekeeper dialog observed in captured frames. Pi and optional test tools were not installed for this case.",
+      "evidence": [
+        {
+          "path": "console-a3a82813f41b.png",
+          "sha256": "68cb815fb04d21177ec6d94c4ca7c0405afa892bd9e5f52cae40ebfcd3df9e70"
+        },
+        {
+          "path": "console-4963e50410b9.png",
+          "sha256": "a5e2bc1e7613276bd1c6ae8eeb1e068361bcaa645574285b78e25496e3eba26c"
+        },
+        {
+          "path": "console-finder-selected-drag.png",
+          "sha256": "18938c7c789d3d70036f53b764b82dd3c514b43f998906553b217c6abea4f9cc"
+        },
+        {
+          "path": "console-61d028031972.png",
+          "sha256": "dd1297ad2168b7bea2ebce69f1f70e6ef652a82c30c952189f835b96f416b98c"
+        },
+        {
+          "path": "installed-readback.txt",
+          "sha256": "c87bb2cd073b925eb1d276476f0de336ec2c243a4159b05d51ab186327f9a780"
+        },
+        {
+          "path": "console-dc5bd48ec5b4.png",
+          "sha256": "eda2446c17dd42d7eecaf70377c6d5f713527d5e52dae11bfb31eba3fbbaa11e"
+        },
+        {
+          "path": "console-dedd61c459e3.png",
+          "sha256": "229f1543d29635c18ba2ae6266dc4dae01d87427f79a964db6a5cd96f65f0962"
+        },
+        {
+          "path": "console-cfe7cbd8951f.png",
+          "sha256": "506a7e7a15e63b489854a5f109d12981fc762e303df2cc2ba3a4636249498803"
+        },
+        {
+          "path": "console-517ced41473f.png",
+          "sha256": "81630034ff5e9ae70249a4bad4e3471f2e7e4ec0ddceee35ff0cd974bee0c7bb"
+        }
+      ],
+      "observer": "native Tart VNC",
+      "mode": "observed-gui",
+      "utc": "2026-11-18T12:21:07.763844+00:00"
+    }
+  ],
+  "cleanup": {
+    "ownerExit": 0,
+    "ownedCloneAbsent": true,
+    "independentBeforeAfterMatch": true,
+    "originalEntriesStopped": 5
+  },
+  "limits": [
+    "Unsigned and unnotarized candidate. No Gatekeeper prompt appeared in captured frames; distribution acceptance was not evaluated.",
+    "The stock guest contained development tools. No optional tools, Pi or shell fixture were added for CF1-02.",
+    "Finder Paste was disabled. The first drag did not verify a copy. The second drag used a visibly selected app and was followed by destination and binary readback.",
+    "One capture timed out after an unverified double-click. The next launch followed a fresh selection and the app window was observed.",
+    "The default missing-Pi screen and one ordinary shell command support CF1-02 only. CF1-03 through CF1-12 remain blocked pending their own checks."
+  ]
+}

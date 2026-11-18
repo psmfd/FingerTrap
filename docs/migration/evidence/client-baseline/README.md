@@ -189,26 +189,103 @@ that campaign; this file does not constitute a new CF-1 verification or GUI pass
 Reverify the bytes and compare package-relevant source/build inputs before reuse.
 Report its actual source identity, rather than attributing it to current dev.
 
+## Finder installation and launch — 2026-11-18
+
+[Observed CF1-01 and CF1-02 outcomes](finder-install-observation.json) use the
+verified #225 candidate and a fresh, owned macOS 15.7.7 Tart guest. Finder
+installed and opened FingerTrap. The normal shell control opened a usable
+pane and displayed an entered command's result. Cleanup verified. The stock
+guest had developer tools already present. No optional tools or Pi were added,
+and no Gatekeeper prompt appeared in captured frames. The candidate is unsigned
+and unnotarized. Current worksheet status is two PASS and ten BLOCKED.
+Earlier run snapshots below and above retain their historical statuses.
+
+## Shell layout and explicit Pi failures — 2026-11-18
+
+[Observed CF1-03 and CF1-04 outcomes](shell-layout-pi-failures.json) use the
+same verified #225 build in a separate owned Tart guest. Native output and
+independent process checks establish shell resize and sibling-only close.
+Explicit missing Pi showed actionable guidance. A non-executable configured
+Pi path produced only exit code 13, so CF1-04 fails the actionable diagnostic
+requirement. The app did not create a fallback shell. Cleanup verified.
+Current worksheet status is three PASS, one FAIL and eight BLOCKED.
+
+## Explicit Pi path correction — 2026-11-18
+
+[Observed CF1-04 correction](pi-path-correction-observation.json) passed on
+verified Apple Silicon draft #230 bytes built by a local Tart runner. In a
+separate fresh Tart guest the explicit missing-Pi request and both configured
+file cases showed what to correct. No fallback shell appeared, and the
+ordinary shell worked. Owner exit and independent cleanup verified. The prior
+failure on PR #225 bytes remains recorded above. Worksheet evidence totals four PASS
+and eight BLOCKED. CF1-04 is only verified on the unmerged candidate.
+
+[CF1-04 retest after the Linux CI correction](pi-path-drain-retest-observation.json)
+passed on verified draft #230 artifact 14442208012 in a separate fresh Tart
+guest. Both formerly failing hosted Linux lanes and all four local Tart macOS
+CI lanes passed. The separate package job also passed in local Tart. The
+guest and runners were removed and no fallback shell was observed.
+
+[CF1-04 CodeRabbit retest](pi-path-review-retest-observation.json) passed on
+verified #230 artifact 14445949024. An inaccessible directory and an owned
+mode-0401 file gave distinct actionable diagnostics without a fallback shell.
+The symlink target launched and its ordinary exit 13 reached the Pi tab.
+Exact-head CI passed 14/14. Local Tart guest and runner cleanup verified.
+
+[CF1-05 real Pi PTY](real-pi-pty-observation.json) passed on integrated dev
+artifact 14456220605 at `34a755a`, using Pi `v0.85.1-psmfd.1`. Packaged
+`--require-pi` smoke passed. Offline Pi rendered `/hotkeys`; its TTY changed
+from 39×126 to 39×61 with the same process. Closing the Pi pane removed its
+process and both shells survived. Cleanup verified. Worksheet evidence is
+five PASS and seven BLOCKED.
+
+[CF1-06 native Pi RPC](native-pi-rpc-observation.json) passed on integrated
+artifact 14456220605 with real Pi `v0.85.1-psmfd.1` and a guest loopback
+model. Native GUI streaming, abort and recovery, confirmation, and Session
+Browser resume all had independent receipt evidence. App, sidecar, Pi and
+fixture exited, and both owned guests were removed. Worksheet evidence is
+six PASS and six BLOCKED. CF1-07 covers authenticated provider login.
+
+To reproduce CF1-06, use the artifact and runtime identities in the receipt
+and a new owned guest. Install the full Pi distribution and set FingerTrap's
+`pi.path` to its verified executable. In the guest, create `/Users/admin/.ft-cf106`
+and start the [loopback model](native-rpc-fixtures/model.py) with that directory as
+its argument. Use the `port` receipt and the golden recorder's `canned` provider
+schema to set `~/.pi/agent/models.json` to `http://127.0.0.1:<port>/v1`. Set the
+default provider and model to `canned` and `canned-model`, install the
+[confirmation fixture](native-rpc-fixtures/confirm.ts) in `~/.pi/agent/extensions`,
+and launch FingerTrap with `PI_OFFLINE=1`. The fixture uses a synthetic key.
+
+Submit `cf106 stream` in the native RPC pane. Create `release-stream` in the
+fixture directory only after the first chunk is visible. Submit `cf106 abort`,
+wait for its first chunk, click Abort, and check the guest fixture's disconnect
+receipt before `cf106 recover`. Submit `cf106 dialog` and answer **yes** in the
+GUI. Verify the dialog receipt precedes the fixture's model request. Close the
+pane, use Session Browser's **resume (rpc)**, and submit `cf106 resume`. Check
+that the same session file gains the final marker and that the original Pi PID
+was replaced. Quit the app, stop the identified fixture, and independently
+verify process exit and removal of the owned clone.
+
 ## Mandatory worksheet
 
 All rows are required for baseline acceptance. A blocked/not-run/skipped case is
 never a pass. Record source/package/runtime identities for every row and retain
 distinct results after any fix or artifact change.
 
-| ID     | Case                                 | Required observation                                                                                                                                           | Current status |
-| ------ | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- |
-| CF1-01 | Artifact and guest inputs            | Archive/app/DMG/native architectures, exact supported Pi executable, source/build identities and clean guest/tool inventory verify.                            | PASS           |
-| CF1-02 | Clean installation and Finder launch | Usable app/pane before optional test tools are installed; record Gatekeeper prompts without disabling it globally.                                             | BLOCKED        |
-| CF1-03 | Shell transport and panes            | Commands/output/resize work; split/close preserves sibling panes.                                                                                              | BLOCKED        |
-| CF1-04 | Explicit Pi failures                 | Missing or invalid explicit Pi requests remain actionable; no silent fallback or misleading shell success.                                                     | BLOCKED        |
-| CF1-05 | Real Pi PTY                          | Named runtime starts, renders, accepts input/resizes and closes; record its exact identity.                                                                    | BLOCKED        |
-| CF1-06 | Native Pi RPC                        | Actual client prompt/stream/abort/dialog/resume behavior works; distinguish fixtures from real provider turns.                                                 | BLOCKED        |
-| CF1-07 | Supported provider login             | Test credential entered through the supported guest path enables an authenticated minimal turn; no credential is copied from the host or recorded.             | BLOCKED        |
-| CF1-08 | Keychain lifecycle                   | Test credential save/relaunch/read/clear/relaunch behaves correctly; test values never enter evidence.                                                         | BLOCKED        |
-| CF1-09 | Repeat/startup/quit launch           | Existing window/session survives repeat launch, minimized/hidden states and startup races; one app/sidecar; launch during quit preserves shutdown.             | BLOCKED        |
-| CF1-10 | Normal shutdown                      | App, sidecar and recorded owned shell/Pi descendants terminate; siblings/unrelated processes remain unaffected.                                                | BLOCKED        |
-| CF1-11 | Hung-sidecar watchdog                | Stop only the recorded owned sidecar; app exits within its twenty-second watchdog plus recorded scheduling allowance; independently inspect/clean descendants. | BLOCKED        |
-| CF1-12 | Crash, recovery and upgrade          | Guest-created sessions/settings survive supported recovery/prior-app upgrade; exact prior/new bytes and final owned process/VM cleanup are recorded.           | BLOCKED        |
+| ID     | Case                                 | Required observation                                                                                                                                           | Current status        |
+| ------ | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| CF1-01 | Artifact and guest inputs            | Archive/app/DMG/native architectures, exact supported Pi executable, source/build identities and clean guest/tool inventory verify.                            | PASS                  |
+| CF1-02 | Clean installation and Finder launch | Usable app/pane before optional test tools are installed; record Gatekeeper prompts without disabling it globally.                                             | PASS                  |
+| CF1-03 | Shell transport and panes            | Commands/output/resize work; split/close preserves sibling panes.                                                                                              | PASS                  |
+| CF1-04 | Explicit Pi failures                 | Missing or invalid explicit Pi requests remain actionable; no silent fallback or misleading shell success.                                                     | PASS (#230 candidate) |
+| CF1-05 | Real Pi PTY                          | Named runtime starts, renders, accepts input/resizes and closes; record its exact identity.                                                                    | PASS                  |
+| CF1-06 | Native Pi RPC                        | Actual client prompt/stream/abort/dialog/resume behavior works; distinguish fixtures from real provider turns.                                                 | PASS (guest loopback) |
+| CF1-07 | Supported provider login             | Test credential entered through the supported guest path enables an authenticated minimal turn; no credential is copied from the host or recorded.             | BLOCKED               |
+| CF1-08 | Keychain lifecycle                   | Test credential save/relaunch/read/clear/relaunch behaves correctly; test values never enter evidence.                                                         | BLOCKED               |
+| CF1-09 | Repeat/startup/quit launch           | Existing window/session survives repeat launch, minimized/hidden states and startup races; one app/sidecar; launch during quit preserves shutdown.             | BLOCKED               |
+| CF1-10 | Normal shutdown                      | App, sidecar and recorded owned shell/Pi descendants terminate; siblings/unrelated processes remain unaffected.                                                | BLOCKED               |
+| CF1-11 | Hung-sidecar watchdog                | Stop only the recorded owned sidecar; app exits within its twenty-second watchdog plus recorded scheduling allowance; independently inspect/clean descendants. | BLOCKED               |
+| CF1-12 | Crash, recovery and upgrade          | Guest-created sessions/settings survive supported recovery/prior-app upgrade; exact prior/new bytes and final owned process/VM cleanup are recorded.           | BLOCKED               |
 
 A sidecar-only smoke bypasses the Tauri bridge. It supplements these observations.
 Run the existing packaged smoke with `--require-pi` after the guest has the named
