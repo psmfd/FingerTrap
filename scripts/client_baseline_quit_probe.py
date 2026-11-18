@@ -36,6 +36,7 @@ def processes(raw):
 
 
 def admit_tree(rows, app_pid, shell_pid, control_pid):
+    """Record the proven app tree and independent control from one inventory."""
     app = client.APP + "/Contents/MacOS/fingertrap"
     sidecar = client.APP + "/Contents/MacOS/fingertrap-sidecar"
     if rows.get(app_pid, {}).get("command") != app:
@@ -93,6 +94,7 @@ def require_shutdown(rows, admitted):
 
 
 def inventory(run, root, name, deadline):
+    """Capture guest process identities independently of the app and UI bridge."""
     return processes(
         shell.guest(
             run, root, name, deadline, "/bin/ps", "-axo", "pid,ppid,lstart,comm"
@@ -101,6 +103,7 @@ def inventory(run, root, name, deadline):
 
 
 def create_control(run, root, deadline):
+    """Create one guest sleep process that must survive the app's normal Quit."""
     code = """import json,pathlib,subprocess
 p=pathlib.Path('/tmp/ft-quit-control.json')
 if p.exists() or p.is_symlink(): raise ValueError('Existing control fixture')
@@ -120,6 +123,7 @@ print(p.read_text())"""
 
 
 def quit_once(run, root, deadline, window_id, admitted):
+    """Send Quit once and use fresh inventories to verify shutdown and control survival."""
     shell.cli(
         run,
         root,
@@ -149,6 +153,7 @@ def quit_once(run, root, deadline, window_id, admitted):
 
 
 def quit_probe(run, root, deadline):
+    """Verify normal Quit in a fresh scenario with proven app and shell identities."""
     root.mkdir(mode=0o700)  # A partial Quit scenario must never replay.
     pilot.require_bridge(
         shell.cli(run, root, "admission", deadline, "permissions", "status"), True
@@ -200,12 +205,14 @@ def quit_probe(run, root, deadline):
 
 
 def request_step(request, index):
+    """Recognize the fixed Quit request alongside the existing permission actions."""
     if request == {"action": "quit-probe"}:
         return {"Name": f"step-{index:02d}", "Quit": True}
     return pilot.request_step(request, index)
 
 
 def scenario_deadline(deadline):
+    """Reserve the full Quit observation window before starting the scenario."""
     now = time.monotonic()
     if deadline - now < SCENARIO_SECONDS:
         raise TimeoutError("Insufficient reserved budget; no client scenario started")
@@ -213,6 +220,7 @@ def scenario_deadline(deadline):
 
 
 def observe(run, image):
+    """Start the permission queue from the exact first frame of the owned guest."""
     pilot.atomic.vnc.connection(run)
     if image != run / "console-first-frame.png" or not image.is_file():
         raise ValueError("Exact fresh owned first frame required")
@@ -223,6 +231,7 @@ def observe(run, image):
     pilot.readback(run, root, deadline)
 
     def dispatch(run, step, root, deadline):
+        """Run the fixed Quit scenario or let enrollment use its remaining time."""
         if step.get("Quit"):
             quit_probe(run, root / "quit", scenario_deadline(deadline))
         else:
@@ -241,6 +250,7 @@ def observe(run, image):
 
 
 def main():
+    """Run the Quit observer under the owned Tart session and cleanup handler."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--archive", type=Path, required=True)
     parser.add_argument("--runtime-archive", type=Path, required=True)

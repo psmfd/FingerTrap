@@ -2,6 +2,7 @@ using System.Buffers;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using FingerTrap.Sidecar.Abstractions;
+using FingerTrap.Sidecar.Executables;
 using FingerTrap.Sidecar.Processes;
 using FingerTrap.Sidecar.Settings;
 using FingerTrap.Sidecar.Runtime;
@@ -51,6 +52,10 @@ internal sealed class PtyService : IPtyService
                 options.SessionPath, options.Env, cancellationToken)
             : null;
         var shellPath = context?.Executable ?? ResolveExecutable(options.Kind, options.Shell, _piSettings);
+        if (context is { EnvironmentMode: ChildEnvironmentMode.Inherit, WorkingDirectory: { } workingDirectory })
+        {
+            PiExecutableResolver.ValidateLegacyUnixPtyPath(shellPath, workingDirectory);
+        }
 
         var ptyOptions = new global::Porta.Pty.PtyOptions
         {

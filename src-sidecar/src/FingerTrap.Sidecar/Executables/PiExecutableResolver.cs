@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using FingerTrap.Sidecar.Pty;
 using FingerTrap.Sidecar.Settings;
 
@@ -10,7 +11,7 @@ namespace FingerTrap.Sidecar.Executables;
 /// purpose: a pi pane and a native RPC pane finding <em>different</em>
 /// binaries would be a confusing, hard-to-diagnose divergence.
 /// </summary>
-internal static class PiExecutableResolver
+internal static partial class PiExecutableResolver
 {
     /// <summary>
     /// Environment variable naming the pi executable outright. The escape
@@ -21,6 +22,19 @@ internal static class PiExecutableResolver
 
     /// <summary>Executable name searched for on <c>PATH</c>.</summary>
     private const string PiExecutableName = "pi";
+    private const UnixFileMode AnyExecute =
+        UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute;
+    private const int UnixExecuteAccess = 1;
+    private const int UnixOperationNotPermitted = 1;
+    private const int UnixNoEntry = 2;
+    private const int UnixAccessDenied = 13;
+    private const int UnixNotDirectory = 20;
+    private const int DarwinAtCurrentDirectory = -2;
+    private const int DarwinAtEffectiveAccess = 0x0010;
+    private const int LinuxAtCurrentDirectory = -100;
+    private const int LinuxAtEffectiveAccess = 0x0200;
+    private const string MissingFile = "does not name an existing file";
+    private const string CannotAccessFile = "could not be accessed";
 
     /// <summary>
     /// Locate the pi executable. Throws rather than falling back: a pi pane
@@ -69,6 +83,98 @@ internal static class PiExecutableResolver
     }
 
     /// <summary>
+    /// The legacy Unix PTY reports an exec failure as a child exit. Check a
+    /// selected file path before spawn so the pane can render a setup error.
+    /// Bare command names still use the PTY child's PATH search.
+    /// </summary>
+    internal static void ValidateLegacyUnixPtyPath(string executable, string workingDirectory)
+    {
+        if ((!OperatingSystem.IsMacOS() && !OperatingSystem.IsLinux()) || !executable.Contains('/'))
+        {
+            return;
+        }
+
+        var failure = LegacyUnixPathFailure(Path.Combine(workingDirectory, executable));
+        if (failure is not null)
+        {
+            throw InvalidPtyPath(executable, failure);
+        }
+    }
+
+    /// <summary>Check the configured path using the same component resolution as Unix exec.</summary>
+    private static string? LegacyUnixPathFailure(string path)
+    {
+        if (path.Contains('\0'))
+        {
+            return MissingFile;
+        }
+
+        // .NET's path normalization would remove a symlink/.. pair before lookup.
+        var resolved = RealPath(path, IntPtr.Zero);
+        if (resolved == IntPtr.Zero)
+        {
+            return UnixLookupFailure(Marshal.GetLastPInvokeError());
+        }
+
+        try
+        {
+            if ((File.GetAttributes(Marshal.PtrToStringUTF8(resolved)!) & FileAttributes.Directory) != 0)
+            {
+                return MissingFile;
+            }
+        }
+        catch (Exception ex) when (ex is FileNotFoundException or DirectoryNotFoundException)
+        {
+            return MissingFile;
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return CannotAccessFile;
+        }
+        finally
+        {
+            Free(resolved);
+        }
+
+        // Use the sidecar's effective credentials, which the PTY child inherits.
+        var (directory, flags) = OperatingSystem.IsMacOS()
+            ? (DarwinAtCurrentDirectory, DarwinAtEffectiveAccess)
+            : (LinuxAtCurrentDirectory, LinuxAtEffectiveAccess);
+        if (CheckAccess(directory, path, UnixExecuteAccess, flags) == 0)
+        {
+            return null;
+        }
+
+        var error = Marshal.GetLastPInvokeError();
+        return error is UnixAccessDenied or UnixOperationNotPermitted
+            ? "is not executable"
+            : UnixLookupFailure(error);
+    }
+
+    private static string UnixLookupFailure(int error) =>
+        error is UnixNoEntry or UnixNotDirectory ? MissingFile : CannotAccessFile;
+
+    [LibraryImport("libc", EntryPoint = "realpath", StringMarshalling = StringMarshalling.Utf8, SetLastError = true)]
+    private static partial IntPtr RealPath(string path, IntPtr buffer);
+
+    [LibraryImport("libc", EntryPoint = "free")]
+    private static partial void Free(IntPtr pointer);
+
+    [LibraryImport("libc", EntryPoint = "faccessat", StringMarshalling = StringMarshalling.Utf8, SetLastError = true)]
+    private static partial int CheckAccess(int directory, string path, int mode, int flags);
+
+    /// <summary>Format a path diagnostic safely for a terminal pane.</summary>
+    private static PiNotFoundException InvalidPtyPath(string executable, string reason)
+    {
+        // This text reaches a terminal pane. Do not render control characters
+        // from the configured path as terminal instructions.
+        var displayPath = string.Concat(executable.Select(c => char.IsControl(c) ? '\uFFFD' : c));
+        return new PiNotFoundException(
+            $"Pi executable '{displayPath}' {reason}. Fix: select an executable Pi file in " +
+            $"the spawn request, pi.path in settings.json, or ${PiPathEnvVar}.");
+    }
+
+    /// <summary>
     /// First executable match for <paramref name="name"/> across <c>PATH</c>,
     /// or null.
     /// </summary>
@@ -113,8 +219,6 @@ internal static class PiExecutableResolver
             }
 
             var mode = File.GetUnixFileMode(candidate);
-            const UnixFileMode AnyExecute =
-                UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute;
             if ((mode & AnyExecute) != 0)
             {
                 return candidate;

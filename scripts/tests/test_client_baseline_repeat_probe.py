@@ -32,6 +32,7 @@ class RepeatGuards(unittest.TestCase):
         return {"pid": 12, "rows": 39, "columns": 126, "sentinel": "owned-nonce"}
 
     def test_replaced_extra_missing_or_reused_process_identity_is_rejected(self):
+        """Reject a process inventory that differs across the two launches."""
         good = self.admitted()
         repeat.require_repeat(
             good, copy.deepcopy(good), self.proof(), self.proof(), 80, 80, "owned-nonce"
@@ -57,6 +58,7 @@ class RepeatGuards(unittest.TestCase):
                 )
 
     def test_window_shell_state_geometry_and_nonce_must_survive(self):
+        """Require the same window and a shell proof bound to the active run."""
         for field, value in (
             ("pid", 99),
             ("rows", 38),
@@ -87,10 +89,12 @@ class RepeatGuards(unittest.TestCase):
                 )
 
     def test_normal_launch_delivered_once_and_failures_never_replay(self):
+        """Make each launch step single-use even when a guest command fails."""
         for fail_at in (None, 0, 1):
             events = []
 
             def guest(*args):
+                """Record dispatches and inject an error at the selected step."""
                 events.append(args[2])
                 if len(events) - 1 == fail_at:
                     raise subprocess.CalledProcessError(1, "open")
@@ -121,6 +125,7 @@ class RepeatGuards(unittest.TestCase):
                     )
 
     def test_fixed_queue_and_reserved_budget_reject_late_or_arbitrary_requests(self):
+        """Only the fixed request can start a scenario with its full time budget."""
         self.assertTrue(repeat.request_step({"action": "repeat-probe"}, 1)["Repeat"])
         for request in (
             {"action": "repeat-probe", "command": "anything"},

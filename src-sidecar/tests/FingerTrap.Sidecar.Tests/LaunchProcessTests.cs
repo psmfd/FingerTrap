@@ -5,6 +5,7 @@ using FingerTrap.Sidecar.PiRpc;
 using FingerTrap.Sidecar.Processes;
 using FingerTrap.Sidecar.Pty;
 using FingerTrap.Sidecar.Runtime;
+using FingerTrap.Sidecar.Settings;
 using Xunit;
 
 namespace FingerTrap.Sidecar.Tests;
@@ -12,6 +13,112 @@ namespace FingerTrap.Sidecar.Tests;
 public sealed class LaunchProcessTests
 {
     private static CancellationToken Token => TestContext.Current.CancellationToken;
+
+    [Theory]
+    [InlineData(false, "does not name an existing file")]
+    [InlineData(true, "is not executable")]
+    public async Task LegacyPiPty_InvalidConfiguredPath_IsActionable(bool exists, string reason)
+    {
+        if (!OperatingSystem.IsMacOS() && !OperatingSystem.IsLinux()) return;
+
+        var root = Directory.CreateTempSubdirectory("ft-invalid-pi-");
+        try
+        {
+            var path = Path.Combine(root.FullName, "configured pi");
+            if (exists)
+            {
+                File.WriteAllText(path, "fixture without execute permission");
+                File.SetUnixFileMode(path, UnixFileMode.UserRead);
+            }
+
+            await using var service = new PtyService(new PiSettings { Path = path });
+            var error = await Assert.ThrowsAsync<PiNotFoundException>(() => service.SpawnAsync(
+                "invalid-pi", new(null, root.FullName, 80, 24, null, PaneKind.Pi), Token));
+            Assert.Contains(path, error.Message, StringComparison.Ordinal);
+            Assert.Contains(reason, error.Message, StringComparison.Ordinal);
+            Assert.Contains("settings.json", error.Message, StringComparison.Ordinal);
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task LegacyPiPty_ValidRelativeRequestOverridesSettings_ReportsOrdinaryExit(bool throughSymlink)
+    {
+        if (OperatingSystem.IsWindows()) return;
+
+        var root = Directory.CreateTempSubdirectory("ft-valid-pi-");
+        try
+        {
+            var executableDirectory = root.FullName;
+            var request = "./fake-pi";
+            if (throughSymlink)
+            {
+                executableDirectory = Directory.CreateDirectory(Path.Combine(root.FullName, "target")).FullName;
+                var linkTarget = Directory.CreateDirectory(Path.Combine(executableDirectory, "bin"));
+                Directory.CreateSymbolicLink(Path.Combine(root.FullName, "link"), linkTarget.FullName);
+                request = "./link/../fake-pi";
+            }
+
+            var path = Path.Combine(executableDirectory, "fake-pi");
+            File.WriteAllText(path, "#!/bin/sh\nread -r value\nexit 13\n");
+            File.SetUnixFileMode(path, UnixFileMode.UserRead | UnixFileMode.UserExecute);
+
+            await using var service = new PtyService(new PiSettings { Path = Path.Combine(root.FullName, "missing") });
+            var exit = new TaskCompletionSource<int>(TaskCreationOptions.RunContinuationsAsynchronously);
+            service.Exited += (_, e) =>
+            {
+                if (e.SessionId == "ordinary-exit") exit.TrySetResult(e.ExitCode);
+            };
+            await service.SpawnAsync("ordinary-exit",
+                new(request, root.FullName, 80, 24, null, PaneKind.Pi), Token);
+            await service.WriteAsync("ordinary-exit", "finish\n"u8.ToArray(), Token);
+            Assert.Equal(13, await exit.Task.WaitAsync(TimeSpan.FromSeconds(5), Token));
+        }
+        finally
+        {
+            root.Delete(recursive: true);
+        }
+    }
+
+    [Theory]
+    [InlineData(true, "could not be accessed")]
+    [InlineData(false, "is not executable")]
+    public async Task LegacyPiPty_PermissionDenied_IsActionable(bool denyTraversal, string reason)
+    {
+        if (!OperatingSystem.IsMacOS() && !OperatingSystem.IsLinux()) return;
+        Assert.SkipWhen(Environment.UserName == "root", "Permission fixture requires an unprivileged launch user");
+
+        var root = Directory.CreateTempSubdirectory("ft-denied-pi-");
+        var directory = root.CreateSubdirectory("configured");
+        var path = Path.Combine(directory.FullName, "fake-pi");
+        var ownerAccess = UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute;
+        try
+        {
+            File.WriteAllText(path, "#!/bin/sh\nexit 13\n");
+            File.SetUnixFileMode(path, denyTraversal ? ownerAccess : UnixFileMode.UserRead | UnixFileMode.OtherExecute);
+            if (denyTraversal)
+            {
+                File.SetUnixFileMode(directory.FullName, ownerAccess & ~UnixFileMode.UserExecute);
+            }
+
+            await using var service = new PtyService(new PiSettings { Path = path });
+            var error = await Assert.ThrowsAsync<PiNotFoundException>(() => service.SpawnAsync(
+                "denied-pi", new(null, root.FullName, 80, 24, null, PaneKind.Pi), Token));
+            Assert.Contains(path, error.Message, StringComparison.Ordinal);
+            Assert.Contains(reason, error.Message, StringComparison.Ordinal);
+            Assert.Contains("settings.json", error.Message, StringComparison.Ordinal);
+        }
+        finally
+        {
+            File.SetUnixFileMode(directory.FullName, ownerAccess);
+            root.Delete(recursive: true);
+        }
+    }
 
     [Theory]
     [InlineData(false, false)]

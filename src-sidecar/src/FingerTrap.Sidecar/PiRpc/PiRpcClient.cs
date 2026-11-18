@@ -725,9 +725,8 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
 
         // Bounded drain so the exit fault carries the complete stderr tail
         // and the event channel gets every line the child managed to write.
-        _ = await Task.WhenAny(
-            Task.WhenAll(_stdoutTask, _stderrTask),
-            Task.Delay(ExitDrainGrace)).ConfigureAwait(false);
+        await WaitForExitDrainAsync(Task.WhenAll(_stdoutTask, _stderrTask), ExitDrainGrace)
+            .ConfigureAwait(false);
 
         var fault = new PiProcessExitedException(_process.ExitCode, _stderr.Snapshot(), _streamFault);
         _exitFault = fault;
@@ -761,6 +760,15 @@ internal sealed partial class PiRpcClient : IAsyncDisposable
 
         _events.Writer.TryComplete();
         _exited.TrySetResult(fault);
+    }
+
+    internal static async Task WaitForExitDrainAsync(Task drain, TimeSpan grace)
+    {
+        using var timer = new CancellationTokenSource();
+        // Wait for reader completion without propagating its task fault here.
+        // MonitorExitAsync publishes the process exit and recorded stream fault.
+        _ = await Task.WhenAny(drain, Task.Delay(grace, timer.Token)).ConfigureAwait(false);
+        timer.Cancel();
     }
 
     private void SignalSettled()
