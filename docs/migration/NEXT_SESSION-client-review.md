@@ -1,34 +1,32 @@
-# Next session — client review and evidence coverage
+# Next session — merged client review readback
 
 ```text
 Resume FingerTrap in /Users/pdavis/projects/_personal/FingerTrap.
 
-Fetch origin and first read origin/docs/client-review-handoff-20261109-coverage:
-CONTRIBUTING.md, docs/migration/STATUS.md, HANDOFF-client-baseline-gui.md,
-issue-ledger.md and the latest WORK_LOG entry. Keep that handoff branch separate
-from test/client-normal-quit.
+Fetch origin. Read CONTRIBUTING.md, docs/migration/STATUS.md,
+HANDOFF-client-baseline-gui.md, issue-ledger.md and latest WORK_LOG entry
+(the latter four under docs/migration). Keep the coverage handoff branch
+separate from test/client-normal-quit.
 
-Refresh PR #227 against dev: maintainer review, CodeRabbit reviews/threads and CI.
-Handoff code head is 76c1269c6699b86456dc38aa050d2aeb4ff30543, ready/unmerged
-at last snapshot unless the maintainer has since merged it. Evidence split d8c2139
-and optimization-safe recipe 76c1269 preserve all 552 hashes and observations.
-Summary schema v2 references two v1 manifests; read evidence/README.md and the
-baseline README for the pattern and exact preservation recipe. GitHub patches
-reproduce all three files; completed full CodeRabbit coverage is linked in the
-handoff. Refresh the latest requested full review. The separate 10.71% docstring-
-coverage warning remains for validation and maintainer decision.
+PR #227 was merged by TheSemicolon on 2026-11-09T13:37:42Z as
+59c3ca42c3c14002fe24d36a626ae2429cd05450. Its tree equals reviewed
+76c1269c6699b86456dc38aa050d2aeb4ff30543; fetched dev c3cddd4 contains it.
+Final PR-head CI: 14/14 successful, CodeQL 5/5 plus aggregate successful,
+CodeRabbit/title/gitflow successful. Full review 5826441662 covers all 16 files,
+including split evidence summary and both manifests. Sole inline thread resolved.
+No separate human approval review or explicit docstring waiver recorded.
+10.71%/80% docstring warning remains for maintainer disposition; source inspection
+confirms missing docstrings, without independently reproducing the exact metric.
 
-Both ordered repeated-launch and fresh Quit runs already passed with cleanup.
-Do not repeat completed VM tests or start a new GUI slice without cause. Fix only
-validated review findings on test/client-normal-quit; run affected checks and
-refresh current-head CI/CodeQL. Material probe/product changes require affected
-bounded validation; docs-only edits do not require another VM run.
+At last refresh current-dev push CI 42632408725 was cancelled: ten successful
+jobs, four cancelled macOS jobs; all five CodeQL analyses successful. Refresh
+before claiming full dev success. Maintainer must select warning disposition
+and next #216/#217 work. Do not start a new GUI slice merely because #227 merged.
+Do not merge or enable auto-merge.
 
-Maintainer owns review and merge. Do not merge or enable auto-merge. If already
-merged, verify actual merge commit and dev readback before proposing next work.
-Preserve private evidence/unrelated files; never reuse cleaned pointers. Five
-original VMs were stopped with no owned clone/QA processes at shutdown. Baseline
-one input PASS/eleven BLOCKED, Pi v0.85.1-psmfd.1, #219 Pi 1.3.0 deferred and all
-acceptance/activation/backend/release gates remain. Existing CF-1 approval persists.
-Update migration records during resumed work.
+Both ordered live validations passed with cleanup; do not repeat without cause.
+Preserve private evidence/unrelated files; never reuse cleaned pointers.
+Baseline one input PASS/eleven BLOCKED, Pi v0.85.1-psmfd.1, #219 deferred,
+and all acceptance/provider/activation/backend/release gates remain unchanged.
+Update migration records during any resumed work.
 ```

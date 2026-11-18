@@ -1,3 +1,56 @@
+## CF-1C-REVIEW-REFRESH-1 — merged PR readback, 2026-11-18
+
+Fetched origin and read coverage handoff `bcd9272`. [PR #227](https://github.com/psmfd/FingerTrap/pull/227)
+was merged by TheSemicolon at 2026-11-09T13:37:42Z as
+`59c3ca42c3c14002fe24d36a626ae2429cd05450` into dev; auto-merge is null.
+The squash tree exactly equals reviewed head
+`76c1269c6699b86456dc38aa050d2aeb4ff30543`. Git ancestry confirms inclusion in
+fetched dev `c3cddd40bdb81e5780f5e38ccf3bb7b658dd2e18`; subsequent #225/#226
+change only Cargo.lock and two workflow files. No agent merge occurred.
+
+Review refresh: five CodeRabbit COMMENTED reviews, no separate human approval
+review or explicit docstring waiver recorded. Latest full review
+[5826441662](https://github.com/psmfd/FingerTrap/pull/227#pullrequestreview-5826441662)
+still covers all 16 files, including all three split evidence JSON files; no
+new coverage gap. The sole inline thread is resolved by the bot for the
+optimization guard in 76c1269. Two additional wording nits are marked unverified;
+no functional finding or new probe change is established.
+
+Exact PR head: [CI 42623427004](https://github.com/psmfd/FingerTrap/actions/runs/42623427004)
+has all fourteen jobs successful. [CodeQL 42623421619](https://github.com/psmfd/FingerTrap/actions/runs/42623421619)
+has five successful analyses plus successful aggregate; CodeRabbit, title and
+gitflow checks succeed. Current dev differs: [push CI 42632408725](https://github.com/psmfd/FingerTrap/actions/runs/42632408725)
+is cancelled, with ten successful jobs and four cancelled macOS jobs. Its five
+CodeQL analyses succeed. Do not describe current dev as fully CI-verified.
+No rerun requested by this read-only refresh.
+
+Separate warning remains: CodeRabbit reports 10.71% versus 80% for touched
+functions of cyclomatic complexity at least 2. AST inspection confirms missing
+docstrings in changed functions (for example `admit_tree`, `quit_once`,
+`reopen_once` and `repeat_probe`). This supports the warning, but does not
+independently reproduce CodeRabbit's scoped percentage. No checked-in tool or
+configuration establishes that exact calculation. Merge is not a recorded waiver.
+No source edits or new tests/GUI runs are needed for this records-only refresh.
+
+All prior evidence splitting, complete three-file coverage and both ordered live
+validations with cleanup remain verified. Baseline stays one input PASS/eleven
+BLOCKED, Pi v0.85.1-psmfd.1, #219 deferred, all acceptance/provider/activation/
+backend/release gates retained. Private evidence/unrelated files preserved;
+never reuse cleaned pointers. Historical open/unmerged snapshots below remain
+historical. This handoff branch stays separate from `test/client-normal-quit`.
+
+**Next action:** maintainer disposition of the docstring warning, then select
+next work under #216/#217; current-dev macOS CI cancellation must be resolved
+before claiming full dev CI success. No new GUI slice, merge or auto-merge here.
+Reproduce readback with `git fetch origin`, `git diff 76c1269 59c3ca4`,
+`git merge-base --is-ancestor 59c3ca4 origin/dev`, and
+`gh api repos/psmfd/FingerTrap/actions/runs/42632408725`.
+Records are locally implemented and verified: repository check (zero errors/
+warnings), Markdownlint, Prettier, diff checks and secret scan pass. Initial
+Markdownlint findings were corrected; the scanner needed its configured cache
+write outside the sandbox, then passed. Scoped checkpoint/backup follows; no
+new CI or live validation is claimed for these documentation edits.
+
 ## Session close — evidence coverage corrected, 2026-11-09
 
 **First resume action:** fetch origin, read this handoff, then refresh #227's

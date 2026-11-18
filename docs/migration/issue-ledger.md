@@ -1,5 +1,25 @@
 # Agent runtime issue migration ledger
 
+## Review refresh — 2026-11-18
+
+PR #227 was merged by TheSemicolon on 2026-11-09 as `59c3ca4`; its tree equals
+reviewed `76c1269` and is included in fetched dev `c3cddd4`. PR-head CI 14/14,
+CodeQL 5/5 plus aggregate, CodeRabbit/title/gitflow succeed. Sole inline thread
+resolved; latest full review still covers all 16 files. No separate human
+approval review or explicit docstring waiver recorded. The 10.71%/80% warning
+remains for maintainer disposition; source inspection confirms missing docstrings
+without independently reproducing the bot's complexity-scoped percentage.
+Current-dev push CI has four cancelled macOS jobs and ten successful jobs;
+do not infer current-dev CI success from PR-head checks.
+
+See [current audit and reproduction commands](STATUS.md#cf-1c-review-refresh-1--merged-pr-readback-2026-11-18).
+Next: maintainer warning disposition and next #216/#217 selection; resolve dev
+CI cancellation before claiming full dev success. Both live validations and
+cleanup remain complete; no rerun or pointer reuse. Private evidence and unrelated
+files preserved. Baseline one input PASS/eleven BLOCKED, Pi v0.85.1-psmfd.1,
+Issue #219 deferred and every existing gate retained. Handoff branch remains separate;
+no agent merge or auto-merge. Open/unmerged snapshots below are historical.
+
 ## Session close — evidence coverage corrected, 2026-11-09
 
 **First resume action:** fetch origin, read this handoff, then refresh #227's

@@ -3566,3 +3566,46 @@ reviewed head. Read these records before switching back to `test/client-normal-q
 do not push this documentation branch onto the PR merely to synchronize trackers.
 Issues #216/#217 and PR #227 receive immutable handoff links after backup. No merge,
 issue closure, auto-merge or activation is part of this session close.
+
+## 2026-11-18 — CF-1C-REVIEW-REFRESH-1 started
+
+Fetch and handoff read complete on the separate coverage handoff branch, starting
+at `bcd927274c899ee1e40de106d8e96fe6213c572c`. Scope: read-only refresh of #227's
+maintainer/CodeRabbit review, CI, actual merge/dev tree and separate docstring
+warning; update durable session records with repository/docs/diff/secret checks.
+TheSemicolon merged #227 at 2026-11-09T13:37:42Z as `59c3ca4`; local Git confirms
+its tree equals reviewed `76c1269` and ancestry in fetched dev `c3cddd4`.
+Next: finish warning/source inspection and exact-head checks. No new GUI run,
+merge, auto-merge, runtime change or acceptance promotion. Private evidence and
+unrelated files preserved; completed runs and cleaned pointers stay untouched.
+
+## 2026-11-18 — CF-1C-REVIEW-REFRESH-1 result
+
+Verified maintainer merge `59c3ca4`, exact tree equality to reviewed `76c1269`,
+and ancestry in dev `c3cddd4`. Five bot COMMENTED reviews, no separate human
+approval review/explicit docstring waiver; sole inline thread resolved. Latest
+full review still selects all 16 files. PR-head CI fourteen successful jobs,
+CodeQL five successful analyses plus aggregate, CodeRabbit/title/gitflow success.
+Current-dev CI 42632408725 cancelled (ten successful/four cancelled macOS jobs);
+five dev CodeQL analyses successful. No rerun or new GUI run requested.
+
+AST inspection of the five changed Python files confirms missing docstrings,
+including admission/Quit/reopen/repeat functions. The bot's 10.71%/80% warning
+is supported but its exact complexity-scoped metric is not independently
+reproduced. No source fix or waiver inferred from merge. Updated status, handoff,
+ledger, inventory pointer and next-session prompt on the separate handoff branch.
+Next: repository/docs/diff/secret checks and scoped checkpoint, then maintainer
+warning disposition and next #216/#217 selection. Current dev is not fully
+CI-verified; all baseline/runtime/activation gates and private evidence retained.
+
+Local checks: repository check PASS (zero warnings/errors), Prettier and diff
+checks pass. Markdownlint initially rejected bare issue numbers at line starts
+in two new summaries; wording corrected. Initial secret scan exited 2; inspect
+its private log and resolve the tool failure before claiming a scan result.
+
+Final local validation: Markdownlint zero issues, Prettier/diff/repository checks
+pass. Secret scanner initially could not write its configured report outside the
+sandbox; authorized retry passes with zero findings. No private evidence or
+unrelated files staged. Next: scoped documentation commit/backup on the handoff
+branch; maintainer retains warning disposition/next-slice decision. No new CI
+success claimed for this documentation update and no live validation repeated.

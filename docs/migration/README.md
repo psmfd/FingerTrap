@@ -1,8 +1,9 @@
 # Agent runtime migration inventory
 
 Latest session: [coverage correction and resume handoff](HANDOFF-client-baseline-gui.md)
-and [copy-ready prompt](NEXT_SESSION-client-review.md). PR #227 remains with the
-maintainer for review and merge decision.
+and [copy-ready prompt](NEXT_SESSION-client-review.md). PR #227 was merged by
+TheSemicolon as `59c3ca4`; see [current review/CI audit](STATUS.md) for the
+remaining docstring warning and cancelled current-dev macOS CI jobs.
 
 **Active sequence: client foundation before further extension catalog import/review.**
 The maintainer selected [foundation #216](https://github.com/psmfd/FingerTrap/issues/216)
