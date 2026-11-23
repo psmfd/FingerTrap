@@ -237,6 +237,7 @@ main {
 
 .status-token {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
   align-items: center;
   margin: 6px 0;
@@ -244,6 +245,7 @@ main {
 
 .status-token input {
   flex: 1;
+  min-width: 0;
   padding: 4px 6px;
   color: #ddd;
   background: #000;
@@ -261,8 +263,13 @@ main {
 }
 
 .status-token-msg {
+  flex-basis: 100%;
   color: #999;
   font-size: 11px;
+}
+
+.status-token-msg:empty {
+  display: none;
 }
 
 .status-list-title {
