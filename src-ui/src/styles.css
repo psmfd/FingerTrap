@@ -320,10 +320,6 @@ main {
   text-decoration: underline;
 }
 
-.status-empty {
-  color: #777;
-}
-
 /* Command palette (FT-1 slice 3) */
 
 .palette-overlay {

@@ -71,6 +71,66 @@ describe('Status panel Keychain controls', () => {
     expect(status('github')).toBe('Credential stored in Keychain');
   });
 
+  it('keeps Clear and Retry Clear available across missing and partial snapshots', async () => {
+    let stored = true;
+    let rejectDelivery!: (reason: Error) => void;
+    let clearAttempts = 0;
+    shell.mockImplementation(async (command, args) => {
+      const provider = (args as { provider: string }).provider;
+      if (command === 'credential_clear') {
+        stored = false;
+        if (++clearAttempts === 1) {
+          await new Promise<void>((_resolve, reject) => {
+            rejectDelivery = reject;
+          });
+        }
+        return;
+      }
+      return stored || provider === 'ado' ? 'configured' : 'not-configured';
+    });
+    panel.toggle();
+    await vi.waitFor(() => expect(status('github')).toBe('Credential stored in Keychain'));
+    expect(card('github').querySelector('.status-state')?.textContent).toBe(
+      'Waiting for provider status…',
+    );
+    expect(button('ado', 'Clear').hidden).toBe(false);
+
+    const clear = button('github', 'Clear');
+    clear.click();
+    expect(clear.disabled).toBe(true);
+    const [, ado] = snapshot('error').providers;
+    panel.update({ providers: [ado] });
+    expect(button('github', 'Clear')).toBe(clear);
+    expect(clear.disabled).toBe(true);
+    expect(card('github').querySelector('.status-state')?.textContent).toBe(
+      'Provider status unavailable',
+    );
+
+    rejectDelivery(new Error('private delivery details'));
+    await vi.waitFor(() => expect(status('github')).toBe('No credential stored in Keychain'));
+    expect(button('github', 'Retry Clear')).toBe(clear);
+    expect(clear.hidden).toBe(false);
+    expect(card('github').querySelector('[role=alert]')?.textContent).toContain(
+      'Removal from the running app is unconfirmed.',
+    );
+
+    panel.update(snapshot('error'));
+    expect([...host.querySelectorAll('.status-name')].map((node) => node.textContent)).toEqual([
+      'github',
+      'ado',
+      'git',
+    ]);
+    expect(card('github').querySelector('.status-state')?.textContent).toBe('error');
+    expect(button('github', 'Retry Clear')).toBe(clear);
+    clear.click();
+    await vi.waitFor(() => expect(button('github', 'Clear')?.hidden).toBe(true));
+    expect(shell.mock.calls.filter(([command]) => command === 'credential_clear')).toEqual([
+      ['credential_clear', { provider: 'github' }],
+      ['credential_clear', { provider: 'github' }],
+    ]);
+    expect(button('ado', 'Clear').hidden).toBe(false);
+  });
+
   it('masks and clears input and serializes save through a snapshot and reopen', async () => {
     let finishSave!: () => void;
     let stored = false;

@@ -62,35 +62,38 @@ export class StatusPanel {
 
   private render(): void {
     this.root.replaceChildren();
-    const providers = this.snapshot?.providers ?? [];
-    if (providers.length === 0) {
-      this.root.appendChild(el('p', 'status-empty', 'waiting for the first snapshot…'));
-      return;
-    }
+    const snapshots = new Map(this.snapshot?.providers.map((p) => [p.provider, p]));
+    const providers = new Set([...snapshots.keys(), ...this.credentials.keys()]);
     for (const provider of providers) {
-      this.root.appendChild(this.renderProvider(provider));
+      this.root.appendChild(this.renderProvider(provider, snapshots.get(provider)));
     }
   }
 
-  private renderProvider(p: api.ProviderSnapshot): HTMLElement {
+  private renderProvider(provider: string, p?: api.ProviderSnapshot): HTMLElement {
     const section = el('section', 'status-provider');
     const head = el('header', 'status-head');
-    head.appendChild(el('span', 'status-name', p.provider));
-    head.appendChild(el('span', `status-state status-state-${cssToken(p.state)}`, p.state));
+    head.appendChild(el('span', 'status-name', provider));
+    if (p) {
+      head.appendChild(el('span', `status-state status-state-${cssToken(p.state)}`, p.state));
+    } else {
+      const text = this.snapshot ? 'Provider status unavailable' : 'Waiting for provider status…';
+      head.appendChild(el('span', 'status-state', text));
+    }
     section.appendChild(head);
 
-    if (p.detail) {
+    if (p?.detail) {
       section.appendChild(el('p', 'status-detail', p.detail));
     }
 
     // Local-git surfaces are one summary line with nothing to click; say so,
     // or its plain text reads as broken links next to the linked rows (#83).
-    if (p.provider === 'git') {
+    if (provider === 'git') {
       section.appendChild(el('p', 'status-hint', 'local repository status — nothing here links to a web page'));
     }
 
-    const controls = this.credentials.get(p.provider);
-    if (controls) section.appendChild(controls.render(p.state));
+    const controls = this.credentials.get(provider);
+    if (controls) section.appendChild(controls.render(p?.state));
+    if (!p) return section;
 
     // List order is an operator-facing choice (#85): the actionable work
     // items first (PRs, then issues), pipeline state last.
@@ -191,7 +194,7 @@ class CredentialControls {
     });
   }
 
-  render(providerState: string): HTMLElement {
+  render(providerState?: string): HTMLElement {
     this.providerNeedsToken = providerState === 'not-configured' || providerState === 'auth-failed';
     this.updateControls();
     return this.root;
