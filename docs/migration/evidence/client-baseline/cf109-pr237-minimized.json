@@ -1,0 +1,108 @@
+{
+  "case": "CF1-09",
+  "scope": "minimized-only",
+  "runId": "20261123T183041Z-01dd0eb98152",
+  "artifactId": 14849262442,
+  "buildCommit": "bd708ae129609fd78513ba5deb9d8329300f4470",
+  "archiveSha256": "44db20ddd2afc84b01f277e755933e5a5cb80ad4ed34798bb1c865b3b5dd5168",
+  "packageSha256": {
+    "FingerTrap-apple-silicon.app.zip": "b6ec37a3bd61a93b477b1b0d36d36e380db54d69bf9eb04dbb99d6cdddafdea8",
+    "FingerTrap_0.1.0_aarch64.dmg": "c26aa9cbeb7be8068d5a79cd62fefbca9e574c6ca5142cdebab7b5c08fa45459"
+  },
+  "bundleBinarySha256": {
+    "fingertrap": "617fa79a2c6e288aaa3b6baee042bd3df0ede8ff996f5eb28b8ded1f5e0c215b",
+    "fingertrap-sidecar": "85b68b857562c919ca56db885e8198392f520046af55a3d82deab7472da506ff",
+    "libporta_pty.dylib": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3"
+  },
+  "installedBinariesVerified": true,
+  "externalEgressDenied": true,
+  "windowId": 30,
+  "appPid": 662,
+  "sidecarPid": 671,
+  "shellPid": 737,
+  "terminalFocusReadback": true,
+  "checkpoints": [
+    {
+      "phase": "sentinel-first",
+      "rendered": true,
+      "independentReadback": true
+    },
+    {
+      "phase": "reopen-session-proof",
+      "rendered": true,
+      "independentReadback": true
+    }
+  ],
+  "samePair": true,
+  "sameShellStillChild": true,
+  "relaunchGeometry": [
+    {
+      "afterReopenMs": 71,
+      "state": {
+        "front": 662,
+        "pids": [662],
+        "hidden": [],
+        "windows": [
+          {
+            "id": 31,
+            "pid": 662,
+            "onscreen": false
+          },
+          {
+            "id": 30,
+            "pid": 662,
+            "onscreen": false
+          }
+        ]
+      }
+    },
+    {
+      "afterReopenMs": 395,
+      "state": {
+        "front": 662,
+        "pids": [662],
+        "hidden": [],
+        "windows": [
+          {
+            "id": 31,
+            "pid": 662,
+            "onscreen": false
+          },
+          {
+            "id": 30,
+            "pid": 662,
+            "onscreen": true
+          }
+        ]
+      }
+    }
+  ],
+  "noFramebufferSaved": true,
+  "sourceCommit": "27f0dc5f0a17c88775387ab82489e66ee8baa280",
+  "variantVerdict": "PASS",
+  "baselineVerdict": "BLOCKED",
+  "priorAttempts": [
+    {
+      "runId": "20261123T182638Z-76f386f177a5",
+      "stoppedAt": "reopen-session-proof",
+      "controllerExit": 0,
+      "cloneRemoved": true,
+      "originalInventoryPreserved": true,
+      "limitation": "Observer boolean shadowed the visual matcher after foreground restoration and independent shell readback."
+    },
+    {
+      "runId": "20261123T182745Z-673a97e1df6a",
+      "stoppedAt": "sentinel-first",
+      "controllerExit": 0,
+      "cloneRemoved": true,
+      "originalInventoryPreserved": true,
+      "limitation": "Initial terminal readback timed out before minimizing."
+    }
+  ],
+  "cleanup": {
+    "controllerExit": 0,
+    "cloneRemoved": true,
+    "originalInventoryPreserved": true,
+    "preTeardownAppAndSidecarExitVerified": true
+  }
+}

@@ -1,0 +1,144 @@
+{
+  "case": "CF1-09",
+  "scope": "controlled-quit-overlap-diagnostic",
+  "runId": "20261123T202719Z-901b8b37e7d5",
+  "buildCommit": "443620281736642fe19029780b9b82b29b0d9f7a",
+  "sourceTree": "457b22ff0153474c41fbe129cfd6bbbd2ee1c763",
+  "archiveSha256": "a6b3734771a1628c413ec98697a2a69a74c8514c2d20196cac90165e74ddc777",
+  "packageSha256": {
+    "FingerTrap-apple-silicon.app.zip": "3db97566227407e1bd6a35498cb43daffe34df9689a4a4d682127b05a830fa63",
+    "FingerTrap_0.1.0_aarch64.dmg": "2ce68fd51979ef127159b2512a5600976ce8ad07be45891a94829045a717b344"
+  },
+  "bundleBinarySha256": {
+    "fingertrap": "c6704f8c3cd8bc5482238f595cfa2ffd87cecad507b7d0e8eacd208ed2de1cbd",
+    "fingertrap-sidecar": "f6cb339604f554a026527a19a3f8deea2d095d0d17d2f6acf51f66d1adcc27c3",
+    "libporta_pty.dylib": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3"
+  },
+  "productCommit": "ea6b1127b35e2aa01204a0ca7599e88bf4d51cd4",
+  "productPullRequest": 238,
+  "installedBinariesVerified": true,
+  "externalEgressDenied": true,
+  "runtimeExecuted": false,
+  "originalLaunch": "packaged-binary-with-explicit-guest-environment",
+  "originalOptInVerified": true,
+  "originalStderrRouteVerified": true,
+  "sidecarHoldOptInVerified": true,
+  "originalProcessIds": {
+    "app": 628,
+    "sidecar": 648,
+    "shell": 717
+  },
+  "terminalFocusReadback": true,
+  "shellTtyMatched": true,
+  "shellPidIsLiveOwnedShell": true,
+  "shellSentinelMatched": true,
+  "checkpoints": [
+    {
+      "phase": "sentinel-first",
+      "rendered": true,
+      "independentReadback": true
+    },
+    {
+      "phase": "quit-overlap",
+      "callbackDuringWaiting": true,
+      "activationSuppressed": true,
+      "originalTreeExited": true
+    }
+  ],
+  "watcherArmed": true,
+  "normalQuitIssued": true,
+  "overlap": {
+    "events": [
+      {
+        "pid": 628,
+        "ns": 21330632250,
+        "event": "app-started"
+      },
+      {
+        "pid": 628,
+        "ns": 22091577000,
+        "event": "sidecar-started"
+      },
+      {
+        "pid": 628,
+        "ns": 35185209333,
+        "event": "shutdown-started"
+      },
+      {
+        "pid": 628,
+        "ns": 35276021583,
+        "event": "reopen-received-while-waiting"
+      },
+      {
+        "pid": 628,
+        "ns": 35278301916,
+        "event": "reopen-suppressed"
+      },
+      {
+        "pid": 628,
+        "ns": 35316797208,
+        "event": "shutdown-wait-ended"
+      },
+      {
+        "pid": 628,
+        "ns": 35316933000,
+        "event": "final-exit"
+      }
+    ],
+    "replacementEvents": [
+      {
+        "pid": 815,
+        "ns": 35251137500,
+        "event": "app-started"
+      }
+    ],
+    "classification": "overlap-suppressed",
+    "dispatchNs": 35191630125,
+    "originalFirstAbsentNs": 35333807250,
+    "dispatched": true,
+    "launcherExit": 0,
+    "secondSidecarSampled": false,
+    "originalAppExited": true,
+    "holdWaitingObservedNs": 35191629916,
+    "holdReleaseRequestedNs": 35280384833,
+    "holdOutcome": "released",
+    "firstProcessSamples": [
+      {
+        "pid": 628,
+        "parentPid": 1,
+        "kind": "app",
+        "ns": 35222794125
+      },
+      {
+        "pid": 648,
+        "parentPid": 628,
+        "kind": "sidecar",
+        "ns": 35222794125
+      },
+      {
+        "pid": 815,
+        "parentPid": 1,
+        "kind": "app",
+        "ns": 35273883583
+      }
+    ]
+  },
+  "verdict": "PASS",
+  "freshLaunch": {
+    "app": 877,
+    "sidecar": 882,
+    "freshAppAndSidecarVerified": true,
+    "freshForegroundWindow": true,
+    "freshShellInputVerified": true
+  },
+  "noFramebufferSaved": true,
+  "cleanup": {
+    "controllerExit": 0,
+    "cloneRemoved": true,
+    "originalInventoryPreserved": true,
+    "cleanupAppPids": [
+      877
+    ],
+    "preTeardownAppAndSidecarExitVerified": true
+  }
+}

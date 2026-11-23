@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "runId": "20261118T190027Z-849e2a3d2e0e",
+  "artifact": {
+    "kind": "cf1-05-integrated-candidate",
+    "campaign": "CF-1",
+    "artifactId": 14456220605,
+    "run": "https://github.com/psmfd/FingerTrap/actions/runs/44358288656",
+    "sourceHead": "34a755a09868b9fb147acdbbbb5332a80e395dcc",
+    "buildCommit": "34a755a09868b9fb147acdbbbb5332a80e395dcc",
+    "sourceTree": "3d7287f88790b3b25f01bec9f2a1e42a0a915dda",
+    "archiveDigest": "sha256:d15eeeb601286158ac83ca69806d520e1c89b9c4ef82cfd053fe0c6690775d78",
+    "appArchiveDigest": "sha256:9bf32f7ae9db0af83907060234a99007d81b954f8f7d883a69b22622a5bdd354",
+    "dmgDigest": "sha256:f6b1838e7d906adb1924fec6487dcf70d18d5a1b2b761f1f0b5681e33ae6e54a",
+    "appVersion": "0.1.0",
+    "target": "aarch64-apple-darwin",
+    "productionRuntimeSelection": "v0.85.1-psmfd.1",
+    "distribution": "unsigned candidate; not notarized; not a published release",
+    "runner": "ft-actions-job-20261118t174006z-12db0416"
+  },
+  "runtime": {
+    "tag": "v0.85.1-psmfd.1",
+    "version": "0.85.1",
+    "archiveSha256": "e0e0331d478af7724fa24d780a8d4abc0033c6f5ee7c0d45dddae6f922e5c4cb",
+    "executableSha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5"
+  },
+  "provider": {
+    "name": "OpenAI Codex",
+    "mode": "browser OAuth",
+    "operatorReportedSignIn": true,
+    "model": "GPT-5.5 (packaged default)",
+    "manualTurns": 1,
+    "automaticSocketRetriesObserved": 2,
+    "successfulTurn": false,
+    "observedFailure": "Native RPC reported that GPT-5.5 could not be used with Codex and a ChatGPT account."
+  },
+  "network": {
+    "preflightHttpsStatus": {
+      "auth.openai.com": 302,
+      "chatgpt.com": 200
+    },
+    "directBlocked": true,
+    "unrelatedHostnameDenied": true,
+    "independentTurnConnectionConfirmed": false
+  },
+  "guest": {
+    "base": "ghcr.io/cirruslabs/macos-sequoia-base@sha256:3f4d14a5ffb9efd3bda2ae0184fd4bc2773d924ff8b7565f958761420ec41a0c",
+    "macOS": "ProductName:\t\tmacOS\nProductVersion:\t\t15.7.7\nBuildVersion:\t\t24G720",
+    "tart": "2.32.1"
+  },
+  "observationWindow": {
+    "holdSeconds": 1800,
+    "reservedSeconds": 300,
+    "privateConsoleReadyUtc": "2026-11-18T19:00:55+00:00",
+    "explicitFinishUtc": "2026-11-18T19:24:15+00:00"
+  },
+  "cases": [
+    {
+      "case": "CF1-07",
+      "status": "FAIL",
+      "observation": "Maintainer completed browser OAuth directly in the guest. Relaunched without the sign-in pane. The sole native RPC prompt with the default GPT-5.5 model did not return a successful response. The pane displayed two automatic socket retries followed by an account/model support error. App, sidecar and Pi exit verified.",
+      "evidence": [
+        {
+          "path": "preflight.json",
+          "sha256": "47b8d5989ad58fd42a32743381d6fbcb7de1f6cc99e13d1b975fa232fcb323f1"
+        },
+        {
+          "path": "post-auth-safe.json",
+          "sha256": "75f60e55ab6c4181f4a3073f66ab0c827af0622549a595b0bf33932bf41e7d1c"
+        },
+        {
+          "path": "model-ready.png",
+          "sha256": "a02d4031f7678820fedcb14387cf29379984375de759a096a408c799c953cebe"
+        },
+        {
+          "path": "settled.png",
+          "sha256": "2ccf75e2487f2859bf4fd9d6a905f3d9f2ce2cd48da7710d67a744d471a48090"
+        },
+        {
+          "path": "shutdown.json",
+          "sha256": "63e9e6b8ca092b05aeee7d91a2861b77414f4424b04fd9920bacb72f9d21d3b1"
+        }
+      ],
+      "observer": "native Tart VNC after uncaptured sign-in, guest process and network receipts",
+      "mode": "observed-gui",
+      "utc": "2026-11-18T19:24:15.365319+00:00"
+    }
+  ],
+  "cleanup": {
+    "appSidecarAndPiExited": true,
+    "ownedGuestAbsent": true,
+    "observerExit": 0,
+    "independentInventoryMatches": true,
+    "originalEntriesStopped": 5
+  },
+  "nextAction": "Confirm a Codex model available to the account and obtain approval for a fresh one-turn retry.",
+  "limits": [
+    "Screen capture and automated input were paused for sign-in. Evidence records an operator-reported sign-in and no successful authenticated turn.",
+    "CF1-08 credential persistence and clearing remain separate."
+  ]
+}

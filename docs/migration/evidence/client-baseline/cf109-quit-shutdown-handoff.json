@@ -1,0 +1,114 @@
+{
+  "case": "CF1-09",
+  "scope": "quit-shutdown-handoff-diagnostic",
+  "runId": "20261123T195046Z-074de19e1adc",
+  "buildCommit": "0bacac50166f24afa5c1e5394b5c76571a4e0f5e",
+  "sourceTree": "e982f571dab28b4a641694e46ed3148e37a064b1",
+  "archiveSha256": "07e30059be572b289933961c3ac0e54346770c11da0a52de66e2222565c33221",
+  "packageSha256": {
+    "FingerTrap-apple-silicon.app.zip": "b0f9b40a101aa9b622766a22c90eb0381ac71647946a15e8b58f44ef9190c25f",
+    "FingerTrap_0.1.0_aarch64.dmg": "e38648aa89d4d06be25a79719f26cceb6fe9b8be155337592d8188eb90f19a26"
+  },
+  "bundleBinarySha256": {
+    "fingertrap": "c6704f8c3cd8bc5482238f595cfa2ffd87cecad507b7d0e8eacd208ed2de1cbd",
+    "fingertrap-sidecar": "04ebbd94f2e5e6cc347094ca8c814e1be3c1f77ebfe7da992ed66ab8896f4211",
+    "libporta_pty.dylib": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3"
+  },
+  "productCommit": "ea6b1127b35e2aa01204a0ca7599e88bf4d51cd4",
+  "productPullRequest": 238,
+  "installedBinariesVerified": true,
+  "externalEgressDenied": true,
+  "runtimeExecuted": false,
+  "originalLaunch": "packaged-binary-with-explicit-guest-environment",
+  "originalOptInVerified": true,
+  "originalStderrRouteVerified": true,
+  "terminalFocusReadback": true,
+  "shellTtyMatched": true,
+  "shellPidIsLiveOwnedShell": true,
+  "shellSentinelMatched": true,
+  "checkpoints": [
+    {
+      "phase": "sentinel-first",
+      "rendered": true,
+      "independentReadback": true
+    }
+  ],
+  "watcherArmed": true,
+  "normalQuitIssued": true,
+  "overlap": {
+    "events": [
+      {
+        "pid": 654,
+        "ns": 18916979916,
+        "event": "app-started"
+      },
+      {
+        "pid": 654,
+        "ns": 19581501875,
+        "event": "sidecar-started"
+      },
+      {
+        "pid": 654,
+        "ns": 32777453125,
+        "event": "shutdown-started"
+      },
+      {
+        "pid": 654,
+        "ns": 32795540291,
+        "event": "shutdown-wait-ended"
+      },
+      {
+        "pid": 654,
+        "ns": 32795704666,
+        "event": "final-exit"
+      }
+    ],
+    "replacementEvents": [
+      {
+        "pid": 842,
+        "ns": 32855616333,
+        "event": "app-started"
+      },
+      {
+        "pid": 842,
+        "ns": 32936755416,
+        "event": "sidecar-started"
+      }
+    ],
+    "classification": "replacement-after-original-final-exit",
+    "dispatchNs": 32778402708,
+    "dispatched": true,
+    "launcherExit": 0,
+    "secondSidecarSampled": true,
+    "originalAppExited": true,
+    "firstProcessSamples": [
+      {
+        "pid": 842,
+        "parentPid": 1,
+        "kind": "app",
+        "ns": 32863701583
+      },
+      {
+        "pid": 849,
+        "parentPid": 842,
+        "kind": "sidecar",
+        "ns": 32992841833
+      }
+    ],
+    "firstAbsentProcessPollStartedNs": 32792403041
+  },
+  "stoppedAt": "normal-quit-overlap",
+  "verdict": "BLOCKED",
+  "stopReason": "replacement-after-original-final-exit",
+  "freshLaunchIssued": false,
+  "cleanup": {
+    "controllerExit": 0,
+    "cloneRemoved": true,
+    "originalInventoryPreserved": true,
+    "cleanupAppPids": [
+      842
+    ],
+    "preTeardownAppAndSidecarExitVerified": false,
+    "appQuitRequestSent": true
+  }
+}

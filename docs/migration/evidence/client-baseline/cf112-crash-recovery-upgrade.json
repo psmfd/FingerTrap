@@ -1,0 +1,215 @@
+{
+  "case": "CF1-12",
+  "verdict": "PASS",
+  "scope": "offline-manual-build-replacement",
+  "runId": "20261123T222731Z-870303b72202",
+  "packages": {
+    "prior": {
+      "artifactId": 14456220605,
+      "buildCommit": "34a755a09868b9fb147acdbbbb5332a80e395dcc",
+      "sourceTree": "3d7287f88790b3b25f01bec9f2a1e42a0a915dda",
+      "archiveSha256": "d15eeeb601286158ac83ca69806d520e1c89b9c4ef82cfd053fe0c6690775d78",
+      "version": "0.1.0",
+      "packageSha256": {
+        "FingerTrap-apple-silicon.app.zip": "9bf32f7ae9db0af83907060234a99007d81b954f8f7d883a69b22622a5bdd354",
+        "FingerTrap_0.1.0_aarch64.dmg": "f6b1838e7d906adb1924fec6487dcf70d18d5a1b2b761f1f0b5681e33ae6e54a"
+      },
+      "bundleBinarySha256": {
+        "fingertrap": "9937ffc6377dd7547e2444aa47a93800653925bdec5dad7ed756a32886286ff2",
+        "fingertrap-sidecar": "cd67fbdad4eb707b7b520918a71ee6fe3d66a782bba5054ed4d26ca966323ed4",
+        "libporta_pty.dylib": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3"
+      }
+    },
+    "replacement": {
+      "artifactId": 14866034272,
+      "buildCommit": "9befb1903015f80ee90d9a94096ead1552d83222",
+      "sourceTree": "844930cfb421714da5a68dd9e467e86aafcdfb5a",
+      "archiveSha256": "07954234e5d8fbe602018bcd5f98cd9462050ce12b64a39d0f1813c82346818c",
+      "version": "0.1.0",
+      "packageSha256": {
+        "FingerTrap-apple-silicon.app.zip": "2ee3764677fff95212b29274ecc2f0b76cb0c2290be5e822e51711467c31e444",
+        "FingerTrap_0.1.0_aarch64.dmg": "1a14ec2cf2262f8946982e59bd0e333f26f37bc8030e79c5f5012eae52d12cbc"
+      },
+      "bundleBinarySha256": {
+        "fingertrap": "cf83fa47744113b07129b197dcb6efb76cf17547b73cbb8ad56442c2f76feef9",
+        "fingertrap-sidecar": "a896d2c470cf4da31bfe1b6703174208adc7fd8e7c733a13757a1efaec8f3419",
+        "libporta_pty.dylib": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3"
+      }
+    }
+  },
+  "runtime": {
+    "tag": "v0.85.1-psmfd.1",
+    "archiveSha256": "e0e0331d478af7724fa24d780a8d4abc0033c6f5ee7c0d45dddae6f922e5c4cb",
+    "executableSha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5"
+  },
+  "guest": {
+    "base": "ghcr.io/cirruslabs/macos-sequoia-base@sha256:3f4d14a5ffb9efd3bda2ae0184fd4bc2773d924ff8b7565f958761420ec41a0c",
+    "macOS": "15.7.7",
+    "build": "24G720",
+    "tart": "2.32.1"
+  },
+  "externalEgressDenied": true,
+  "initialInstall": {
+    "priorBundleVerified": true,
+    "runtimeVerified": true,
+    "fixtureStarted": true
+  },
+  "priorDefaultShellVerified": true,
+  "priorRpc": {
+    "app": {
+      "pid": 608,
+      "parentPid": 1,
+      "started": "Mon Nov 23 22:27:43 2026",
+      "kind": "app"
+    },
+    "sidecar": {
+      "pid": 620,
+      "parentPid": 608,
+      "started": "Mon Nov 23 22:27:43 2026",
+      "kind": "sidecar"
+    },
+    "pi": [
+      {
+        "pid": 744,
+        "parentPid": 620,
+        "started": "Mon Nov 23 22:27:47 2026",
+        "kind": "rpc"
+      }
+    ],
+    "shellCount": 1,
+    "rpcRegistryMatched": true
+  },
+  "seedSession": {
+    "seeded": true,
+    "pathSha256": "79ebf9b772c0dd5b8c35a5272ae25b43611d9ddc23ffeeb9dcab6982dedeb382",
+    "bytes": 1090,
+    "sha256": "c4982dd96af7af0a65c76675d03cb66543ff4021b9f42ff1297c197c9bf1d981",
+    "seedMarker": true,
+    "resumeMarker": false
+  },
+  "seedRendered": true,
+  "heldFirstChunkRendered": true,
+  "heldBeforeCrash": {
+    "recover": [
+      "request",
+      "first",
+      "done"
+    ],
+    "abort": [
+      "request",
+      "first"
+    ]
+  },
+  "crashSignals": 1,
+  "crash": {
+    "directSidecarIdentityVerified": true,
+    "signal": "SIGKILL",
+    "sidecarPid": 620
+  },
+  "afterCrash": {
+    "priorAppAlive": true,
+    "priorSidecarAlive": false,
+    "priorPiAlive": false,
+    "priorRegistryEntryPresent": true,
+    "controlSurvived": true
+  },
+  "beforeReplacement": {
+    "priorAppAlive": false,
+    "priorSidecarAlive": false,
+    "priorPiAlive": false,
+    "priorRegistryEntryPresent": true,
+    "priorKnownProcessesPresent": [],
+    "settingsPreserved": true,
+    "session": {
+      "pathSha256": "79ebf9b772c0dd5b8c35a5272ae25b43611d9ddc23ffeeb9dcab6982dedeb382",
+      "bytes": 1287,
+      "sha256": "2b254f692bb47163b2271b75bfe25ef897f960b2fa587836e84eef3aada80a73",
+      "seedMarker": true,
+      "resumeMarker": false,
+      "priorBytesPreserved": true
+    }
+  },
+  "replacementInstall": {
+    "replacementBundleVerified": true,
+    "priorBundleVerifiedBeforeSwap": true
+  },
+  "replacementDefaultShellVerified": true,
+  "settingsPreserved": true,
+  "afterReplacement": {
+    "priorRegistryEntryPresent": false,
+    "priorPiAlive": false,
+    "priorKnownProcessesPresent": [],
+    "session": {
+      "pathSha256": "79ebf9b772c0dd5b8c35a5272ae25b43611d9ddc23ffeeb9dcab6982dedeb382",
+      "bytes": 1287,
+      "sha256": "2b254f692bb47163b2271b75bfe25ef897f960b2fa587836e84eef3aada80a73",
+      "seedMarker": true,
+      "resumeMarker": false,
+      "priorBytesPreserved": true
+    }
+  },
+  "liveOrphanReapExercised": false,
+  "originalSessionRenderedInBrowser": true,
+  "replacementRpc": {
+    "app": {
+      "pid": 801,
+      "parentPid": 1,
+      "started": "Mon Nov 23 22:27:55 2026",
+      "kind": "app"
+    },
+    "sidecar": {
+      "pid": 806,
+      "parentPid": 801,
+      "started": "Mon Nov 23 22:27:55 2026",
+      "kind": "sidecar"
+    },
+    "pi": [
+      {
+        "pid": 915,
+        "parentPid": 806,
+        "started": "Mon Nov 23 22:28:00 2026",
+        "kind": "rpc"
+      }
+    ],
+    "shellCount": 1,
+    "rpcRegistryMatched": true
+  },
+  "restoredHistoryRendered": true,
+  "resumedReplyRendered": true,
+  "resumedSession": {
+    "pathSha256": "79ebf9b772c0dd5b8c35a5272ae25b43611d9ddc23ffeeb9dcab6982dedeb382",
+    "bytes": 1978,
+    "sha256": "d51ba63f9e7c5feed231fdc194a7d33cac66d729498f05c6b6f7c74f5d37d171",
+    "seedMarker": true,
+    "resumeMarker": true,
+    "priorBytesPreserved": true
+  },
+  "turnsDispatched": 3,
+  "resumeDispatches": 1,
+  "modelEvents": {
+    "recover": [
+      "request",
+      "first",
+      "done"
+    ],
+    "abort": [
+      "request",
+      "first",
+      "disconnected"
+    ],
+    "resume": [
+      "request",
+      "first",
+      "done"
+    ]
+  },
+  "noFramebufferSaved": true,
+  "cleanup": {
+    "directOwnedExitVerified": true,
+    "fixtureExitVerified": true,
+    "unrelatedControlSurvived": true,
+    "controllerExit": 0,
+    "cloneRemoved": true,
+    "originalInventoryPreserved": true
+  }
+}
