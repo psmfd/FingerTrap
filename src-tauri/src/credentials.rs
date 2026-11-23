@@ -120,9 +120,11 @@ fn save(state: &SidecarState, provider: String, token: String) -> Result<(), Str
 }
 
 fn deliver_saved(state: &SidecarState, provider: &str, token: &str) -> Result<(), String> {
-    // The durable replacement supersedes the old clear even if this delivery fails.
+    // Until delivery succeeds, the sidecar may still have the old credential.
+    // A pending clear can safely retry its delivery without touching Keychain.
+    push_to_sidecar(state, provider, Some(token))?;
     state.set_pending_clear(provider, false);
-    push_to_sidecar(state, provider, Some(token))
+    Ok(())
 }
 
 /// Remove a credential, or retry only its pending sidecar delivery.
@@ -239,19 +241,21 @@ mod tests {
     use super::*;
 
     #[test]
-    fn durable_replacement_invalidates_old_retry_even_when_delivery_fails() {
+    fn failed_replacement_delivery_keeps_old_retry_provider_scoped() {
         let state = SidecarState::default();
         state.set_pending_clear("github", true);
         state.set_pending_clear("ado", true);
 
         // No running child, so the delivery fails after the simulated durable save.
         assert!(deliver_saved(&state, "github", "synthetic-test-value").is_err());
-        assert!(!state.has_pending_clear("github"));
+        assert!(state.has_pending_clear("github"));
         assert!(state.has_pending_clear("ado"));
 
-        // A stale delivery retry short-circuits before opening the Keychain.
+        assert!(clear(&state, "github".into(), true).is_err());
+        assert!(state.has_pending_clear("github"));
+        // A delivery retry without pending state stays a no-op.
+        state.set_pending_clear("github", false);
         assert!(clear(&state, "github".into(), true).is_ok());
-        assert!(clear(&state, "ado".into(), true).is_err());
         assert!(state.has_pending_clear("ado"));
     }
 }

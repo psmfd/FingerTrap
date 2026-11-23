@@ -256,16 +256,21 @@ describe('Status panel Keychain controls', () => {
     ]);
   });
 
-  it('drops old delivery retry when the shell reports a saved replacement after failed delivery', async () => {
+  it('retries delivery without deleting a saved replacement after a failed save delivery', async () => {
     let replacementSaved = false;
+    let pendingDelivery = true;
     shell.mockImplementation(async (command) => {
       if (command === 'credential_save') {
         replacementSaved = true;
         throw new Error('sidecar delivery failed');
       }
+      if (command === 'credential_clear') {
+        pendingDelivery = false;
+        return;
+      }
       return {
         store: replacementSaved ? 'configured' : 'not-configured',
-        retryClear: !replacementSaved,
+        retryClear: pendingDelivery,
       };
     });
     panel.toggle();
@@ -273,9 +278,25 @@ describe('Status panel Keychain controls', () => {
     card('github').querySelector('input')!.value = 'synthetic-replacement';
     button('github', 'Save').click();
     await vi.waitFor(() => expect(status('github')).toBe('Credential stored in Keychain'));
-    expect(button('github', 'Retry Clear')).toBeUndefined();
+    expect(card('github').querySelector('[role=alert]')?.textContent).toContain(
+      'Save failed. The running app may still be using the previous credential.',
+    );
+
+    host.replaceChildren();
+    panel = new StatusPanel(host);
+    panel.toggle();
+    await vi.waitFor(() => expect(status('github')).toBe('Credential stored in Keychain'));
+    expect(card('github').querySelector('[role=alert]')?.textContent).toContain(
+      'Retry Clear leaves the stored credential intact.',
+    );
+    button('github', 'Retry Clear').click();
+    await vi.waitFor(() => expect(status('github')).toBe('Credential stored in Keychain'));
+    expect(shell).toHaveBeenCalledWith('credential_clear', {
+      provider: 'github',
+      retryDelivery: true,
+    });
     expect(button('github', 'Clear').hidden).toBe(false);
-    expect(card('github').querySelector('[role=alert]')?.textContent).toBe('Save failed.');
+    expect(card('github').querySelector('[role=alert]')?.textContent).toBe('');
   });
 
   it('distinguishes a failed or unavailable Keychain read from an absent credential', async () => {

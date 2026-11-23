@@ -258,7 +258,10 @@ class CredentialControls {
     this.input.disabled = this.save.disabled = this.clear.disabled = this.busy;
     this.status.textContent =
       this.busy || !this.stored ? 'Checking Keychain…' : CREDENTIAL_STATUS[this.stored];
-    const recoveryMessage = this.retryClear ? 'Removal from the running app is unconfirmed.' : '';
+    let recoveryMessage = this.retryClear ? 'Removal from the running app is unconfirmed.' : '';
+    if (this.pendingDelivery && this.stored === 'configured') {
+      recoveryMessage = 'The running app may still be using the previous credential. Retry Clear leaves the stored credential intact.';
+    }
     const error = [this.mutationError, recoveryMessage].filter(Boolean).join(' ');
     if (this.error.textContent !== error) this.error.textContent = error;
   }
