@@ -129,7 +129,7 @@ describe('Status panel Keychain controls', () => {
     await vi.waitFor(() => expect(button('github', 'Clear')?.hidden).toBe(true));
     expect(shell.mock.calls.filter(([command]) => command === 'credential_clear')).toEqual([
       ['credential_clear', { provider: 'github' }],
-      ['credential_clear', { provider: 'github' }],
+      ['credential_clear', { provider: 'github', retryDelivery: true }],
     ]);
     expect(button('ado', 'Clear').hidden).toBe(false);
   });
@@ -226,10 +226,56 @@ describe('Status panel Keychain controls', () => {
     await vi.waitFor(() => expect(button('github', 'Clear')?.hidden).toBe(true));
     expect(shell.mock.calls.filter(([command]) => command === 'credential_clear')).toEqual([
       ['credential_clear', { provider: 'github' }],
+      ['credential_clear', { provider: 'github', retryDelivery: true }],
+      ['credential_clear', { provider: 'github', retryDelivery: true }],
+    ]);
+    expect(card('github').querySelector('[role=alert]')?.textContent).toBe('');
+  });
+
+  it('keeps a local retry after deletion fails and Keychain is unavailable', async () => {
+    let attempts = 0;
+    shell.mockImplementation(async (command) => {
+      if (command === 'credential_clear') {
+        if (++attempts === 1) throw new Error('Keychain deletion failed');
+        return;
+      }
+      const store =
+        attempts === 0 ? 'configured' : attempts === 1 ? 'store-unavailable' : 'not-configured';
+      return { store, retryClear: false };
+    });
+    panel.toggle();
+    await vi.waitFor(() => expect(status('github')).toBe('Credential stored in Keychain'));
+    button('github', 'Clear').click();
+    await vi.waitFor(() => expect(status('github')).toBe('Keychain unavailable'));
+    expect(button('github', 'Retry Clear').hidden).toBe(false);
+    button('github', 'Retry Clear').click();
+    await vi.waitFor(() => expect(button('github', 'Clear')?.hidden).toBe(true));
+    expect(shell.mock.calls.filter(([command]) => command === 'credential_clear')).toEqual([
       ['credential_clear', { provider: 'github' }],
       ['credential_clear', { provider: 'github' }],
     ]);
-    expect(card('github').querySelector('[role=alert]')?.textContent).toBe('');
+  });
+
+  it('drops old delivery retry when the shell reports a saved replacement after failed delivery', async () => {
+    let replacementSaved = false;
+    shell.mockImplementation(async (command) => {
+      if (command === 'credential_save') {
+        replacementSaved = true;
+        throw new Error('sidecar delivery failed');
+      }
+      return {
+        store: replacementSaved ? 'configured' : 'not-configured',
+        retryClear: !replacementSaved,
+      };
+    });
+    panel.toggle();
+    await vi.waitFor(() => expect(button('github', 'Retry Clear')?.hidden).toBe(false));
+    card('github').querySelector('input')!.value = 'synthetic-replacement';
+    button('github', 'Save').click();
+    await vi.waitFor(() => expect(status('github')).toBe('Credential stored in Keychain'));
+    expect(button('github', 'Retry Clear')).toBeUndefined();
+    expect(button('github', 'Clear').hidden).toBe(false);
+    expect(card('github').querySelector('[role=alert]')?.textContent).toBe('Save failed.');
   });
 
   it('distinguishes a failed or unavailable Keychain read from an absent credential', async () => {

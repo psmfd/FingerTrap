@@ -173,7 +173,8 @@ class CredentialControls {
   private stored: keyof typeof CREDENTIAL_STATUS | undefined;
   private providerNeedsToken = false;
   private busy = false;
-  private retryClear = false;
+  private clearFailed = false;
+  private pendingDelivery = false;
   private mutationError = '';
 
   constructor(private readonly provider: string) {
@@ -195,8 +196,16 @@ class CredentialControls {
     this.clear.addEventListener('click', () => {
       if (this.busy || (!this.retryClear && this.stored !== 'configured')) return;
       this.discardInput();
-      void this.refresh({ kind: 'clear', run: () => invoke('credential_clear', { provider }) });
+      const retryDelivery = this.pendingDelivery;
+      void this.refresh({
+        kind: retryDelivery ? 'retryDelivery' : 'clear',
+        run: () => invoke('credential_clear', retryDelivery ? { provider, retryDelivery } : { provider }),
+      });
     });
+  }
+
+  private get retryClear(): boolean {
+    return this.clearFailed || this.pendingDelivery;
   }
 
   render(providerState?: string): HTMLElement {
@@ -209,26 +218,29 @@ class CredentialControls {
     this.input.value = '';
   }
 
-  async refresh(mutation?: { kind: 'save' | 'clear'; run: () => Promise<void> }): Promise<void> {
+  async refresh(mutation?: { kind: 'save' | 'clear' | 'retryDelivery'; run: () => Promise<void> }): Promise<void> {
     if (this.busy) return;
     this.busy = true;
     this.updateControls();
     if (mutation) {
       this.mutationError = '';
+      if (mutation.kind === 'save') this.clearFailed = false;
       try {
         await mutation.run();
-        this.retryClear = false;
+        this.clearFailed = false;
+        this.pendingDelivery = false;
       } catch {
         // The Keychain mutation may have succeeded before sidecar delivery failed.
-        if (mutation.kind === 'clear') this.retryClear = true;
-        this.mutationError = mutation.kind === 'clear' ? 'Clear failed.' : 'Save failed.';
+        if (mutation.kind === 'clear') this.clearFailed = true;
+        this.mutationError = mutation.kind === 'save' ? 'Save failed.' : 'Clear failed.';
       }
     }
     try {
       const result = await invoke<CredentialStatus>('credential_status', { provider: this.provider });
       this.stored =
         result.store === 'configured' || result.store === 'not-configured' ? result.store : 'store-unavailable';
-      this.retryClear = result.retryClear === true;
+      this.pendingDelivery = result.retryClear === true;
+      if (this.pendingDelivery) this.clearFailed = false;
     } catch {
       this.stored = 'store-unavailable';
     } finally {
