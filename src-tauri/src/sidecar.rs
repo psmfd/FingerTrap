@@ -4,7 +4,7 @@ use std::sync::atomic::{AtomicU8, Ordering};
 use std::sync::{Arc, Condvar, Mutex};
 use std::time::Duration;
 
-use crate::sidecar_process::{finish_shutdown, SidecarProcess, WriteReceipt};
+use crate::sidecar_process::{finish_shutdown, wait_for_exit, SidecarProcess, WriteReceipt};
 use tauri::{ipc::Channel, Manager, State};
 use tauri_plugin_shell::ShellExt;
 
@@ -247,7 +247,7 @@ pub fn spawn(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
         }
     });
     // Exit observation does not wait for descendants to close inherited pipes.
-    std::thread::spawn(move || match child.wait() {
+    std::thread::spawn(move || match wait_for_exit(&child) {
         Ok(status) => {
             eprintln!("sidecar terminated: {status}");
             app_handle.state::<SidecarState>().mark_terminated();

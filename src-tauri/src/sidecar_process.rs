@@ -1,6 +1,6 @@
 //! Bounded stdin delivery with a kill handle independent of the pipe writer.
 use std::io::Write;
-use std::process::Command;
+use std::process::{Command, ExitStatus};
 use std::sync::mpsc::{self, Receiver, SyncSender};
 use std::sync::{Arc, Condvar, Mutex};
 use std::time::Duration;
@@ -12,6 +12,24 @@ const QUEUE_CAPACITY: usize = 8;
 // Match the RPC body ceiling, allowing a small framing header.
 const MAX_FRAME_BYTES: usize = 4 * 1024 * 1024 + 1024;
 const WRITE_TIMEOUT: Duration = Duration::from_secs(5);
+
+pub(crate) fn wait_for_exit(child: &SharedChild) -> std::io::Result<ExitStatus> {
+    #[cfg(target_os = "macos")]
+    {
+        // The blocking SharedChild waiter can stall the kill path when the
+        // child is stopped. Poll without entering that blocking wait state.
+        loop {
+            if let Some(status) = child.try_wait()? {
+                return Ok(status);
+            }
+            std::thread::sleep(Duration::from_millis(50));
+        }
+    }
+    #[cfg(not(target_os = "macos"))]
+    {
+        child.wait()
+    }
+}
 
 struct Frame {
     bytes: Zeroizing<Vec<u8>>,
@@ -189,6 +207,85 @@ mod tests {
         )
         .unwrap());
         assert!(start.elapsed() < Duration::from_secs(1));
+    }
+
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn watchdog_can_kill_a_stopped_child_while_observing_exit() {
+        use std::os::unix::process::ExitStatusExt;
+
+        fn ps(pid: &str, format: &str) -> Vec<u8> {
+            Command::new("/bin/ps")
+                .args(["-p", pid, "-o", format])
+                .output()
+                .unwrap()
+                .stdout
+        }
+
+        fn signal(pid: &str, kind: &str) -> bool {
+            Command::new("/bin/kill")
+                .args([kind, pid])
+                .stdout(Stdio::null())
+                .stderr(Stdio::null())
+                .status()
+                .unwrap()
+                .success()
+        }
+
+        let process = SidecarProcess::spawn(
+            Command::new("/bin/cat")
+                .stdin(Stdio::piped())
+                .stdout(Stdio::null())
+                .stderr(Stdio::null()),
+        )
+        .unwrap();
+        let child = Arc::clone(&process.child);
+        let pid = child.id().to_string();
+        let identity = ps(&pid, "ppid=,lstart=,comm=");
+        assert!(!identity.is_empty());
+
+        let (exited, observation) = mpsc::channel();
+        let observed = Arc::clone(&child);
+        std::thread::spawn(move || {
+            let _ = exited.send(wait_for_exit(&observed));
+        });
+        // Give the observer a chance to enter its wait before the stop transition.
+        std::thread::sleep(Duration::from_millis(50));
+        let stopped = signal(&pid, "-STOP");
+        let stop_deadline = Instant::now() + Duration::from_secs(1);
+        let mut stop_verified = false;
+        while stopped && Instant::now() < stop_deadline {
+            if String::from_utf8_lossy(&ps(&pid, "state="))
+                .trim_start()
+                .starts_with('T')
+            {
+                stop_verified = true;
+                break;
+            }
+            std::thread::sleep(Duration::from_millis(10));
+        }
+
+        let (finished, watchdog) = mpsc::channel();
+        std::thread::spawn(move || {
+            let _ = finished.send(finish_shutdown(
+                Some(&child),
+                &(Mutex::new(false), Condvar::new()),
+                Duration::from_millis(75),
+            ));
+        });
+        // The shutdown frame is admitted concurrently with the watchdog.
+        std::thread::spawn(move || {
+            let _ = process.enqueue(b"shutdown");
+        });
+        let forced = watchdog.recv_timeout(Duration::from_secs(1));
+        if !matches!(forced, Ok(Ok(true))) && ps(&pid, "ppid=,lstart=,comm=") == identity {
+            // Release only the original test child even if the owned handle is wedged.
+            let _ = signal(&pid, "-KILL");
+        }
+        let status = observation.recv_timeout(Duration::from_secs(1));
+        assert!(stop_verified, "owned test child did not stop");
+        assert!(forced.unwrap().unwrap(), "watchdog did not force exit");
+        assert_eq!(status.unwrap().unwrap().signal(), Some(9));
     }
 
     #[test]
