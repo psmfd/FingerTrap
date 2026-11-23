@@ -1,0 +1,71 @@
+{
+  "case": "CF1-08",
+  "verdict": "PASS",
+  "date": "2026-11-23",
+  "sourceCommit": "d2100c6185cdc6a021cf02a5bfbf374af47d1f31",
+  "sourceTree": "cb6212d9fcf03ff71af6deebe1fa8585c18f04d3",
+  "candidateArchiveSha256": "ffb97b373a089c2109e497442fda10a665777d5dddc5c1027f603a6d8be804ae",
+  "candidatePackageSha256": {
+    "FingerTrap-apple-silicon.app.zip": "e381d8c22b02e5b78ead2397dabded90fea02b01267f90e7ae1f936716af567e",
+    "FingerTrap_0.1.0_aarch64.dmg": "8f4ac411ecef3d5e013dabfd6bca9757c69b9af79f554cd0e6cf55187bbb7e86"
+  },
+  "installedBundleBinarySha256": {
+    "fingertrap": "aa231398d31b31472cb13117a560916eb1bfb4fbb90b15a5735bb5b49be44084",
+    "fingertrap-sidecar": "e4c5a70ad10e43b492f7ad0b1877a2ab813916b98a89ccd6fcd41bd590b5751c",
+    "libporta_pty.dylib": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3"
+  },
+  "priorAttempt": "keychain-lifecycle-observation.json",
+  "runId": "20261123T155114Z-eb138bf05134",
+  "guest": {
+    "version": "15.7.7",
+    "build": "24G720",
+    "externalEgressDenied": true
+  },
+  "providerCard": "github",
+  "observer": "In-memory fast CPU Vision and an independent attribute-only Keychain lookup",
+  "observerPreflightNormalQuitVerified": true,
+  "checkpoints": [
+    {
+      "stage": "observer-preflight-empty",
+      "app": "absent",
+      "keychain": "absent"
+    },
+    {
+      "stage": "initial-empty",
+      "app": "absent",
+      "keychain": "absent"
+    },
+    {
+      "stage": "after-save",
+      "app": "stored",
+      "keychain": "present"
+    },
+    {
+      "stage": "after-first-relaunch",
+      "app": "stored",
+      "keychain": "present"
+    },
+    {
+      "stage": "after-clear",
+      "app": "absent",
+      "keychain": "absent"
+    },
+    {
+      "stage": "after-second-relaunch",
+      "app": "absent",
+      "keychain": "absent"
+    }
+  ],
+  "guestKeychainPromptsObserved": 0,
+  "savedScreenCaptures": false,
+  "testValueRetained": false,
+  "realCredentialsUsed": false,
+  "pinnedPiTag": "v0.85.1-psmfd.1",
+  "pinnedPiExecuted": false,
+  "cleanup": {
+    "preTeardownAppAndSidecarExitVerified": true,
+    "guestControllerExit": 0,
+    "cloneRemoved": true,
+    "originalInventoryPreserved": true
+  }
+}

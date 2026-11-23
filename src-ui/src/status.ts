@@ -27,6 +27,9 @@ interface RowEntry {
 
 export class StatusPanel {
   private readonly root: HTMLElement;
+  private readonly credentials = new Map(
+    [...TOKEN_PROVIDERS].map((provider) => [provider, new CredentialControls(provider)]),
+  );
   private snapshot: api.StatusSnapshotNotification | undefined;
   private visible = false;
 
@@ -41,9 +44,12 @@ export class StatusPanel {
     this.root.hidden = !this.visible;
     if (this.visible) {
       this.render();
+      for (const controls of this.credentials.values()) void controls.refresh();
       api.statusRefresh().catch(() => {
         // Best-effort: the periodic poll covers a lost refresh.
       });
+    } else {
+      for (const controls of this.credentials.values()) controls.discardInput();
     }
   }
 
@@ -56,36 +62,38 @@ export class StatusPanel {
 
   private render(): void {
     this.root.replaceChildren();
-    const providers = this.snapshot?.providers ?? [];
-    if (providers.length === 0) {
-      this.root.appendChild(el('p', 'status-empty', 'waiting for the first snapshot…'));
-      return;
-    }
+    const snapshots = new Map(this.snapshot?.providers.map((p) => [p.provider, p]));
+    const providers = new Set([...snapshots.keys(), ...this.credentials.keys()]);
     for (const provider of providers) {
-      this.root.appendChild(this.renderProvider(provider));
+      this.root.appendChild(this.renderProvider(provider, snapshots.get(provider)));
     }
   }
 
-  private renderProvider(p: api.ProviderSnapshot): HTMLElement {
+  private renderProvider(provider: string, p?: api.ProviderSnapshot): HTMLElement {
     const section = el('section', 'status-provider');
     const head = el('header', 'status-head');
-    head.appendChild(el('span', 'status-name', p.provider));
-    head.appendChild(el('span', `status-state status-state-${cssToken(p.state)}`, p.state));
+    head.appendChild(el('span', 'status-name', provider));
+    if (p) {
+      head.appendChild(el('span', `status-state status-state-${cssToken(p.state)}`, p.state));
+    } else {
+      const text = this.snapshot ? 'Provider status unavailable' : 'Waiting for provider status…';
+      head.appendChild(el('span', 'status-state', text));
+    }
     section.appendChild(head);
 
-    if (p.detail) {
+    if (p?.detail) {
       section.appendChild(el('p', 'status-detail', p.detail));
     }
 
     // Local-git surfaces are one summary line with nothing to click; say so,
     // or its plain text reads as broken links next to the linked rows (#83).
-    if (p.provider === 'git') {
+    if (provider === 'git') {
       section.appendChild(el('p', 'status-hint', 'local repository status — nothing here links to a web page'));
     }
 
-    if (TOKEN_PROVIDERS.has(p.provider) && (p.state === 'not-configured' || p.state === 'auth-failed')) {
-      section.appendChild(this.renderTokenEntry(p.provider));
-    }
+    const controls = this.credentials.get(provider);
+    if (controls) section.appendChild(controls.render(p?.state));
+    if (!p) return section;
 
     // List order is an operator-facing choice (#85): the actionable work
     // items first (PRs, then issues), pipeline state last.
@@ -141,37 +149,100 @@ export class StatusPanel {
     wrap.appendChild(ul);
     return wrap;
   }
+}
 
-  private renderTokenEntry(provider: string): HTMLElement {
-    const form = el('div', 'status-token');
-    const input = document.createElement('input');
-    input.type = 'password';
-    input.placeholder = `paste a fine-grained read-only PAT for ${provider}`;
-    input.autocomplete = 'off';
-    form.appendChild(input);
+const CREDENTIAL_STATUS = {
+  configured: 'Credential stored in Keychain',
+  'not-configured': 'No credential stored in Keychain',
+  'store-unavailable': 'Keychain unavailable',
+};
 
-    const save = el('button', 'status-save', 'save') as HTMLButtonElement;
-    save.type = 'button';
-    const message = el('span', 'status-token-msg', '');
-    save.addEventListener('click', () => {
-      const token = input.value;
-      if (!token) return;
-      save.disabled = true;
-      invoke('credential_save', { provider, token })
-        .then(() => {
-          input.value = '';
-          message.textContent = 'saved to the OS keychain';
-        })
-        .catch((err: unknown) => {
-          message.textContent = String(err);
-        })
-        .finally(() => {
-          save.disabled = false;
-        });
+/** Credential controls retain their operation state across provider snapshots. */
+class CredentialControls {
+  private readonly root = el('div', 'status-token');
+  private readonly input = document.createElement('input');
+  private readonly save = el('button', 'status-save', 'Save') as HTMLButtonElement;
+  private readonly clear = el('button', 'status-save', 'Clear') as HTMLButtonElement;
+  private readonly status = el('span', 'status-token-msg', 'Checking Keychain…');
+  private readonly error = el('span', 'status-token-msg');
+  private stored: keyof typeof CREDENTIAL_STATUS | undefined;
+  private providerNeedsToken = false;
+  private busy = false;
+  private retryClear = false;
+  private mutationError = '';
+
+  constructor(private readonly provider: string) {
+    this.input.type = 'password';
+    this.input.autocomplete = 'off';
+    this.input.placeholder = 'Paste a fine-grained read-only PAT';
+    this.input.setAttribute('aria-label', `${provider} personal access token`);
+    this.save.type = this.clear.type = 'button';
+    this.status.setAttribute('role', 'status');
+    this.error.setAttribute('role', 'alert');
+    this.root.append(this.input, this.save, this.clear, this.status, this.error);
+
+    this.save.addEventListener('click', () => {
+      const token = this.input.value;
+      if (!token || this.busy) return;
+      this.discardInput();
+      void this.refresh({ kind: 'save', run: () => invoke('credential_save', { provider, token }) });
     });
-    form.appendChild(save);
-    form.appendChild(message);
-    return form;
+    this.clear.addEventListener('click', () => {
+      if (this.busy || (!this.retryClear && this.stored !== 'configured')) return;
+      this.discardInput();
+      void this.refresh({ kind: 'clear', run: () => invoke('credential_clear', { provider }) });
+    });
+  }
+
+  render(providerState?: string): HTMLElement {
+    this.providerNeedsToken = providerState === 'not-configured' || providerState === 'auth-failed';
+    this.updateControls();
+    return this.root;
+  }
+
+  discardInput(): void {
+    this.input.value = '';
+  }
+
+  async refresh(mutation?: { kind: 'save' | 'clear'; run: () => Promise<void> }): Promise<void> {
+    if (this.busy) return;
+    this.busy = true;
+    this.updateControls();
+    if (mutation) {
+      this.mutationError = '';
+      try {
+        await mutation.run();
+        this.retryClear = false;
+      } catch {
+        // The Keychain mutation may have succeeded before sidecar delivery failed.
+        if (mutation.kind === 'clear') this.retryClear = true;
+        this.mutationError = mutation.kind === 'clear' ? 'Clear failed.' : 'Save failed.';
+      }
+    }
+    try {
+      const result = await invoke('credential_status', { provider: this.provider });
+      this.stored =
+        result === 'configured' || result === 'not-configured' ? result : 'store-unavailable';
+    } catch {
+      this.stored = 'store-unavailable';
+    } finally {
+      this.busy = false;
+      this.updateControls();
+    }
+  }
+
+  private updateControls(): void {
+    const offerSave = this.providerNeedsToken || this.stored === 'not-configured';
+    this.input.hidden = this.save.hidden = !offerSave;
+    if (!offerSave) this.discardInput();
+    this.clear.hidden = !this.retryClear && this.stored !== 'configured';
+    this.clear.textContent = this.retryClear ? 'Retry Clear' : 'Clear';
+    this.input.disabled = this.save.disabled = this.clear.disabled = this.busy;
+    this.status.textContent =
+      this.busy || !this.stored ? 'Checking Keychain…' : CREDENTIAL_STATUS[this.stored];
+    const recoveryMessage = this.retryClear ? 'Removal from the running app is unconfirmed.' : '';
+    const error = [this.mutationError, recoveryMessage].filter(Boolean).join(' ');
+    if (this.error.textContent !== error) this.error.textContent = error;
   }
 }
 

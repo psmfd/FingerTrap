@@ -1,0 +1,61 @@
+{
+  "case": "CF1-08",
+  "verdict": "BLOCKED",
+  "date": "2026-11-23",
+  "sourceCommit": "d2100c6185cdc6a021cf02a5bfbf374af47d1f31",
+  "sourceTree": "cb6212d9fcf03ff71af6deebe1fa8585c18f04d3",
+  "candidate": {
+    "execution": "standalone local Tart candidate lane",
+    "target": "aarch64-apple-darwin",
+    "archiveSha256": "ffb97b373a089c2109e497442fda10a665777d5dddc5c1027f603a6d8be804ae",
+    "packageSha256": {
+      "FingerTrap-apple-silicon.app.zip": "e381d8c22b02e5b78ead2397dabded90fea02b01267f90e7ae1f936716af567e",
+      "FingerTrap_0.1.0_aarch64.dmg": "8f4ac411ecef3d5e013dabfd6bca9757c69b9af79f554cd0e6cf55187bbb7e86"
+    },
+    "bundleBinarySha256": {
+      "fingertrap": "aa231398d31b31472cb13117a560916eb1bfb4fbb90b15a5735bb5b49be44084",
+      "fingertrap-sidecar": "e4c5a70ad10e43b492f7ad0b1877a2ab813916b98a89ccd6fcd41bd590b5751c",
+      "libporta_pty.dylib": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3"
+    },
+    "packagedSidecarShellSmoke": "PASS",
+    "realPiSmoke": "SKIPPED",
+    "signedAndNotarizedRelease": false
+  },
+  "pinnedPi": {
+    "tag": "v0.85.1-psmfd.1",
+    "source": "e7d09c9dc5fca409f46a5476669e3c0404054d69",
+    "archiveSha256": "e0e0331d478af7724fa24d780a8d4abc0033c6f5ee7c0d45dddae6f922e5c4cb",
+    "expectedBinarySha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5",
+    "executed": false
+  },
+  "acceptance": {
+    "runId": "20261123T154435Z-5c2d41149adc",
+    "guestVersion": "15.7.7",
+    "guestBuild": "24G720",
+    "externalEgressDenied": true,
+    "installedBinaryHashesVerified": true,
+    "initialIndependentKeychainPresence": "absent",
+    "appAndSidecarLaunchVerified": true,
+    "stoppedAt": "initial-empty",
+    "reason": "Host Vision text recognition subprocess timed out at the first GUI checkpoint.",
+    "observerDeadlineSeconds": 10,
+    "completedGuiCheckpoints": 0,
+    "keychainPromptsObserved": 0,
+    "syntheticValueGenerated": false,
+    "saveOrClearSubmitted": false,
+    "savedScreenCaptures": false
+  },
+  "cleanup": {
+    "preTeardownAppAndSidecarExitVerified": false,
+    "guestControllerExit": 0,
+    "cloneRemoved": true,
+    "originalInventoryPreserved": true
+  },
+  "observerFollowup": {
+    "firstObserverTimedOutOnSyntheticFrame": true,
+    "existingFastCpuObserverRecognizedSyntheticStatus": true,
+    "updatedFastCpuObserverMatchedSyntheticControls": true,
+    "syntheticCheckDurationSeconds": [0.14, 0.06],
+    "revisedObserverTestedInTart": false
+  }
+}
