@@ -24,6 +24,8 @@ pub struct SidecarState {
     /// preload read stuck behind a keychain modal could otherwise land after
     /// a save/clear and push a stale token — or resurrect a cleared one.
     credential_overrides: Mutex<HashSet<String>>,
+    pub(crate) credential_actions: crate::credentials::CredentialActions,
+    pending_clears: Mutex<HashSet<String>>,
     terminated: Arc<(Mutex<bool>, Condvar)>,
     shutdown_phase: AtomicU8,
 }
@@ -34,6 +36,8 @@ impl Default for SidecarState {
             child: Mutex::new(None),
             output_channel: Mutex::new(None),
             credential_overrides: Mutex::new(HashSet::new()),
+            credential_actions: Default::default(),
+            pending_clears: Mutex::new(HashSet::new()),
             terminated: Arc::new((Mutex::new(false), Condvar::new())),
             shutdown_phase: AtomicU8::new(SHUTDOWN_RUNNING),
         }
@@ -85,9 +89,25 @@ impl SidecarState {
         self.write(frame)
     }
 
+    pub(crate) fn set_pending_clear(&self, provider: &str, pending: bool) {
+        let mut providers = self.pending_clears.lock().unwrap();
+        let (terminated, _) = &*self.terminated;
+        if pending && !*terminated.lock().unwrap() {
+            providers.insert(provider.to_string());
+        } else {
+            providers.remove(provider);
+        }
+    }
+
+    pub(crate) fn has_pending_clear(&self, provider: &str) -> bool {
+        self.pending_clears.lock().unwrap().contains(provider)
+    }
+
     fn mark_terminated(&self) {
+        let mut pending = self.pending_clears.lock().unwrap();
         let (lock, ready) = &*self.terminated;
         *lock.lock().unwrap() = true;
+        pending.clear();
         ready.notify_all();
     }
 }
@@ -277,5 +297,21 @@ mod tests {
             .shutdown_phase
             .store(SHUTDOWN_ALLOW_EXIT, Ordering::Release);
         assert_eq!(shutdown_decision(&state), ShutdownDecision::Exit);
+    }
+
+    #[test]
+    fn pending_clear_is_provider_scoped_and_cannot_outlive_the_sidecar() {
+        let state = SidecarState::default();
+        state.set_pending_clear("github", true);
+        assert!(state.has_pending_clear("github"));
+        assert!(!state.has_pending_clear("ado"));
+        state.set_pending_clear("github", false);
+        assert!(!state.has_pending_clear("github"));
+
+        state.set_pending_clear("ado", true);
+        state.mark_terminated();
+        state.set_pending_clear("github", true);
+        assert!(!state.has_pending_clear("ado"));
+        assert!(!state.has_pending_clear("github"));
     }
 }

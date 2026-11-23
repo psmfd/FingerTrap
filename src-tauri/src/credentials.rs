@@ -13,6 +13,8 @@
 //! `store-unavailable` and nothing is ever written to a plaintext fallback.
 
 use keyring::v1::Entry;
+use serde::Serialize;
+use std::sync::{Mutex, MutexGuard};
 use tauri::{AppHandle, Manager};
 use zeroize::Zeroizing;
 
@@ -31,14 +33,25 @@ const PROVIDERS: [&str; 2] = ["github", "ado"];
 /// not a token.
 const MAX_TOKEN_LEN: usize = 512;
 
-fn validate_provider(provider: &str) -> Result<(), String> {
-    if PROVIDERS.contains(&provider) {
-        Ok(())
-    } else {
-        Err(format!(
-            "unknown provider '{provider}'; expected one of: {}",
-            PROVIDERS.join(", ")
-        ))
+/// Serialize each provider's store mutations and status reads across WebViews.
+/// Separate locks let the other provider proceed during a Keychain prompt.
+#[derive(Default)]
+pub(crate) struct CredentialActions([Mutex<()>; PROVIDERS.len()]);
+
+impl CredentialActions {
+    fn lock(&self, provider: &str) -> Result<MutexGuard<'_, ()>, String> {
+        let index = PROVIDERS
+            .iter()
+            .position(|name| *name == provider)
+            .ok_or_else(|| {
+                format!(
+                    "unknown provider '{provider}'; expected one of: {}",
+                    PROVIDERS.join(", ")
+                )
+            })?;
+        self.0[index]
+            .lock()
+            .map_err(|_| "credential worker failed".into())
     }
 }
 
@@ -92,7 +105,7 @@ pub async fn credential_save(
 
 fn save(state: &SidecarState, provider: String, token: String) -> Result<(), String> {
     let token = Zeroizing::new(token);
-    validate_provider(&provider)?;
+    let _action = state.credential_actions.lock(&provider)?;
     if token.is_empty() || token.len() > MAX_TOKEN_LEN {
         return Err(format!("token must be 1..={MAX_TOKEN_LEN} characters"));
     }
@@ -103,7 +116,9 @@ fn save(state: &SidecarState, provider: String, token: String) -> Result<(), Str
     entry_for(&provider)?
         .set_password(&token)
         .map_err(|e| format!("credential store error: {e}"))?;
-    push_to_sidecar(state, &provider, Some(&token))
+    push_to_sidecar(state, &provider, Some(&token))?;
+    state.set_pending_clear(&provider, false);
+    Ok(())
 }
 
 /// Remove a provider's token from the keychain and clear it sidecar-side.
@@ -115,35 +130,50 @@ pub async fn credential_clear(app: AppHandle, provider: String) -> Result<(), St
 }
 
 fn clear(state: &SidecarState, provider: String) -> Result<(), String> {
-    validate_provider(&provider)?;
+    let _action = state.credential_actions.lock(&provider)?;
     match entry_for(&provider)?.delete_credential() {
         Ok(()) => {}
         // Already absent is success — same idempotency contract as pty/kill.
         Err(keyring::v1::Error::NoEntry) => {}
         Err(e) => return Err(format!("credential store error: {e}")),
     }
-    push_to_sidecar(state, &provider, None)
+    let delivery = push_to_sidecar(state, &provider, None);
+    state.set_pending_clear(&provider, delivery.is_err());
+    delivery
 }
 
-/// `configured` | `not-configured` | `store-unavailable` — the UI renders
-/// states, never blanks (ADR-0022), and the token itself never crosses back.
+/// Secret-free store state and pending delivery for the current sidecar.
+#[derive(Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CredentialStatus {
+    store: &'static str,
+    retry_clear: bool,
+}
+
 #[tauri::command]
-pub async fn credential_status(provider: String) -> Result<String, String> {
-    tauri::async_runtime::spawn_blocking(move || status(provider))
+pub async fn credential_status(
+    app: AppHandle,
+    provider: String,
+) -> Result<CredentialStatus, String> {
+    tauri::async_runtime::spawn_blocking(move || status(&app.state::<SidecarState>(), &provider))
         .await
         .map_err(|_| "credential worker failed".to_string())?
 }
 
-fn status(provider: String) -> Result<String, String> {
-    validate_provider(&provider)?;
-    match entry_for(&provider)?.get_password() {
-        Ok(secret) => {
+fn status(state: &SidecarState, provider: &str) -> Result<CredentialStatus, String> {
+    let _action = state.credential_actions.lock(provider)?;
+    let store = match entry_for(provider).map(|entry| entry.get_password()) {
+        Ok(Ok(secret)) => {
             drop(Zeroizing::new(secret));
-            Ok("configured".into())
+            "configured"
         }
-        Err(keyring::v1::Error::NoEntry) => Ok("not-configured".into()),
-        Err(_) => Ok("store-unavailable".into()),
-    }
+        Ok(Err(keyring::v1::Error::NoEntry)) => "not-configured",
+        _ => "store-unavailable",
+    };
+    Ok(CredentialStatus {
+        store,
+        retry_clear: state.has_pending_clear(provider),
+    })
 }
 
 /// Called after (re)spawn: push every stored credential into the fresh

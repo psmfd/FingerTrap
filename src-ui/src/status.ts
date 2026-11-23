@@ -157,6 +157,11 @@ const CREDENTIAL_STATUS = {
   'store-unavailable': 'Keychain unavailable',
 };
 
+interface CredentialStatus {
+  store: keyof typeof CREDENTIAL_STATUS;
+  retryClear: boolean;
+}
+
 /** Credential controls retain their operation state across provider snapshots. */
 class CredentialControls {
   private readonly root = el('div', 'status-token');
@@ -220,9 +225,10 @@ class CredentialControls {
       }
     }
     try {
-      const result = await invoke('credential_status', { provider: this.provider });
+      const result = await invoke<CredentialStatus>('credential_status', { provider: this.provider });
       this.stored =
-        result === 'configured' || result === 'not-configured' ? result : 'store-unavailable';
+        result.store === 'configured' || result.store === 'not-configured' ? result.store : 'store-unavailable';
+      this.retryClear = result.retryClear === true;
     } catch {
       this.stored = 'store-unavailable';
     } finally {

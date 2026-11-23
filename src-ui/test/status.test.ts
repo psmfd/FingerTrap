@@ -54,7 +54,7 @@ describe('Status panel Keychain controls', () => {
         stored.delete(provider);
         return;
       }
-      return stored.has(provider) ? 'configured' : 'not-configured';
+      return { store: stored.has(provider) ? 'configured' : 'not-configured', retryClear: false };
     });
     panel.update(snapshot('error'));
     panel.toggle();
@@ -86,7 +86,10 @@ describe('Status panel Keychain controls', () => {
         }
         return;
       }
-      return stored || provider === 'ado' ? 'configured' : 'not-configured';
+      return {
+        store: stored || provider === 'ado' ? 'configured' : 'not-configured',
+        retryClear: provider === 'github' && clearAttempts === 1,
+      };
     });
     panel.toggle();
     await vi.waitFor(() => expect(status('github')).toBe('Credential stored in Keychain'));
@@ -142,7 +145,7 @@ describe('Status panel Keychain controls', () => {
         stored = true;
         return;
       }
-      return stored ? 'configured' : 'not-configured';
+      return { store: stored ? 'configured' : 'not-configured', retryClear: false };
     });
     panel.update(snapshot('not-configured'));
     panel.toggle();
@@ -172,22 +175,25 @@ describe('Status panel Keychain controls', () => {
     expect(button('github', 'Clear').disabled).toBe(false);
   });
 
-  it('allows retrying a failed Clear after Keychain deletion, including after reopening', async () => {
+  it('allows retrying a failed Clear after Keychain deletion, including after panel recreation', async () => {
     let stored = false;
     let clearAttempts = 0;
     shell.mockImplementation(async (command, args) => {
       const provider = (args as { provider: string }).provider;
-      if (provider === 'ado') return 'not-configured';
+      if (provider === 'ado') return { store: 'not-configured', retryClear: false };
       if (command === 'credential_save') {
         stored = true;
         throw new Error('private delivery details');
       }
       if (command === 'credential_clear') {
         stored = false;
-        if (++clearAttempts === 1) throw new Error('private delivery details');
+        if (++clearAttempts <= 2) throw new Error('private delivery details');
         return;
       }
-      return stored ? 'configured' : 'not-configured';
+      return {
+        store: stored ? 'configured' : 'not-configured',
+        retryClear: clearAttempts > 0 && clearAttempts <= 2,
+      };
     });
     panel.update(snapshot('not-configured'));
     panel.toggle();
@@ -205,14 +211,21 @@ describe('Status panel Keychain controls', () => {
     expect(host.textContent).not.toContain('private delivery details');
     expect(button('ado', 'Clear').hidden).toBe(true);
 
-    panel.toggle();
+    host.replaceChildren();
+    panel = new StatusPanel(host);
     panel.update(snapshot('error'));
     panel.toggle();
     await vi.waitFor(() => expect(status('github')).toBe('No credential stored in Keychain'));
     expect(button('github', 'Retry Clear').hidden).toBe(false);
     button('github', 'Retry Clear').click();
+    await vi.waitFor(() => expect(button('github', 'Retry Clear').disabled).toBe(false));
+    expect(card('github').querySelector('[role=alert]')?.textContent).toContain(
+      'Removal from the running app is unconfirmed.',
+    );
+    button('github', 'Retry Clear').click();
     await vi.waitFor(() => expect(button('github', 'Clear')?.hidden).toBe(true));
     expect(shell.mock.calls.filter(([command]) => command === 'credential_clear')).toEqual([
+      ['credential_clear', { provider: 'github' }],
       ['credential_clear', { provider: 'github' }],
       ['credential_clear', { provider: 'github' }],
     ]);
@@ -221,7 +234,7 @@ describe('Status panel Keychain controls', () => {
 
   it('distinguishes a failed or unavailable Keychain read from an absent credential', async () => {
     shell
-      .mockResolvedValueOnce('store-unavailable')
+      .mockResolvedValueOnce({ store: 'store-unavailable', retryClear: false })
       .mockRejectedValueOnce(new Error('unavailable'));
     panel.update(snapshot('not-configured'));
     panel.toggle();
