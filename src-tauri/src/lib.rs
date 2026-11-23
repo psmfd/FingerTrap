@@ -1,4 +1,6 @@
 mod activation;
+#[cfg(target_os = "macos")]
+mod app_menu;
 mod credentials;
 mod links;
 mod sidecar;
@@ -6,7 +8,12 @@ mod sidecar_process;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let app = tauri::Builder::default()
+    let builder = tauri::Builder::default();
+    #[cfg(target_os = "macos")]
+    let builder = builder
+        .menu(app_menu::with_graceful_quit)
+        .on_menu_event(app_menu::handle_event);
+    let app = builder
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             activation::request(app);
         }))
