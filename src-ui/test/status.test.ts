@@ -112,12 +112,20 @@ describe('Status panel Keychain controls', () => {
     expect(button('github', 'Clear').disabled).toBe(false);
   });
 
-  it('reports mutation failures separately from the durable result', async () => {
+  it('allows retrying a failed Clear after Keychain deletion, including after reopening', async () => {
     let stored = false;
-    shell.mockImplementation(async (command) => {
-      if (command === 'credential_save' || command === 'credential_clear') {
-        stored = command === 'credential_save';
+    let clearAttempts = 0;
+    shell.mockImplementation(async (command, args) => {
+      const provider = (args as { provider: string }).provider;
+      if (provider === 'ado') return 'not-configured';
+      if (command === 'credential_save') {
+        stored = true;
         throw new Error('private delivery details');
+      }
+      if (command === 'credential_clear') {
+        stored = false;
+        if (++clearAttempts === 1) throw new Error('private delivery details');
+        return;
       }
       return stored ? 'configured' : 'not-configured';
     });
@@ -127,12 +135,28 @@ describe('Status panel Keychain controls', () => {
     card('github').querySelector('input')!.value = 'synthetic-test-value';
     button('github', 'Save').click();
     await vi.waitFor(() => expect(status('github')).toBe('Credential stored in Keychain'));
-    expect(card('github').querySelector('[role=alert]')?.textContent).toBe('Save failed');
+    expect(card('github').querySelector('[role=alert]')?.textContent).toBe('Save failed.');
 
     button('github', 'Clear').click();
     await vi.waitFor(() => expect(status('github')).toBe('No credential stored in Keychain'));
-    expect(card('github').querySelector('[role=alert]')?.textContent).toBe('Clear failed');
+    expect(card('github').querySelector('[role=alert]')?.textContent).toBe(
+      'Clear failed. Removal from the running app is unconfirmed.',
+    );
     expect(host.textContent).not.toContain('private delivery details');
+    expect(button('ado', 'Clear').hidden).toBe(true);
+
+    panel.toggle();
+    panel.update(snapshot('error'));
+    panel.toggle();
+    await vi.waitFor(() => expect(status('github')).toBe('No credential stored in Keychain'));
+    expect(button('github', 'Retry Clear').hidden).toBe(false);
+    button('github', 'Retry Clear').click();
+    await vi.waitFor(() => expect(button('github', 'Clear')?.hidden).toBe(true));
+    expect(shell.mock.calls.filter(([command]) => command === 'credential_clear')).toEqual([
+      ['credential_clear', { provider: 'github' }],
+      ['credential_clear', { provider: 'github' }],
+    ]);
+    expect(card('github').querySelector('[role=alert]')?.textContent).toBe('');
   });
 
   it('distinguishes a failed or unavailable Keychain read from an absent credential', async () => {

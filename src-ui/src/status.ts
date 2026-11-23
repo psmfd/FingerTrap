@@ -165,6 +165,8 @@ class CredentialControls {
   private stored: keyof typeof CREDENTIAL_STATUS | undefined;
   private providerNeedsToken = false;
   private busy = false;
+  private retryClear = false;
+  private mutationError = '';
 
   constructor(private readonly provider: string) {
     this.input.type = 'password';
@@ -180,12 +182,12 @@ class CredentialControls {
       const token = this.input.value;
       if (!token || this.busy) return;
       this.discardInput();
-      void this.refresh(() => invoke('credential_save', { provider, token }), 'Save failed');
+      void this.refresh({ kind: 'save', run: () => invoke('credential_save', { provider, token }) });
     });
     this.clear.addEventListener('click', () => {
-      if (this.busy || this.stored !== 'configured') return;
+      if (this.busy || (!this.retryClear && this.stored !== 'configured')) return;
       this.discardInput();
-      void this.refresh(() => invoke('credential_clear', { provider }), 'Clear failed');
+      void this.refresh({ kind: 'clear', run: () => invoke('credential_clear', { provider }) });
     });
   }
 
@@ -199,17 +201,19 @@ class CredentialControls {
     this.input.value = '';
   }
 
-  async refresh(mutate?: () => Promise<void>, failureMessage?: string): Promise<void> {
+  async refresh(mutation?: { kind: 'save' | 'clear'; run: () => Promise<void> }): Promise<void> {
     if (this.busy) return;
     this.busy = true;
     this.updateControls();
-    if (mutate) {
-      this.error.textContent = '';
+    if (mutation) {
+      this.mutationError = '';
       try {
-        await mutate();
+        await mutation.run();
+        this.retryClear = false;
       } catch {
         // The Keychain mutation may have succeeded before sidecar delivery failed.
-        this.error.textContent = failureMessage ?? '';
+        if (mutation.kind === 'clear') this.retryClear = true;
+        this.mutationError = mutation.kind === 'clear' ? 'Clear failed.' : 'Save failed.';
       }
     }
     try {
@@ -228,10 +232,14 @@ class CredentialControls {
     const offerSave = this.providerNeedsToken || this.stored === 'not-configured';
     this.input.hidden = this.save.hidden = !offerSave;
     if (!offerSave) this.discardInput();
-    this.clear.hidden = this.stored !== 'configured';
+    this.clear.hidden = !this.retryClear && this.stored !== 'configured';
+    this.clear.textContent = this.retryClear ? 'Retry Clear' : 'Clear';
     this.input.disabled = this.save.disabled = this.clear.disabled = this.busy;
     this.status.textContent =
       this.busy || !this.stored ? 'Checking Keychain…' : CREDENTIAL_STATUS[this.stored];
+    const recoveryMessage = this.retryClear ? 'Removal from the running app is unconfirmed.' : '';
+    const error = [this.mutationError, recoveryMessage].filter(Boolean).join(' ');
+    if (this.error.textContent !== error) this.error.textContent = error;
   }
 }
 
