@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "runId": "20261118T193419Z-4d951c1b1034",
+  "firstAttempt": "codex-oauth-observation.json",
+  "artifact": {
+    "kind": "cf1-05-integrated-candidate",
+    "campaign": "CF-1",
+    "artifactId": 14456220605,
+    "run": "https://github.com/psmfd/FingerTrap/actions/runs/44358288656",
+    "sourceHead": "34a755a09868b9fb147acdbbbb5332a80e395dcc",
+    "buildCommit": "34a755a09868b9fb147acdbbbb5332a80e395dcc",
+    "sourceTree": "3d7287f88790b3b25f01bec9f2a1e42a0a915dda",
+    "archiveDigest": "sha256:d15eeeb601286158ac83ca69806d520e1c89b9c4ef82cfd053fe0c6690775d78",
+    "appArchiveDigest": "sha256:9bf32f7ae9db0af83907060234a99007d81b954f8f7d883a69b22622a5bdd354",
+    "dmgDigest": "sha256:f6b1838e7d906adb1924fec6487dcf70d18d5a1b2b761f1f0b5681e33ae6e54a",
+    "appVersion": "0.1.0",
+    "target": "aarch64-apple-darwin",
+    "productionRuntimeSelection": "v0.85.1-psmfd.1",
+    "distribution": "unsigned candidate; not notarized; not a published release",
+    "runner": "ft-actions-job-20261118t174006z-12db0416"
+  },
+  "runtime": {
+    "tag": "v0.85.1-psmfd.1",
+    "executableSha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5"
+  },
+  "provider": {
+    "name": "OpenAI Codex",
+    "signInMethod": "browser OAuth",
+    "signInReportedSuccessful": true,
+    "priorSignInFailureReported": true,
+    "model": "gpt-6.1-sol",
+    "transport": "sse",
+    "retryEnabled": false,
+    "configuredInGuest": true,
+    "manuallySelected": true,
+    "manualTurns": 1,
+    "successfulTurn": false
+  },
+  "network": {
+    "preflightHttpsStatus": {
+      "auth.openai.com": 302,
+      "chatgpt.com": 200
+    },
+    "directBlocked": true,
+    "unrelatedHostnameDenied": true,
+    "observedApprovedTlsConnectionsBefore": 17,
+    "observedApprovedTlsConnectionsAfter": 17,
+    "newConnectionObserved": false,
+    "transportFailureCauseVerified": false
+  },
+  "sessionOutcome": [
+    {
+      "promptMatched": true,
+      "modelChangeSeen": true
+    },
+    {
+      "expectedProvider": true,
+      "expectedModel": true,
+      "stop": "error",
+      "visibleText": false,
+      "expectedText": false,
+      "errorKind": "socket-closed",
+      "reasoningItems": 0
+    }
+  ],
+  "cases": [
+    {
+      "case": "CF1-07",
+      "status": "FAIL",
+      "observation": "Maintainer reported a successful browser OAuth sign-in after one failed login. After an uncaptured restart the native pane initially selected GPT-5.5, and GPT-6.1 Sol was explicitly selected. The single prompt returned the pane to idle without visible reply. Guest session metadata confirmed the Codex provider and gpt-6.1-sol, with stop reason error and a closed-socket classification. No new approved TLS connection was observed by the guest tunnel after the prompt. App, sidecar, and Pi exit verified.",
+      "evidence": [
+        {
+          "path": "preflight.json",
+          "sha256": "6914c41f23d6002a3958cab9af2050c36ac738f2bea14e022dfb06e8eb8dfe09"
+        },
+        {
+          "path": "post-auth-safe.json",
+          "sha256": "0c4b721275163f9bc304b54601cac739c9887ff52352870bc7bfeac8606a8651"
+        },
+        {
+          "path": "retry-sol-selected.png",
+          "sha256": "c98c4d4fa4a319a13b4567479581cc2ad4b6acb48ffc4599254f108df620879e"
+        },
+        {
+          "path": "retry-settled.png",
+          "sha256": "88ae5db7ccb6c23e2bf750f4f1b257641be461310621f0364c4c14427c8067ce"
+        },
+        {
+          "path": "session-outcome.json",
+          "sha256": "0c8c117b115644f29fa3963941706ef1c01ed82b2a939ae053cce6335d041437"
+        },
+        {
+          "path": "shutdown.json",
+          "sha256": "ddb74f4f7856356b9cbd296ce206f9bc4a6f6c173f58a883cc02eae867270e1a"
+        }
+      ],
+      "observer": "post-sign-in native Tart GUI, sanitized saved-turn fields and TLS hostname receipts",
+      "mode": "observed-gui",
+      "utc": "2026-11-18T19:58:48.813927+00:00"
+    }
+  ],
+  "observationWindow": {
+    "holdSeconds": 1800,
+    "reservedSeconds": 300,
+    "privateConsoleReadyUtc": "2026-11-18T19:34:46+00:00",
+    "explicitFinishUtc": "2026-11-18T19:58:48+00:00"
+  },
+  "cleanup": {
+    "appSidecarAndPiExited": true,
+    "ownerExit": 0,
+    "ownedGuestAbsent": true,
+    "independentInventoryMatches": true,
+    "originalEntriesStopped": 5
+  },
+  "nextAction": "Investigate the pinned Pi SSE transport through the guest tunnel without credentials or an additional model turn."
+}

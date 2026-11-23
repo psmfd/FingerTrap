@@ -1,0 +1,157 @@
+{
+  "case": "CF1-11",
+  "scope": "hung-sidecar-watchdog-diagnostic",
+  "runId": "20261123T211341Z-aabd7ece2b9c",
+  "buildCommit": "04a7319cf8360b40c568f1195c4ef62068500f5a",
+  "sourceTree": "f226edd1f0a3f236eef7e3111f0603f45b43e5fd",
+  "archiveSha256": "910d77d635d507fa3720216f7a665904a2af738137cb3f33ed4c5d254e41d53a",
+  "packageSha256": {
+    "FingerTrap-apple-silicon.app.zip": "ef5ffce66977725e73c237293e0e1ac0e2b31191f2cb827f8ef291618bdc9e5a",
+    "FingerTrap_0.1.0_aarch64.dmg": "4ecbae78ee5bb6e7ae5b6db220a4623d9b10f33af5b9c0c2e753e74e6a64ac85"
+  },
+  "bundleBinarySha256": {
+    "fingertrap": "8f54cc655ae40852ca78406bbd79f0303a7d09f6db6723757180c834c1d6cb04",
+    "fingertrap-sidecar": "04ebbd94f2e5e6cc347094ca8c814e1be3c1f77ebfe7da992ed66ab8896f4211",
+    "libporta_pty.dylib": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3"
+  },
+  "productReferenceArtifact": 14855351635,
+  "productBaseCommit": "ea6b1127b35e2aa01204a0ca7599e88bf4d51cd4",
+  "runtimeTag": "v0.85.1-psmfd.1",
+  "runtimeBinarySha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5",
+  "runtimeExecutionVerified": true,
+  "guest": {
+    "base": "ghcr.io/cirruslabs/macos-sequoia-base@sha256:3f4d14a5ffb9efd3bda2ae0184fd4bc2773d924ff8b7565f958761420ec41a0c",
+    "macOS": "15.7.7",
+    "build": "24G720",
+    "tart": "2.32.1"
+  },
+  "installedBinariesVerified": true,
+  "externalEgressDenied": true,
+  "normalLaunchServicesLaunch": true,
+  "productionStderrRouteVerified": true,
+  "shellTtyMatched": true,
+  "shellSentinelMatched": true,
+  "checkpoints": [
+    {
+      "phase": "sentinel-first",
+      "rendered": true,
+      "independentReadback": true
+    }
+  ],
+  "admissionChecks": {
+    "appSidecarAncestryVerified": true,
+    "shellOnProvenTty": true,
+    "pinnedPiUnderSidecar": true,
+    "pinnedPiHasControllingTty": true,
+    "unrelatedControlAliveOutsideAppTree": true
+  },
+  "ownedProcesses": [
+    {
+      "pid": 689,
+      "parentPid": 1,
+      "started": "Mon Nov 23 21:13:59 2026",
+      "kind": "app"
+    },
+    {
+      "pid": 699,
+      "parentPid": 689,
+      "started": "Mon Nov 23 21:13:59 2026",
+      "kind": "sidecar"
+    },
+    {
+      "pid": 770,
+      "parentPid": 699,
+      "started": "Mon Nov 23 21:14:01 2026",
+      "kind": "shell"
+    },
+    {
+      "pid": 853,
+      "parentPid": 699,
+      "started": "Mon Nov 23 21:14:16 2026",
+      "kind": "pi-pty"
+    }
+  ],
+  "unrelatedProcess": {
+    "pid": 855,
+    "parentPid": 1,
+    "started": "Mon Nov 23 21:14:16 2026",
+    "kind": "unrelated-control"
+  },
+  "stopRequest": {
+    "sidecarPid": 699,
+    "signal": "SIGSTOP",
+    "sidecarIdentityMatchedBeforeStop": true
+  },
+  "sidecarStoppedVerified": true,
+  "singleGuestObserverArmed": true,
+  "normalQuitIssued": true,
+  "trace": {
+    "guestGoAnchorNs": 43291625416,
+    "lastGuestSampleNs": 68366464041,
+    "lastGuestSampleMs": 25074.84,
+    "deadlineReached": true,
+    "events": [
+      {
+        "pid": 689,
+        "ns": 24360793750,
+        "event": "app-started"
+      },
+      {
+        "pid": 689,
+        "ns": 43330864000,
+        "event": "menu-action"
+      },
+      {
+        "pid": 689,
+        "ns": 43330903000,
+        "event": "exit-requested"
+      },
+      {
+        "pid": 689,
+        "ns": 43330916666,
+        "event": "shutdown-entered"
+      },
+      {
+        "pid": 689,
+        "ns": 43331111750,
+        "event": "watchdog-armed"
+      },
+      {
+        "pid": 689,
+        "ns": 63341151458,
+        "event": "watchdog-kill-attempt"
+      }
+    ],
+    "observation": {
+      "appExited": false,
+      "sidecarExited": false,
+      "remainingOwnedPids": [
+        689,
+        699,
+        770,
+        853
+      ],
+      "survivingOwnedDescendantPids": [
+        770,
+        853
+      ],
+      "allOwnedGone": false,
+      "controlSurvived": true,
+      "gracefulShutdownRequested": false,
+      "watchdogFallback": false,
+      "watchdogKillFailed": false
+    }
+  },
+  "hostResultObservedMs": 25078.34,
+  "stoppedAt": "watchdog-observation",
+  "stopReason": "watchdog-app-or-sidecar-exit-unverified",
+  "verdict": "BLOCKED",
+  "cleanup": {
+    "controllerExit": 0,
+    "cloneRemoved": true,
+    "originalInventoryPreserved": true,
+    "builderCloneRemoved": true,
+    "descendantCleanupReached": false,
+    "directPreTeardownAppTreeExitVerified": false
+  }
+}

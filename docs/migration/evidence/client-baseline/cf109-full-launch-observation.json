@@ -1,0 +1,36 @@
+{
+  "case": "CF1-09",
+  "scope": "full-launch-variants",
+  "runId": "20261123T172626Z-655dc3de431e",
+  "artifactId": 14837469920,
+  "buildCommit": "fece9cff69ade29b0f9d1810ea7630e5102f7785",
+  "archiveSha256": "807b44e370b1ac45fb6fa51b3b4a41d6287e8de48b9ff378e05ca4dc2a0bf61a",
+  "installedBinariesVerified": true,
+  "externalEgressDenied": true,
+  "repeatRequests": 2,
+  "checkpoints": [
+    {
+      "phase": "rapid-startup",
+      "rendered": true,
+      "independentReadback": true
+    },
+    {
+      "phase": "normal-reopen",
+      "sameWindowPairAndShell": true,
+      "rendered": true,
+      "independentReadback": true
+    }
+  ],
+  "verdict": "BLOCKED",
+  "stoppedAt": "minimized-reopen",
+  "minimizedStateObservedBeforeRequest": true,
+  "reopenRequestReturned": true,
+  "postReopenOriginalWindowForegroundUnverified": true,
+  "hiddenAndQuitVariantsAttempted": false,
+  "cleanup": {
+    "controllerExit": 0,
+    "cloneRemoved": true,
+    "originalInventoryPreserved": true,
+    "preTeardownAppAndSidecarExitVerified": false
+  }
+}

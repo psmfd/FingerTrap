@@ -266,6 +266,49 @@ that the same session file gains the final marker and that the original Pi PID
 was replaced. Quit the app, stop the identified fixture, and independently
 verify process exit and removal of the owned clone.
 
+## Accepted baseline — 2026-11-23
+
+The maintainer accepted all **12 passing rows** across the named packaged
+Apple Silicon builds with pinned Pi `v0.85.1-psmfd.1`. The sections above
+retain their run-specific results. Integrated dev `e3396b5` passed
+[all 14 CI jobs](https://github.com/psmfd/FingerTrap/actions/runs/45277085514)
+and [CodeQL](https://github.com/psmfd/FingerTrap/actions/runs/45277084012).
+The four CI clones were removed, the runner group returned to zero
+registrations, and all six original Tart entries were stopped and preserved.
+
+- **CF1-01–04.** [Artifact and guest inventory](inputs.json),
+  [Finder installation](finder-install-observation.json),
+  [shell layout and initial Pi diagnostics](shell-layout-pi-failures.json),
+  and [the #230 correction retest](pi-path-review-retest-observation.json).
+- **CF1-05–07.** [Real Pi PTY](real-pi-pty-observation.json),
+  [native RPC with a loopback model](native-pi-rpc-observation.json), and
+  [the authenticated native OAuth turn](codex-native-live-observation.json).
+  The native OAuth record also preserves the absent Content-Type observation.
+  [Earlier OAuth failure](codex-oauth-observation.json) and
+  [Sol retry](codex-oauth-sol-retry-observation.json) retain their own verdicts.
+- **CF1-08.** [Keychain lifecycle rerun](keychain-lifecycle-rerun.json)
+  and [the earlier observation timeout](keychain-lifecycle-observation.json).
+- **CF1-09.** [Rapid startup and foreground reopen](cf109-full-launch-observation.json),
+  [minimized](cf109-pr237-minimized.json) and
+  [hidden reopen](cf109-pr237-hidden.json),
+  [natural Quit handoff](cf109-quit-shutdown-handoff.json), and
+  [controlled overlap and fresh launch](cf109-controlled-quit-overlap.json).
+  The controlled overlap used a test-only shutdown hold.
+- **CF1-10–11.** [Normal Quit](cf110-normal-shutdown-rerun.json),
+  [the prior admission timeout](cf110-normal-shutdown-admission.json),
+  [the watchdog blocker](cf111-watchdog-observation.json),
+  [its diagnostic trace](cf111-watchdog-trace.json), and
+  [the uninstrumented watchdog fix retest](cf111-watchdog-fix-retest.json).
+- **CF1-12.** [Crash recovery and manual replacement](cf112-crash-recovery-upgrade.json)
+  preserved the original session and settings across two `0.1.0` builds.
+  The prior Pi exited before replacement, leaving live-orphan reaping
+  unobserved.
+
+The acceptance covers the packaged-client baseline. The comparison in
+[#219](https://github.com/psmfd/FingerTrap/issues/219) requires its own
+plan approval. Signing, release, runtime pin, SDK, backend and managed
+activation retain their separate gates.
+
 ## Mandatory worksheet
 
 All rows are required for baseline acceptance. A blocked/not-run/skipped case is
@@ -280,12 +323,12 @@ distinct results after any fix or artifact change.
 | CF1-04 | Explicit Pi failures                 | Missing or invalid explicit Pi requests remain actionable; no silent fallback or misleading shell success.                                                     | PASS (#230 candidate) |
 | CF1-05 | Real Pi PTY                          | Named runtime starts, renders, accepts input/resizes and closes; record its exact identity.                                                                    | PASS                  |
 | CF1-06 | Native Pi RPC                        | Actual client prompt/stream/abort/dialog/resume behavior works; distinguish fixtures from real provider turns.                                                 | PASS (guest loopback) |
-| CF1-07 | Supported provider login             | Test credential entered through the supported guest path enables an authenticated minimal turn; no credential is copied from the host or recorded.             | BLOCKED               |
-| CF1-08 | Keychain lifecycle                   | Test credential save/relaunch/read/clear/relaunch behaves correctly; test values never enter evidence.                                                         | BLOCKED               |
-| CF1-09 | Repeat/startup/quit launch           | Existing window/session survives repeat launch, minimized/hidden states and startup races; one app/sidecar; launch during quit preserves shutdown.             | BLOCKED               |
-| CF1-10 | Normal shutdown                      | App, sidecar and recorded owned shell/Pi descendants terminate; siblings/unrelated processes remain unaffected.                                                | BLOCKED               |
-| CF1-11 | Hung-sidecar watchdog                | Stop only the recorded owned sidecar; app exits within its twenty-second watchdog plus recorded scheduling allowance; independently inspect/clean descendants. | BLOCKED               |
-| CF1-12 | Crash, recovery and upgrade          | Guest-created sessions/settings survive supported recovery/prior-app upgrade; exact prior/new bytes and final owned process/VM cleanup are recorded.           | BLOCKED               |
+| CF1-07 | Supported provider login             | Test credential entered through the supported guest path enables an authenticated minimal turn; no credential is copied from the host or recorded.             | PASS (native OAuth)   |
+| CF1-08 | Keychain lifecycle                   | Test credential save/relaunch/read/clear/relaunch behaves correctly; test values never enter evidence.                                                         | PASS (local review)   |
+| CF1-09 | Repeat/startup/quit launch           | Existing window/session survives repeat launch, minimized/hidden states and startup races; one app/sidecar; launch during quit preserves shutdown.             | PASS (combined)       |
+| CF1-10 | Normal shutdown                      | App, sidecar and recorded owned shell/Pi descendants terminate; siblings/unrelated processes remain unaffected.                                                | PASS (#238 candidate) |
+| CF1-11 | Hung-sidecar watchdog                | Stop only the recorded owned sidecar; app exits within its twenty-second watchdog plus recorded scheduling allowance; independently inspect/clean descendants. | PASS (local fix)      |
+| CF1-12 | Crash, recovery and upgrade          | Guest-created sessions/settings survive supported recovery/prior-app upgrade; exact prior/new bytes and final owned process/VM cleanup are recorded.           | PASS (manual swap)    |
 
 A sidecar-only smoke bypasses the Tauri bridge. It supplements these observations.
 Run the existing packaged smoke with `--require-pi` after the guest has the named

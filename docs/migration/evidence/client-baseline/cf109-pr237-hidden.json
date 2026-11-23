@@ -1,0 +1,62 @@
+{
+  "case": "CF1-09",
+  "scope": "hidden-only",
+  "runId": "20261123T183220Z-91c820db201c",
+  "artifactId": 14849262442,
+  "buildCommit": "bd708ae129609fd78513ba5deb9d8329300f4470",
+  "archiveSha256": "44db20ddd2afc84b01f277e755933e5a5cb80ad4ed34798bb1c865b3b5dd5168",
+  "installedBinariesVerified": true,
+  "externalEgressDenied": true,
+  "windowId": 31,
+  "appPid": 649,
+  "sidecarPid": 661,
+  "shellPid": 726,
+  "terminalFocusReadback": true,
+  "checkpoints": [
+    {
+      "phase": "sentinel-first",
+      "rendered": true,
+      "independentReadback": true
+    },
+    {
+      "phase": "reopen-session-proof",
+      "rendered": true,
+      "independentReadback": true
+    }
+  ],
+  "samePair": true,
+  "sameShellStillChild": true,
+  "relaunchGeometry": [
+    {
+      "afterReopenMs": 42,
+      "state": {
+        "front": 649,
+        "pids": [649],
+        "hidden": [],
+        "windows": [
+          {
+            "id": 32,
+            "pid": 649,
+            "onscreen": false
+          },
+          {
+            "id": 31,
+            "pid": 649,
+            "onscreen": true
+          }
+        ]
+      }
+    }
+  ],
+  "noFramebufferSaved": true,
+  "sourceCommit": "27f0dc5f0a17c88775387ab82489e66ee8baa280",
+  "variantVerdict": "PASS",
+  "baselineVerdict": "BLOCKED",
+  "hiddenBeforeReopen": true,
+  "cleanup": {
+    "controllerExit": 0,
+    "cloneRemoved": true,
+    "originalInventoryPreserved": true,
+    "preTeardownAppAndSidecarExitVerified": true
+  }
+}

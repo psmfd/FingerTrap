@@ -1,0 +1,188 @@
+{
+  "case": "CF1-11",
+  "verdict": "PASS",
+  "qualification": "local uninstrumented candidate",
+  "buildCommit": "594e4b5bb1c3d9eab86f2b5e0a7f43b5671036af",
+  "sourceTree": "844930cfb421714da5a68dd9e467e86aafcdfb5a",
+  "archiveSha256": "374789ef9eccd1801b1e92f1a890f7b2f192651d4c650c6f08de6867c869f782",
+  "packageSha256": {
+    "FingerTrap-apple-silicon.app.zip": "6cc1ab0198e905cf2b3f555b0512b0829c1c02b4a2798b20fe6307eccd2191bf",
+    "FingerTrap_0.1.0_aarch64.dmg": "1e8301107745743fc8132a520095f7986976d1e6aa8e474f82d94ac1fea42bce"
+  },
+  "bundleBinarySha256": {
+    "fingertrap": "4f26214a88c791c921e3e7da06e22ba8be17dd9048f002cdd64811950f88ea59",
+    "fingertrap-sidecar": "04ebbd94f2e5e6cc347094ca8c814e1be3c1f77ebfe7da992ed66ab8896f4211",
+    "libporta_pty.dylib": "8be92e96232fdf4bda05bc42207446c2a7597143ab28c59b1fa621541e2723b3"
+  },
+  "runtimeTag": "v0.85.1-psmfd.1",
+  "runtimeBinarySha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5",
+  "guest": {
+    "macOS": "15.7.7",
+    "build": "24G720",
+    "tart": "2.32.1",
+    "base": "ghcr.io/cirruslabs/macos-sequoia-base@sha256:3f4d14a5ffb9efd3bda2ae0184fd4bc2773d924ff8b7565f958761420ec41a0c"
+  },
+  "packageBuildCloneRemoved": true,
+  "regression": {
+    "pinnedSharedChild": "1.1.2",
+    "originalBlockingWaitTimedOut": true,
+    "macOSPollingIntervalMs": 50,
+    "fixedNativeTestsPassed": 12
+  },
+  "normalQuit": {
+    "runId": "20261123T214200Z-6df93ce601bc",
+    "installedBinariesVerified": true,
+    "externalEgressDenied": true,
+    "normalLaunchServicesLaunch": true,
+    "productionStderrRouteVerified": true,
+    "shellTtyMatched": true,
+    "shellSentinelMatched": true,
+    "admissionChecks": {
+      "appSidecarAncestryVerified": true,
+      "shellOnProvenTty": true,
+      "pinnedPiUnderSidecar": true,
+      "pinnedPiHasControllingTty": true,
+      "unrelatedControlAliveOutsideAppTree": true
+    },
+    "ownedProcesses": [
+      {
+        "pid": 639,
+        "parentPid": 1,
+        "started": "Mon Nov 23 21:42:17 2026",
+        "kind": "app"
+      },
+      {
+        "pid": 652,
+        "parentPid": 639,
+        "started": "Mon Nov 23 21:42:17 2026",
+        "kind": "sidecar"
+      },
+      {
+        "pid": 721,
+        "parentPid": 652,
+        "started": "Mon Nov 23 21:42:19 2026",
+        "kind": "shell"
+      },
+      {
+        "pid": 816,
+        "parentPid": 652,
+        "started": "Mon Nov 23 21:42:32 2026",
+        "kind": "pi-pty"
+      }
+    ],
+    "unrelatedProcess": {
+      "pid": 818,
+      "parentPid": 1,
+      "started": "Mon Nov 23 21:42:33 2026",
+      "kind": "unrelated-control"
+    },
+    "normalQuitIssued": true,
+    "cleanup": {
+      "controllerExit": 0,
+      "cloneRemoved": true,
+      "originalInventoryPreserved": true
+    },
+    "observedWithinMs": 231.07,
+    "observation": {
+      "allOwnedGone": true,
+      "remainingOwnedPids": [],
+      "packagedProcessesStillPresent": false,
+      "controlSurvived": true,
+      "gracefulShutdownRequested": true,
+      "sidecarExitedSuccessfully": true,
+      "watchdogFallback": false
+    }
+  },
+  "hungSidecar": {
+    "runId": "20261123T214259Z-c370693947b4",
+    "installedBinariesVerified": true,
+    "externalEgressDenied": true,
+    "normalLaunchServicesLaunch": true,
+    "productionStderrRouteVerified": true,
+    "shellTtyMatched": true,
+    "shellSentinelMatched": true,
+    "admissionChecks": {
+      "appSidecarAncestryVerified": true,
+      "shellOnProvenTty": true,
+      "pinnedPiUnderSidecar": true,
+      "pinnedPiHasControllingTty": true,
+      "unrelatedControlAliveOutsideAppTree": true
+    },
+    "ownedProcesses": [
+      {
+        "pid": 642,
+        "parentPid": 1,
+        "started": "Mon Nov 23 21:43:13 2026",
+        "kind": "app"
+      },
+      {
+        "pid": 654,
+        "parentPid": 642,
+        "started": "Mon Nov 23 21:43:13 2026",
+        "kind": "sidecar"
+      },
+      {
+        "pid": 722,
+        "parentPid": 654,
+        "started": "Mon Nov 23 21:43:15 2026",
+        "kind": "shell"
+      },
+      {
+        "pid": 823,
+        "parentPid": 654,
+        "started": "Mon Nov 23 21:43:28 2026",
+        "kind": "pi-pty"
+      }
+    ],
+    "unrelatedProcess": {
+      "pid": 825,
+      "parentPid": 1,
+      "started": "Mon Nov 23 21:43:29 2026",
+      "kind": "unrelated-control"
+    },
+    "normalQuitIssued": true,
+    "cleanup": {
+      "controllerExit": 0,
+      "cloneRemoved": true,
+      "originalInventoryPreserved": true
+    },
+    "stopRequest": {
+      "sidecarPid": 654,
+      "signal": "SIGSTOP",
+      "sidecarIdentityMatchedBeforeStop": true
+    },
+    "sidecarStoppedVerified": true,
+    "singleGuestObserverArmed": true,
+    "guestWatch": {
+      "guestGoAnchorNs": 36420907708,
+      "lastGuestSampleNs": 56554470208,
+      "lastGuestSampleMs": 20133.56,
+      "deadlineReached": false,
+      "observation": {
+        "appExited": true,
+        "sidecarExited": true,
+        "remainingOwnedPids": [],
+        "survivingOwnedDescendantPids": [],
+        "allOwnedGone": true,
+        "controlSurvived": true,
+        "gracefulShutdownRequested": false,
+        "watchdogFallback": true,
+        "watchdogKillFailed": false
+      }
+    },
+    "hostResultObservedMs": 20136.91,
+    "survivorsBeforeCleanup": [],
+    "descendantCleanup": {
+      "signalsSent": [],
+      "appExited": true,
+      "sidecarExited": true,
+      "remainingOwnedPids": [],
+      "survivingOwnedDescendantPids": [],
+      "allOwnedGone": true,
+      "controlSurvived": true,
+      "gracefulShutdownRequested": false,
+      "watchdogFallback": true,
+      "watchdogKillFailed": false
+    }
+  }
+}

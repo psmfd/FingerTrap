@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "baselineRow": "CF1-07",
+  "worksheetResult": "PASS",
+  "runId": "20261123T151018Z-a1cde8abed8f",
+  "rehearsalRunId": "20261123T150837Z-5d0ba1bfb8d3",
+  "harnessCheckpoint": "3a51215",
+  "artifactId": 14456220605,
+  "buildCommit": "34a755a09868b9fb147acdbbbb5332a80e395dcc",
+  "runtimeTag": "v0.85.1-psmfd.1",
+  "runtimeBinarySha256": "811d65137d4272b30a6b2bd9a4093218b8f94bb8f55a9db9ccf8d443c4d4b2a5",
+  "provider": "openai-codex",
+  "model": "gpt-6.1-sol",
+  "login": "operator OAuth in fresh guest; capture paused; closure and fresh guest credential verified before native launch",
+  "native": {
+    "packagedAncestryVerified": true,
+    "guestShimUsed": true,
+    "ephemeralSession": true,
+    "toolFree": true,
+    "retriesDisabled": true,
+    "inputAccepted": 1,
+    "inputBlocked": 0,
+    "firstTextMsFromInput": 1514,
+    "expectedReply": true,
+    "renderedExpectedReply": true,
+    "stop": "stop",
+    "settled": true,
+    "sessionTranscriptAbsent": true
+  },
+  "providerObservation": {
+    "transport": "sse",
+    "prepared": 1,
+    "attempted": 1,
+    "admitted": 1,
+    "headerCount": 1,
+    "status": 200,
+    "mediaTypeObservation": "absent",
+    "turnTunnelConnections": 1,
+    "turnNetworkDenied": false,
+    "signInAuthorityDenied": 396,
+    "signInClientHelloRejected": 0,
+    "signInSniMismatch": 0
+  },
+  "cleanup": {
+    "ownerExit": 0,
+    "preTeardownVerified": true,
+    "cloneRemoved": true,
+    "originalsPreserved": true,
+    "developmentVmStopped": true
+  },
+  "limitations": [
+    "Content-Type was absent at the fetch response boundary. The approved disposition accepted the exact streamed rendered reply with HTTP 200.",
+    "The diagnostic uses a guest-only shim for memory-only, tool-free launch and a one-shot fetch guard. The packaged app and pinned Pi binary identities were verified.",
+    "One admitted application fetch and one tunnel connection were observed. Exact upstream request receipt and the cause of the earlier closed-socket error remain unverified."
+  ],
+  "privateReceiptSha256": {
+    "stage.json": "e1c8d5b1a07766a15aad8b41ec4c07c6db7a56034b0880ffd56daa4bd68af76b",
+    "live.json": "37f208b2cfd0d25337f7deb482d00c5b5b48465ab6819c1dd11966230614133d",
+    "native-ready.json": "cd186d34277c0d33f8cff5dc1e53256b2afd2665f4d1687bab1912e386420de9",
+    "native-turn.json": "3183ab4c15faf67f43b52cae3540c39066c37d68d3d5d24c790751de31e90822",
+    "native-verdict.json": "ee10299d7931af084e674021dc911a3bd2b3f59668a375ee8d08e00409e96ac3",
+    "cleanup.json": "6b54882e86e9c1e05d3b9ef01a7d67d8f786f6cbf07d96e74a6f7b2e3f8f1abf",
+    "owned-cleanup.json": "3ab0f35c0aed7f80f0f889a43a6bc2c09c95c57347ea5e520ab7a8247398d9a2",
+    "source-digests.json": "8fefbadfbc00e9a996d1f1ce50890673074443a93ca7a163e2610f7062f5190f"
+  }
+}
